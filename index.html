@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>Bangla Task - অ্যাডমিন</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+<!-- ═══════════ LOADING ═══════════ -->
+<div id="loadingScreen" class="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center p-4">
+  <div class="text-center text-white">
+    <div class="animate-spin rounded-full h-16 w-16 border-4 border-white border-t-transparent mx-auto mb-4"></div>
+    <p class="text-lg">লোড হচ্ছে...</p>
+  </div>
+</div>
+
+<!-- ═══════════ ACCESS DENIED ═══════════ -->
+<div id="deniedScreen" class="hidden min-h-screen bg-gradient-to-br from-red-700 to-red-900 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl p-8 max-w-md text-center">
+    <div class="text-5xl mb-4">🚫</div>
+    <h2 class="text-xl font-bold mb-2">অ্যাক্সেস নেই</h2>
+    <p class="text-gray-600 text-sm">আপনি অ্যাডমিন নন। শুধু অনুমোদিত অ্যাডমিনরাই এই প্যানেলে ঢুকতে পারবেন।</p>
+    <p class="text-xs text-gray-400 mt-3">আপনার Telegram ID: <span id="myId" class="font-mono"></span></p>
+  </div>
+</div>
+
+<!-- ═══════════ ADMIN PANEL ═══════════ -->
+<div id="panel" class="hidden pb-20">
+  <!-- Header -->
+  <header class="bg-gray-900 text-white shadow sticky top-0 z-20">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div>
+        <h1 class="text-base font-bold">⚙️ অ্যাডমিন প্যানেল</h1>
+        <p id="adminName" class="text-xs text-gray-400"></p>
+      </div>
+      <button onclick="refreshAll()" class="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded">
+        🔄 রিফ্রেশ
+      </button>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <div class="max-w-4xl mx-auto p-3 grid grid-cols-3 gap-2">
+    <div class="bg-white p-3 rounded-xl shadow">
+      <p class="text-[10px] text-gray-500">ইউজার</p>
+      <p id="sUsers" class="text-xl font-bold">0</p>
+    </div>
+    <div class="bg-white p-3 rounded-xl shadow">
+      <p class="text-[10px] text-gray-500">টাস্ক</p>
+      <p id="sTasks" class="text-xl font-bold">0</p>
+    </div>
+    <div class="bg-white p-3 rounded-xl shadow">
+      <p class="text-[10px] text-gray-500">পেন্ডিং</p>
+      <p id="sPending" class="text-xl font-bold text-yellow-600">0</p>
+    </div>
+    <div class="bg-white p-3 rounded-xl shadow">
+      <p class="text-[10px] text-gray-500">অনুমোদিত</p>
+      <p id="sApproved" class="text-xl font-bold text-green-600">0</p>
+    </div>
+    <div class="bg-white p-3 rounded-xl shadow">
+      <p class="text-[10px] text-gray-500">পেআউট</p>
+      <p id="sEarnings" class="text-xl font-bold text-blue-600">0</p>
+    </div>
+    <div class="bg-white p-3 rounded-xl shadow">
+      <p class="text-[10px] text-gray-500">পেন্ডিং WD</p>
+      <p id="sWd" class="text-xl font-bold text-red-600">0</p>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="max-w-4xl mx-auto px-3">
+    <div class="flex gap-1 bg-white rounded-lg p-1 shadow overflow-x-auto">
+      <button data-tab="submissions" class="aTab flex-1 px-3 py-2 rounded-md font-medium text-xs whitespace-nowrap bg-blue-600 text-white">📥 সাবমিশন</button>
+      <button data-tab="tasks" class="aTab flex-1 px-3 py-2 rounded-md font-medium text-xs whitespace-nowrap text-gray-600">📋 টাস্ক</button>
+      <button data-tab="users" class="aTab flex-1 px-3 py-2 rounded-md font-medium text-xs whitespace-nowrap text-gray-600">👥 ইউজার</button>
+      <button data-tab="withdrawals" class="aTab flex-1 px-3 py-2 rounded-md font-medium text-xs whitespace-nowrap text-gray-600">💸 উইথড্র</button>
+    </div>
+  </div>
+
+  <main class="max-w-4xl mx-auto p-3">
+
+    <!-- SUBMISSIONS -->
+    <section id="aTab-submissions" class="aPane">
+      <div class="flex gap-2 mb-3 flex-wrap">
+        <button data-f="pending" class="subFilter px-3 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-medium">পেন্ডিং</button>
+        <button data-f="approved" class="subFilter px-3 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">অনুমোদিত</button>
+        <button data-f="rejected" class="subFilter px-3 py-1 bg-red-100 text-red-700 rounded text-xs font-medium">বাতিল</button>
+        <button data-f="" class="subFilter px-3 py-1 bg-gray-100 rounded text-xs font-medium">সব</button>
+      </div>
+      <div id="subsList" class="space-y-2"></div>
+    </section>
+
+    <!-- TASKS -->
+    <section id="aTab-tasks" class="aPane hidden">
+      <div class="bg-white p-4 rounded-xl shadow mb-4">
+        <h3 class="font-semibold mb-3 text-sm">➕ নতুন টাস্ক তৈরি করুন</h3>
+        <div class="space-y-2">
+          <input id="tTitle" placeholder="টাইটেল (যেমন: বাংলা ভয়েস রেকর্ডিং)"
+            class="w-full px-3 py-2 border rounded-lg text-sm"/>
+          <input id="tDesc" placeholder="বর্ণনা"
+            class="w-full px-3 py-2 border rounded-lg text-sm"/>
+          <div class="grid grid-cols-3 gap-2">
+            <select id="tType" class="px-3 py-2 border rounded-lg text-sm">
+              <option value="voice">ভয়েস</option>
+              <option value="image">ছবি</option>
+              <option value="survey">সার্ভে</option>
+              <option value="text">টেক্সট</option>
+            </select>
+            <input id="tReward" type="number" placeholder="রিওয়ার্ড ৳"
+              class="px-3 py-2 border rounded-lg text-sm"/>
+            <input id="tSlots" type="number" placeholder="স্লট" value="1000"
+              class="px-3 py-2 border rounded-lg text-sm"/>
+          </div>
+          <button onclick="createTask()"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2 font-medium text-sm">
+            টাস্ক তৈরি করুন
+          </button>
+        </div>
+        <p id="taskMsg" class="text-sm mt-2"></p>
+      </div>
+      <h3 class="font-semibold mb-2 text-sm">📋 সব টাস্ক</h3>
+      <div id="tasksList" class="space-y-2"></div>
+    </section>
+
+    <!-- USERS -->
+    <section id="aTab-users" class="aPane hidden">
+      <div id="usersList" class="space-y-2"></div>
+    </section>
+
+    <!-- WITHDRAWALS -->
+    <section id="aTab-withdrawals" class="aPane hidden">
+      <div id="wdsList" class="space-y-2"></div>
+    </section>
+  </main>
+</div>
+
+<!-- ═══════════ FIREBASE + TELEGRAM LOGIC ═══════════ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getAuth, signInAnonymously, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getDatabase, ref, set, get, push, update, onValue
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// ═══ Firebase Config ═══
+const firebaseConfig = {
+  apiKey: "AIzaSyB-PP2p5jiwmqq8HUm6bw34_vBvUnMDSgI",
+  authDomain: "diamond-top-up-9953b.firebaseapp.com",
+  databaseURL: "https://diamond-top-up-9953b-default-rtdb.firebaseio.com",
+  projectId: "diamond-top-up-9953b",
+  storageBucket: "diamond-top-up-9953b.appspot.com",
+  messagingSenderId: "187130123982",
+  appId: "1:187130123982:android:ae8fb02de0e5d0cd4f229f"
+};
+
+const app = initializeApp(firebaseConfig, "adminApp");
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+const $ = id => document.getElementById(id);
+const tg = window.Telegram?.WebApp;
+let tgUser = null;
+let unsubscribers = [];
+let subFilterStatus = 'pending';
+
+// ═══ Access Denied Helper ═══
+function showDenied(id) {
+  $('loadingScreen').classList.add('hidden');
+  $('deniedScreen').classList.remove('hidden');
+  $('myId').textContent = id || 'unknown';
+}
+
+// ═══ Init ═══
+async function init() {
+  // Telegram check
+  if (!tg || !tg.initDataUnsafe?.user) {
+    showDenied('Telegram এর বাইরে');
+    return;
+  }
+  tg.ready();
+  tg.expand();
+  tgUser = tg.initDataUnsafe.user;
+
+  // Firebase anonymous auth
+  try {
+    await signInAnonymously(auth);
+  } catch (err) {
+    alert('Firebase Anonymous Auth চালু করুন: ' + err.message);
+    return;
+  }
+}
+
+onAuthStateChanged(auth, async (fbUser) => {
+  if (!fbUser || !tgUser) return;
+
+  // Check if admin
+  const adminSnap = await get(ref(db, 'admins/' + tgUser.id));
+  if (!adminSnap.exists()) {
+    showDenied(tgUser.id);
+    return;
+  }
+
+  // Show panel
+  $('adminName').textContent =
+    [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' ') +
+    (tgUser.username ? ' (@' + tgUser.username + ')' : '') +
+    ' | ID: ' + tgUser.id;
+
+  $('loadingScreen').classList.add('hidden');
+  $('panel').classList.remove('hidden');
+
+  startLiveUpdates();
+});
+
+// ═══ Live Updates ═══
+function startLiveUpdates() {
+  unsubscribers.forEach(fn => fn());
+  unsubscribers = [];
+
+  // Stats
+  unsubscribers.push(onValue(ref(db, 'users'), s => {
+    $('sUsers').textContent = Object.keys(s.val() || {}).length;
+  }));
+  unsubscribers.push(onValue(ref(db, 'tasks'), s => {
+    $('sTasks').textContent = Object.keys(s.val() || {}).length;
+  }));
+  unsubscribers.push(onValue(ref(db, 'submissions'), s => {
+    const arr = Object.values(s.val() || {});
+    $('sPending').textContent = arr.filter(x => x.status === 'pending').length;
+    $('sApproved').textContent = arr.filter(x => x.status === 'approved').length;
+    $('sEarnings').textContent = arr.filter(x => x.status === 'approved')
+      .reduce((a, b) => a + (b.reward || 0), 0).toFixed(0);
+  }));
+  unsubscribers.push(onValue(ref(db, 'withdrawals'), s => {
+    const arr = Object.values(s.val() || {});
+    $('sWd').textContent = arr.filter(x => x.status === 'pending').length;
+  }));
+
+  loadSubmissions(subFilterStatus);
+  loadTasks();
+  loadUsers();
+  loadWithdrawals();
+}
+
+window.refreshAll = () => {
+  startLiveUpdates();
+  tg?.HapticFeedback?.impactOccurred('light');
+};
+
+// ═══ Tabs ═══
+document.querySelectorAll('.aTab').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.aTab').forEach(b => {
+      b.className = 'aTab flex-1 px-3 py-2 rounded-md font-medium text-xs whitespace-nowrap text-gray-600';
+    });
+    btn.className = 'aTab flex-1 px-3 py-2 rounded-md font-medium text-xs whitespace-nowrap bg-blue-600 text-white';
+    document.querySelectorAll('.aPane').forEach(p => p.classList.add('hidden'));
+    $('aTab-' + btn.dataset.tab).classList.remove('hidden');
+    tg?.HapticFeedback?.selectionChanged?.();
+  };
+});
+
+// ═══ Escape ═══
+function esc(s) {
+  return String(s || '').replace(/[<>&"]/g, c =>
+    ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
+}
+
+// ═══ Submissions ═══
+document.querySelectorAll('.subFilter').forEach(b => {
+  b.onclick = () => {
+    subFilterStatus = b.dataset.f;
+    loadSubmissions(subFilterStatus);
+    tg?.HapticFeedback?.selectionChanged?.();
+  };
+});
+
+function loadSubmissions(status) {
+  onValue(ref(db, 'submissions'), snap => {
+    const data = snap.val() || {};
+    let rows = Object.entries(data).map(([id, s]) => ({ id, ...s }));
+    if (status) rows = rows.filter(r => r.status === status);
+    rows.sort((a, b) => b.createdAt - a.createdAt);
+
+    const list = $('subsList');
+    list.innerHTML = '';
+    if (!rows.length) {
+      list.innerHTML = '<p class="text-gray-500 text-center py-6 text-sm">কোনো সাবমিশন নেই।</p>';
+      return;
+    }
+
+    rows.forEach(s => {
+      const badge = s.status === 'approved' ? 'bg-green-100 text-green-700'
+                  : s.status === 'rejected' ? 'bg-red-100 text-red-700'
+                  : 'bg-yellow-100 text-yellow-700';
+      const div = document.createElement('div');
+      div.className = 'bg-white p-3 rounded-xl shadow';
+      div.innerHTML = `
+        <div class="flex justify-between items-start flex-wrap gap-2">
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-sm">${esc(s.taskTitle)}</p>
+            <p class="text-xs text-gray-500">${esc(s.userName)} ${s.username ? '(@' + esc(s.username) + ')' : ''}</p>
+            <p class="text-xs text-gray-400">ID: ${s.telegramId || 'N/A'}</p>
+            <p class="text-sm text-gray-700 mt-1 break-words">${esc(s.content) || '<em>ফাইল জমা</em>'}</p>
+            ${s.fileUrl ? `<a href="${s.fileUrl}" target="_blank" class="text-blue-600 underline text-xs">📎 ফাইল দেখুন</a>` : ''}
+          </div>
+          <div class="text-right">
+            <span class="${badge} px-2 py-1 rounded-full text-xs">${s.status}</span>
+            <p class="text-green-600 font-bold text-sm mt-1">৳ ${s.reward}</p>
+            ${s.status === 'pending' ? `
+              <div class="flex gap-1 mt-2">
+                <button class="approveBtn bg-green-600 text-white px-2 py-1 rounded text-xs">✓</button>
+                <button class="rejectBtn bg-red-600 text-white px-2 py-1 rounded text-xs">✗</button>
+              </div>` : ''}
+          </div>
+        </div>`;
+      if (s.status === 'pending') {
+        div.querySelector('.approveBtn').onclick = () => reviewSubmission(s, 'approved');
+        div.querySelector('.rejectBtn').onclick = () => reviewSubmission(s, 'rejected');
+      }
+      list.appendChild(div);
+    });
+  });
+}
+
+async function reviewSubmission(s, action) {
+  try {
+    await update(ref(db, 'submissions/' + s.id), {
+      status: action,
+      reviewedAt: Date.now(),
+      reviewedBy: tgUser.id
+    });
+    if (action === 'approved') {
+      const uSnap = await get(ref(db, 'users/' + s.userId));
+      const u = uSnap.val() || {};
+      await update(ref(db, 'users/' + s.userId), {
+        wallet_balance: (u.wallet_balance || 0) + s.reward,
+        total_earned: (u.total_earned || 0) + s.reward
+      });
+    }
+    tg?.HapticFeedback?.notificationOccurred('success');
+  } catch (err) {
+    alert('সমস্যা: ' + err.message);
+  }
+}
+
+// ═══ Tasks ═══
+window.createTask = async () => {
+  const title = $('tTitle').value.trim();
+  const description = $('tDesc').value.trim();
+  const type = $('tType').value;
+  const reward = parseFloat($('tReward').value);
+  const total_slots = parseInt($('tSlots').value) || 1000;
+  $('taskMsg').className = 'text-sm';
+
+  if (!title || !reward) {
+    $('taskMsg').className = 'text-sm text-red-500';
+    $('taskMsg').textContent = 'টাইটেল ও রিওয়ার্ড দিন';
+    return;
+  }
+
+  try {
+    const tRef = push(ref(db, 'tasks'));
+    await set(tRef, {
+      title, description, type, reward, total_slots,
+      filled_slots: 0, status: 'active',
+      createdAt: Date.now(),
+      createdBy: tgUser.id
+    });
+    $('taskMsg').className = 'text-sm text-green-600';
+    $('taskMsg').textContent = '✅ টাস্ক তৈরি হয়েছে';
+    $('tTitle').value = ''; $('tDesc').value = ''; $('tReward').value = '';
+    tg?.HapticFeedback?.notificationOccurred('success');
+  } catch (err) {
+    $('taskMsg').className = 'text-sm text-red-500';
+    $('taskMsg').textContent = 'সমস্যা: ' + err.message;
+  }
+};
+
+function loadTasks() {
+  onValue(ref(db, 'tasks'), snap => {
+    const data = snap.val() || {};
+    const rows = Object.entries(data).map(([id, t]) => ({ id, ...t }))
+      .sort((a, b) => b.createdAt - a.createdAt);
+
+    const list = $('tasksList');
+    list.innerHTML = '';
+    if (!rows.length) {
+      list.innerHTML = '<p class="text-gray-500 text-center py-6 text-sm">কোনো টাস্ক নেই।</p>';
+      return;
+    }
+
+    rows.forEach(t => {
+      const badge = t.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600';
+      const div = document.createElement('div');
+      div.className = 'bg-white p-3 rounded-xl shadow flex justify-between items-center gap-2';
+      div.innerHTML = `
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-sm truncate">${esc(t.title)}</p>
+          <p class="text-xs text-gray-500 truncate">${esc(t.description)}</p>
+          <p class="text-xs text-gray-400 mt-1">${esc(t.type)} | ৳${t.reward} | ${t.filled_slots || 0}/${t.total_slots}</p>
+        </div>
+        <div class="text-right">
+          <span class="${badge} px-2 py-1 rounded-full text-xs whitespace-nowrap">${t.status}</span>
+          <button class="toggleBtn block mt-1 text-xs text-blue-600 underline">
+            ${t.status === 'active' ? 'বন্ধ' : 'চালু'}
+          </button>
+          <button class="delBtn block mt-1 text-xs text-red-600 underline">মুছুন</button>
+        </div>`;
+      div.querySelector('.toggleBtn').onclick = async () => {
+        await update(ref(db, 'tasks/' + t.id), {
+          status: t.status === 'active' ? 'closed' : 'active'
+        });
+        tg?.HapticFeedback?.impactOccurred('light');
+      };
+      div.querySelector('.delBtn').onclick = async () => {
+        if (!confirm('এই টাস্ক মুছে ফেলবেন?')) return;
+        await update(ref(db, 'tasks/' + t.id), { status: 'deleted' });
+      };
+      list.appendChild(div);
+    });
+  });
+}
+
+// ═══ Users ═══
+function loadUsers() {
+  onValue(ref(db, 'users'), snap => {
+    const data = snap.val() || {};
+    const rows = Object.entries(data).map(([id, u]) => ({ id, ...u }))
+      .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+    const list = $('usersList');
+    list.innerHTML = '';
+    if (!rows.length) {
+      list.innerHTML = '<p class="text-gray-500 text-center py-6 text-sm">কোনো ইউজার নেই।</p>';
+      return;
+    }
+
+    rows.forEach(u => {
+      const badge = u.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
+      const name = [u.firstName, u.lastName].filter(Boolean).join(' ') || 'User';
+      const div = document.createElement('div');
+      div.className = 'bg-white p-3 rounded-xl shadow flex justify-between items-center gap-2';
+      div.innerHTML = `
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-sm truncate">${esc(name)} ${u.username ? '<span class="text-xs text-gray-500">@' + esc(u.username) + '</span>' : ''}</p>
+          <p class="text-xs text-gray-400">ID: ${u.telegramId || 'N/A'}</p>
+          <p class="text-xs text-gray-400">ব্যালেন্স: ৳${(u.wallet_balance || 0).toFixed(0)} | আয়: ৳${(u.total_earned || 0).toFixed(0)}</p>
+        </div>
+        <div class="text-right">
+          <span class="${badge} px-2 py-1 rounded-full text-xs">${u.status || 'active'}</span>
+          <button class="toggleUser block mt-1 text-xs text-blue-600 underline">
+            ${u.status === 'active' ? 'ব্লক' : 'আনব্লক'}
+          </button>
+        </div>`;
+      div.querySelector('.toggleUser').onclick = async () => {
+        await update(ref(db, 'users/' + u.id), {
+          status: u.status === 'active' ? 'blocked' : 'active'
+        });
+        tg?.HapticFeedback?.impactOccurred('light');
+      };
+      list.appendChild(div);
+    });
+  });
+}
+
+// ═══ Withdrawals ═══
+function loadWithdrawals() {
+  onValue(ref(db, 'withdrawals'), snap => {
+    const data = snap.val() || {};
+    const rows = Object.entries(data).map(([id, w]) => ({ id, ...w }))
+      .sort((a, b) => b.createdAt - a.createdAt);
+
+    const list = $('wdsList');
+    list.innerHTML = '';
+    if (!rows.length) {
+      list.innerHTML = '<p class="text-gray-500 text-center py-6 text-sm">কোনো উইথড্র নেই।</p>';
+      return;
+    }
+
+    rows.forEach(w => {
+      const badge = w.status === 'paid' ? 'bg-green-100 text-green-700'
+                  : w.status === 'rejected' ? 'bg-red-100 text-red-700'
+                  : 'bg-yellow-100 text-yellow-700';
+      const div = document.createElement('div');
+      div.className = 'bg-white p-3 rounded-xl shadow flex justify-between items-center gap-2';
+      div.innerHTML = `
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-sm">৳ ${w.amount} - ${esc(w.method)}</p>
+          <p class="text-xs text-gray-500 truncate">${esc(w.userName)} ${w.username ? '(@' + esc(w.username) + ')' : ''}</p>
+          <p class="text-xs text-gray-400">অ্যাকাউন্ট: ${esc(w.accountNumber)}</p>
+          <p class="text-xs text-gray-400">${new Date(w.createdAt).toLocaleString('bn-BD')}</p>
+        </div>
+        <div class="text-right">
+          <span class="${badge} px-2 py-1 rounded-full text-xs">${w.status}</span>
+          ${w.status === 'pending' ? `
+            <div class="flex gap-1 mt-2">
+              <button class="paidBtn bg-green-600 text-white px-2 py-1 rounded text-xs">✓ পেইড</button>
+              <button class="rejBtn bg-red-600 text-white px-2 py-1 rounded text-xs">✗ বাতিল</button>
+            </div>` : ''}
+        </div>`;
+      if (w.status === 'pending') {
+        div.querySelector('.paidBtn').onclick = () => processWithdrawal(w, 'paid');
+        div.querySelector('.rejBtn').onclick = () => processWithdrawal(w, 'rejected');
+      }
+      list.appendChild(div);
+    });
+  });
+}
+
+async function processWithdrawal(w, action) {
+  try {
+    await update(ref(db, 'withdrawals/' + w.id), {
+      status: action,
+      processedAt: Date.now(),
+      processedBy: tgUser.id
+    });
+    if (action === 'rejected') {
+      const uSnap = await get(ref(db, 'users/' + w.userId));
+      const u = uSnap.val() || {};
+      await update(ref(db, 'users/' + w.userId), {
+        wallet_balance: (u.wallet_balance || 0) + w.amount
+      });
+    }
+    tg?.HapticFeedback?.notificationOccurred('success');
+  } catch (err) {
+    alert('সমস্যা: ' + err.message);
+  }
+}
+
+// ═══ Start ═══
+init();
+</script>
+</body>
+</html>
