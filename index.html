@@ -56,7 +56,6 @@
 
 <!-- ═══════════ ADMIN PANEL ═══════════ -->
 <div id="panel" class="hidden pb-20">
-  <!-- Header -->
   <header class="bg-gray-900 text-white shadow sticky top-0 z-20">
     <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
       <div>
@@ -128,7 +127,7 @@
           <input id="tTitle" placeholder="টাইটেল" class="w-full px-3 py-2 border rounded-lg text-sm"/>
           <input id="tDesc" placeholder="বর্ণনা" class="w-full px-3 py-2 border rounded-lg text-sm"/>
           <div class="grid grid-cols-3 gap-2">
-            <select id="tType" class="px-3 py-2 border rounded-lg text-sm">
+            <select id="tType" onchange="toggleSurveyLink()" class="px-3 py-2 border rounded-lg text-sm">
               <option value="voice">ভয়েস</option>
               <option value="image">ছবি</option>
               <option value="survey">সার্ভে</option>
@@ -136,6 +135,11 @@
             </select>
             <input id="tReward" type="number" placeholder="রিওয়ার্ড ৳" class="px-3 py-2 border rounded-lg text-sm"/>
             <input id="tSlots" type="number" placeholder="স্লট" value="1000" class="px-3 py-2 border rounded-lg text-sm"/>
+          </div>
+          <div id="surveyLinkDiv" class="hidden">
+            <input id="tLink" type="url" placeholder="🔗 সার্ভে লিংক (https://...)"
+              class="w-full px-3 py-2 border-2 border-purple-300 bg-purple-50 rounded-lg text-sm"/>
+            <p class="text-xs text-purple-600 mt-1">সার্ভে টাস্কের জন্য লিংক দিন — ইউজার ক্লিক করে ১ মিনিট পর অটো রিওয়ার্ড পাবে</p>
           </div>
           <button onclick="createTask()" class="w-full bg-blue-600 text-white rounded-lg py-2 font-medium text-sm">তৈরি করুন</button>
         </div>
@@ -156,6 +160,93 @@
   </main>
 </div>
 
+<!-- ═══════════ EDIT TASK MODAL ═══════════ -->
+<div id="editTaskModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl w-full max-w-lg p-5 max-h-[90vh] overflow-y-auto">
+    <h3 class="text-lg font-bold mb-4">✏️ টাস্ক এডিট করুন</h3>
+    <input type="hidden" id="etId"/>
+    <div class="space-y-3">
+      <div>
+        <label class="block text-xs font-medium text-gray-700 mb-1">টাইটেল</label>
+        <input id="etTitle" class="w-full px-3 py-2 border rounded-lg text-sm"/>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-gray-700 mb-1">বর্ণনা</label>
+        <input id="etDesc" class="w-full px-3 py-2 border rounded-lg text-sm"/>
+      </div>
+      <div class="grid grid-cols-3 gap-2">
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1">টাইপ</label>
+          <select id="etType" onchange="toggleEditSurveyLink()" class="w-full px-3 py-2 border rounded-lg text-sm">
+            <option value="voice">ভয়েস</option>
+            <option value="image">ছবি</option>
+            <option value="survey">সার্ভে</option>
+            <option value="text">টেক্সট</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1">রিওয়ার্ড</label>
+          <input id="etReward" type="number" class="w-full px-3 py-2 border rounded-lg text-sm"/>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1">স্লট</label>
+          <input id="etSlots" type="number" class="w-full px-3 py-2 border rounded-lg text-sm"/>
+        </div>
+      </div>
+      <div id="editSurveyLinkDiv" class="hidden">
+        <label class="block text-xs font-medium text-gray-700 mb-1">সার্ভে লিংক</label>
+        <input id="etLink" type="url" placeholder="https://..." class="w-full px-3 py-2 border-2 border-purple-300 bg-purple-50 rounded-lg text-sm"/>
+      </div>
+      <div class="flex gap-2 pt-2">
+        <button onclick="closeEditTask()" class="flex-1 bg-gray-200 py-2 rounded-lg font-medium text-sm">বাতিল</button>
+        <button onclick="saveEditTask()" class="flex-1 bg-blue-600 text-white py-2 rounded-lg font-medium text-sm">সেভ করুন</button>
+      </div>
+      <p id="editTaskMsg" class="text-sm"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ EDIT USER MODAL ═══════════ -->
+<div id="editUserModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto">
+    <h3 class="text-lg font-bold mb-1">👤 ইউজার ম্যানেজ</h3>
+    <p id="euName" class="text-sm text-gray-500 mb-4"></p>
+    <input type="hidden" id="euId"/>
+
+    <div class="bg-gray-50 rounded-lg p-3 mb-4">
+      <p class="text-xs text-gray-500">বর্তমান ব্যালেন্স</p>
+      <p class="text-2xl font-bold text-green-600">৳ <span id="euCurrentBalance">0</span></p>
+      <p class="text-xs text-gray-500 mt-1">মোট আয়: ৳ <span id="euEarned">0</span></p>
+    </div>
+
+    <div class="space-y-3">
+      <div>
+        <label class="block text-xs font-medium text-gray-700 mb-1">ব্যালেন্স পরিবর্তন</label>
+        <div class="flex gap-2">
+          <select id="euAction" class="px-3 py-2 border rounded-lg text-sm">
+            <option value="add">যোগ করুন (+)</option>
+            <option value="subtract">বিয়োগ করুন (−)</option>
+            <option value="set">সেট করুন (=)</option>
+          </select>
+          <input id="euAmount" type="number" placeholder="পরিমাণ ৳" class="flex-1 px-3 py-2 border rounded-lg text-sm"/>
+        </div>
+        <div class="flex gap-1 mt-2">
+          <button onclick="quickAmt(10)" class="text-xs bg-gray-100 px-2 py-1 rounded">+১০</button>
+          <button onclick="quickAmt(50)" class="text-xs bg-gray-100 px-2 py-1 rounded">+৫০</button>
+          <button onclick="quickAmt(100)" class="text-xs bg-gray-100 px-2 py-1 rounded">+১০০</button>
+          <button onclick="quickAmt(500)" class="text-xs bg-gray-100 px-2 py-1 rounded">+৫০০</button>
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button onclick="closeEditUser()" class="flex-1 bg-gray-200 py-2 rounded-lg font-medium text-sm">বাতিল</button>
+        <button onclick="saveUserBalance()" class="flex-1 bg-green-600 text-white py-2 rounded-lg font-medium text-sm">ব্যালেন্স আপডেট</button>
+      </div>
+      <p id="editUserMsg" class="text-sm"></p>
+    </div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════
 //   Firebase REST API
@@ -173,6 +264,13 @@ async function fbUpdate(path, data) {
     body: JSON.stringify(data)
   });
 }
+async function fbSet(path, data) {
+  await fetch(DB_URL + path + '.json', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+}
 async function fbPush(path, data) {
   const r = await fetch(DB_URL + path + '.json', {
     method: 'POST',
@@ -180,6 +278,9 @@ async function fbPush(path, data) {
     body: JSON.stringify(data)
   });
   return r.json();
+}
+async function fbDelete(path) {
+  await fetch(DB_URL + path + '.json', { method: 'DELETE' });
 }
 function fbPoll(path, cb, ms = 3000) {
   let last = null;
@@ -206,24 +307,14 @@ let subFilterStatus = 'pending';
 let pollTimers = [];
 
 // ═══════════════════════════════════════════
-//   Auto-login check (localStorage)
+//   Auto-login
 // ═══════════════════════════════════════════
 async function checkAutoLogin() {
   const savedId = localStorage.getItem('admin_tg_id');
-  if (!savedId) {
-    showLogin();
-    return;
-  }
-
-  // Verify with Firebase that this ID is still admin
+  if (!savedId) { showLogin(); return; }
   const isAdmin = await fbGet('/admins/' + savedId);
-  if (isAdmin) {
-    currentAdminId = savedId;
-    showPanel();
-  } else {
-    localStorage.removeItem('admin_tg_id');
-    showLogin();
-  }
+  if (isAdmin) { currentAdminId = savedId; showPanel(); }
+  else { localStorage.removeItem('admin_tg_id'); showLogin(); }
 }
 
 function showLogin() {
@@ -265,14 +356,11 @@ $('loginForm').onsubmit = async (e) => {
 
   try {
     const isAdmin = await fbGet('/admins/' + id);
-
     if (isAdmin) {
-      // ✅ সফল লগইন — localStorage এ সেভ
       localStorage.setItem('admin_tg_id', id);
       currentAdminId = id;
       showPanel();
     } else {
-      // ❌ অ্যাডমিন নয়
       showDenied(id);
     }
   } catch (err) {
@@ -286,7 +374,7 @@ function resetLogin() {
 }
 
 function logout() {
-  if (!confirm('লগআউট করবেন? পরেরবার আবার ID দিতে হবে।')) return;
+  if (!confirm('লগআউট করবেন?')) return;
   localStorage.removeItem('admin_tg_id');
   location.reload();
 }
@@ -295,11 +383,9 @@ function logout() {
 //   Live Data (Polling)
 // ═══════════════════════════════════════════
 function startPolling() {
-  // Clear old timers
   pollTimers.forEach(t => clearInterval(t));
   pollTimers = [];
 
-  // Stats
   pollTimers.push(fbPoll('/users', d => {
     $('sUsers').textContent = Object.keys(d || {}).length;
   }));
@@ -318,7 +404,6 @@ function startPolling() {
     $('sWd').textContent = arr.filter(x => x.status === 'pending').length;
   }));
 
-  // Lists
   pollTimers.push(fbPoll('/submissions', renderSubs));
   pollTimers.push(fbPoll('/tasks', renderTasks));
   pollTimers.push(fbPoll('/users', renderUsers));
@@ -339,13 +424,23 @@ document.querySelectorAll('.aTab').forEach(btn => {
   };
 });
 
-// ═══════════════════════════════════════════
-//   Helper
-// ═══════════════════════════════════════════
 function esc(s) {
   return String(s || '').replace(/[<>&"]/g, c =>
     ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
 }
+
+// ═══════════════════════════════════════════
+//   Survey Link Toggle (Create)
+// ═══════════════════════════════════════════
+window.toggleSurveyLink = () => {
+  const type = $('tType').value;
+  $('surveyLinkDiv').classList.toggle('hidden', type !== 'survey');
+};
+
+window.toggleEditSurveyLink = () => {
+  const type = $('etType').value;
+  $('editSurveyLinkDiv').classList.toggle('hidden', type !== 'survey');
+};
 
 // ═══════════════════════════════════════════
 //   Submissions
@@ -422,7 +517,7 @@ async function reviewSub(s, action) {
 }
 
 // ═══════════════════════════════════════════
-//   Tasks
+//   Tasks — Create
 // ═══════════════════════════════════════════
 window.createTask = async () => {
   const title = $('tTitle').value.trim();
@@ -430,6 +525,7 @@ window.createTask = async () => {
   const type = $('tType').value;
   const reward = parseFloat($('tReward').value);
   const total_slots = parseInt($('tSlots').value) || 1000;
+  const link = $('tLink').value.trim();
   $('taskMsg').className = 'text-sm';
 
   if (!title || !reward) {
@@ -437,25 +533,37 @@ window.createTask = async () => {
     $('taskMsg').textContent = 'টাইটেল ও রিওয়ার্ড দিন';
     return;
   }
+  if (type === 'survey' && !link) {
+    $('taskMsg').className = 'text-sm text-red-500';
+    $('taskMsg').textContent = 'সার্ভে টাস্কের জন্য লিংক দিন';
+    return;
+  }
+
+  const data = {
+    title, description, type, reward, total_slots,
+    filled_slots: 0, status: 'active',
+    createdAt: Date.now(),
+    createdBy: currentAdminId
+  };
+  if (type === 'survey') data.link = link;
 
   try {
-    await fbPush('/tasks', {
-      title, description, type, reward, total_slots,
-      filled_slots: 0, status: 'active',
-      createdAt: Date.now(),
-      createdBy: currentAdminId
-    });
+    await fbPush('/tasks', data);
     $('taskMsg').className = 'text-sm text-green-600';
     $('taskMsg').textContent = '✅ টাস্ক তৈরি হয়েছে';
     $('tTitle').value = '';
     $('tDesc').value = '';
     $('tReward').value = '';
+    $('tLink').value = '';
   } catch (err) {
     $('taskMsg').className = 'text-sm text-red-500';
     $('taskMsg').textContent = 'সমস্যা: ' + err.message;
   }
 };
 
+// ═══════════════════════════════════════════
+//   Tasks — Render
+// ═══════════════════════════════════════════
 function renderTasks(data) {
   const rows = Object.entries(data || {})
     .map(([id, t]) => ({ id, ...t }))
@@ -471,29 +579,104 @@ function renderTasks(data) {
   rows.forEach(t => {
     const badge = t.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600';
     const div = document.createElement('div');
-    div.className = 'bg-white p-3 rounded-xl shadow flex justify-between items-center gap-2';
+    div.className = 'bg-white p-3 rounded-xl shadow';
     div.innerHTML = `
-      <div class="flex-1 min-w-0">
-        <p class="font-semibold text-sm truncate">${esc(t.title)}</p>
-        <p class="text-xs text-gray-500 truncate">${esc(t.description)}</p>
-        <p class="text-xs text-gray-400 mt-1">${esc(t.type)} | ৳${t.reward} | ${t.filled_slots || 0}/${t.total_slots}</p>
+      <div class="flex justify-between items-start gap-2">
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-sm">${esc(t.title)}</p>
+          <p class="text-xs text-gray-500 truncate">${esc(t.description)}</p>
+          <p class="text-xs text-gray-400 mt-1">${esc(t.type)} | ৳${t.reward} | ${t.filled_slots || 0}/${t.total_slots}</p>
+          ${t.type === 'survey' && t.link ? `<p class="text-xs text-purple-600 truncate mt-1">🔗 ${esc(t.link)}</p>` : ''}
+        </div>
+        <div class="text-right shrink-0">
+          <span class="${badge} px-2 py-1 rounded-full text-xs whitespace-nowrap">${t.status}</span>
+        </div>
       </div>
-      <div class="text-right">
-        <span class="${badge} px-2 py-1 rounded-full text-xs whitespace-nowrap">${t.status}</span>
-        <button class="toggleBtn block mt-1 text-xs text-blue-600 underline">
-          ${t.status === 'active' ? 'বন্ধ' : 'চালু'}
+      <div class="flex gap-2 mt-3 pt-3 border-t">
+        <button class="editBtn flex-1 bg-blue-50 text-blue-700 py-1.5 rounded text-xs font-medium">✏️ এডিট</button>
+        <button class="toggleBtn flex-1 ${t.status === 'active' ? 'bg-yellow-50 text-yellow-700' : 'bg-green-50 text-green-700'} py-1.5 rounded text-xs font-medium">
+          ${t.status === 'active' ? '⏸️ বন্ধ' : '▶️ চালু'}
         </button>
+        <button class="delBtn flex-1 bg-red-50 text-red-700 py-1.5 rounded text-xs font-medium">🗑️ ডিলিট</button>
       </div>`;
-    div.querySelector('.toggleBtn').onclick = () => fbUpdate('/tasks/' + t.id, {
-      status: t.status === 'active' ? 'closed' : 'active'
-    });
+
+    div.querySelector('.editBtn').onclick = () => openEditTask(t);
+    div.querySelector('.toggleBtn').onclick = () => toggleTask(t);
+    div.querySelector('.delBtn').onclick = () => deleteTask(t);
     list.appendChild(div);
   });
 }
 
+async function toggleTask(t) {
+  const newStatus = t.status === 'active' ? 'closed' : 'active';
+  await fbUpdate('/tasks/' + t.id, { status: newStatus });
+}
+
+async function deleteTask(t) {
+  if (!confirm(`"${t.title}" টাস্কটি ডিলিট করবেন?\n\nএটি স্থায়ীভাবে মুছে যাবে।`)) return;
+  await fbDelete('/tasks/' + t.id);
+}
+
+// ═══════════════════════════════════════════
+//   Tasks — Edit Modal
+// ═══════════════════════════════════════════
+window.openEditTask = (t) => {
+  $('etId').value = t.id;
+  $('etTitle').value = t.title || '';
+  $('etDesc').value = t.description || '';
+  $('etType').value = t.type || 'text';
+  $('etReward').value = t.reward || 0;
+  $('etSlots').value = t.total_slots || 1000;
+  $('etLink').value = t.link || '';
+  $('editTaskMsg').textContent = '';
+  toggleEditSurveyLink();
+  $('editTaskModal').classList.remove('hidden');
+};
+
+window.closeEditTask = () => {
+  $('editTaskModal').classList.add('hidden');
+};
+
+window.saveEditTask = async () => {
+  const id = $('etId').value;
+  const title = $('etTitle').value.trim();
+  const description = $('etDesc').value.trim();
+  const type = $('etType').value;
+  const reward = parseFloat($('etReward').value);
+  const total_slots = parseInt($('etSlots').value) || 1000;
+  const link = $('etLink').value.trim();
+  $('editTaskMsg').className = 'text-sm';
+
+  if (!title || !reward) {
+    $('editTaskMsg').className = 'text-sm text-red-500';
+    $('editTaskMsg').textContent = 'টাইটেল ও রিওয়ার্ড দিন';
+    return;
+  }
+  if (type === 'survey' && !link) {
+    $('editTaskMsg').className = 'text-sm text-red-500';
+    $('editTaskMsg').textContent = 'সার্ভে টাস্কের জন্য লিংক দিন';
+    return;
+  }
+
+  const data = { title, description, type, reward, total_slots };
+  if (type === 'survey') data.link = link;
+
+  try {
+    await fbUpdate('/tasks/' + id, data);
+    $('editTaskMsg').className = 'text-sm text-green-600';
+    $('editTaskMsg').textContent = '✅ সেভ হয়েছে';
+    setTimeout(closeEditTask, 800);
+  } catch (err) {
+    $('editTaskMsg').className = 'text-sm text-red-500';
+    $('editTaskMsg').textContent = 'সমস্যা: ' + err.message;
+  }
+};
+
 // ═══════════════════════════════════════════
 //   Users
 // ═══════════════════════════════════════════
+let currentUserEdit = null;
+
 function renderUsers(data) {
   const rows = Object.entries(data || {})
     .map(([id, u]) => ({ id, ...u }))
@@ -510,25 +693,90 @@ function renderUsers(data) {
     const badge = u.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
     const name = [u.firstName, u.lastName].filter(Boolean).join(' ') || u.name || 'User';
     const div = document.createElement('div');
-    div.className = 'bg-white p-3 rounded-xl shadow flex justify-between items-center gap-2';
+    div.className = 'bg-white p-3 rounded-xl shadow';
     div.innerHTML = `
-      <div class="flex-1 min-w-0">
-        <p class="font-semibold text-sm truncate">${esc(name)} ${u.username ? '<span class="text-xs text-gray-500">@' + esc(u.username) + '</span>' : ''}</p>
-        <p class="text-xs text-gray-400">ID: ${u.telegramId || u.id || 'N/A'}</p>
-        <p class="text-xs text-gray-400">ব্যালেন্স: ৳${(u.wallet_balance || 0).toFixed(0)} | আয়: ৳${(u.total_earned || 0).toFixed(0)}</p>
+      <div class="flex justify-between items-start gap-2">
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-sm truncate">${esc(name)} ${u.username ? '<span class="text-xs text-gray-500">@' + esc(u.username) + '</span>' : ''}</p>
+          <p class="text-xs text-gray-400">ID: ${u.telegramId || u.id || 'N/A'}</p>
+          <p class="text-xs text-gray-400">ব্যালেন্স: ৳${(u.wallet_balance || 0).toFixed(0)} | আয়: ৳${(u.total_earned || 0).toFixed(0)}</p>
+        </div>
+        <div class="text-right shrink-0">
+          <span class="${badge} px-2 py-1 rounded-full text-xs">${u.status || 'active'}</span>
+        </div>
       </div>
-      <div class="text-right">
-        <span class="${badge} px-2 py-1 rounded-full text-xs">${u.status || 'active'}</span>
-        <button class="toggleUser block mt-1 text-xs text-blue-600 underline">
-          ${u.status === 'active' ? 'ব্লক' : 'আনব্লক'}
+      <div class="flex gap-2 mt-3 pt-3 border-t">
+        <button class="editUserBtn flex-1 bg-blue-50 text-blue-700 py-1.5 rounded text-xs font-medium">💰 ব্যালেন্স</button>
+        <button class="toggleUserBtn flex-1 ${u.status === 'active' ? 'bg-yellow-50 text-yellow-700' : 'bg-green-50 text-green-700'} py-1.5 rounded text-xs font-medium">
+          ${u.status === 'active' ? '🚫 ব্লক' : '✅ আনব্লক'}
         </button>
       </div>`;
-    div.querySelector('.toggleUser').onclick = () => fbUpdate('/users/' + u.id, {
-      status: u.status === 'active' ? 'blocked' : 'active'
-    });
+
+    div.querySelector('.editUserBtn').onclick = () => openEditUser(u);
+    div.querySelector('.toggleUserBtn').onclick = () => toggleUser(u);
     list.appendChild(div);
   });
 }
+
+async function toggleUser(u) {
+  const newStatus = u.status === 'active' ? 'blocked' : 'active';
+  await fbUpdate('/users/' + u.id, { status: newStatus });
+}
+
+window.openEditUser = (u) => {
+  currentUserEdit = u;
+  const name = [u.firstName, u.lastName].filter(Boolean).join(' ') || u.name || 'User';
+  $('euId').value = u.id;
+  $('euName').textContent = name + (u.username ? ' (@' + u.username + ')' : '');
+  $('euCurrentBalance').textContent = (u.wallet_balance || 0).toFixed(0);
+  $('euEarned').textContent = (u.total_earned || 0).toFixed(0);
+  $('euAmount').value = '';
+  $('euAction').value = 'add';
+  $('editUserMsg').textContent = '';
+  $('editUserModal').classList.remove('hidden');
+};
+
+window.closeEditUser = () => {
+  $('editUserModal').classList.add('hidden');
+  currentUserEdit = null;
+};
+
+window.quickAmt = (amt) => {
+  $('euAmount').value = amt;
+};
+
+window.saveUserBalance = async () => {
+  if (!currentUserEdit) return;
+  const action = $('euAction').value;
+  const amount = parseFloat($('euAmount').value);
+  $('editUserMsg').className = 'text-sm';
+
+  if (!amount || amount <= 0) {
+    $('editUserMsg').className = 'text-sm text-red-500';
+    $('editUserMsg').textContent = 'সঠিক পরিমাণ লিখুন';
+    return;
+  }
+
+  const current = currentUserEdit.wallet_balance || 0;
+  let newBalance;
+
+  if (action === 'add') newBalance = current + amount;
+  else if (action === 'subtract') newBalance = Math.max(0, current - amount);
+  else newBalance = amount;
+
+  try {
+    await fbUpdate('/users/' + currentUserEdit.id, { wallet_balance: newBalance });
+    $('editUserMsg').className = 'text-sm text-green-600';
+    $('editUserMsg').textContent = `✅ নতুন ব্যালেন্স: ৳${newBalance.toFixed(0)}`;
+    $('euCurrentBalance').textContent = newBalance.toFixed(0);
+    $('euAmount').value = '';
+    currentUserEdit.wallet_balance = newBalance;
+    setTimeout(closeEditUser, 1200);
+  } catch (err) {
+    $('editUserMsg').className = 'text-sm text-red-500';
+    $('editUserMsg').textContent = 'সমস্যা: ' + err.message;
+  }
+};
 
 // ═══════════════════════════════════════════
 //   Withdrawals
