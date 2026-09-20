@@ -1,735 +1,2107 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
-<title>Bangla Task - অ্যাডমিন</title>
-<script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Admin Panel - Earn Wallet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
+
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-light: #818cf8;
+      --secondary: #8b5cf6;
+      --accent: #06b6d4;
+      --bg: #f8fafc;
+      --bg-alt: #f1f5f9;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --success-bg: #d1fae5;
+      --danger: #ef4444;
+      --danger-bg: #fee2e2;
+      --warning: #f59e0b;
+      --warning-bg: #fef3c7;
+      --info: #3b82f6;
+      --info-bg: #dbeafe;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+      --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+      --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+      --radius: 16px;
+      --radius-sm: 12px;
+      --radius-lg: 24px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 30px;
+      -webkit-font-smoothing: antialiased;
+      letter-spacing: -0.01em;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.06) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.04) 0%, transparent 60%);
+      z-index: -1;
+      animation: bgMove 20s ease-in-out infinite;
+    }
+    @keyframes bgMove {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-5%, -5%); }
+    }
+
+    .container { max-width: 680px; margin: 0 auto; padding: 0 16px; }
+
+    .header {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+      color: #fff;
+      padding: 28px 24px 60px;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      border-radius: 0 0 32px 32px;
+      margin-bottom: -32px;
+      z-index: 1;
+      box-shadow: 0 20px 40px -10px rgba(67, 56, 202, 0.4);
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.5), transparent 70%);
+      top: -100px; right: -60px;
+      border-radius: 50%;
+      filter: blur(20px);
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      width: 150px; height: 150px;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.3), transparent 70%);
+      bottom: -80px; left: -40px;
+      border-radius: 50%;
+      filter: blur(20px);
+    }
+    .header-content {
+      position: relative; z-index: 2;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .header-brand { display: flex; align-items: center; gap: 12px; }
+    .header-logo {
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #a78bfa, #6366f1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+    }
+    .header-title { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em; }
+    .header-subtitle { font-size: 0.72rem; font-weight: 500; color: rgba(255, 255, 255, 0.7); margin-top: 2px; }
+    .header-status {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(255, 255, 255, 0.15); padding: 6px 12px;
+      border-radius: 999px; font-size: 0.72rem; font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
+    }
+    .header-status .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #10b981; box-shadow: 0 0 10px #10b981; animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.1); }
+    }
+
+    .tabs-wrapper { position: relative; z-index: 2; margin-top: 16px; padding: 0 4px; }
+    .tabs {
+      display: flex; overflow-x: auto; background: var(--surface);
+      border-radius: 20px; padding: 6px; gap: 4px;
+      box-shadow: var(--shadow-lg); scrollbar-width: none; -ms-overflow-style: none;
+      border: 1px solid var(--border);
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      flex: 0 0 auto; min-width: 84px; text-align: center;
+      padding: 10px 12px; font-weight: 700; font-size: 0.72rem;
+      color: var(--text-muted); cursor: pointer; border-radius: 14px;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; flex-direction: column; align-items: center;
+      gap: 4px; position: relative; user-select: none;
+    }
+    .tab i { font-size: 1.05rem; transition: transform 0.25s; }
+    .tab:hover { background: var(--bg-alt); color: var(--text-secondary); }
+    .tab.active {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+    }
+    .tab.active i { transform: scale(1.1); }
+
+    .tab-content { display: none; padding-top: 24px; animation: fadeSlide 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+    .tab-content.active { display: block; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--surface); padding: 20px; border-radius: var(--radius-lg);
+      margin-bottom: 16px; border: 1px solid var(--border);
+      box-shadow: var(--shadow); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+    }
+    .card-title {
+      font-size: 1rem; font-weight: 800; color: var(--text);
+      display: flex; align-items: center; gap: 10px; letter-spacing: -0.02em;
+    }
+    .card-title-icon {
+      width: 36px; height: 36px; border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem; color: #fff; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+    .icon-primary { background: linear-gradient(135deg, #6366f1, #818cf8); }
+    .icon-success { background: linear-gradient(135deg, #10b981, #34d399); }
+    .icon-warning { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+    .icon-danger { background: linear-gradient(135deg, #ef4444, #f87171); }
+    .icon-info { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+    .icon-purple { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+    .icon-cyan { background: linear-gradient(135deg, #06b6d4, #22d3ee); }
+
+    .form-group { margin-bottom: 16px; }
+    label {
+      display: block; font-size: 0.78rem; font-weight: 700;
+      margin-bottom: 8px; color: var(--text-secondary); letter-spacing: 0.01em;
+    }
+    input, select, textarea {
+      width: 100%; padding: 13px 16px; border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm); font-size: 0.9rem; font-family: inherit;
+      outline: none; background: var(--bg-alt); transition: all 0.2s;
+      font-weight: 600; color: var(--text);
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--primary); background: #fff;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    }
+    input::placeholder, textarea::placeholder { color: var(--text-muted); font-weight: 500; }
+    textarea { resize: vertical; min-height: 80px; font-family: inherit; }
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+      background-size: 18px; padding-right: 42px;
+    }
+
+    .btn {
+      width: 100%; padding: 14px 20px; border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff; border: none; font-size: 0.92rem; font-weight: 700;
+      cursor: pointer; font-family: inherit; letter-spacing: -0.01em;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(99, 102, 241, 0.4); }
+    .btn:active { transform: translateY(0) scale(0.98); }
+    .btn-green { background: linear-gradient(135deg, #10b981, #34d399); box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3); }
+    .btn-green:hover { box-shadow: 0 10px 22px rgba(16, 185, 129, 0.4); }
+    .btn-red { background: linear-gradient(135deg, #ef4444, #f87171); box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3); }
+    .btn-red:hover { box-shadow: 0 10px 22px rgba(239, 68, 68, 0.4); }
+    .btn-warning { background: linear-gradient(135deg, #f59e0b, #fbbf24); box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3); }
+    .btn-warning:hover { box-shadow: 0 10px 22px rgba(245, 158, 11, 0.4); }
+    .btn-info { background: linear-gradient(135deg, #3b82f6, #60a5fa); box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3); }
+    .btn-small { width: auto; padding: 9px 14px; font-size: 0.78rem; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+    .btn-small:hover { box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15); }
+
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .stat-card {
+      background: var(--surface); padding: 18px 14px; border-radius: var(--radius);
+      text-align: center; border: 1px solid var(--border);
+      position: relative; overflow: hidden; transition: all 0.3s;
+    }
+    .stat-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+    .stat-card.green::before { background: linear-gradient(90deg, #10b981, #34d399); }
+    .stat-card.warning::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+    .stat-card.danger::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+    .stat-card.info::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .stat-card.purple::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+    .stat-card .num { font-size: 1.75rem; font-weight: 900; color: var(--primary); line-height: 1.1; letter-spacing: -0.03em; }
+    .stat-card.green .num { color: var(--success); }
+    .stat-card.warning .num { color: var(--warning); }
+    .stat-card.danger .num { color: var(--danger); }
+    .stat-card.info .num { color: var(--info); }
+    .stat-card.purple .num { color: var(--secondary); }
+    .stat-card .label {
+      font-size: 0.68rem; color: var(--text-muted); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px;
+    }
+
+    .user-card {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 16px; border-radius: var(--radius); margin-bottom: 12px;
+      transition: all 0.25s; position: relative; overflow: hidden;
+    }
+    .user-card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+      background: linear-gradient(180deg, var(--primary), var(--secondary));
+    }
+    .user-card:hover { box-shadow: var(--shadow-md); transform: translateX(2px); }
+    .user-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+    .user-avatar-row { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .user-avatar {
+      width: 42px; height: 42px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-weight: 800; font-size: 1rem; flex-shrink: 0;
+      box-shadow: 0 6px 14px rgba(99, 102, 241, 0.25);
+    }
+    .user-name { font-weight: 800; font-size: 0.92rem; color: var(--text); letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-id { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+    .user-balance-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .user-balance {
+      font-weight: 800; color: var(--primary); font-size: 0.85rem;
+      background: rgba(99, 102, 241, 0.08); padding: 4px 12px;
+      border-radius: 8px; display: inline-flex; align-items: center; gap: 5px;
+    }
+    .user-stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 12px 0; }
+    .user-stat-mini {
+      background: var(--bg-alt); padding: 10px 8px; border-radius: 10px;
+      text-align: center; border: 1px solid var(--border); transition: all 0.2s;
+    }
+    .user-stat-mini:hover { background: var(--surface); }
+    .user-stat-mini .val { font-size: 1rem; font-weight: 900; color: var(--primary); display: block; letter-spacing: -0.02em; }
+    .user-stat-mini.green .val { color: var(--success); }
+    .user-stat-mini.red .val { color: var(--danger); }
+    .user-stat-mini .lbl { font-size: 0.62rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+    .user-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 999px; font-size: 0.65rem;
+      font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase;
+    }
+    .status-badge.active { background: var(--success-bg); color: #047857; }
+    .status-badge.banned { background: var(--danger-bg); color: #b91c1c; }
+    .status-badge.verified { background: var(--success-bg); color: #047857; }
+    .status-badge.notverified { background: var(--danger-bg); color: #b91c1c; }
+    .status-badge.pending { background: var(--warning-bg); color: #b45309; }
+    .status-badge.survey { background: rgba(99, 102, 241, 0.12); color: var(--primary); }
+    .status-badge.voice { background: rgba(245, 158, 11, 0.12); color: #b45309; }
+    .status-badge.image { background: rgba(236, 72, 153, 0.12); color: #be185d; }
+    .status-badge.text { background: rgba(6, 182, 212, 0.12); color: #0891b2; }
+
+    .ref-level-badge {
+      display: inline-flex; align-items: center; padding: 3px 10px;
+      border-radius: 999px; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.02em;
+    }
+    .ref-level-badge.beginner { background: rgba(99, 102, 241, 0.12); color: var(--primary); }
+    .ref-level-badge.bronze { background: rgba(205, 127, 50, 0.15); color: #b45309; }
+    .ref-level-badge.silver { background: rgba(148, 163, 184, 0.2); color: #475569; }
+    .ref-level-badge.gold { background: rgba(245, 158, 11, 0.15); color: #b45309; }
+    .ref-level-badge.platinum { background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.15)); color: var(--primary); }
+
+    .alert-box {
+      padding: 14px 16px; border-radius: var(--radius-sm); font-size: 0.8rem;
+      font-weight: 600; margin-bottom: 14px; line-height: 1.55;
+      display: flex; align-items: flex-start; gap: 12px; border-left: 4px solid;
+    }
+    .alert-box i { font-size: 1.15rem; flex-shrink: 0; margin-top: 1px; }
+    .alert-box.warning { background: var(--warning-bg); border-color: var(--warning); color: #92400e; }
+    .alert-box.info { background: var(--info-bg); border-color: var(--info); color: #1e40af; }
+    .alert-box.success { background: var(--success-bg); border-color: var(--success); color: #065f46; }
+    .alert-box.danger { background: var(--danger-bg); border-color: var(--danger); color: #991b1b; }
+
+    .toast {
+      position: fixed; top: 24px; left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: linear-gradient(135deg, #1e293b, #334155);
+      color: #fff; padding: 14px 24px; border-radius: 14px;
+      font-size: 0.85rem; font-weight: 700; z-index: 10000;
+      opacity: 0; pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--shadow-xl); max-width: calc(100% - 40px);
+      text-align: center; letter-spacing: -0.01em;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .wd-card {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 16px; border-radius: var(--radius); margin-bottom: 12px;
+      transition: all 0.25s; position: relative; overflow: hidden;
+    }
+    .wd-card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+      background: linear-gradient(180deg, #f59e0b, #fbbf24);
+    }
+    .wd-card:hover { box-shadow: var(--shadow-md); }
+    .wd-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px dashed var(--border); }
+    .wd-method { display: inline-flex; align-items: center; gap: 6px; background: var(--info-bg); color: #1e40af; padding: 5px 12px; border-radius: 8px; font-weight: 800; font-size: 0.75rem; }
+    .wd-amount { font-size: 1.2rem; font-weight: 900; color: var(--primary); letter-spacing: -0.02em; }
+    .wd-info { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 14px; }
+    .wd-info b { color: var(--text); font-weight: 700; }
+    .wd-account { color: #dc2626; font-weight: 800; font-size: 0.88rem; }
+    .wd-actions { display: flex; gap: 8px; }
+    .wd-actions .btn { flex: 1; }
+
+    .level-edit-item {
+      background: var(--bg-alt); padding: 14px; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border); margin-bottom: 10px; transition: all 0.2s;
+    }
+    .level-edit-item:hover { border-color: var(--primary); background: #fff; }
+    .level-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .level-num { font-weight: 800; color: var(--primary); font-size: 0.85rem; background: rgba(99, 102, 241, 0.1); padding: 4px 12px; border-radius: 8px; }
+    .level-fields { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .level-fields input { padding: 8px 10px; font-size: 0.82rem; background: #fff; width: 68px; border-radius: 8px; }
+    .level-fields input.wide { width: 110px; }
+
+    .channel-item { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: var(--bg-alt); padding: 10px; border-radius: 12px; border: 1.5px solid var(--border); }
+    .channel-item input { flex: 1; background: #fff; padding: 10px 12px; font-size: 0.82rem; }
+
+    .channel-verified-item {
+      display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+      background: var(--bg-alt); border-radius: var(--radius-sm); margin-bottom: 8px;
+      border: 1.5px solid var(--border); transition: all 0.2s;
+    }
+    .channel-verified-item:hover { background: #fff; border-color: var(--primary); }
+    .channel-verified-item i {
+      color: var(--primary); font-size: 1.2rem;
+      background: rgba(99, 102, 241, 0.1); padding: 8px; border-radius: 10px;
+    }
+    .channel-verified-item .ch-info { flex: 1; min-width: 0; }
+    .channel-verified-item .ch-name { font-weight: 800; font-size: 0.85rem; color: var(--text); }
+    .channel-verified-item .ch-id { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; font-weight: 600; }
+
+    .search-box { position: relative; margin-bottom: 16px; }
+    .search-box input { padding-left: 44px; background: var(--bg-alt); }
+    .search-box i {
+      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+      color: var(--text-muted); font-size: 1rem; pointer-events: none;
+    }
+
+    .activity-table { width: 100%; font-size: 0.82rem; border-collapse: separate; border-spacing: 0 6px; }
+    .activity-table thead th {
+      text-align: left; padding: 10px 12px; font-weight: 800;
+      color: var(--text-muted); text-transform: uppercase;
+      font-size: 0.68rem; letter-spacing: 0.08em; border-bottom: 2px solid var(--border);
+    }
+    .activity-table tbody tr { background: var(--bg-alt); transition: all 0.2s; }
+    .activity-table tbody tr:hover { background: #fff; box-shadow: var(--shadow-sm); }
+    .activity-table tbody td { padding: 12px; border-radius: 0; }
+    .activity-table tbody tr td:first-child { border-radius: 10px 0 0 10px; }
+    .activity-table tbody tr td:last-child { border-radius: 0 10px 10px 0; }
+    .activity-table .user-id { font-weight: 700; color: var(--primary); }
+
+    /* ===== TASK ADMIN ITEM ===== */
+    .task-admin-item {
+      background: var(--bg-alt); padding: 16px; border-radius: var(--radius-sm);
+      margin-bottom: 12px; border: 1.5px solid var(--border);
+      transition: all 0.25s;
+    }
+    .task-admin-item:hover { background: #fff; border-color: var(--primary); box-shadow: var(--shadow-md); }
+    .task-admin-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+    .task-admin-info { flex: 1; min-width: 0; }
+    .task-admin-info .name { font-weight: 800; font-size: 0.95rem; color: var(--text); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .task-admin-info .reward {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: var(--success-bg); color: #047857;
+      font-weight: 800; font-size: 0.72rem; padding: 3px 9px;
+      border-radius: 6px;
+    }
+    .task-admin-info .meta { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; margin-top: 6px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .task-admin-info .url { font-size: 0.72rem; color: var(--primary); word-break: break-all; margin-top: 6px; font-weight: 600; }
+    .task-admin-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+    .ad-slot-box {
+      background: var(--bg-alt); padding: 16px; border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border); margin-bottom: 12px; transition: all 0.2s;
+    }
+    .ad-slot-box:hover { border-color: var(--primary); }
+    .ad-slot-header { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--primary); font-size: 0.9rem; margin-bottom: 12px; }
+    .ad-slot-header i { background: rgba(99, 102, 241, 0.1); padding: 8px; border-radius: 9px; }
+
+    .stat-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .stat-mini {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.06), rgba(139, 92, 246, 0.06));
+      padding: 16px 12px; border-radius: var(--radius-sm); text-align: center;
+      border: 1.5px solid rgba(99, 102, 241, 0.15);
+    }
+    .stat-mini .num { font-size: 1.5rem; font-weight: 900; color: var(--primary); letter-spacing: -0.03em; line-height: 1.1; }
+    .stat-mini .num.green { color: var(--success); }
+    .stat-mini .num.red { color: var(--danger); }
+    .stat-mini .num.purple { color: var(--secondary); }
+    .stat-mini .lbl { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 6px; }
+
+    .ref-detail-item {
+      padding: 12px 14px; background: var(--bg-alt);
+      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+      margin-bottom: 10px; font-size: 0.82rem; transition: all 0.2s;
+    }
+    .ref-detail-item:hover { background: #fff; border-color: var(--primary); }
+    .ref-detail-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .ref-detail-row + .ref-detail-row { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border); }
+    .ref-detail-name { font-weight: 800; color: var(--text); }
+    .ref-detail-id { color: var(--text-muted); font-size: 0.7rem; font-weight: 600; margin-left: 4px;}
+    .ref-detail-bal { font-weight: 800; color: var(--primary); }
+    .ref-qualified { color: var(--success); font-weight: 800; }
+    .ref-notqualified { color: var(--danger); font-weight: 800; }
+
+    .leaderboard-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px; background: var(--bg-alt);
+      border-radius: var(--radius-sm); margin-bottom: 8px;
+      border: 1.5px solid var(--border); transition: all 0.2s;
+    }
+    .leaderboard-item:hover { background: #fff; border-color: var(--primary); }
+    .leaderboard-medal { font-weight: 900; font-size: 1.15rem; width: 40px; text-align: center; flex-shrink: 0; }
+    .leaderboard-info { flex: 1; min-width: 0; }
+    .leaderboard-name { font-weight: 800; font-size: 0.88rem; color: var(--text); }
+    .leaderboard-id { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+    .leaderboard-stats { text-align: right; flex-shrink: 0; }
+    .leaderboard-qualified { font-weight: 900; color: var(--success); font-size: 1rem; }
+    .leaderboard-total { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; margin-top: 2px; }
+
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
+    .empty-state .icon {
+      font-size: 3rem; color: var(--border); margin-bottom: 14px;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 80px; height: 80px; border-radius: 50%; background: var(--bg-alt);
+    }
+    .empty-state p { font-size: 0.9rem; font-weight: 700; }
+
+    .nv-user-item {
+      display: flex; justify-content: space-between; padding: 12px 14px;
+      background: linear-gradient(135deg, #fef2f2, #fee2e2);
+      border: 1.5px solid rgba(239, 68, 68, 0.2);
+      border-radius: var(--radius-sm); margin-bottom: 8px; align-items: center; gap: 10px;
+    }
+    .nv-user-name { font-weight: 800; font-size: 0.85rem; color: var(--text); }
+    .nv-user-id { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 2px;}
+    .nv-user-last { font-size: 0.68rem; color: var(--text-secondary); font-weight: 700; }
+
+    .mode-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+    .mode-option {
+      padding: 16px 12px; border: 2px solid var(--border);
+      border-radius: var(--radius-sm); background: var(--surface);
+      cursor: pointer; transition: all 0.25s; text-align: center; position: relative;
+    }
+    .mode-option:hover { border-color: var(--primary-light); background: var(--bg-alt); }
+    .mode-option.selected {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.08));
+      box-shadow: 0 4px 12px rgba(99,102,241,0.2);
+    }
+    .mode-option.selected.deduct-mode {
+      border-color: var(--warning);
+      background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(251,191,36,0.08));
+      box-shadow: 0 4px 12px rgba(245,158,11,0.2);
+    }
+    .mode-option .mode-icon { font-size: 1.75rem; margin-bottom: 6px; }
+    .mode-option .mode-title { font-weight: 900; font-size: 0.85rem; color: var(--text); margin-bottom: 4px; }
+    .mode-option .mode-desc { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; line-height: 1.4; }
+    .mode-option.selected .mode-check {
+      position: absolute; top: 8px; right: 8px; width: 22px; height: 22px;
+      border-radius: 50%; background: var(--primary); color: #fff;
+      display: flex; align-items: center; justify-content: center; font-size: 0.7rem;
+    }
+    .mode-option.selected.deduct-mode .mode-check { background: var(--warning); }
+    .mode-option .mode-check { display: none; }
+    .mode-option.selected .mode-check { display: flex; }
+
+    .cycle-info-box {
+      background: linear-gradient(135deg, #6C5CE7, #A29BFE); color: #fff;
+      padding: 16px 20px; border-radius: var(--radius); margin-bottom: 16px;
+      position: relative; overflow: hidden;
+    }
+    .cycle-info-box::before {
+      content: ''; position: absolute; width: 150px; height: 150px;
+      background: rgba(255,255,255,0.15); border-radius: 50%;
+      top: -60px; right: -40px;
+    }
+    .cycle-info-box .cycle-title { font-size: 0.7rem; font-weight: 700; opacity: 0.85; letter-spacing: 1px; text-transform: uppercase; position: relative; }
+    .cycle-info-box .cycle-value { font-size: 1.05rem; font-weight: 900; margin-top: 4px; position: relative; }
+    .cycle-info-box .cycle-desc { font-size: 0.72rem; opacity: 0.85; margin-top: 8px; font-weight: 600; line-height: 1.4; position: relative; }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 9999;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      align-items: center; justify-content: center; padding: 16px;
+      animation: fadeSlide 0.25s ease-out;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal-box {
+      background: var(--surface); width: 100%; max-width: 520px;
+      max-height: 90vh; overflow-y: auto; border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl); animation: modalPop 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @keyframes modalPop {
+      from { opacity: 0; transform: scale(0.94) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-header {
+      padding: 20px 22px; display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border); position: sticky; top: 0;
+      background: var(--surface); z-index: 10;
+    }
+    .modal-title { font-weight: 900; font-size: 1.05rem; display: flex; align-items: center; gap: 10px; color: var(--text); }
+    .modal-close {
+      width: 36px; height: 36px; border-radius: 10px; border: none;
+      background: var(--bg-alt); color: var(--text-secondary);
+      font-size: 1rem; cursor: pointer; display: flex;
+      align-items: center; justify-content: center; transition: all 0.2s;
+    }
+    .modal-close:hover { background: var(--danger-bg); color: var(--danger); }
+    .modal-body { padding: 20px 22px; }
+
+    /* ===== DETAIL MODAL STYLES ===== */
+    .detail-hero { text-align: center; padding: 16px 0 20px; }
+    .detail-hero-avatar {
+      width: 72px; height: 72px; border-radius: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #fff; font-weight: 900; font-size: 1.75rem;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px; box-shadow: 0 10px 30px rgba(99,102,241,0.3);
+    }
+    .detail-hero-name { font-weight: 900; font-size: 1.1rem; color: var(--text); }
+    .detail-hero-id { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-top: 4px; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .detail-box {
+      background: var(--bg-alt); padding: 12px 14px; border-radius: 12px;
+      border: 1.5px solid var(--border);
+    }
+    .detail-box .lbl { font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+    .detail-box .val { font-size: 1.05rem; font-weight: 900; color: var(--text); margin-top: 4px; letter-spacing: -0.02em; }
+    .detail-box.info .val { color: var(--primary); }
+    .detail-box.green .val { color: var(--success); }
+    .detail-box.purple .val { color: var(--secondary); }
+    .detail-box.warning .val { color: var(--warning); }
+
+    .comm-history-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 14px; background: var(--bg-alt); border-radius: 10px;
+      margin-bottom: 6px; border: 1px solid var(--border);
+    }
+    .comm-history-item .from { font-weight: 800; font-size: 0.82rem; color: var(--text); }
+    .comm-history-item .sub { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+    .comm-history-item .amt { font-weight: 900; color: var(--success); font-size: 0.9rem; text-align: right; }
+    .comm-history-item .amt small { display: block; font-size: 0.62rem; color: var(--text-muted); font-weight: 600; }
+
+    @media (max-width: 400px) {
+      .container { padding: 0 12px; }
+      .card { padding: 16px; border-radius: 20px; }
+      .header { padding: 22px 18px 55px; border-radius: 0 0 26px 26px; }
+      .header-title { font-size: 1rem; }
+      .stat-card .num { font-size: 1.5rem; }
+      .detail-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
+<body>
 
-<div id="loginScreen" class="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center p-4">
-  <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
-    <div class="text-center mb-6">
-      <div class="text-5xl mb-2">🔐</div>
-      <h1 class="text-2xl font-bold text-gray-800">অ্যাডমিন লগইন</h1>
-      <p class="text-gray-500 text-sm mt-1">আপনার Telegram ID দিয়ে লগইন করুন</p>
-    </div>
-    <form id="loginForm" class="space-y-4">
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Telegram ID</label>
-        <input type="text" id="tgIdInput" required placeholder="যেমন: 8921657661"
-          class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-mono"/>
-        <p class="text-xs text-gray-400 mt-1">💡 Telegram এ @userinfobot এ মেসেজ দিলে আপনার ID পাবেন</p>
+  <div class="header">
+    <div class="header-content">
+      <div class="header-brand">
+        <div class="header-logo"><i class="fas fa-shield-halved"></i></div>
+        <div>
+          <div class="header-title">Admin Panel</div>
+          <div class="header-subtitle">Earn Wallet Control Center</div>
+        </div>
       </div>
-      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium">লগইন করুন</button>
-      <p id="loginMsg" class="text-center text-sm text-red-500 min-h-[20px]"></p>
-    </form>
-  </div>
-</div>
-
-<div id="deniedScreen" class="hidden min-h-screen bg-gradient-to-br from-red-700 to-red-900 flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl p-8 max-w-md text-center w-full">
-    <div class="text-5xl mb-4">🚫</div>
-    <h2 class="text-xl font-bold mb-2">অ্যাক্সেস নেই</h2>
-    <p class="text-gray-600 text-sm">এই Telegram ID অ্যাডমিন হিসেবে নিবন্ধিত নয়।</p>
-    <div class="bg-gray-100 rounded-lg p-3 mt-4">
-      <p class="text-xs text-gray-500 mb-1">আপনার দেওয়া ID:</p>
-      <p id="deniedId" class="font-mono font-bold text-blue-600 text-lg"></p>
-    </div>
-    <button onclick="resetLogin()" class="mt-4 text-sm bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg">🔄 আবার চেষ্টা করুন</button>
-  </div>
-</div>
-
-<div id="panel" class="hidden pb-20">
-  <header class="bg-gray-900 text-white shadow sticky top-0 z-20">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-      <div>
-        <h1 class="text-base font-bold">⚙️ অ্যাডমিন প্যানেল</h1>
-        <p id="adminInfo" class="text-xs text-gray-400"></p>
+      <div class="header-status">
+        <span class="dot"></span>
+        <span>Live</span>
       </div>
-      <div class="flex gap-2">
-        <button onclick="location.reload()" class="text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded">🔄</button>
-        <button onclick="logout()" class="text-xs bg-red-700 hover:bg-red-600 px-3 py-1.5 rounded">লগআউট</button>
-      </div>
-    </div>
-  </header>
-
-  <div class="max-w-4xl mx-auto p-3 grid grid-cols-3 gap-2">
-    <div class="bg-white p-3 rounded-xl shadow"><p class="text-[10px] text-gray-500">ইউজার</p><p id="sUsers" class="text-xl font-bold">0</p></div>
-    <div class="bg-white p-3 rounded-xl shadow"><p class="text-[10px] text-gray-500">টাস্ক</p><p id="sTasks" class="text-xl font-bold">0</p></div>
-    <div class="bg-white p-3 rounded-xl shadow"><p class="text-[10px] text-gray-500">পেন্ডিং</p><p id="sPending" class="text-xl font-bold text-yellow-600">0</p></div>
-    <div class="bg-white p-3 rounded-xl shadow"><p class="text-[10px] text-gray-500">অনুমোদিত</p><p id="sApproved" class="text-xl font-bold text-green-600">0</p></div>
-    <div class="bg-white p-3 rounded-xl shadow"><p class="text-[10px] text-gray-500">পেআউট</p><p id="sEarnings" class="text-xl font-bold text-blue-600">0</p></div>
-    <div class="bg-white p-3 rounded-xl shadow"><p class="text-[10px] text-gray-500">পেন্ডিং WD</p><p id="sWd" class="text-xl font-bold text-red-600">0</p></div>
-  </div>
-
-  <div class="max-w-4xl mx-auto px-3">
-    <div class="flex gap-1 bg-white rounded-lg p-1 shadow overflow-x-auto">
-      <button data-tab="submissions" class="aTab flex-1 px-3 py-2 rounded-md font-medium text-xs whitespace-nowrap bg-blue-600 text-white">📥 সাবমিশন</button>
-      <button data-tab="tasks" class="aTab flex-1 px-3 py-2 rounded-md font-medium text-xs whitespace-nowrap text-gray-600">📋 টাস্ক</button>
-      <button data-tab="users" class="aTab flex-1 px-3 py-2 rounded-md font-medium text-xs whitespace-nowrap text-gray-600">👥 ইউজার</button>
-      <button data-tab="withdrawals" class="aTab flex-1 px-3 py-2 rounded-md font-medium text-xs whitespace-nowrap text-gray-600">💸 উইথড্র</button>
     </div>
   </div>
 
-  <main class="max-w-4xl mx-auto p-3">
-    <section id="aTab-submissions" class="aPane">
-      <div class="flex gap-2 mb-3 flex-wrap">
-        <button data-f="pending" class="subFilter px-3 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-medium">পেন্ডিং</button>
-        <button data-f="approved" class="subFilter px-3 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">অনুমোদিত</button>
-        <button data-f="rejected" class="subFilter px-3 py-1 bg-red-100 text-red-700 rounded text-xs font-medium">বাতিল</button>
-        <button data-f="" class="subFilter px-3 py-1 bg-gray-100 rounded text-xs font-medium">সব</button>
-      </div>
-      <div id="subsList" class="space-y-2"></div>
-    </section>
+  <div class="toast" id="toast">Saved!</div>
 
-    <section id="aTab-tasks" class="aPane hidden">
-      <div class="bg-white p-4 rounded-xl shadow mb-4">
-        <h3 class="font-semibold mb-3 text-sm">➕ নতুন টাস্ক</h3>
-        <div class="space-y-2">
-          <input id="tTitle" placeholder="টাইটেল" class="w-full px-3 py-2 border rounded-lg text-sm"/>
-          <input id="tDesc" placeholder="বর্ণনা" class="w-full px-3 py-2 border rounded-lg text-sm"/>
-          <div class="grid grid-cols-3 gap-2">
-            <select id="tType" onchange="toggleSurveyLink()" class="px-3 py-2 border rounded-lg text-sm">
-              <option value="voice">ভয়েস</option>
-              <option value="image">ছবি</option>
-              <option value="survey">সার্ভে</option>
-              <option value="text">টেক্সট</option>
-            </select>
-            <input id="tReward" type="number" placeholder="রিওয়ার্ড ৳" class="px-3 py-2 border rounded-lg text-sm"/>
-            <input id="tSlots" type="number" placeholder="স্লট" value="1000" class="px-3 py-2 border rounded-lg text-sm"/>
+  <!-- ✅ MODAL FOR USER DETAILS -->
+  <div class="modal-overlay" id="userDetailModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">
+          <div class="card-title-icon icon-primary"><i class="fas fa-user"></i></div>
+          User Details
+        </div>
+        <button class="modal-close" onclick="closeUserModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body" id="userDetailBody"></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- ===== MODERN TABS ===== -->
+    <div class="tabs-wrapper">
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('settings', this)"><i class="fas fa-sliders"></i><span>Settings</span></div>
+        <div class="tab" onclick="switchTab('channels', this)"><i class="fas fa-satellite-dish"></i><span>Channels</span></div>
+        <div class="tab" onclick="switchTab('analytics', this)"><i class="fas fa-chart-pie"></i><span>Analytics</span></div>
+        <div class="tab" onclick="switchTab('users', this)"><i class="fas fa-users"></i><span>Users</span></div>
+        <div class="tab" onclick="switchTab('withdrawals', this)"><i class="fas fa-money-bill-transfer"></i><span>Payouts</span></div>
+        <div class="tab" onclick="switchTab('ads', this)"><i class="fas fa-rectangle-ad"></i><span>Ads</span></div>
+        <div class="tab" onclick="switchTab('tasks', this)"><i class="fas fa-briefcase"></i><span>Tasks</span></div>
+        <div class="tab" onclick="switchTab('maintenance', this)"><i class="fas fa-wrench"></i><span>System</span></div>
+        <div class="tab" onclick="switchTab('referrals', this)"><i class="fas fa-user-group"></i><span>Referrals</span></div>
+      </div>
+    </div>
+
+    <!-- ================= SETTINGS TAB ================= -->
+    <div id="tab-settings" class="tab-content active">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-primary"><i class="fas fa-robot"></i></div>
+            App Configuration
           </div>
+        </div>
+        <div class="form-group"><label>Bot Username (Without @)</label><input type="text" id="botUsername" placeholder="your_bot"></div>
+        <div class="form-group"><label>Currency Symbol</label><input type="text" id="currencySymbol" placeholder="TK"></div>
+        <div class="form-group">
+          <label>Ad Reset Hour (0-23)</label>
+          <input type="number" id="adResetHour" placeholder="0" min="0" max="23">
+          <small style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Ads reset at this hour daily</small>
+        </div>
+      </div>
 
-          <div id="surveyLinkDiv" class="hidden space-y-2">
-            <input id="tLink" type="url" placeholder="🔗 সার্ভে লিংক (https://...)"
-              class="w-full px-3 py-2 border-2 border-purple-300 bg-purple-50 rounded-lg text-sm"/>
-            <div>
-              <label class="block text-xs font-medium text-gray-700 mb-1">⏱️ টাইমার সময় (সেকেন্ড)</label>
-              <input id="tTimer" type="number" placeholder="ডিফল্ট ৬০ সেকেন্ড" value="60" min="5"
-                class="w-full px-3 py-2 border-2 border-purple-300 bg-purple-50 rounded-lg text-sm"/>
-              <p class="text-xs text-purple-600 mt-1">ইউজারকে এই সময় পর্যন্ত অপেক্ষা করতে হবে (৫ সেকেন্ড থেকে বেশি)</p>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-success"><i class="fas fa-gift"></i></div>
+            Referral & Bonus
+          </div>
+        </div>
+        <div class="form-group"><label>Daily Login Bonus (Amount)</label><input type="number" id="dailyBonusAmount" placeholder="20"></div>
+        <div class="form-group"><label>Bonus Per Referral (One-time)</label><input type="number" id="refBonus" placeholder="5"></div>
+        <div class="form-group">
+          <label>Minimum Referral Balance Requirement</label>
+          <input type="number" id="minReferralBalance" placeholder="20" value="20">
+          <small style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Referral counts as valid only if referred user has this much balance</small>
+        </div>
+
+        <div class="form-group">
+          <label>Commission Rate (%) — Ongoing Earnings</label>
+          <input type="number" id="refCommissionRate" placeholder="2" value="2" min="0" max="50" step="0.1">
+          <small style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Referred users earn → Referrer gets this % every time</small>
+        </div>
+
+        <div class="form-group">
+          <label>Commission Mode</label>
+          <div class="mode-selector">
+            <div class="mode-option" id="modeOption-bonus" onclick="selectCommissionMode('bonus')">
+              <div class="mode-check"><i class="fas fa-check"></i></div>
+              <div class="mode-icon">🎁</div>
+              <div class="mode-title">Bonus Mode</div>
+              <div class="mode-desc">User keeps 100% income<br>Commission from app margin</div>
+            </div>
+            <div class="mode-option" id="modeOption-deduct" onclick="selectCommissionMode('deduct')">
+              <div class="mode-check"><i class="fas fa-check"></i></div>
+              <div class="mode-icon">💸</div>
+              <div class="mode-title">Deduct Mode</div>
+              <div class="mode-desc">Cut from user's income<br>Saves your cost</div>
             </div>
           </div>
-
-          <button onclick="createTask()" class="w-full bg-blue-600 text-white rounded-lg py-2 font-medium text-sm">তৈরি করুন</button>
         </div>
-        <p id="taskMsg" class="text-sm mt-2"></p>
-      </div>
-      <div id="tasksList" class="space-y-2"></div>
-    </section>
 
-    <section id="aTab-users" class="aPane hidden">
-      <div id="usersList" class="space-y-2"></div>
-    </section>
+        <div class="alert-box info" id="modeInfoBox" style="margin-top:4px;">
+          <i class="fas fa-info-circle"></i>
+          <div id="modeInfoText">
+            <b>Bonus Mode:</b> Referred user keeps 100% income. Referrer's commission comes from your app margin.
+          </div>
+        </div>
 
-    <section id="aTab-withdrawals" class="aPane hidden">
-      <div id="wdsList" class="space-y-2"></div>
-    </section>
-  </main>
-</div>
-
-<div id="editTaskModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl w-full max-w-lg p-5 max-h-[90vh] overflow-y-auto">
-    <h3 class="text-lg font-bold mb-4">✏️ টাস্ক এডিট করুন</h3>
-    <input type="hidden" id="etId"/>
-    <div class="space-y-3">
-      <div><label class="block text-xs font-medium text-gray-700 mb-1">টাইটেল</label>
-        <input id="etTitle" class="w-full px-3 py-2 border rounded-lg text-sm"/></div>
-      <div><label class="block text-xs font-medium text-gray-700 mb-1">বর্ণনা</label>
-        <input id="etDesc" class="w-full px-3 py-2 border rounded-lg text-sm"/></div>
-      <div class="grid grid-cols-3 gap-2">
-        <div><label class="block text-xs font-medium text-gray-700 mb-1">টাইপ</label>
-          <select id="etType" onchange="toggleEditSurveyLink()" class="w-full px-3 py-2 border rounded-lg text-sm">
-            <option value="voice">ভয়েস</option>
-            <option value="image">ছবি</option>
-            <option value="survey">সার্ভে</option>
-            <option value="text">টেক্সট</option>
-          </select></div>
-        <div><label class="block text-xs font-medium text-gray-700 mb-1">রিওয়ার্ড</label>
-          <input id="etReward" type="number" class="w-full px-3 py-2 border rounded-lg text-sm"/></div>
-        <div><label class="block text-xs font-medium text-gray-700 mb-1">স্লট</label>
-          <input id="etSlots" type="number" class="w-full px-3 py-2 border rounded-lg text-sm"/></div>
+        <div class="form-group"><label>Tutorial Video Link</label><input type="text" id="tutorialLink" placeholder="https://youtube.com/..."></div>
+        <div class="form-group"><label>Support Channel Link</label><input type="text" id="supportLink" placeholder="https://t.me/your_group"></div>
       </div>
 
-      <div id="editSurveyLinkDiv" class="hidden space-y-2">
-        <div>
-          <label class="block text-xs font-medium text-gray-700 mb-1">সার্ভে লিংক</label>
-          <input id="etLink" type="url" placeholder="https://..." class="w-full px-3 py-2 border-2 border-purple-300 bg-purple-50 rounded-lg text-sm"/>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-cyan"><i class="fas fa-money-bill-wave"></i></div>
+            Withdrawal System
+          </div>
         </div>
-        <div>
-          <label class="block text-xs font-medium text-gray-700 mb-1">⏱️ টাইমার সময় (সেকেন্ড)</label>
-          <input id="etTimer" type="number" min="5" class="w-full px-3 py-2 border-2 border-purple-300 bg-purple-50 rounded-lg text-sm"/>
-          <p class="text-xs text-purple-600 mt-1">যেমন: 30, 60, 120</p>
+        <div class="form-group"><label>Minimum Withdraw Amount</label><input type="number" id="minWithdraw" placeholder="10"></div>
+        <div class="form-group"><label>Withdraw Notice Text</label><textarea id="withdrawNotice" rows="2" placeholder="Payment will be sent in 30 minutes"></textarea></div>
+        <div class="form-group"><label>Payment Methods</label><input type="text" id="paymentMethods" placeholder="Bkash, Nagad, Binance"></div>
+        
+        <div style="margin-top:18px; padding:14px; background:linear-gradient(135deg, rgba(99,102,241,0.05), rgba(139,92,246,0.05)); border-radius:14px; border:1.5px solid rgba(99,102,241,0.15);">
+          <div style="font-size:0.9rem; color:var(--primary); margin-bottom:10px; font-weight:800; display:flex; align-items:center; gap:8px;">
+            <i class="fas fa-layer-group"></i> Withdraw Levels
+          </div>
+          <p style="font-size:0.78rem; color:var(--text-secondary); margin-bottom:12px; font-weight:600;">Each level defines required referrals, fee, amount range and processing time.</p>
+          <div id="withdrawLevelsContainer"></div>
+          <button class="btn btn-green btn-small" onclick="addWithdrawLevel()" style="margin-top:8px;"><i class="fas fa-plus"></i> Add Level</button>
         </div>
       </div>
 
-      <div class="flex gap-2 pt-2">
-        <button onclick="closeEditTask()" class="flex-1 bg-gray-200 py-2 rounded-lg font-medium text-sm">বাতিল</button>
-        <button onclick="saveEditTask()" class="flex-1 bg-blue-600 text-white py-2 rounded-lg font-medium text-sm">সেভ করুন</button>
-      </div>
-      <p id="editTaskMsg" class="text-sm"></p>
+      <button class="btn" onclick="saveSettings()"><i class="fas fa-save"></i> Save All Settings</button>
     </div>
-  </div>
-</div>
 
-<div id="editUserModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-  <div class="bg-white rounded-2xl w-full max-w-md p-5 max-h-[90vh] overflow-y-auto">
-    <h3 class="text-lg font-bold mb-1">👤 ইউজার ম্যানেজ</h3>
-    <p id="euName" class="text-sm text-gray-500 mb-4"></p>
-    <input type="hidden" id="euId"/>
-    <div class="bg-gray-50 rounded-lg p-3 mb-4">
-      <p class="text-xs text-gray-500">বর্তমান ব্যালেন্স</p>
-      <p class="text-2xl font-bold text-green-600">৳ <span id="euCurrentBalance">0</span></p>
-      <p class="text-xs text-gray-500 mt-1">মোট আয়: ৳ <span id="euEarned">0</span></p>
+    <!-- ================= CHANNELS TAB ================= -->
+    <div id="tab-channels" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-info"><i class="fas fa-link"></i></div>
+            Verification Channels
+          </div>
+        </div>
+        <div class="alert-box info">
+          <i class="fas fa-info-circle"></i>
+          <div>Users must join all channels to access the app. Adding/removing channels will require all users to re-verify.</div>
+        </div>
+        <div id="channelLinksContainer"></div>
+        <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
+          <input type="text" id="newChannelLabel" placeholder="Channel Name" style="flex:1; min-width:120px;">
+          <input type="text" id="newChannelId" placeholder="Chat ID" style="flex:1; min-width:120px;">
+          <button class="btn btn-green btn-small" onclick="addChannelLink()" style="flex:0 0 auto;"><i class="fas fa-plus"></i> Add</button>
+        </div>
+        <button class="btn btn-warning" onclick="saveChannelsAndForceReverify()" style="margin-top:16px;">
+          <i class="fas fa-shield-halved"></i> Save & Force Re-Verify All Users
+        </button>
+        <div class="alert-box warning" style="margin-top:12px;">
+          <i class="fas fa-exclamation-triangle"></i>
+          <div><b>Force Re-Verify:</b> All users' verification status will reset. They must rejoin all channels on next open.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-success"><i class="fas fa-chart-simple"></i></div>
+            Verification Stats
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card green"><div class="num" id="totalVerifiedUsers">0</div><div class="label">Verified Users</div></div>
+          <div class="stat-card danger"><div class="num" id="totalNotVerifiedUsers">0</div><div class="label">Not Verified</div></div>
+        </div>
+        <button class="btn btn-info btn-small" onclick="loadVerificationStats()"><i class="fas fa-rotate"></i> Refresh Stats</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-purple"><i class="fas fa-list"></i></div>
+            Active Channels
+          </div>
+        </div>
+        <div id="currentChannelsList"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-danger"><i class="fas fa-user-slash"></i></div>
+            Not-Verified Users (Top 20)
+          </div>
+        </div>
+        <div class="alert-box warning">
+          <i class="fas fa-info-circle"></i>
+          <div>These users can't access the app until they join all channels.</div>
+        </div>
+        <div id="notVerifiedUsersList">Loading...</div>
+      </div>
     </div>
-    <div class="space-y-3">
-      <div>
-        <label class="block text-xs font-medium text-gray-700 mb-1">ব্যালেন্স পরিবর্তন</label>
-        <div class="flex gap-2">
-          <select id="euAction" class="px-3 py-2 border rounded-lg text-sm">
-            <option value="add">যোগ করুন (+)</option>
-            <option value="subtract">বিয়োগ করুন (−)</option>
-            <option value="set">সেট করুন (=)</option>
+
+    <!-- ================= ANALYTICS TAB ================= -->
+    <div id="tab-analytics" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-primary"><i class="fas fa-chart-line"></i></div>
+            Ad Activity Overview
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card info"><div class="num" id="totalUsers">0</div><div class="label">Total Users</div></div>
+          <div class="stat-card green"><div class="num" id="totalAdViews">0</div><div class="label">Total Ad Views</div></div>
+          <div class="stat-card warning"><div class="num" id="totalAdClicks">0</div><div class="label">Total Ad Clicks</div></div>
+          <div class="stat-card danger"><div class="num" id="avgClickRate">0%</div><div class="label">Avg Click Rate</div></div>
+        </div>
+        <div style="overflow-x:auto; margin-top:8px;">
+          <table class="activity-table">
+            <thead><tr><th>User</th><th>Views</th><th>Clicks</th><th>Rate</th><th>Last</th></tr></thead>
+            <tbody id="analyticsTableBody">
+              <tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:30px; font-weight:600;">Loading data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <button class="btn btn-info btn-small" onclick="refreshAnalytics()" style="margin-top:14px;"><i class="fas fa-rotate"></i> Refresh Analytics</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-purple"><i class="fas fa-coins"></i></div>
+            Commission Overview
+          </div>
+        </div>
+        <div class="stat-mini-grid">
+          <div class="stat-mini"><div class="num purple" id="totalCommissionPaid">0</div><div class="lbl">Total Paid (TK)</div></div>
+          <div class="stat-mini"><div class="num green" id="totalCommissionEarners">0</div><div class="lbl">Earners</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= USERS TAB ================= -->
+    <div id="tab-users" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-primary"><i class="fas fa-users"></i></div>
+            All Users
+          </div>
+        </div>
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" id="userSearch" placeholder="Search by ID or Name..." oninput="filterUsers()">
+        </div>
+        <button class="btn btn-info btn-small" onclick="refreshUsers()" style="margin-bottom:14px;"><i class="fas fa-rotate"></i> Refresh List</button>
+        <div id="usersContainer">Loading users...</div>
+      </div>
+    </div>
+
+    <!-- ================= WITHDRAWALS TAB ================= -->
+    <div id="tab-withdrawals" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>
+            Pending Requests
+          </div>
+        </div>
+        <div id="wd-container">Loading...</div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-info"><i class="fas fa-clock-rotate-left"></i></div>
+            All Withdrawals
+          </div>
+        </div>
+        <div id="allWdContainer">Loading...</div>
+      </div>
+    </div>
+
+    <!-- ================= ADS TAB ================= -->
+    <div id="tab-ads" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-primary"><i class="fas fa-bullhorn"></i></div>
+            Ad Networks Config
+          </div>
+        </div>
+        <div class="form-group"><label>Daily Ad Viewing Limit (Per Cycle)</label><input type="number" id="dailyAdLimit" placeholder="10"></div>
+        <div class="form-group"><label>Reward Per Ad Watch</label><input type="number" step="0.01" id="adReward" placeholder="0.5"></div>
+
+        <div class="cycle-info-box">
+          <div class="cycle-title">⚡ AM/PM Ad Cycle</div>
+          <div class="cycle-value">🔁 2 Cycles Per Day</div>
+          <div class="cycle-desc">🌅 AM Cycle: 12:00 AM - 11:59 AM<br>🌙 PM Cycle: 12:00 PM - 11:59 PM<br>Users get fresh ads after each cycle reset.</div>
+        </div>
+
+        <div id="adsContainer"></div>
+        <button class="btn" onclick="saveAds()"><i class="fas fa-save"></i> Save Ad Settings</button>
+      </div>
+    </div>
+
+    <!-- ================= TASKS TAB ================= -->
+    <div id="tab-tasks" class="tab-content">
+      <!-- Create/Edit Task -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-success"><i class="fas fa-plus-circle"></i></div>
+            <span id="taskFormTitle">Create New Task</span>
+          </div>
+        </div>
+
+        <div class="form-group"><label>Task Title *</label><input type="text" id="newTaskTitle" placeholder="e.g. Simple Survey Task"></div>
+        <div class="form-group"><label>Description</label><textarea id="newTaskDesc" rows="2" placeholder="Short description..."></textarea></div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <div class="form-group" style="flex:1; min-width:140px;">
+            <label>Task Type *</label>
+            <select id="newTaskType" onchange="toggleSurveyFields()">
+              <option value="survey">📊 Survey</option>
+              <option value="voice">🎤 Voice</option>
+              <option value="image">🖼️ Image</option>
+              <option value="text">📝 Text</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex:1; min-width:140px;">
+            <label>Category</label>
+            <input type="text" id="newTaskCat" placeholder="Survey" value="Survey">
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <div class="form-group" style="flex:1; min-width:120px;">
+            <label>Reward (TK) *</label>
+            <input type="number" id="newTaskReward" placeholder="5" step="0.01">
+          </div>
+          <div class="form-group" style="flex:1; min-width:120px;">
+            <label>Total Slots *</label>
+            <input type="number" id="newTaskSlots" placeholder="100" value="100">
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <div class="form-group" style="flex:1; min-width:120px;">
+            <label>Time Limit (Days)</label>
+            <input type="number" id="newTaskTime" placeholder="7" value="7">
+          </div>
+          <div class="form-group" style="flex:1; min-width:120px;" id="timerGroup">
+            <label>⏱️ Timer (Seconds) *</label>
+            <input type="number" id="newTaskTimer" placeholder="60" value="60" min="5">
+            <small style="font-size:0.68rem; color:#94a3b8; font-weight:600;">Time user must wait after opening survey</small>
+          </div>
+        </div>
+
+        <div class="form-group" id="surveyLinkGroup">
+          <label>🔗 Survey URL *</label>
+          <input type="url" id="newTaskLink" placeholder="https://example.com/survey">
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:8px;">
+          <button class="btn btn-green" id="saveTaskBtn" onclick="saveNewTask()" style="flex:2;"><i class="fas fa-save"></i> Save Task</button>
+          <button class="btn btn-red" id="cancelTaskBtn" onclick="resetTaskForm()" style="flex:1; display:none;"><i class="fas fa-times"></i> Cancel</button>
+        </div>
+      </div>
+
+      <!-- Active Tasks List -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-info"><i class="fas fa-list-check"></i></div>
+            Active Tasks
+          </div>
+        </div>
+        <div class="alert-box info">
+          <i class="fas fa-info-circle"></i>
+          <div>Users who complete a survey automatically receive the reward after the timer ends. No manual approval needed.</div>
+        </div>
+        <div id="activeTasksList"></div>
+      </div>
+    </div>
+
+    <!-- ================= MAINTENANCE TAB ================= -->
+    <div id="tab-maintenance" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-warning"><i class="fas fa-wrench"></i></div>
+            System Maintenance
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Maintenance Mode</label>
+          <select id="maintenanceMode">
+            <option value="false">🟢 Online</option>
+            <option value="true">🔴 Maintenance Mode</option>
           </select>
-          <input id="euAmount" type="number" placeholder="পরিমাণ ৳" class="flex-1 px-3 py-2 border rounded-lg text-sm"/>
         </div>
-        <div class="flex gap-1 mt-2">
-          <button onclick="quickAmt(10)" class="text-xs bg-gray-100 px-2 py-1 rounded">+১০</button>
-          <button onclick="quickAmt(50)" class="text-xs bg-gray-100 px-2 py-1 rounded">+৫০</button>
-          <button onclick="quickAmt(100)" class="text-xs bg-gray-100 px-2 py-1 rounded">+১০০</button>
-          <button onclick="quickAmt(500)" class="text-xs bg-gray-100 px-2 py-1 rounded">+৫০০</button>
-        </div>
+        <div class="form-group"><label>Maintenance Message</label><input type="text" id="maintenanceMsg" placeholder="We're updating our system..."></div>
+        <div class="form-group"><label>Estimated Time (Minutes)</label><input type="number" id="maintenanceTime" placeholder="30"></div>
+        <button class="btn btn-warning" onclick="saveMaintenance()"><i class="fas fa-save"></i> Update Maintenance</button>
       </div>
-      <div class="flex gap-2 pt-2">
-        <button onclick="closeEditUser()" class="flex-1 bg-gray-200 py-2 rounded-lg font-medium text-sm">বাতিল</button>
-        <button onclick="saveUserBalance()" class="flex-1 bg-green-600 text-white py-2 rounded-lg font-medium text-sm">ব্যালেন্স আপডেট</button>
-      </div>
-      <p id="editUserMsg" class="text-sm"></p>
     </div>
+
+    <!-- ================= REFERRALS TAB ================= -->
+    <div id="tab-referrals" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-warning"><i class="fas fa-trophy"></i></div>
+            Top Referrers
+          </div>
+        </div>
+        <div class="alert-box success">
+          <i class="fas fa-check-circle"></i>
+          <div>Only <b id="minRefBalNote">20+</b> TK balance users count as qualified referrals.</div>
+        </div>
+        <div id="adminRefLeaderboard">
+          <div class="empty-state"><div class="icon"><i class="fas fa-users"></i></div><p>Loading...</p></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-primary"><i class="fas fa-chart-simple"></i></div>
+            Referral Statistics
+          </div>
+        </div>
+        <div id="adminRefStats"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <div class="card-title-icon icon-info"><i class="fas fa-list-ul"></i></div>
+            Recent Referral Details
+          </div>
+        </div>
+        <div id="referralDetailsList"></div>
+      </div>
+
+      <button class="btn btn-green" onclick="refreshReferralStats()"><i class="fas fa-rotate"></i> Refresh Referral Stats</button>
+    </div>
+
   </div>
-</div>
 
-<script>
-const DB_URL = 'https://diamond-top-up-9953b-default-rtdb.firebaseio.com';
-
-async function fbGet(path) { const r = await fetch(DB_URL + path + '.json'); return r.json(); }
-async function fbUpdate(path, data) {
-  await fetch(DB_URL + path + '.json', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-}
-async function fbPush(path, data) {
-  const r = await fetch(DB_URL + path + '.json', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-  return r.json();
-}
-async function fbDelete(path) { await fetch(DB_URL + path + '.json', { method: 'DELETE' }); }
-
-function fbPoll(path, cb, ms = 3000) {
-  let last = null;
-  const tick = async () => {
-    try {
-      const d = await fbGet(path);
-      const s = JSON.stringify(d);
-      if (s !== last) { last = s; cb(d); }
-    } catch (e) { console.error(e); }
-  };
-  tick();
-  return setInterval(tick, ms);
-}
-
-const $ = id => document.getElementById(id);
-const loginScreen = $('loginScreen');
-const deniedScreen = $('deniedScreen');
-const panel = $('panel');
-let currentAdminId = null;
-let subFilterStatus = 'pending';
-let pollTimers = [];
-
-async function checkAutoLogin() {
-  const savedId = localStorage.getItem('admin_tg_id');
-  if (!savedId) { showLogin(); return; }
-  const isAdmin = await fbGet('/admins/' + savedId);
-  if (isAdmin) { currentAdminId = savedId; showPanel(); }
-  else { localStorage.removeItem('admin_tg_id'); showLogin(); }
-}
-
-function showLogin() {
-  loginScreen.classList.remove('hidden');
-  deniedScreen.classList.add('hidden');
-  panel.classList.add('hidden');
-  $('tgIdInput').value = '';
-  $('loginMsg').textContent = '';
-}
-
-function showDenied(id) {
-  loginScreen.classList.add('hidden');
-  deniedScreen.classList.remove('hidden');
-  panel.classList.add('hidden');
-  $('deniedId').textContent = id;
-}
-
-function showPanel() {
-  loginScreen.classList.add('hidden');
-  deniedScreen.classList.add('hidden');
-  panel.classList.remove('hidden');
-  $('adminInfo').textContent = 'Admin ID: ' + currentAdminId;
-  startPolling();
-}
-
-$('loginForm').onsubmit = async (e) => {
-  e.preventDefault();
-  $('loginMsg').className = 'text-center text-sm text-red-500 min-h-[20px]';
-  $('loginMsg').textContent = 'চেক করা হচ্ছে...';
-  const id = $('tgIdInput').value.trim();
-  if (!id || !/^\d+$/.test(id)) {
-    $('loginMsg').textContent = 'শুধু সংখ্যায় Telegram ID লিখুন';
-    return;
-  }
-  try {
-    const isAdmin = await fbGet('/admins/' + id);
-    if (isAdmin) {
-      localStorage.setItem('admin_tg_id', id);
-      currentAdminId = id;
-      showPanel();
-    } else { showDenied(id); }
-  } catch (err) {
-    $('loginMsg').textContent = 'সংযোগে সমস্যা: ' + err.message;
-  }
-};
-
-function resetLogin() {
-  localStorage.removeItem('admin_tg_id');
-  showLogin();
-}
-
-function logout() {
-  if (!confirm('লগআউট করবেন?')) return;
-  localStorage.removeItem('admin_tg_id');
-  location.reload();
-}
-
-function startPolling() {
-  pollTimers.forEach(t => clearInterval(t));
-  pollTimers = [];
-
-  pollTimers.push(fbPoll('/users', d => { $('sUsers').textContent = Object.keys(d || {}).length; }));
-  pollTimers.push(fbPoll('/tasks', d => { $('sTasks').textContent = Object.keys(d || {}).length; }));
-  pollTimers.push(fbPoll('/submissions', d => {
-    const arr = Object.values(d || {});
-    $('sPending').textContent = arr.filter(x => x.status === 'pending').length;
-    $('sApproved').textContent = arr.filter(x => x.status === 'approved').length;
-    $('sEarnings').textContent = arr.filter(x => x.status === 'approved')
-      .reduce((a, b) => a + (b.reward || 0), 0).toFixed(0);
-  }));
-  pollTimers.push(fbPoll('/withdrawals', d => {
-    const arr = Object.values(d || {});
-    $('sWd').textContent = arr.filter(x => x.status === 'pending').length;
-  }));
-
-  pollTimers.push(fbPoll('/submissions', renderSubs));
-  pollTimers.push(fbPoll('/tasks', renderTasks));
-  pollTimers.push(fbPoll('/users', renderUsers));
-  pollTimers.push(fbPoll('/withdrawals', renderWds));
-}
-
-document.querySelectorAll('.aTab').forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll('.aTab').forEach(b => {
-      b.className = 'aTab flex-1 px-3 py-2 rounded-md font-medium text-xs whitespace-nowrap text-gray-600';
-    });
-    btn.className = 'aTab flex-1 px-3 py-2 rounded-md font-medium text-xs whitespace-nowrap bg-blue-600 text-white';
-    document.querySelectorAll('.aPane').forEach(p => p.classList.add('hidden'));
-    $('aTab-' + btn.dataset.tab).classList.remove('hidden');
-  };
-});
-
-function esc(s) {
-  return String(s || '').replace(/[<>&"]/g, c =>
-    ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
-}
-
-window.toggleSurveyLink = () => {
-  const type = $('tType').value;
-  $('surveyLinkDiv').classList.toggle('hidden', type !== 'survey');
-};
-
-window.toggleEditSurveyLink = () => {
-  const type = $('etType').value;
-  $('editSurveyLinkDiv').classList.toggle('hidden', type !== 'survey');
-};
-
-document.querySelectorAll('.subFilter').forEach(b => {
-  b.onclick = () => {
-    subFilterStatus = b.dataset.f;
-    fbGet('/submissions').then(renderSubs);
-  };
-});
-
-function renderSubs(data) {
-  let rows = Object.entries(data || {}).map(([id, s]) => ({ id, ...s }));
-  if (subFilterStatus) rows = rows.filter(r => r.status === subFilterStatus);
-  rows.sort((a, b) => b.createdAt - a.createdAt);
-
-  const list = $('subsList');
-  list.innerHTML = '';
-  if (!rows.length) {
-    list.innerHTML = '<p class="text-gray-500 text-center py-6 text-sm">কোনো সাবমিশন নেই।</p>';
-    return;
-  }
-
-  rows.forEach(s => {
-    const badge = s.status === 'approved' ? 'bg-green-100 text-green-700'
-                : s.status === 'rejected' ? 'bg-red-100 text-red-700'
-                : 'bg-yellow-100 text-yellow-700';
-    const div = document.createElement('div');
-    div.className = 'bg-white p-3 rounded-xl shadow';
-    div.innerHTML = `
-      <div class="flex justify-between items-start flex-wrap gap-2">
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-sm">${esc(s.taskTitle)}</p>
-          <p class="text-xs text-gray-500">${esc(s.userName)} ${s.username ? '(@' + esc(s.username) + ')' : ''}</p>
-          <p class="text-xs text-gray-400">ID: ${s.telegramId || 'N/A'}</p>
-          <p class="text-sm text-gray-700 mt-1 break-words">${esc(s.content) || '<em>ফাইল জমা</em>'}</p>
-          ${s.fileUrl ? `<a href="${s.fileUrl}" target="_blank" class="text-blue-600 underline text-xs">📎 ফাইল দেখুন</a>` : ''}
-        </div>
-        <div class="text-right">
-          <span class="${badge} px-2 py-1 rounded-full text-xs">${s.status}</span>
-          <p class="text-green-600 font-bold text-sm mt-1">৳ ${s.reward}</p>
-          ${s.status === 'pending' ? `
-            <div class="flex gap-1 mt-2">
-              <button class="approveBtn bg-green-600 text-white px-2 py-1 rounded text-xs">✓</button>
-              <button class="rejectBtn bg-red-600 text-white px-2 py-1 rounded text-xs">✗</button>
-            </div>` : ''}
-        </div>
-      </div>`;
-    if (s.status === 'pending') {
-      div.querySelector('.approveBtn').onclick = () => reviewSub(s, 'approved');
-      div.querySelector('.rejectBtn').onclick = () => reviewSub(s, 'rejected');
-    }
-    list.appendChild(div);
-  });
-}
-
-async function reviewSub(s, action) {
-  try {
-    await fbUpdate('/submissions/' + s.id, {
-      status: action, reviewedAt: Date.now(), reviewedBy: currentAdminId
-    });
-    if (action === 'approved') {
-      const u = await fbGet('/users/' + s.userId) || {};
-      await fbUpdate('/users/' + s.userId, {
-        wallet_balance: (u.wallet_balance || 0) + s.reward,
-        total_earned: (u.total_earned || 0) + s.reward
-      });
-    }
-  } catch (err) { alert('সমস্যা: ' + err.message); }
-}
-
-window.createTask = async () => {
-  const title = $('tTitle').value.trim();
-  const description = $('tDesc').value.trim();
-  const type = $('tType').value;
-  const reward = parseFloat($('tReward').value);
-  const total_slots = parseInt($('tSlots').value) || 1000;
-  const link = $('tLink').value.trim();
-  const timerSec = parseInt($('tTimer').value) || 60;
-  $('taskMsg').className = 'text-sm';
-
-  if (!title || !reward) {
-    $('taskMsg').className = 'text-sm text-red-500';
-    $('taskMsg').textContent = 'টাইটেল ও রিওয়ার্ড দিন';
-    return;
-  }
-  if (type === 'survey' && !link) {
-    $('taskMsg').className = 'text-sm text-red-500';
-    $('taskMsg').textContent = 'সার্ভে টাস্কের জন্য লিংক দিন';
-    return;
-  }
-  if (type === 'survey' && timerSec < 5) {
-    $('taskMsg').className = 'text-sm text-red-500';
-    $('taskMsg').textContent = 'টাইমার কমপক্ষে ৫ সেকেন্ড হতে হবে';
-    return;
-  }
-
-  const data = {
-    title, description, type, reward, total_slots,
-    filled_slots: 0, status: 'active',
-    createdAt: Date.now(), createdBy: currentAdminId
-  };
-  if (type === 'survey') {
-    data.link = link;
-    data.timer = timerSec;
-  }
-
-  try {
-    await fbPush('/tasks', data);
-    $('taskMsg').className = 'text-sm text-green-600';
-    $('taskMsg').textContent = '✅ টাস্ক তৈরি হয়েছে';
-    $('tTitle').value = ''; $('tDesc').value = ''; $('tReward').value = ''; $('tLink').value = '';
-    $('tTimer').value = '60';
-  } catch (err) {
-    $('taskMsg').className = 'text-sm text-red-500';
-    $('taskMsg').textContent = 'সমস্যা: ' + err.message;
-  }
-};
-
-function renderTasks(data) {
-  const rows = Object.entries(data || {})
-    .map(([id, t]) => ({ id, ...t }))
-    .sort((a, b) => b.createdAt - a.createdAt);
-
-  const list = $('tasksList');
-  list.innerHTML = '';
-  if (!rows.length) {
-    list.innerHTML = '<p class="text-gray-500 text-center py-6 text-sm">কোনো টাস্ক নেই।</p>';
-    return;
-  }
-
-  rows.forEach(t => {
-    const badge = t.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600';
-    const div = document.createElement('div');
-    div.className = 'bg-white p-3 rounded-xl shadow';
-    div.innerHTML = `
-      <div class="flex justify-between items-start gap-2">
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-sm">${esc(t.title)}</p>
-          <p class="text-xs text-gray-500 truncate">${esc(t.description)}</p>
-          <p class="text-xs text-gray-400 mt-1">${esc(t.type)} | ৳${t.reward} | ${t.filled_slots || 0}/${t.total_slots}${t.type === 'survey' && t.timer ? ' | ⏱️ ' + t.timer + 's' : ''}</p>
-          ${t.type === 'survey' && t.link ? `<p class="text-xs text-purple-600 truncate mt-1">🔗 ${esc(t.link)}</p>` : ''}
-        </div>
-        <div class="text-right shrink-0">
-          <span class="${badge} px-2 py-1 rounded-full text-xs whitespace-nowrap">${t.status}</span>
-        </div>
-      </div>
-      <div class="flex gap-2 mt-3 pt-3 border-t">
-        <button class="editBtn flex-1 bg-blue-50 text-blue-700 py-1.5 rounded text-xs font-medium">✏️ এডিট</button>
-        <button class="toggleBtn flex-1 ${t.status === 'active' ? 'bg-yellow-50 text-yellow-700' : 'bg-green-50 text-green-700'} py-1.5 rounded text-xs font-medium">
-          ${t.status === 'active' ? '⏸️ বন্ধ' : '▶️ চালু'}
-        </button>
-        <button class="delBtn flex-1 bg-red-50 text-red-700 py-1.5 rounded text-xs font-medium">🗑️ ডিলিট</button>
-      </div>`;
-    div.querySelector('.editBtn').onclick = () => openEditTask(t);
-    div.querySelector('.toggleBtn').onclick = () => fbUpdate('/tasks/' + t.id, {
-      status: t.status === 'active' ? 'closed' : 'active'
-    });
-    div.querySelector('.delBtn').onclick = async () => {
-      if (!confirm(`"${t.title}" টাস্কটি ডিলিট করবেন?`)) return;
-      await fbDelete('/tasks/' + t.id);
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyC_WvNxSQQ58TcJhDcBw5NUrAZjOQe1T2g",
+      authDomain: "cat-coins-34d4c.firebaseapp.com",
+      databaseURL: "https://cat-coins-34d4c-default-rtdb.firebaseio.com",
+      projectId: "cat-coins-34d4c",
+      storageBucket: "cat-coins-34d4c.appspot.com",
+      messagingSenderId: "616291442045",
+      appId: "1:616291442045:android:9de76c46bfdc5edec60014"
     };
-    list.appendChild(div);
-  });
-}
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    
+    let configData = { adSlots:[], newTasks:{} };
+    let allUsers = [];
+    let filteredUsers = [];
+    let channelLinks = [];
+    let withdrawLevels = [];
+    let MIN_REFERRAL_BALANCE = 20;
+    let selectedCommissionMode = 'bonus';
+    
+    // ✅ Task Editing State
+    let editingTaskId = null;
 
-window.openEditTask = (t) => {
-  $('etId').value = t.id;
-  $('etTitle').value = t.title || '';
-  $('etDesc').value = t.description || '';
-  $('etType').value = t.type || 'text';
-  $('etReward').value = t.reward || 0;
-  $('etSlots').value = t.total_slots || 1000;
-  $('etLink').value = t.link || '';
-  $('etTimer').value = t.timer || 60;
-  $('editTaskMsg').textContent = '';
-  toggleEditSurveyLink();
-  $('editTaskModal').classList.remove('hidden');
-};
+    const REFERRAL_LEVELS = {
+      BEGINNER: { min: 0, label: '⭐ BEGINNER', class: 'beginner' },
+      BRONZE: { min: 5, label: '🥉 BRONZE', class: 'bronze' },
+      SILVER: { min: 15, label: '🥈 SILVER', class: 'silver' },
+      GOLD: { min: 30, label: '🥇 GOLD', class: 'gold' },
+      PLATINUM: { min: 50, label: '👑 PLATINUM', class: 'platinum' }
+    };
 
-window.closeEditTask = () => $('editTaskModal').classList.add('hidden');
-
-window.saveEditTask = async () => {
-  const id = $('etId').value;
-  const title = $('etTitle').value.trim();
-  const description = $('etDesc').value.trim();
-  const type = $('etType').value;
-  const reward = parseFloat($('etReward').value);
-  const total_slots = parseInt($('etSlots').value) || 1000;
-  const link = $('etLink').value.trim();
-  const timerSec = parseInt($('etTimer').value) || 60;
-  $('editTaskMsg').className = 'text-sm';
-
-  if (!title || !reward) {
-    $('editTaskMsg').className = 'text-sm text-red-500';
-    $('editTaskMsg').textContent = 'টাইটেল ও রিওয়ার্ড দিন';
-    return;
-  }
-  if (type === 'survey' && !link) {
-    $('editTaskMsg').className = 'text-sm text-red-500';
-    $('editTaskMsg').textContent = 'সার্ভে টাস্কের জন্য লিংক দিন';
-    return;
-  }
-  if (type === 'survey' && timerSec < 5) {
-    $('editTaskMsg').className = 'text-sm text-red-500';
-    $('editTaskMsg').textContent = 'টাইমার কমপক্ষে ৫ সেকেন্ড হতে হবে';
-    return;
-  }
-
-  const data = { title, description, type, reward, total_slots };
-  if (type === 'survey') {
-    data.link = link;
-    data.timer = timerSec;
-  }
-
-  try {
-    await fbUpdate('/tasks/' + id, data);
-    $('editTaskMsg').className = 'text-sm text-green-600';
-    $('editTaskMsg').textContent = '✅ সেভ হয়েছে';
-    setTimeout(closeEditTask, 800);
-  } catch (err) {
-    $('editTaskMsg').className = 'text-sm text-red-500';
-    $('editTaskMsg').textContent = 'সমস্যা: ' + err.message;
-  }
-};
-
-let currentUserEdit = null;
-
-function renderUsers(data) {
-  const rows = Object.entries(data || {})
-    .map(([id, u]) => ({ id, ...u }))
-    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-  const list = $('usersList');
-  list.innerHTML = '';
-  if (!rows.length) {
-    list.innerHTML = '<p class="text-gray-500 text-center py-6 text-sm">কোনো ইউজার নেই।</p>';
-    return;
-  }
-
-  rows.forEach(u => {
-    const badge = u.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
-    const name = [u.firstName, u.lastName].filter(Boolean).join(' ') || u.name || 'User';
-    const div = document.createElement('div');
-    div.className = 'bg-white p-3 rounded-xl shadow';
-    div.innerHTML = `
-      <div class="flex justify-between items-start gap-2">
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-sm truncate">${esc(name)} ${u.username ? '<span class="text-xs text-gray-500">@' + esc(u.username) + '</span>' : ''}</p>
-          <p class="text-xs text-gray-400">ID: ${u.telegramId || u.id || 'N/A'}</p>
-          <p class="text-xs text-gray-400">ব্যালেন্স: ৳${(u.wallet_balance || 0).toFixed(0)} | আয়: ৳${(u.total_earned || 0).toFixed(0)}</p>
-        </div>
-        <div class="text-right shrink-0">
-          <span class="${badge} px-2 py-1 rounded-full text-xs">${u.status || 'active'}</span>
-        </div>
-      </div>
-      <div class="flex gap-2 mt-3 pt-3 border-t">
-        <button class="editUserBtn flex-1 bg-blue-50 text-blue-700 py-1.5 rounded text-xs font-medium">💰 ব্যালেন্স</button>
-        <button class="toggleUserBtn flex-1 ${u.status === 'active' ? 'bg-yellow-50 text-yellow-700' : 'bg-green-50 text-green-700'} py-1.5 rounded text-xs font-medium">
-          ${u.status === 'active' ? '🚫 ব্লক' : '✅ আনব্লক'}
-        </button>
-      </div>`;
-    div.querySelector('.editUserBtn').onclick = () => openEditUser(u);
-    div.querySelector('.toggleUserBtn').onclick = () => fbUpdate('/users/' + u.id, {
-      status: u.status === 'active' ? 'blocked' : 'active'
-    });
-    list.appendChild(div);
-  });
-}
-
-window.openEditUser = (u) => {
-  currentUserEdit = u;
-  const name = [u.firstName, u.lastName].filter(Boolean).join(' ') || u.name || 'User';
-  $('euId').value = u.id;
-  $('euName').textContent = name + (u.username ? ' (@' + u.username + ')' : '');
-  $('euCurrentBalance').textContent = (u.wallet_balance || 0).toFixed(0);
-  $('euEarned').textContent = (u.total_earned || 0).toFixed(0);
-  $('euAmount').value = '';
-  $('euAction').value = 'add';
-  $('editUserMsg').textContent = '';
-  $('editUserModal').classList.remove('hidden');
-};
-
-window.closeEditUser = () => {
-  $('editUserModal').classList.add('hidden');
-  currentUserEdit = null;
-};
-
-window.quickAmt = (amt) => { $('euAmount').value = amt; };
-
-window.saveUserBalance = async () => {
-  if (!currentUserEdit) return;
-  const action = $('euAction').value;
-  const amount = parseFloat($('euAmount').value);
-  $('editUserMsg').className = 'text-sm';
-
-  if (!amount || amount <= 0) {
-    $('editUserMsg').className = 'text-sm text-red-500';
-    $('editUserMsg').textContent = 'সঠিক পরিমাণ লিখুন';
-    return;
-  }
-
-  const current = currentUserEdit.wallet_balance || 0;
-  let newBalance;
-  if (action === 'add') newBalance = current + amount;
-  else if (action === 'subtract') newBalance = Math.max(0, current - amount);
-  else newBalance = amount;
-
-  try {
-    await fbUpdate('/users/' + currentUserEdit.id, { wallet_balance: newBalance });
-    $('editUserMsg').className = 'text-sm text-green-600';
-    $('editUserMsg').textContent = `✅ নতুন ব্যালেন্স: ৳${newBalance.toFixed(0)}`;
-    $('euCurrentBalance').textContent = newBalance.toFixed(0);
-    $('euAmount').value = '';
-    currentUserEdit.wallet_balance = newBalance;
-    setTimeout(closeEditUser, 1200);
-  } catch (err) {
-    $('editUserMsg').className = 'text-sm text-red-500';
-    $('editUserMsg').textContent = 'সমস্যা: ' + err.message;
-  }
-};
-
-function renderWds(data) {
-  const rows = Object.entries(data || {})
-    .map(([id, w]) => ({ id, ...w }))
-    .sort((a, b) => b.createdAt - a.createdAt);
-
-  const list = $('wdsList');
-  list.innerHTML = '';
-  if (!rows.length) {
-    list.innerHTML = '<p class="text-gray-500 text-center py-6 text-sm">কোনো উইথড্র নেই।</p>';
-    return;
-  }
-
-  rows.forEach(w => {
-    const badge = w.status === 'paid' ? 'bg-green-100 text-green-700'
-                : w.status === 'rejected' ? 'bg-red-100 text-red-700'
-                : 'bg-yellow-100 text-yellow-700';
-    const div = document.createElement('div');
-    div.className = 'bg-white p-3 rounded-xl shadow flex justify-between items-center gap-2';
-    div.innerHTML = `
-      <div class="flex-1 min-w-0">
-        <p class="font-semibold text-sm">৳ ${w.amount} - ${esc(w.method)}</p>
-        <p class="text-xs text-gray-500 truncate">${esc(w.userName)} ${w.username ? '(@' + esc(w.username) + ')' : ''}</p>
-        <p class="text-xs text-gray-400">অ্যাকাউন্ট: ${esc(w.accountNumber)}</p>
-      </div>
-      <div class="text-right">
-        <span class="${badge} px-2 py-1 rounded-full text-xs">${w.status}</span>
-        ${w.status === 'pending' ? `
-          <div class="flex gap-1 mt-2">
-            <button class="paidBtn bg-green-600 text-white px-2 py-1 rounded text-xs">✓ পেইড</button>
-            <button class="rejBtn bg-red-600 text-white px-2 py-1 rounded text-xs">✗ বাতিল</button>
-          </div>` : ''}
-      </div>`;
-    if (w.status === 'pending') {
-      div.querySelector('.paidBtn').onclick = () => processWd(w, 'paid');
-      div.querySelector('.rejBtn').onclick = () => processWd(w, 'rejected');
+    function getReferralLevel(refs) {
+      if (refs >= 50) return REFERRAL_LEVELS.PLATINUM;
+      if (refs >= 30) return REFERRAL_LEVELS.GOLD;
+      if (refs >= 15) return REFERRAL_LEVELS.SILVER;
+      if (refs >= 5) return REFERRAL_LEVELS.BRONZE;
+      return REFERRAL_LEVELS.BEGINNER;
     }
-    list.appendChild(div);
-  });
-}
 
-async function processWd(w, action) {
-  try {
-    await fbUpdate('/withdrawals/' + w.id, {
-      status: action, processedAt: Date.now(), processedBy: currentAdminId
+    function toast(msg) {
+      const t = document.getElementById('toast');
+      t.innerText = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function switchTab(id, el) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('tab-' + id).classList.add('active');
+      if(id === 'users') loadUsers();
+      if(id === 'withdrawals') loadAllWithdrawals();
+      if(id === 'referrals') loadReferralStats();
+      if(id === 'analytics') { loadAnalytics(); loadCommissionOverview(); }
+      if(id === 'channels') { loadVerificationStats(); loadNotVerifiedUsers(); renderCurrentChannels(); }
+      if(id === 'tasks') { loadTasksList(); }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ===================================================
+    // ✅ COMMISSION MODE SELECTOR
+    // ===================================================
+    function selectCommissionMode(mode) {
+      selectedCommissionMode = mode;
+      const bonusEl = document.getElementById('modeOption-bonus');
+      const deductEl = document.getElementById('modeOption-deduct');
+      const infoBox = document.getElementById('modeInfoBox');
+      const infoText = document.getElementById('modeInfoText');
+      bonusEl.classList.remove('selected');
+      deductEl.classList.remove('selected');
+      if (mode === 'bonus') {
+        bonusEl.classList.add('selected');
+        infoBox.className = 'alert-box info';
+        infoText.innerHTML = '<b>Bonus Mode:</b> Referred user keeps 100% income. Referrer\'s commission comes from your app margin. <b>User experience is positive</b>, but costs more.';
+      } else {
+        deductEl.classList.add('selected');
+        deductEl.classList.add('deduct-mode');
+        infoBox.className = 'alert-box warning';
+        infoText.innerHTML = '<b>Deduct Mode:</b> Commission is <b>cut from the referred user\'s income</b>. User earns less (e.g., 1 TK → 0.98 TK). Saves your cost but user might notice.';
+      }
+    }
+    function updateCommissionModeUI(mode) { selectCommissionMode(mode); }
+
+    // ===================================================
+    // ✅ COMMISSION OVERVIEW
+    // ===================================================
+    async function loadCommissionOverview() {
+      try {
+        const snap = await db.ref('users').once('value');
+        let totalCommission = 0;
+        let earners = 0;
+        snap.forEach(child => {
+          const u = child.val();
+          const comm = Number(u.totalCommission || 0);
+          if (comm > 0) earners++;
+          totalCommission += comm;
+        });
+        document.getElementById('totalCommissionPaid').textContent = totalCommission.toFixed(2);
+        document.getElementById('totalCommissionEarners').textContent = earners;
+      } catch(e) { console.error(e); }
+    }
+
+    // ===================================================
+    // ✅ USER DETAIL MODAL
+    // ===================================================
+    async function showUserDetail(userId) {
+      const u = allUsers.find(x => x.id === userId);
+      if (!u) return;
+      const modal = document.getElementById('userDetailModal');
+      const body = document.getElementById('userDetailBody');
+      
+      const initial = (u.name || 'U').charAt(0).toUpperCase();
+      const refs = u._qualifiedRefs || 0;
+      const totalRefs = u._totalRefs || 0;
+      const level = getReferralLevel(refs);
+      const sym = configData.currencySymbol || 'TK';
+      
+      const commHist = u.commissionHistory || {};
+      const commKeys = Object.keys(commHist).sort((a,b) => (commHist[b].timestamp||0) - (commHist[a].timestamp||0));
+      let commHtml = '';
+      if (commKeys.length === 0) {
+        commHtml = '<div class="empty-state" style="padding:20px;"><div class="icon" style="width:60px;height:60px;font-size:1.8rem;"><i class="fas fa-coins"></i></div><p style="font-size:0.82rem;">No commission history</p></div>';
+      } else {
+        commKeys.slice(0, 20).forEach(k => {
+          const c = commHist[k];
+          commHtml += `<div class="comm-history-item">
+            <div>
+              <div class="from">${c.fromName || 'User'}</div>
+              <div class="sub">${c.source || 'Earning'} • ${c.rate || 2}% • ${new Date(c.timestamp).toLocaleDateString()}</div>
+            </div>
+            <div class="amt">+${Number(c.commission || 0).toFixed(4)}<small>${sym}</small></div>
+          </div>`;
+        });
+      }
+      
+      body.innerHTML = `
+        <div class="detail-hero">
+          <div class="detail-hero-avatar">${initial}</div>
+          <div class="detail-hero-name">${u.name || 'Unknown'}</div>
+          <div class="detail-hero-id">ID: ${u.id}</div>
+        </div>
+        
+        <div class="detail-grid">
+          <div class="detail-box info"><div class="lbl">Balance</div><div class="val">${(u.balance || 0).toFixed(2)} ${sym}</div></div>
+          <div class="detail-box green"><div class="lbl">Total Earned</div><div class="val">${(u.totalEarned || 0).toFixed(2)} ${sym}</div></div>
+          <div class="detail-box purple"><div class="lbl">Commission</div><div class="val">${(u.totalCommission || 0).toFixed(2)} ${sym}</div></div>
+          <div class="detail-box warning"><div class="lbl">Qualified Refs</div><div class="val">${refs}/${totalRefs}</div></div>
+        </div>
+        
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
+          <span class="status-badge ${u.isBanned ? 'banned' : 'active'}">${u.isBanned ? '🚫 Banned' : '✅ Active'}</span>
+          <span class="status-badge ${u.channelVerified ? 'verified' : 'notverified'}">${u.channelVerified ? '✅ Verified' : '❌ Not Verified'}</span>
+          <span class="ref-level-badge ${level.class}">${level.label}</span>
+        </div>
+        
+        <div style="background:var(--bg-alt); padding:12px; border-radius:12px; margin-bottom:16px; font-size:0.8rem; font-weight:600; color:var(--text-secondary);">
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span>📅 Last Active:</span><b>${u.lastActive || 'Never'}</b></div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span>📺 Ad Views:</span><b>${u._adViews || 0}</b></div>
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span>🖱️ Ad Clicks:</span><b>${u._adClicks || 0}</b></div>
+          <div style="display:flex; justify-content:space-between;"><span>💸 Withdrawals:</span><b>${u.withdrawCount || 0}</b></div>
+        </div>
+        
+        <div style="font-weight:800; font-size:0.85rem; margin-bottom:10px; color:var(--text); display:flex; align-items:center; gap:8px;">
+          <i class="fas fa-coins" style="color:var(--warning);"></i> Commission History (Recent ${Math.min(commKeys.length, 20)})
+        </div>
+        ${commHtml}
+      `;
+      
+      modal.classList.add('active');
+    }
+    
+    function closeUserModal() {
+      document.getElementById('userDetailModal').classList.remove('active');
+    }
+    
+    document.getElementById('userDetailModal').addEventListener('click', (e) => {
+      if (e.target.id === 'userDetailModal') closeUserModal();
     });
-    if (action === 'rejected') {
-      const u = await fbGet('/users/' + w.userId) || {};
-      await fbUpdate('/users/' + w.userId, {
-        wallet_balance: (u.wallet_balance || 0) + w.amount
+
+    // ===================================================
+    // ✅ SURVEY TASK MANAGEMENT
+    // Firebase path: config/newTasks/{taskId}
+    // Structure: {title, description, type, category, reward, totalSlots,
+    //             submittedCount, timeLimit, timer, url, createdAt, createdBy}
+    // ===================================================
+    function toggleSurveyFields() {
+      const type = document.getElementById('newTaskType').value;
+      const isSurvey = type === 'survey';
+      const linkGroup = document.getElementById('surveyLinkGroup');
+      const timerGroup = document.getElementById('timerGroup');
+      
+      if (isSurvey) {
+        linkGroup.style.opacity = '1';
+        timerGroup.style.opacity = '1';
+        document.getElementById('newTaskLink').disabled = false;
+        document.getElementById('newTaskTimer').disabled = false;
+      } else {
+        linkGroup.style.opacity = '0.4';
+        timerGroup.style.opacity = '0.4';
+        document.getElementById('newTaskLink').disabled = true;
+        document.getElementById('newTaskTimer').disabled = true;
+      }
+    }
+
+    async function saveNewTask() {
+      const title = document.getElementById('newTaskTitle').value.trim();
+      const description = document.getElementById('newTaskDesc').value.trim();
+      const type = document.getElementById('newTaskType').value;
+      const category = document.getElementById('newTaskCat').value.trim() || 'General';
+      const reward = parseFloat(document.getElementById('newTaskReward').value) || 0;
+      const totalSlots = parseInt(document.getElementById('newTaskSlots').value) || 100;
+      const timeLimitDays = parseInt(document.getElementById('newTaskTime').value) || 7;
+      const timer = parseInt(document.getElementById('newTaskTimer').value) || 60;
+      const url = document.getElementById('newTaskLink').value.trim();
+
+      if (!title) return toast('❌ Please enter Task Title!');
+      if (reward <= 0) return toast('❌ Please enter a valid reward!');
+      if (type === 'survey' && !url) return toast('❌ Survey URL is required for Survey task!');
+      if (type === 'survey' && timer < 5) return toast('❌ Timer must be at least 5 seconds!');
+
+      const taskData = {
+        title: title,
+        description: description,
+        type: type,
+        category: category,
+        reward: reward,
+        totalSlots: totalSlots,
+        timeLimit: timeLimitDays + ' days',
+        timer: type === 'survey' ? timer : 0,
+        url: type === 'survey' ? url : '',
+        updatedAt: Date.now()
+      };
+
+      try {
+        if (editingTaskId) {
+          await db.ref('config/newTasks/' + editingTaskId).update(taskData);
+          toast('✅ Task Updated Successfully!');
+        } else {
+          taskData.createdAt = Date.now();
+          taskData.submittedCount = 0;
+          taskData.createdBy = 'admin';
+          await db.ref('config/newTasks').push(taskData);
+          toast('✅ Task Created Successfully!');
+        }
+        resetTaskForm();
+        loadTasksList();
+      } catch(e) { toast('❌ Error: ' + e.message); }
+    }
+
+    function resetTaskForm() {
+      editingTaskId = null;
+      document.getElementById('newTaskTitle').value = '';
+      document.getElementById('newTaskDesc').value = '';
+      document.getElementById('newTaskType').value = 'survey';
+      document.getElementById('newTaskCat').value = 'Survey';
+      document.getElementById('newTaskReward').value = '';
+      document.getElementById('newTaskSlots').value = '100';
+      document.getElementById('newTaskTime').value = '7';
+      document.getElementById('newTaskTimer').value = '60';
+      document.getElementById('newTaskLink').value = '';
+      document.getElementById('taskFormTitle').innerText = 'Create New Task';
+      document.getElementById('saveTaskBtn').innerHTML = '<i class="fas fa-save"></i> Save Task';
+      document.getElementById('cancelTaskBtn').style.display = 'none';
+      toggleSurveyFields();
+    }
+
+    async function editTask(id) {
+      try {
+        const snap = await db.ref('config/newTasks/' + id).once('value');
+        if (!snap.exists()) return toast('Task not found!');
+        const task = snap.val();
+        
+        editingTaskId = id;
+        document.getElementById('newTaskTitle').value = task.title || '';
+        document.getElementById('newTaskDesc').value = task.description || '';
+        document.getElementById('newTaskType').value = task.type || 'survey';
+        document.getElementById('newTaskCat').value = task.category || 'Survey';
+        document.getElementById('newTaskReward').value = task.reward || '';
+        document.getElementById('newTaskSlots').value = task.totalSlots || 100;
+        
+        const daysMatch = (task.timeLimit || '7 days').match(/\d+/);
+        document.getElementById('newTaskTime').value = daysMatch ? daysMatch[0] : '7';
+        document.getElementById('newTaskTimer').value = task.timer || 60;
+        document.getElementById('newTaskLink').value = task.url || '';
+        
+        document.getElementById('taskFormTitle').innerText = 'Edit Task';
+        document.getElementById('saveTaskBtn').innerHTML = '<i class="fas fa-check"></i> Update Task';
+        document.getElementById('cancelTaskBtn').style.display = 'flex';
+        
+        toggleSurveyFields();
+        document.getElementById('tab-tasks').scrollIntoView({ behavior: 'smooth' });
+      } catch(e) { toast('Error loading task: ' + e.message); }
+    }
+
+    async function loadTasksList() {
+      const container = document.getElementById('activeTasksList');
+      container.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:16px; font-weight:600;">Loading...</p>';
+      try {
+        const snap = await db.ref('config/newTasks').once('value');
+        if (!snap.exists()) {
+          container.innerHTML = '<div class="empty-state"><div class="icon"><i class="fas fa-briefcase"></i></div><p>No tasks created yet</p></div>';
+          return;
+        }
+        let html = '';
+        const tasksArr = [];
+        snap.forEach(child => { tasksArr.push({ id: child.key, ...child.val() }); });
+        tasksArr.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+        
+        tasksArr.forEach(t => {
+          const submitted = t.submittedCount || 0;
+          const total = t.totalSlots || 100;
+          const progress = Math.min((submitted / total) * 100, 100);
+          const typeClass = t.type || 'survey';
+          const typeIcon = t.type === 'survey' ? '📊' : t.type === 'voice' ? '🎤' : t.type === 'image' ? '🖼️' : '📝';
+          
+          html += `<div class="task-admin-item">
+            <div class="task-admin-head">
+              <div class="task-admin-info">
+                <div class="name">${typeIcon} ${t.title || 'Untitled'}<span class="reward">+${t.reward} TK</span></div>
+                <div class="meta">
+                  <span><i class="fas fa-folder"></i> ${t.category || 'General'}</span>
+                  <span><i class="fas fa-users"></i> ${submitted}/${total} (${progress.toFixed(0)}%)</span>
+                  ${t.type === 'survey' && t.timer ? `<span><i class="fas fa-clock"></i> ${t.timer}s</span>` : ''}
+                  <span><i class="fas fa-calendar"></i> ${t.timeLimit || '7 days'}</span>
+                </div>
+                ${t.url ? `<div class="url"><i class="fas fa-link"></i> ${t.url.length > 60 ? t.url.substring(0, 60) + '...' : t.url}</div>` : ''}
+              </div>
+            </div>
+            <div style="display:flex; gap:6px; justify-content:space-between; align-items:center; margin-top:10px;">
+              <span class="status-badge ${typeClass}">${(t.type || 'task').toUpperCase()}</span>
+              <div class="task-admin-actions">
+                <button class="btn btn-info btn-small" onclick="editTask('${t.id}')"><i class="fas fa-pen"></i> Edit</button>
+                <button class="btn btn-red btn-small" onclick="deleteNewTask('${t.id}')"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+          </div>`;
+        });
+        container.innerHTML = html;
+      } catch(e) { container.innerHTML = '<p style="color:#ef4444; text-align:center; font-weight:600;">Error loading tasks</p>'; }
+    }
+
+    function deleteNewTask(id) {
+      if(confirm('Delete this task? Users will no longer see it.')) {
+        db.ref('config/newTasks/' + id).remove().then(() => { toast('Task Deleted!'); loadTasksList(); });
+      }
+    }
+
+    // ===================================================
+    // ✅ ADS MANAGEMENT (6 SLOTS)
+    // ===================================================
+    function loadAdsConfig() {
+      let adHtml = '';
+      for(let i=0; i<6; i++) {
+        let slot = configData.adSlots[i] || { network: 'none', id: '' };
+        adHtml += `<div class="ad-slot-box">
+          <div class="ad-slot-header"><i class="fas fa-layer-group"></i> Slot ${i+1}</div>
+          <select id="adNet_${i}" style="margin:8px 0;">
+            <option value="none" ${slot.network==='none'?'selected':''}>Disabled (None)</option>
+            <option value="adsgram" ${slot.network==='adsgram'?'selected':''}>Adsgram</option>
+            <option value="monetag" ${slot.network==='monetag'?'selected':''}>Monetag</option>
+            <option value="gigapub" ${slot.network==='gigapub'?'selected':''}>GigaPub</option>
+          </select>
+          <input type="text" id="adId_${i}" value="${slot.id||''}" placeholder="Block ID / Zone ID">
+        </div>`;
+      }
+      document.getElementById('adsContainer').innerHTML = adHtml;
+    }
+
+    function saveAds() {
+      let slots = [];
+      for(let i=0; i<6; i++) {
+        slots.push({ network: document.getElementById(`adNet_${i}`).value, id: document.getElementById(`adId_${i}`).value });
+      }
+      db.ref('config').update({
+        dailyAdLimit: Number(document.getElementById('dailyAdLimit').value),
+        adReward: Number(document.getElementById('adReward').value),
+        adSlots: slots
+      }).then(() => toast('✅ Ad Settings Saved (6 Slots)!'));
+    }
+
+    // ===================================================
+    // ✅ CHANNELS & SETTINGS
+    // ===================================================
+    function renderChannelLinks() {
+      const container = document.getElementById('channelLinksContainer');
+      if (!channelLinks.length) {
+        container.innerHTML = '<p style="color:#94a3b8; text-align:center; padding:16px; font-weight:600; font-size:0.85rem;">No channels added yet.</p>';
+        return;
+      }
+      let html = '';
+      channelLinks.forEach((link, index) => {
+        html += `<div class="channel-item">
+          <input type="text" value="${link.label}" id="channelLabel_${index}" placeholder="Label" style="flex:1;">
+          <input type="text" value="${link.chatId}" id="channelId_${index}" placeholder="Chat ID" style="flex:1;">
+          <button class="btn btn-red btn-small" onclick="removeChannelLink(${index})" style="flex:0 0 auto; padding:8px 10px;"><i class="fas fa-trash"></i></button>
+        </div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function renderCurrentChannels() {
+      const container = document.getElementById('currentChannelsList');
+      if (!channelLinks.length) {
+        container.innerHTML = '<p style="color:#94a3b8; text-align:center; font-weight:600;">No channels configured.</p>';
+        return;
+      }
+      let html = '';
+      channelLinks.forEach(link => {
+        html += `<div class="channel-verified-item">
+          <i class="fa-brands fa-telegram"></i>
+          <div class="ch-info">
+            <div class="ch-name">${link.label}</div>
+            <div class="ch-id">@${link.chatId}</div>
+          </div>
+        </div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function addChannelLink() {
+      const label = document.getElementById('newChannelLabel').value.trim();
+      const chatId = document.getElementById('newChannelId').value.trim();
+      if (!label || !chatId) return toast('Please enter both label and chat ID');
+      channelLinks.push({ label, chatId });
+      renderChannelLinks();
+      document.getElementById('newChannelLabel').value = '';
+      document.getElementById('newChannelId').value = '';
+      toast('Channel added! Click "Save & Force Re-Verify" to apply.');
+    }
+
+    function removeChannelLink(index) {
+      channelLinks.splice(index, 1);
+      renderChannelLinks();
+      toast('Channel removed! Save to apply changes.');
+    }
+
+    async function saveChannelsAndForceReverify() {
+      if (!confirm('⚠️ This will save channels AND force re-verification for ALL users. Continue?')) return;
+      const newChannelLinks = [];
+      channelLinks.forEach((link, index) => {
+        const labelEl = document.getElementById(`channelLabel_${index}`);
+        const chatIdEl = document.getElementById(`channelId_${index}`);
+        if (labelEl && chatIdEl && labelEl.value.trim() && chatIdEl.value.trim()) {
+          newChannelLinks.push({ label: labelEl.value.trim(), chatId: chatIdEl.value.trim() });
+        }
+      });
+      if (newChannelLinks.length === 0) return toast('❌ No channels to save!');
+      try {
+        toast('⏳ Saving channels...');
+        await db.ref('config/channelLinks').set(newChannelLinks);
+        channelLinks = newChannelLinks;
+        toast('⏳ Force re-verifying users...');
+        const usersSnap = await db.ref('users').once('value');
+        const updates = {};
+        let count = 0;
+        usersSnap.forEach(child => {
+          updates[child.key + '/channelVerified'] = false;
+          updates[child.key + '/verifiedChannels'] = null;
+          count++;
+        });
+        if (count > 0) await db.ref('users').update(updates);
+        toast(`✅ Saved! ${count} users will re-verify on next open.`);
+        loadVerificationStats();
+        loadNotVerifiedUsers();
+        renderCurrentChannels();
+      } catch(e) { toast('❌ Error: ' + e.message); }
+    }
+
+    async function loadVerificationStats() {
+      try {
+        const snap = await db.ref('users').once('value');
+        let verified = 0, notVerified = 0;
+        snap.forEach(child => {
+          if (child.val().channelVerified === true) verified++;
+          else notVerified++;
+        });
+        document.getElementById('totalVerifiedUsers').textContent = verified;
+        document.getElementById('totalNotVerifiedUsers').textContent = notVerified;
+      } catch(e) { console.error(e); }
+    }
+
+    async function loadNotVerifiedUsers() {
+      const container = document.getElementById('notVerifiedUsersList');
+      container.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:16px; font-weight:600;">Loading...</p>';
+      try {
+        const snap = await db.ref('users').once('value');
+        let list = [];
+        snap.forEach(child => {
+          const u = child.val();
+          if (u.channelVerified !== true) {
+            list.push({ id: child.key, name: u.name || 'User', lastActive: u.lastActive || 'Never' });
+          }
+        });
+        list.sort((a,b) => (b.lastActive > a.lastActive ? 1 : -1));
+        if (list.length === 0) {
+          container.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>All users verified! ✅</div></div>';
+          return;
+        }
+        let html = '';
+        list.slice(0, 20).forEach(u => {
+          html += `<div class="nv-user-item">
+            <div>
+              <div class="nv-user-name">${u.name}</div>
+              <div class="nv-user-id">ID: ${u.id}</div>
+            </div>
+            <div class="nv-user-last">Last: ${u.lastActive}</div>
+          </div>`;
+        });
+        if (list.length > 20) html += `<p style="text-align:center; color:#94a3b8; font-size:0.8rem; margin-top:8px; font-weight:600;">+ ${list.length - 20} more...</p>`;
+        container.innerHTML = html;
+      } catch(e) {
+        container.innerHTML = '<p style="text-align:center; color:#ef4444; font-weight:600;">Error loading</p>';
+      }
+    }
+
+    function renderWithdrawLevels() {
+      const container = document.getElementById('withdrawLevelsContainer');
+      if (!withdrawLevels.length) {
+        container.innerHTML = '<p style="color:#94a3b8; text-align:center; padding:10px; font-size:0.82rem; font-weight:600;">No levels configured.</p>';
+        return;
+      }
+      let html = '';
+      withdrawLevels.forEach((level, index) => {
+        html += `<div class="level-edit-item">
+          <div class="level-header">
+            <span class="level-num">Level ${index + 1}</span>
+            <button class="btn btn-red btn-small" onclick="removeWithdrawLevel(${index})" style="padding:5px 9px; font-size:0.7rem;"><i class="fas fa-trash"></i></button>
+          </div>
+          <div class="level-fields">
+            <input type="number" value="${level.requiredRefs}" id="wl_refs_${index}" placeholder="Refs">
+            <input type="number" value="${level.fee}" id="wl_fee_${index}" placeholder="Fee %">
+            <input type="number" value="${level.minAmount}" id="wl_min_${index}" placeholder="Min">
+            <input type="number" value="${level.maxAmount}" id="wl_max_${index}" placeholder="Max">
+            <input type="text" value="${level.time}" id="wl_time_${index}" placeholder="Time" class="wide">
+          </div>
+        </div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function addWithdrawLevel() {
+      withdrawLevels.push({ requiredRefs: 5, fee: 5, minAmount: 10, maxAmount: 100, time: "30 Min-1 Hours" });
+      renderWithdrawLevels();
+      toast('Level added! Save to apply.');
+    }
+
+    function removeWithdrawLevel(index) {
+      if (withdrawLevels.length <= 1) return toast('Cannot remove last level!');
+      if(confirm('Remove this level?')) {
+        withdrawLevels.splice(index, 1);
+        renderWithdrawLevels();
+        toast('Level removed! Save to apply.');
+      }
+    }
+
+    function getWithdrawLevelsFromUI() {
+      const levels = [];
+      withdrawLevels.forEach((_, index) => {
+        const refs = parseInt(document.getElementById(`wl_refs_${index}`).value) || 5;
+        const fee = parseFloat(document.getElementById(`wl_fee_${index}`).value) || 5;
+        const minAmt = parseFloat(document.getElementById(`wl_min_${index}`).value) || 10;
+        const maxAmt = parseFloat(document.getElementById(`wl_max_${index}`).value) || 100;
+        const time = document.getElementById(`wl_time_${index}`).value || "30 Min-1 Hours";
+        levels.push({ requiredRefs: refs, fee, minAmount: minAmt, maxAmount: maxAmt, time });
+      });
+      return levels;
+    }
+
+    // ===== READ CONFIG =====
+    db.ref('config').on('value', snap => {
+      if(snap.exists()) {
+        configData = snap.val();
+        if(!configData.adSlots) configData.adSlots = [{},{},{},{},{},{}];
+        if(!configData.newTasks) configData.newTasks = {};
+        channelLinks = configData.channelLinks || [
+          {label:'NexEarn Channel', chatId:'nexearn2'},
+          {label:'NexEarn Adda', chatId:'nexearn2_adda'},
+          {label:'NexEarn Official', chatId:'nexearn2_official'},
+          {label:'NexEarn Payment', chatId:'nexearn2_payment'}
+        ];
+        renderChannelLinks();
+        withdrawLevels = configData.withdrawLevels || [
+          { requiredRefs: 5, fee: 5, minAmount: 10, maxAmount: 100, time: "30 Min-1 Hours" },
+          { requiredRefs: 7, fee: 4, minAmount: 10, maxAmount: 200, time: "30 Min-1 Hours" },
+          { requiredRefs: 7, fee: 3, minAmount: 10, maxAmount: 300, time: "30 Min-1 Hours" },
+          { requiredRefs: 7, fee: 2, minAmount: 10, maxAmount: 400, time: "30 Min-1 Hours" },
+          { requiredRefs: 7, fee: 1, minAmount: 10, maxAmount: 500, time: "30 Min-1 Hours" }
+        ];
+        renderWithdrawLevels();
+        document.getElementById('botUsername').value = configData.botUsername || '';
+        document.getElementById('currencySymbol').value = configData.currencySymbol || 'TK';
+        document.getElementById('dailyBonusAmount').value = configData.dailyBonusAmount || 20;
+        document.getElementById('refBonus').value = configData.refBonus || 5;
+        document.getElementById('minReferralBalance').value = configData.minReferralBalance || 20;
+        MIN_REFERRAL_BALANCE = configData.minReferralBalance || 20;
+        document.getElementById('minRefBalNote').textContent = MIN_REFERRAL_BALANCE + '+';
+        
+        document.getElementById('refCommissionRate').value = configData.refCommissionRate || 2;
+        selectedCommissionMode = configData.refCommissionMode || 'bonus';
+        updateCommissionModeUI(selectedCommissionMode);
+        
+        document.getElementById('tutorialLink').value = configData.tutorialLink || '';
+        document.getElementById('supportLink').value = configData.supportLink || '';
+        document.getElementById('minWithdraw').value = configData.minWithdraw || 10;
+        document.getElementById('withdrawNotice').value = configData.withdrawNotice || '';
+        document.getElementById('paymentMethods').value = configData.paymentMethods ? configData.paymentMethods.join(', ') : 'Bkash, Nagad';
+        document.getElementById('adResetHour').value = configData.adResetHour || 0;
+        document.getElementById('dailyAdLimit').value = configData.dailyAdLimit || 10;
+        document.getElementById('adReward').value = configData.adReward || 0.5;
+        if(configData.maintenance) {
+          document.getElementById('maintenanceMode').value = configData.maintenance.active ? 'true' : 'false';
+          document.getElementById('maintenanceMsg').value = configData.maintenance.message || '';
+          document.getElementById('maintenanceTime').value = configData.maintenance.estimatedMinutes || '';
+        }
+        loadAdsConfig();
+        loadTasksList();
+      }
+    });
+
+    // ===== SAVE =====
+    function saveSettings() {
+      let methods = document.getElementById('paymentMethods').value.split(',').map(m => m.trim());
+      const levels = getWithdrawLevelsFromUI();
+      db.ref('config').update({
+        botUsername: document.getElementById('botUsername').value,
+        currencySymbol: document.getElementById('currencySymbol').value,
+        dailyBonusAmount: Number(document.getElementById('dailyBonusAmount').value),
+        refBonus: Number(document.getElementById('refBonus').value),
+        minReferralBalance: Number(document.getElementById('minReferralBalance').value) || 20,
+        refCommissionRate: Number(document.getElementById('refCommissionRate').value) || 2,
+        refCommissionMode: selectedCommissionMode,
+        tutorialLink: document.getElementById('tutorialLink').value,
+        supportLink: document.getElementById('supportLink').value,
+        minWithdraw: Number(document.getElementById('minWithdraw').value),
+        withdrawNotice: document.getElementById('withdrawNotice').value,
+        paymentMethods: methods,
+        withdrawLevels: levels,
+        adResetHour: Number(document.getElementById('adResetHour').value) || 0
+      }).then(() => {
+        withdrawLevels = levels;
+        MIN_REFERRAL_BALANCE = Number(document.getElementById('minReferralBalance').value) || 20;
+        document.getElementById('minRefBalNote').textContent = MIN_REFERRAL_BALANCE + '+';
+        toast('✅ Settings Saved!');
       });
     }
-  } catch (err) { alert('সমস্যা: ' + err.message); }
-}
 
-checkAutoLogin();
-</script>
+    function saveMaintenance() {
+      const active = document.getElementById('maintenanceMode').value === 'true';
+      db.ref('config/maintenance').set({
+        active: active,
+        message: document.getElementById('maintenanceMsg').value,
+        estimatedMinutes: Number(document.getElementById('maintenanceTime').value) || 30
+      }).then(() => toast('✅ Maintenance Updated!'));
+    }
+
+    // ===== USERS =====
+    async function loadUsers() {
+      try {
+        const snap = await db.ref('users').once('value');
+        allUsers = [];
+        snap.forEach(child => {
+          let u = child.val();
+          u.id = child.key;
+          allUsers.push(u);
+        });
+        await Promise.all(allUsers.map(async (u) => {
+          const refs = u.referredUsers || {};
+          const keys = Object.keys(refs);
+          let qualified = 0;
+          if (keys.length > 0) {
+            await Promise.all(keys.map(async (rid) => {
+              const bSnap = await db.ref('users/' + rid + '/balance').once('value');
+              const bal = bSnap.exists() ? Number(bSnap.val() || 0) : 0;
+              if (bal >= MIN_REFERRAL_BALANCE) qualified++;
+            }));
+          }
+          u._qualifiedRefs = qualified;
+          u._totalRefs = keys.length;
+          let views = 0;
+          const da = u.dailyAds || {};
+          for (let k in da) views += Number(da[k]) || 0;
+          u._adViews = views;
+          u._adClicks = u.adClicks || 0;
+        }));
+        filterUsers();
+      } catch(e) { console.error(e); }
+    }
+
+    function filterUsers() {
+      const search = document.getElementById('userSearch').value.toLowerCase();
+      filteredUsers = allUsers.filter(u => 
+        (u.id && u.id.toString().includes(search)) || 
+        (u.name && u.name.toLowerCase().includes(search))
+      );
+      renderUsers();
+    }
+
+    function renderUsers() {
+      const container = document.getElementById('usersContainer');
+      if(filteredUsers.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="icon"><i class="fas fa-user-slash"></i></div><p>No users found</p></div>';
+        return;
+      }
+      let html = '';
+      filteredUsers.forEach(u => {
+        const isBanned = u.isBanned || false;
+        const isVerified = u.channelVerified === true;
+        const refs = u._qualifiedRefs || 0;
+        const level = getReferralLevel(refs);
+        const initial = (u.name || 'U').charAt(0).toUpperCase();
+        html += `<div class="user-card">
+          <div class="user-header">
+            <div class="user-avatar-row">
+              <div class="user-avatar">${initial}</div>
+              <div style="min-width:0; flex:1;">
+                <div class="user-name">${u.name || 'Unknown'}</div>
+                <div class="user-id">ID: ${u.id}</div>
+              </div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end;">
+              <span class="status-badge ${isBanned ? 'banned' : 'active'}">${isBanned ? '🚫 Banned' : '✅ Active'}</span>
+              <span class="status-badge ${isVerified ? 'verified' : 'notverified'}">${isVerified ? '✅ Verified' : '❌ Not Verified'}</span>
+            </div>
+          </div>
+          <div class="user-balance-row">
+            <span class="user-balance">💰 ${(u.balance || 0).toFixed(2)} ${configData.currencySymbol || 'TK'}</span>
+            <span class="ref-level-badge ${level.class}">${level.label}</span>
+          </div>
+          <div class="user-stats-grid">
+            <div class="user-stat-mini green"><span class="val">${refs}</span><div class="lbl">Refs</div></div>
+            <div class="user-stat-mini"><span class="val">${u._adViews || 0}</span><div class="lbl">Views</div></div>
+            <div class="user-stat-mini"><span class="val">${u._adClicks || 0}</span><div class="lbl">Clicks</div></div>
+          </div>
+          <div class="user-actions">
+            <button class="btn btn-info btn-small" onclick="showUserDetail('${u.id}')"><i class="fas fa-eye"></i> View</button>
+            <button class="btn btn-green btn-small" onclick="editUser('${u.id}')"><i class="fas fa-pen"></i> Balance</button>
+            <button class="btn ${isBanned ? 'btn-green' : 'btn-warning'} btn-small" onclick="toggleBan('${u.id}', ${!isBanned})">
+              <i class="fas ${isBanned ? 'fa-unlock' : 'fa-ban'}"></i> ${isBanned ? 'Unban' : 'Ban'}
+            </button>
+            <button class="btn btn-warning btn-small" onclick="forceReverifyUser('${u.id}')"><i class="fas fa-rotate"></i> Verify</button>
+            <button class="btn btn-red btn-small" onclick="deleteUser('${u.id}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function refreshUsers() { loadUsers(); toast('Users refreshed!'); }
+
+    function editUser(userId) {
+      const user = allUsers.find(u => u.id === userId);
+      if(!user) return;
+      const newBal = prompt(`Enter new balance for ${user.name || userId}:`, user.balance || 0);
+      if(newBal !== null && !isNaN(newBal)) {
+        db.ref('users/' + userId + '/balance').set(Number(newBal)).then(() => { toast('Balance updated!'); loadUsers(); });
+      }
+    }
+
+    function toggleBan(userId, ban) {
+      const action = ban ? 'ban' : 'unban';
+      if(confirm(`Are you sure you want to ${action} this user?`)) {
+        db.ref('users/' + userId).update({ isBanned: ban }).then(() => { toast(`User ${action}ned!`); loadUsers(); });
+      }
+    }
+
+    function forceReverifyUser(userId) {
+      if(confirm('Force this user to re-verify all channels?')) {
+        db.ref('users/' + userId).update({ channelVerified: false, verifiedChannels: null }).then(() => {
+          toast('✅ User will re-verify on next open!'); loadUsers();
+        });
+      }
+    }
+
+    function deleteUser(userId) {
+      if(confirm('⚠️ DELETE this user? Cannot be undone!')) {
+        db.ref('users/' + userId).remove().then(() => { toast('User deleted!'); loadUsers(); });
+      }
+    }
+
+    // ===== ANALYTICS =====
+    async function loadAnalytics() {
+      try {
+        const usersSnap = await db.ref('users').once('value');
+        let userData = [];
+        let totalViews = 0, totalClicks = 0;
+        const today = new Date().toISOString().slice(0, 10);
+        if (usersSnap.exists()) {
+          usersSnap.forEach(child => {
+            const u = child.val();
+            const dailyAds = u.dailyAds || {};
+            let views = 0;
+            for (let key in dailyAds) views += Number(dailyAds[key]) || 0;
+            const clicks = u.adClicks || 0;
+            const lastActive = u.lastActive || 'Never';
+            totalViews += views;
+            totalClicks += clicks;
+            userData.push({ id: child.key, name: u.name || 'User', views, clicks, lastActive });
+          });
+        }
+        userData.sort((a, b) => b.views - a.views);
+        document.getElementById('totalUsers').textContent = usersSnap.exists() ? usersSnap.numChildren() : 0;
+        document.getElementById('totalAdViews').textContent = totalViews;
+        document.getElementById('totalAdClicks').textContent = totalClicks;
+        const clickRate = totalViews > 0 ? ((totalClicks / totalViews) * 100).toFixed(1) : 0;
+        document.getElementById('avgClickRate').textContent = clickRate + '%';
+        const tbody = document.getElementById('analyticsTableBody');
+        if (userData.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:30px; font-weight:600;">No data yet</td></tr>';
+          return;
+        }
+        let html = '';
+        userData.slice(0, 30).forEach(u => {
+          const rate = u.views > 0 ? ((u.clicks / u.views) * 100).toFixed(1) : 0;
+          const lastActiveStr = u.lastActive === today ? '🟢 Today' : u.lastActive;
+          html += `<tr>
+            <td class="user-id">${u.name}<br><span style="font-size:0.68rem; color:#94a3b8;">${u.id}</span></td>
+            <td><strong>${u.views}</strong></td>
+            <td><strong>${u.clicks}</strong></td>
+            <td>${rate}%</td>
+            <td style="font-size:0.72rem;">${lastActiveStr}</td>
+          </tr>`;
+        });
+        tbody.innerHTML = html;
+      } catch (e) {
+        console.error('Analytics error:', e);
+        document.getElementById('analyticsTableBody').innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ef4444; font-weight:600;">Error loading</td></tr>';
+      }
+    }
+
+    function refreshAnalytics() { toast('Refreshing...'); loadAnalytics(); loadCommissionOverview(); }
+
+    // ===== WITHDRAWALS =====
+    db.ref('withdrawals').orderByChild('status').equalTo('pending').on('value', snap => {
+      let html = '';
+      if(snap.exists()) {
+        snap.forEach(child => {
+          let req = child.val();
+          let key = child.key;
+          let date = new Date(req.timestamp).toLocaleString();
+          const feeText = req.fee ? `Fee: ${req.fee.toFixed(2)}` : '';
+          const levelText = req.level ? `Level ${req.level}` : '';
+          html += `<div class="wd-card">
+            <div class="wd-header">
+              <span class="wd-method"><i class="fas fa-credit-card"></i> ${req.method}</span>
+              <span class="wd-amount">${req.amount} TK</span>
+            </div>
+            <div class="wd-info">
+              <b>Account:</b> <span class="wd-account">${req.account}</span><br>
+              <b>User ID:</b> ${req.userId}<br>
+              <b>Name:</b> ${req.userName}<br>
+              <b>Level:</b> ${levelText} | ${feeText}<br>
+              <small style="color:#94a3b8;">📅 ${date}</small>
+            </div>
+            <div class="wd-actions">
+              <button class="btn btn-green btn-small" onclick="approveWd('${key}')"><i class="fas fa-check"></i> Approve</button>
+              <button class="btn btn-red btn-small" onclick="rejectWd('${key}', '${req.userId}', ${req.amount})"><i class="fas fa-times"></i> Reject</button>
+            </div>
+          </div>`;
+        });
+      } else {
+        html = '<div class="empty-state"><div class="icon"><i class="fas fa-check-circle"></i></div><p>No Pending Requests!</p></div>';
+      }
+      document.getElementById('wd-container').innerHTML = html;
+    });
+
+    function loadAllWithdrawals() {
+      db.ref('withdrawals').once('value', snap => {
+        let html = '';
+        if(snap.exists()) {
+          let count = 0;
+          snap.forEach(child => {
+            let req = child.val();
+            count++;
+            const statusColor = req.status === 'approved' ? '#10b981' : req.status === 'pending' ? '#f59e0b' : '#ef4444';
+            const statusBg = req.status === 'approved' ? 'rgba(16,185,129,0.1)' : req.status === 'pending' ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.1)';
+            const feeText = req.fee ? `Fee: ${req.fee.toFixed(2)}` : '';
+            html += `<div style="border-bottom:1px solid #e2e8f0; padding:12px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; font-size:0.82rem;">
+              <span><b>${req.userName || 'User'}</b> <span style="color:#94a3b8;">(${req.userId})</span></span>
+              <span style="color:#475569;">${req.method} - ${req.account}</span>
+              <span style="font-weight:800; color:var(--primary);">${req.amount} TK ${feeText}</span>
+              <span style="color:${statusColor}; font-weight:800; background:${statusBg}; padding:3px 10px; border-radius:20px; font-size:0.7rem; text-transform:uppercase;">${req.status}</span>
+            </div>`;
+          });
+          if(count === 0) html = '<p style="text-align:center; color:#94a3b8; font-weight:600;">No withdrawals found.</p>';
+        } else { html = '<p style="text-align:center; color:#94a3b8; font-weight:600;">No withdrawals found.</p>'; }
+        document.getElementById('allWdContainer').innerHTML = html;
+      });
+    }
+
+    function approveWd(id) {
+      if(confirm('Approve this payment?')) db.ref('withdrawals/' + id).update({ status: 'approved' }).then(() => toast('✅ Payment Approved!'));
+    }
+
+    async function rejectWd(id, userId, amount) {
+      if(confirm('Reject and refund balance?')) {
+        try {
+          const userRef = db.ref('users/' + userId);
+          const snap = await userRef.once('value');
+          if(snap.exists()){
+            let bal = Number(snap.val().balance || 0);
+            await userRef.update({ balance: bal + Number(amount) });
+          }
+          await db.ref('withdrawals/' + id).update({ status: 'rejected' });
+          toast('✅ Rejected & Refunded!');
+        } catch(e) { toast('Error!'); }
+      }
+    }
+
+    // ===== REFERRALS =====
+    async function loadReferralStats() {
+      try {
+        const snap = await db.ref('users').once('value');
+        let users = [];
+        let totalRefs = 0, totalQualifiedRefs = 0, totalCommission = 0;
+        let allReferralDetails = [];
+        const balanceMap = {};
+        snap.forEach(child => {
+          const u = child.val();
+          balanceMap[child.key] = Number(u.balance || 0);
+          totalCommission += Number(u.totalCommission || 0);
+        });
+        if(snap.exists()) {
+          snap.forEach(child => {
+            const u = child.val();
+            const id = child.key;
+            const refs = u.referredUsers || {};
+            const keys = Object.keys(refs);
+            let qualified = 0;
+            keys.forEach(rid => {
+              if ((balanceMap[rid] || 0) >= MIN_REFERRAL_BALANCE) qualified++;
+              allReferralDetails.push({
+                referrerId: id, referrerName: u.name || 'User',
+                referredId: rid, referredName: refs[rid].name || 'User',
+                referredBalance: balanceMap[rid] || 0,
+                qualified: (balanceMap[rid] || 0) >= MIN_REFERRAL_BALANCE,
+                joinedAt: refs[rid].joinedAt || 0
+              });
+            });
+            if (keys.length > 0) {
+              users.push({ id, name: u.name || 'User', totalReferrals: keys.length, qualifiedReferrals: qualified, balance: u.balance || 0 });
+              totalRefs += keys.length;
+              totalQualifiedRefs += qualified;
+            }
+          });
+        }
+        users.sort((a, b) => b.qualifiedReferrals - a.qualifiedReferrals);
+        const topReferrers = users.slice(0, 10);
+        const leaderContainer = document.getElementById('adminRefLeaderboard');
+        if (topReferrers.length === 0) {
+          leaderContainer.innerHTML = '<div class="empty-state"><div class="icon"><i class="fas fa-user-group"></i></div><p>No referrals yet</p></div>';
+        } else {
+          let html = '';
+          const medals = ['🥇', '🥈', '🥉'];
+          topReferrers.forEach((u, i) => {
+            const medal = i < 3 ? medals[i] : `#${i+1}`;
+            const level = getReferralLevel(u.qualifiedReferrals);
+            html += `<div class="leaderboard-item">
+              <div class="leaderboard-medal">${medal}</div>
+              <div class="leaderboard-info">
+                <div class="leaderboard-name">${u.name}</div>
+                <div class="leaderboard-id">ID: ${u.id}</div>
+                <span class="ref-level-badge ${level.class}" style="margin-top:4px;">${level.label}</span>
+              </div>
+              <div class="leaderboard-stats">
+                <div class="leaderboard-qualified">✅ ${u.qualifiedReferrals}</div>
+                <div class="leaderboard-total">Total: ${u.totalReferrals}</div>
+              </div>
+            </div>`;
+          });
+          leaderContainer.innerHTML = html;
+        }
+        const statsContainer = document.getElementById('adminRefStats');
+        const totalUsers = snap.exists() ? snap.numChildren() : 0;
+        statsContainer.innerHTML = `
+          <div class="stat-mini-grid">
+            <div class="stat-mini"><div class="num">${totalRefs}</div><div class="lbl">Total Refs</div></div>
+            <div class="stat-mini"><div class="num green">${totalQualifiedRefs}</div><div class="lbl">Qualified (${MIN_REFERRAL_BALANCE}+)</div></div>
+            <div class="stat-mini"><div class="num purple">${totalCommission.toFixed(2)}</div><div class="lbl">Commission Paid</div></div>
+            <div class="stat-mini"><div class="num red">${totalUsers}</div><div class="lbl">Total Users</div></div>
+          </div>
+        `;
+        const detailContainer = document.getElementById('referralDetailsList');
+        if (allReferralDetails.length === 0) {
+          detailContainer.innerHTML = '<div class="empty-state"><div class="icon"><i class="fas fa-list"></i></div><p>No referral records yet</p></div>';
+        } else {
+          allReferralDetails.sort((a,b) => (b.joinedAt || 0) - (a.joinedAt || 0));
+          let html = '';
+          allReferralDetails.slice(0, 30).forEach(r => {
+            const badge = r.qualified 
+              ? '<span class="ref-qualified">✅ Qualified</span>' 
+              : '<span class="ref-notqualified">❌ Not Qualified</span>';
+            html += `<div class="ref-detail-item">
+              <div class="ref-detail-row">
+                <span><span class="ref-detail-name">${r.referrerName}</span><span class="ref-detail-id">(${r.referrerId})</span></span>
+                <span style="color:#94a3b8; font-size:0.7rem;">${new Date(r.joinedAt).toLocaleDateString()}</span>
+              </div>
+              <div class="ref-detail-row">
+                <span>↳ <span class="ref-detail-name">${r.referredName}</span><span class="ref-detail-id">(${r.referredId})</span></span>
+                <span><span class="ref-detail-bal">${r.referredBalance.toFixed(2)} TK</span> ${badge}</span>
+              </div>
+            </div>`;
+          });
+          if (allReferralDetails.length > 30) html += `<p style="text-align:center; color:#94a3b8; font-size:0.8rem; font-weight:600; margin-top:8px;">+ ${allReferralDetails.length - 30} more...</p>`;
+          detailContainer.innerHTML = html;
+        }
+      } catch(e) { console.error('Error loading referral stats:', e); }
+    }
+
+    function refreshReferralStats() {
+      toast('Refreshing...');
+      loadReferralStats();
+    }
+
+    // ===== INIT =====
+    window.onload = function() {
+      loadAnalytics();
+      loadCommissionOverview();
+      loadVerificationStats();
+      toggleSurveyFields();
+    };
+  </script>
 </body>
 </html>
