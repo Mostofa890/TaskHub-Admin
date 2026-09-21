@@ -368,7 +368,30 @@
           </div>
           <div class="form-group" style="flex:1; min-width:140px;">
             <label>Category</label>
-            <input type="text" id="etCat">
+            <select id="etCat">
+              <option value="General">General</option>
+              <option value="Survey">Survey</option>
+              <option value="YouTube Video View">YouTube Video View</option>
+              <option value="YouTube Like">YouTube Like</option>
+              <option value="YouTube Comment">YouTube Comment</option>
+              <option value="YouTube Subscribe">YouTube Subscribe</option>
+              <option value="App Download">App Download</option>
+              <option value="App Install">App Install</option>
+              <option value="Website Visit">Website Visit</option>
+              <option value="Telegram Join">Telegram Join</option>
+              <option value="Telegram Channel">Telegram Channel</option>
+              <option value="Facebook Like">Facebook Like</option>
+              <option value="Facebook Follow">Facebook Follow</option>
+              <option value="Instagram Follow">Instagram Follow</option>
+              <option value="Instagram Like">Instagram Like</option>
+              <option value="Twitter Follow">Twitter Follow</option>
+              <option value="TikTok Follow">TikTok Follow</option>
+              <option value="Voice Recording">Voice Recording</option>
+              <option value="Image Upload">Image Upload</option>
+              <option value="Text Writing">Text Writing</option>
+              <option value="Sign Up">Sign Up</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -386,12 +409,12 @@
             <label>Time Limit (Days)</label>
             <input type="number" id="etTime">
           </div>
-          <div class="form-group" style="flex:1; min-width:120px;" id="etTimerGroup">
+          <div class="form-group" style="flex:1; min-width:120px; display:none;" id="etTimerGroup">
             <label>⏱️ Timer (Seconds)</label>
             <input type="number" id="etTimer" min="5">
           </div>
         </div>
-        <div class="form-group" id="etLinkGroup">
+        <div class="form-group" id="etLinkGroup" style="display:none;">
           <label>🔗 Survey URL</label>
           <input type="url" id="etLink">
         </div>
@@ -618,7 +641,7 @@
       </div>
     </div>
 
-    <!-- ================= TASKS TAB (FULL SYSTEM FROM BANGLA ADMIN) ================= -->
+    <!-- ================= TASKS TAB ================= -->
     <div id="tab-tasks" class="tab-content">
       <!-- Create/Edit Task -->
       <div class="card">
@@ -643,8 +666,31 @@
             </select>
           </div>
           <div class="form-group" style="flex:1; min-width:140px;">
-            <label>Category</label>
-            <input type="text" id="newTaskCat" placeholder="Survey" value="Survey">
+            <label>Category *</label>
+            <select id="newTaskCat">
+              <option value="General">General</option>
+              <option value="Survey" selected>Survey</option>
+              <option value="YouTube Video View">YouTube Video View</option>
+              <option value="YouTube Like">YouTube Like</option>
+              <option value="YouTube Comment">YouTube Comment</option>
+              <option value="YouTube Subscribe">YouTube Subscribe</option>
+              <option value="App Download">App Download</option>
+              <option value="App Install">App Install</option>
+              <option value="Website Visit">Website Visit</option>
+              <option value="Telegram Join">Telegram Join</option>
+              <option value="Telegram Channel">Telegram Channel</option>
+              <option value="Facebook Like">Facebook Like</option>
+              <option value="Facebook Follow">Facebook Follow</option>
+              <option value="Instagram Follow">Instagram Follow</option>
+              <option value="Instagram Like">Instagram Like</option>
+              <option value="Twitter Follow">Twitter Follow</option>
+              <option value="TikTok Follow">TikTok Follow</option>
+              <option value="Voice Recording">Voice Recording</option>
+              <option value="Image Upload">Image Upload</option>
+              <option value="Text Writing">Text Writing</option>
+              <option value="Sign Up">Sign Up</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
         </div>
 
@@ -664,14 +710,16 @@
             <label>Time Limit (Days)</label>
             <input type="number" id="newTaskTime" placeholder="7" value="7">
           </div>
-          <div class="form-group" style="flex:1; min-width:120px;" id="timerGroup">
+          <!-- Timer field: hidden by default, shown only for survey -->
+          <div class="form-group" style="flex:1; min-width:120px; display:none;" id="timerGroup">
             <label>⏱️ Timer (Seconds) *</label>
             <input type="number" id="newTaskTimer" placeholder="60" value="60" min="5">
             <small style="font-size:0.68rem; color:#94a3b8; font-weight:600;">Time user must wait after opening survey</small>
           </div>
         </div>
 
-        <div class="form-group" id="surveyLinkGroup">
+        <!-- Link field: hidden by default, shown only for survey -->
+        <div class="form-group" id="surveyLinkGroup" style="display:none;">
           <label>🔗 Survey URL *</label>
           <input type="url" id="newTaskLink" placeholder="https://example.com/survey">
         </div>
@@ -780,7 +828,7 @@
     let MIN_REFERRAL_BALANCE = 20;
     let selectedCommissionMode = 'bonus';
     
-    // ✅ Task & Submission State
+    // Task & Submission State
     let editingTaskId = null;
     let allSubmissions = [];
     let currentSubFilter = 'pending';
@@ -928,23 +976,20 @@
     document.getElementById('userDetailModal').addEventListener('click', (e) => { if (e.target.id === 'userDetailModal') closeUserModal(); });
 
     // ===================================================
-    // ✅ TASK SYSTEM (FULL FROM BANGLA ADMIN PANEL)
+    // ✅ TASK SYSTEM
     // ===================================================
+    // Survey type নির্বাচন করলে Timer ও Link দেখাবে, অন্যথায় সম্পূর্ণ হাইড থাকবে
     function toggleSurveyFields() {
       const type = document.getElementById('newTaskType').value;
       const isSurvey = type === 'survey';
       const linkGroup = document.getElementById('surveyLinkGroup');
       const timerGroup = document.getElementById('timerGroup');
       if (isSurvey) {
-        linkGroup.style.opacity = '1';
-        timerGroup.style.opacity = '1';
-        document.getElementById('newTaskLink').disabled = false;
-        document.getElementById('newTaskTimer').disabled = false;
+        linkGroup.style.display = 'block';
+        timerGroup.style.display = 'block';
       } else {
-        linkGroup.style.opacity = '0.4';
-        timerGroup.style.opacity = '0.4';
-        document.getElementById('newTaskLink').disabled = true;
-        document.getElementById('newTaskTimer').disabled = true;
+        linkGroup.style.display = 'none';
+        timerGroup.style.display = 'none';
       }
     }
 
@@ -954,15 +999,11 @@
       const linkGroup = document.getElementById('etLinkGroup');
       const timerGroup = document.getElementById('etTimerGroup');
       if (isSurvey) {
-        linkGroup.style.opacity = '1';
-        timerGroup.style.opacity = '1';
-        document.getElementById('etLink').disabled = false;
-        document.getElementById('etTimer').disabled = false;
+        linkGroup.style.display = 'block';
+        timerGroup.style.display = 'block';
       } else {
-        linkGroup.style.opacity = '0.4';
-        timerGroup.style.opacity = '0.4';
-        document.getElementById('etLink').disabled = true;
-        document.getElementById('etTimer').disabled = true;
+        linkGroup.style.display = 'none';
+        timerGroup.style.display = 'none';
       }
     }
 
@@ -970,7 +1011,7 @@
       const title = document.getElementById('newTaskTitle').value.trim();
       const description = document.getElementById('newTaskDesc').value.trim();
       const type = document.getElementById('newTaskType').value;
-      const category = document.getElementById('newTaskCat').value.trim() || 'General';
+      const category = document.getElementById('newTaskCat').value || 'General';
       const reward = parseFloat(document.getElementById('newTaskReward').value) || 0;
       const totalSlots = parseInt(document.getElementById('newTaskSlots').value) || 100;
       const timeLimitDays = parseInt(document.getElementById('newTaskTime').value) || 7;
@@ -1032,7 +1073,19 @@
       document.getElementById('etTitle').value = t.title || '';
       document.getElementById('etDesc').value = t.description || '';
       document.getElementById('etType').value = t.type || 'survey';
-      document.getElementById('etCat').value = t.category || 'General';
+      
+      // Category option not থাকলে dynamically অ্যাড করি
+      const catSelect = document.getElementById('etCat');
+      const catValue = t.category || 'General';
+      let optionExists = Array.from(catSelect.options).some(o => o.value === catValue);
+      if (!optionExists) {
+        const newOpt = document.createElement('option');
+        newOpt.value = catValue;
+        newOpt.textContent = catValue;
+        catSelect.appendChild(newOpt);
+      }
+      catSelect.value = catValue;
+      
       document.getElementById('etReward').value = t.reward || 0;
       document.getElementById('etSlots').value = t.totalSlots || 100;
       const daysMatch = (t.timeLimit || '7 days').match(/\d+/);
@@ -1054,7 +1107,7 @@
       const title = document.getElementById('etTitle').value.trim();
       const description = document.getElementById('etDesc').value.trim();
       const type = document.getElementById('etType').value;
-      const category = document.getElementById('etCat').value.trim() || 'General';
+      const category = document.getElementById('etCat').value || 'General';
       const reward = parseFloat(document.getElementById('etReward').value) || 0;
       const totalSlots = parseInt(document.getElementById('etSlots').value) || 100;
       const timeLimitDays = parseInt(document.getElementById('etTime').value) || 7;
