@@ -11,177 +11,54 @@
 
   <style>
     :root {
-      --primary: #6366f1;
-      --primary-dark: #4f46e5;
-      --primary-light: #818cf8;
-      --secondary: #8b5cf6;
-      --accent: #06b6d4;
-      --bg: #f8fafc;
-      --bg-alt: #f1f5f9;
-      --surface: #ffffff;
-      --text: #0f172a;
-      --text-secondary: #475569;
-      --text-muted: #94a3b8;
+      --primary: #6366f1; --primary-dark: #4f46e5; --primary-light: #818cf8;
+      --secondary: #8b5cf6; --accent: #06b6d4;
+      --bg: #f8fafc; --bg-alt: #f1f5f9; --surface: #ffffff;
+      --text: #0f172a; --text-secondary: #475569; --text-muted: #94a3b8;
       --border: #e2e8f0;
-      --success: #10b981;
-      --success-bg: #d1fae5;
-      --danger: #ef4444;
-      --danger-bg: #fee2e2;
-      --warning: #f59e0b;
-      --warning-bg: #fef3c7;
-      --info: #3b82f6;
-      --info-bg: #dbeafe;
+      --success: #10b981; --success-bg: #d1fae5;
+      --danger: #ef4444; --danger-bg: #fee2e2;
+      --warning: #f59e0b; --warning-bg: #fef3c7;
+      --info: #3b82f6; --info-bg: #dbeafe;
       --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
       --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
       --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.05);
       --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.05);
       --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.15);
-      --radius: 16px;
-      --radius-sm: 12px;
-      --radius-lg: 24px;
+      --radius: 16px; --radius-sm: 12px; --radius-lg: 24px;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding-bottom: 30px;
-      -webkit-font-smoothing: antialiased;
-      letter-spacing: -0.01em;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      top: -50%; left: -50%;
-      width: 200%; height: 200%;
-      background: 
-        radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.06) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.04) 0%, transparent 60%);
-      z-index: -1;
-      animation: bgMove 20s ease-in-out infinite;
-    }
-    @keyframes bgMove {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(-5%, -5%); }
-    }
-
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 30px; -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+    body::before { content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.06) 0%, transparent 40%), radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.04) 0%, transparent 60%); z-index: -1; animation: bgMove 20s ease-in-out infinite; }
+    @keyframes bgMove { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-5%, -5%); } }
     .container { max-width: 680px; margin: 0 auto; padding: 0 16px; }
-
-    .header {
-      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
-      color: #fff;
-      padding: 28px 24px 60px;
-      text-align: left;
-      position: relative;
-      overflow: hidden;
-      border-radius: 0 0 32px 32px;
-      margin-bottom: -32px;
-      z-index: 1;
-      box-shadow: 0 20px 40px -10px rgba(67, 56, 202, 0.4);
-    }
-    .header::before {
-      content: '';
-      position: absolute;
-      width: 200px; height: 200px;
-      background: radial-gradient(circle, rgba(139, 92, 246, 0.5), transparent 70%);
-      top: -100px; right: -60px;
-      border-radius: 50%;
-      filter: blur(20px);
-    }
-    .header::after {
-      content: '';
-      position: absolute;
-      width: 150px; height: 150px;
-      background: radial-gradient(circle, rgba(6, 182, 212, 0.3), transparent 70%);
-      bottom: -80px; left: -40px;
-      border-radius: 50%;
-      filter: blur(20px);
-    }
-    .header-content {
-      position: relative; z-index: 2;
-      display: flex; justify-content: space-between; align-items: center;
-    }
+    .header { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%); color: #fff; padding: 28px 24px 60px; text-align: left; position: relative; overflow: hidden; border-radius: 0 0 32px 32px; margin-bottom: -32px; z-index: 1; box-shadow: 0 20px 40px -10px rgba(67, 56, 202, 0.4); }
+    .header::before { content: ''; position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(139, 92, 246, 0.5), transparent 70%); top: -100px; right: -60px; border-radius: 50%; filter: blur(20px); }
+    .header::after { content: ''; position: absolute; width: 150px; height: 150px; background: radial-gradient(circle, rgba(6, 182, 212, 0.3), transparent 70%); bottom: -80px; left: -40px; border-radius: 50%; filter: blur(20px); }
+    .header-content { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; }
     .header-brand { display: flex; align-items: center; gap: 12px; }
-    .header-logo {
-      width: 44px; height: 44px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #a78bfa, #6366f1);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem;
-      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
-    }
+    .header-logo { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, #a78bfa, #6366f1); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4); }
     .header-title { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em; }
     .header-subtitle { font-size: 0.72rem; font-weight: 500; color: rgba(255, 255, 255, 0.7); margin-top: 2px; }
-    .header-status {
-      display: flex; align-items: center; gap: 6px;
-      background: rgba(255, 255, 255, 0.15); padding: 6px 12px;
-      border-radius: 999px; font-size: 0.72rem; font-weight: 700;
-      border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
-    }
-    .header-status .dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #10b981; box-shadow: 0 0 10px #10b981; animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.7; transform: scale(1.1); }
-    }
-
+    .header-status { display: flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.15); padding: 6px 12px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); }
+    .header-status .dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } }
     .tabs-wrapper { position: relative; z-index: 2; margin-top: 16px; padding: 0 4px; }
-    .tabs {
-      display: flex; overflow-x: auto; background: var(--surface);
-      border-radius: 20px; padding: 6px; gap: 4px;
-      box-shadow: var(--shadow-lg); scrollbar-width: none; -ms-overflow-style: none;
-      border: 1px solid var(--border);
-    }
+    .tabs { display: flex; overflow-x: auto; background: var(--surface); border-radius: 20px; padding: 6px; gap: 4px; box-shadow: var(--shadow-lg); scrollbar-width: none; -ms-overflow-style: none; border: 1px solid var(--border); }
     .tabs::-webkit-scrollbar { display: none; }
-    .tab {
-      flex: 0 0 auto; min-width: 84px; text-align: center;
-      padding: 10px 12px; font-weight: 700; font-size: 0.72rem;
-      color: var(--text-muted); cursor: pointer; border-radius: 14px;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex; flex-direction: column; align-items: center;
-      gap: 4px; position: relative; user-select: none;
-    }
+    .tab { flex: 0 0 auto; min-width: 84px; text-align: center; padding: 10px 12px; font-weight: 700; font-size: 0.72rem; color: var(--text-muted); cursor: pointer; border-radius: 14px; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; user-select: none; }
     .tab i { font-size: 1.05rem; transition: transform 0.25s; }
     .tab:hover { background: var(--bg-alt); color: var(--text-secondary); }
-    .tab.active {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: #fff; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
-    }
+    .tab.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35); }
     .tab.active i { transform: scale(1.1); }
-
     .tab-content { display: none; padding-top: 24px; animation: fadeSlide 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
     .tab-content.active { display: block; }
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .card {
-      background: var(--surface); padding: 20px; border-radius: var(--radius-lg);
-      margin-bottom: 16px; border: 1px solid var(--border);
-      box-shadow: var(--shadow); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    @keyframes fadeSlide { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    .card { background: var(--surface); padding: 20px; border-radius: var(--radius-lg); margin-bottom: 16px; border: 1px solid var(--border); box-shadow: var(--shadow); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-    .card-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
-    }
-    .card-title {
-      font-size: 1rem; font-weight: 800; color: var(--text);
-      display: flex; align-items: center; gap: 10px; letter-spacing: -0.02em;
-    }
-    .card-title-icon {
-      width: 36px; height: 36px; border-radius: 11px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.95rem; color: #fff; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-    }
+    .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+    .card-title { font-size: 1rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 10px; letter-spacing: -0.02em; }
+    .card-title-icon { width: 36px; height: 36px; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; color: #fff; box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); }
     .icon-primary { background: linear-gradient(135deg, #6366f1, #818cf8); }
     .icon-success { background: linear-gradient(135deg, #10b981, #34d399); }
     .icon-warning { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
@@ -189,40 +66,14 @@
     .icon-info { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
     .icon-purple { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
     .icon-cyan { background: linear-gradient(135deg, #06b6d4, #22d3ee); }
-
     .form-group { margin-bottom: 16px; }
-    label {
-      display: block; font-size: 0.78rem; font-weight: 700;
-      margin-bottom: 8px; color: var(--text-secondary); letter-spacing: 0.01em;
-    }
-    input, select, textarea {
-      width: 100%; padding: 13px 16px; border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm); font-size: 0.9rem; font-family: inherit;
-      outline: none; background: var(--bg-alt); transition: all 0.2s;
-      font-weight: 600; color: var(--text);
-    }
-    input:focus, textarea:focus, select:focus {
-      border-color: var(--primary); background: #fff;
-      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-    }
+    label { display: block; font-size: 0.78rem; font-weight: 700; margin-bottom: 8px; color: var(--text-secondary); letter-spacing: 0.01em; }
+    input, select, textarea { width: 100%; padding: 13px 16px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.9rem; font-family: inherit; outline: none; background: var(--bg-alt); transition: all 0.2s; font-weight: 600; color: var(--text); }
+    input:focus, textarea:focus, select:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
     input::placeholder, textarea::placeholder { color: var(--text-muted); font-weight: 500; }
     textarea { resize: vertical; min-height: 80px; font-family: inherit; }
-    select {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 14px center;
-      background-size: 18px; padding-right: 42px;
-    }
-
-    .btn {
-      width: 100%; padding: 14px 20px; border-radius: var(--radius-sm);
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: #fff; border: none; font-size: 0.92rem; font-weight: 700;
-      cursor: pointer; font-family: inherit; letter-spacing: -0.01em;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex; align-items: center; justify-content: center;
-      gap: 8px; box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
-    }
+    select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; background-size: 18px; padding-right: 42px; }
+    .btn { width: 100%; padding: 14px 20px; border-radius: var(--radius-sm); background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; border: none; font-size: 0.92rem; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: -0.01em; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3); }
     .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(99, 102, 241, 0.4); }
     .btn:active { transform: translateY(0) scale(0.98); }
     .btn-green { background: linear-gradient(135deg, #10b981, #34d399); box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3); }
@@ -234,17 +85,9 @@
     .btn-info { background: linear-gradient(135deg, #3b82f6, #60a5fa); box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3); }
     .btn-small { width: auto; padding: 9px 14px; font-size: 0.78rem; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
     .btn-small:hover { box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15); }
-
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-    .stat-card {
-      background: var(--surface); padding: 18px 14px; border-radius: var(--radius);
-      text-align: center; border: 1px solid var(--border);
-      position: relative; overflow: hidden; transition: all 0.3s;
-    }
-    .stat-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-    }
+    .stat-card { background: var(--surface); padding: 18px 14px; border-radius: var(--radius); text-align: center; border: 1px solid var(--border); position: relative; overflow: hidden; transition: all 0.3s; }
+    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--primary), var(--secondary)); }
     .stat-card.green::before { background: linear-gradient(90deg, #10b981, #34d399); }
     .stat-card.warning::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
     .stat-card.danger::before { background: linear-gradient(90deg, #ef4444, #f87171); }
@@ -257,109 +100,54 @@
     .stat-card.danger .num { color: var(--danger); }
     .stat-card.info .num { color: var(--info); }
     .stat-card.purple .num { color: var(--secondary); }
-    .stat-card .label {
-      font-size: 0.68rem; color: var(--text-muted); font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px;
-    }
-
-    .user-card {
-      background: var(--surface); border: 1px solid var(--border);
-      padding: 16px; border-radius: var(--radius); margin-bottom: 12px;
-      transition: all 0.25s; position: relative; overflow: hidden;
-    }
-    .user-card::before {
-      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-      background: linear-gradient(180deg, var(--primary), var(--secondary));
-    }
+    .stat-card .label { font-size: 0.68rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; }
+    .user-card { background: var(--surface); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius); margin-bottom: 12px; transition: all 0.25s; position: relative; overflow: hidden; }
+    .user-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, var(--primary), var(--secondary)); }
     .user-card:hover { box-shadow: var(--shadow-md); transform: translateX(2px); }
     .user-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
     .user-avatar-row { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-    .user-avatar {
-      width: 42px; height: 42px; border-radius: 12px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-weight: 800; font-size: 1rem; flex-shrink: 0;
-      box-shadow: 0 6px 14px rgba(99, 102, 241, 0.25);
-    }
+    .user-avatar { width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 1rem; flex-shrink: 0; box-shadow: 0 6px 14px rgba(99, 102, 241, 0.25); }
     .user-name { font-weight: 800; font-size: 0.92rem; color: var(--text); letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .user-id { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
     .user-balance-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-    .user-balance {
-      font-weight: 800; color: var(--primary); font-size: 0.85rem;
-      background: rgba(99, 102, 241, 0.08); padding: 4px 12px;
-      border-radius: 8px; display: inline-flex; align-items: center; gap: 5px;
-    }
+    .user-balance { font-weight: 800; color: var(--primary); font-size: 0.85rem; background: rgba(99, 102, 241, 0.08); padding: 4px 12px; border-radius: 8px; display: inline-flex; align-items: center; gap: 5px; }
     .user-stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 12px 0; }
-    .user-stat-mini {
-      background: var(--bg-alt); padding: 10px 8px; border-radius: 10px;
-      text-align: center; border: 1px solid var(--border); transition: all 0.2s;
-    }
+    .user-stat-mini { background: var(--bg-alt); padding: 10px 8px; border-radius: 10px; text-align: center; border: 1px solid var(--border); transition: all 0.2s; }
     .user-stat-mini:hover { background: var(--surface); }
     .user-stat-mini .val { font-size: 1rem; font-weight: 900; color: var(--primary); display: block; letter-spacing: -0.02em; }
     .user-stat-mini.green .val { color: var(--success); }
     .user-stat-mini.red .val { color: var(--danger); }
     .user-stat-mini .lbl { font-size: 0.62rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
     .user-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-
-    .status-badge {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 3px 10px; border-radius: 999px; font-size: 0.65rem;
-      font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase;
-    }
+    .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 999px; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; }
     .status-badge.active { background: var(--success-bg); color: #047857; }
     .status-badge.banned { background: var(--danger-bg); color: #b91c1c; }
     .status-badge.verified { background: var(--success-bg); color: #047857; }
     .status-badge.notverified { background: var(--danger-bg); color: #b91c1c; }
     .status-badge.pending { background: var(--warning-bg); color: #b45309; }
+    .status-badge.approved { background: var(--success-bg); color: #047857; }
+    .status-badge.rejected { background: var(--danger-bg); color: #b91c1c; }
+    .status-badge.closed { background: rgba(148,163,184,0.2); color: #475569; }
     .status-badge.survey { background: rgba(99, 102, 241, 0.12); color: var(--primary); }
     .status-badge.voice { background: rgba(245, 158, 11, 0.12); color: #b45309; }
     .status-badge.image { background: rgba(236, 72, 153, 0.12); color: #be185d; }
     .status-badge.text { background: rgba(6, 182, 212, 0.12); color: #0891b2; }
-
-    .ref-level-badge {
-      display: inline-flex; align-items: center; padding: 3px 10px;
-      border-radius: 999px; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.02em;
-    }
+    .ref-level-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.02em; }
     .ref-level-badge.beginner { background: rgba(99, 102, 241, 0.12); color: var(--primary); }
     .ref-level-badge.bronze { background: rgba(205, 127, 50, 0.15); color: #b45309; }
     .ref-level-badge.silver { background: rgba(148, 163, 184, 0.2); color: #475569; }
     .ref-level-badge.gold { background: rgba(245, 158, 11, 0.15); color: #b45309; }
     .ref-level-badge.platinum { background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.15)); color: var(--primary); }
-
-    .alert-box {
-      padding: 14px 16px; border-radius: var(--radius-sm); font-size: 0.8rem;
-      font-weight: 600; margin-bottom: 14px; line-height: 1.55;
-      display: flex; align-items: flex-start; gap: 12px; border-left: 4px solid;
-    }
+    .alert-box { padding: 14px 16px; border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 600; margin-bottom: 14px; line-height: 1.55; display: flex; align-items: flex-start; gap: 12px; border-left: 4px solid; }
     .alert-box i { font-size: 1.15rem; flex-shrink: 0; margin-top: 1px; }
     .alert-box.warning { background: var(--warning-bg); border-color: var(--warning); color: #92400e; }
     .alert-box.info { background: var(--info-bg); border-color: var(--info); color: #1e40af; }
     .alert-box.success { background: var(--success-bg); border-color: var(--success); color: #065f46; }
     .alert-box.danger { background: var(--danger-bg); border-color: var(--danger); color: #991b1b; }
-
-    .toast {
-      position: fixed; top: 24px; left: 50%;
-      transform: translateX(-50%) translateY(-100px);
-      background: linear-gradient(135deg, #1e293b, #334155);
-      color: #fff; padding: 14px 24px; border-radius: 14px;
-      font-size: 0.85rem; font-weight: 700; z-index: 10000;
-      opacity: 0; pointer-events: none;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: var(--shadow-xl); max-width: calc(100% - 40px);
-      text-align: center; letter-spacing: -0.01em;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
+    .toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-100px); background: linear-gradient(135deg, #1e293b, #334155); color: #fff; padding: 14px 24px; border-radius: 14px; font-size: 0.85rem; font-weight: 700; z-index: 10000; opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: var(--shadow-xl); max-width: calc(100% - 40px); text-align: center; letter-spacing: -0.01em; border: 1px solid rgba(255, 255, 255, 0.1); }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    .wd-card {
-      background: var(--surface); border: 1px solid var(--border);
-      padding: 16px; border-radius: var(--radius); margin-bottom: 12px;
-      transition: all 0.25s; position: relative; overflow: hidden;
-    }
-    .wd-card::before {
-      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-      background: linear-gradient(180deg, #f59e0b, #fbbf24);
-    }
+    .wd-card { background: var(--surface); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius); margin-bottom: 12px; transition: all 0.25s; position: relative; overflow: hidden; }
+    .wd-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, #f59e0b, #fbbf24); }
     .wd-card:hover { box-shadow: var(--shadow-md); }
     .wd-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px dashed var(--border); }
     .wd-method { display: inline-flex; align-items: center; gap: 6px; background: var(--info-bg); color: #1e40af; padding: 5px 12px; border-radius: 8px; font-weight: 800; font-size: 0.75rem; }
@@ -369,100 +157,61 @@
     .wd-account { color: #dc2626; font-weight: 800; font-size: 0.88rem; }
     .wd-actions { display: flex; gap: 8px; }
     .wd-actions .btn { flex: 1; }
-
-    .level-edit-item {
-      background: var(--bg-alt); padding: 14px; border-radius: var(--radius-sm);
-      border: 1.5px solid var(--border); margin-bottom: 10px; transition: all 0.2s;
-    }
+    .level-edit-item { background: var(--bg-alt); padding: 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); margin-bottom: 10px; transition: all 0.2s; }
     .level-edit-item:hover { border-color: var(--primary); background: #fff; }
     .level-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .level-num { font-weight: 800; color: var(--primary); font-size: 0.85rem; background: rgba(99, 102, 241, 0.1); padding: 4px 12px; border-radius: 8px; }
     .level-fields { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
     .level-fields input { padding: 8px 10px; font-size: 0.82rem; background: #fff; width: 68px; border-radius: 8px; }
     .level-fields input.wide { width: 110px; }
-
     .channel-item { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; background: var(--bg-alt); padding: 10px; border-radius: 12px; border: 1.5px solid var(--border); }
     .channel-item input { flex: 1; background: #fff; padding: 10px 12px; font-size: 0.82rem; }
-
-    .channel-verified-item {
-      display: flex; align-items: center; gap: 12px; padding: 12px 14px;
-      background: var(--bg-alt); border-radius: var(--radius-sm); margin-bottom: 8px;
-      border: 1.5px solid var(--border); transition: all 0.2s;
-    }
+    .channel-verified-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--bg-alt); border-radius: var(--radius-sm); margin-bottom: 8px; border: 1.5px solid var(--border); transition: all 0.2s; }
     .channel-verified-item:hover { background: #fff; border-color: var(--primary); }
-    .channel-verified-item i {
-      color: var(--primary); font-size: 1.2rem;
-      background: rgba(99, 102, 241, 0.1); padding: 8px; border-radius: 10px;
-    }
+    .channel-verified-item i { color: var(--primary); font-size: 1.2rem; background: rgba(99, 102, 241, 0.1); padding: 8px; border-radius: 10px; }
     .channel-verified-item .ch-info { flex: 1; min-width: 0; }
     .channel-verified-item .ch-name { font-weight: 800; font-size: 0.85rem; color: var(--text); }
     .channel-verified-item .ch-id { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; font-weight: 600; }
-
     .search-box { position: relative; margin-bottom: 16px; }
     .search-box input { padding-left: 44px; background: var(--bg-alt); }
-    .search-box i {
-      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
-      color: var(--text-muted); font-size: 1rem; pointer-events: none;
-    }
-
+    .search-box i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1rem; pointer-events: none; }
     .activity-table { width: 100%; font-size: 0.82rem; border-collapse: separate; border-spacing: 0 6px; }
-    .activity-table thead th {
-      text-align: left; padding: 10px 12px; font-weight: 800;
-      color: var(--text-muted); text-transform: uppercase;
-      font-size: 0.68rem; letter-spacing: 0.08em; border-bottom: 2px solid var(--border);
-    }
+    .activity-table thead th { text-align: left; padding: 10px 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; font-size: 0.68rem; letter-spacing: 0.08em; border-bottom: 2px solid var(--border); }
     .activity-table tbody tr { background: var(--bg-alt); transition: all 0.2s; }
     .activity-table tbody tr:hover { background: #fff; box-shadow: var(--shadow-sm); }
     .activity-table tbody td { padding: 12px; border-radius: 0; }
     .activity-table tbody tr td:first-child { border-radius: 10px 0 0 10px; }
     .activity-table tbody tr td:last-child { border-radius: 0 10px 10px 0; }
     .activity-table .user-id { font-weight: 700; color: var(--primary); }
-
-    /* ===== TASK ADMIN ITEM ===== */
-    .task-admin-item {
-      background: var(--bg-alt); padding: 16px; border-radius: var(--radius-sm);
-      margin-bottom: 12px; border: 1.5px solid var(--border);
-      transition: all 0.25s;
-    }
+    .task-admin-item { background: var(--bg-alt); padding: 16px; border-radius: var(--radius-sm); margin-bottom: 12px; border: 1.5px solid var(--border); transition: all 0.25s; }
     .task-admin-item:hover { background: #fff; border-color: var(--primary); box-shadow: var(--shadow-md); }
     .task-admin-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
     .task-admin-info { flex: 1; min-width: 0; }
     .task-admin-info .name { font-weight: 800; font-size: 0.95rem; color: var(--text); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .task-admin-info .reward {
-      display: inline-flex; align-items: center; gap: 4px;
-      background: var(--success-bg); color: #047857;
-      font-weight: 800; font-size: 0.72rem; padding: 3px 9px;
-      border-radius: 6px;
-    }
+    .task-admin-info .reward { display: inline-flex; align-items: center; gap: 4px; background: var(--success-bg); color: #047857; font-weight: 800; font-size: 0.72rem; padding: 3px 9px; border-radius: 6px; }
     .task-admin-info .meta { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; margin-top: 6px; display: flex; gap: 10px; flex-wrap: wrap; }
     .task-admin-info .url { font-size: 0.72rem; color: var(--primary); word-break: break-all; margin-top: 6px; font-weight: 600; }
     .task-admin-actions { display: flex; gap: 6px; flex-shrink: 0; }
-
-    .ad-slot-box {
-      background: var(--bg-alt); padding: 16px; border-radius: var(--radius-sm);
-      border: 1.5px solid var(--border); margin-bottom: 12px; transition: all 0.2s;
-    }
+    .submission-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 10px; transition: all 0.25s; }
+    .submission-card:hover { box-shadow: var(--shadow-md); border-color: var(--primary); }
+    .submission-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+    .submission-title { font-weight: 800; font-size: 0.9rem; color: var(--text); }
+    .submission-user { font-size: 0.72rem; color: var(--text-secondary); font-weight: 600; margin-top: 3px; }
+    .submission-meta { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; margin-top: 4px; }
+    .submission-reward { font-weight: 900; color: var(--success); font-size: 0.95rem; white-space: nowrap; }
+    .submission-status { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .ad-slot-box { background: var(--bg-alt); padding: 16px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); margin-bottom: 12px; transition: all 0.2s; }
     .ad-slot-box:hover { border-color: var(--primary); }
     .ad-slot-header { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--primary); font-size: 0.9rem; margin-bottom: 12px; }
     .ad-slot-header i { background: rgba(99, 102, 241, 0.1); padding: 8px; border-radius: 9px; }
-
     .stat-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-    .stat-mini {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.06), rgba(139, 92, 246, 0.06));
-      padding: 16px 12px; border-radius: var(--radius-sm); text-align: center;
-      border: 1.5px solid rgba(99, 102, 241, 0.15);
-    }
+    .stat-mini { background: linear-gradient(135deg, rgba(99, 102, 241, 0.06), rgba(139, 92, 246, 0.06)); padding: 16px 12px; border-radius: var(--radius-sm); text-align: center; border: 1.5px solid rgba(99, 102, 241, 0.15); }
     .stat-mini .num { font-size: 1.5rem; font-weight: 900; color: var(--primary); letter-spacing: -0.03em; line-height: 1.1; }
     .stat-mini .num.green { color: var(--success); }
     .stat-mini .num.red { color: var(--danger); }
     .stat-mini .num.purple { color: var(--secondary); }
     .stat-mini .lbl { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 6px; }
-
-    .ref-detail-item {
-      padding: 12px 14px; background: var(--bg-alt);
-      border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-      margin-bottom: 10px; font-size: 0.82rem; transition: all 0.2s;
-    }
+    .ref-detail-item { padding: 12px 14px; background: var(--bg-alt); border: 1.5px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px; font-size: 0.82rem; transition: all 0.2s; }
     .ref-detail-item:hover { background: #fff; border-color: var(--primary); }
     .ref-detail-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
     .ref-detail-row + .ref-detail-row { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border); }
@@ -471,13 +220,7 @@
     .ref-detail-bal { font-weight: 800; color: var(--primary); }
     .ref-qualified { color: var(--success); font-weight: 800; }
     .ref-notqualified { color: var(--danger); font-weight: 800; }
-
-    .leaderboard-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px 14px; background: var(--bg-alt);
-      border-radius: var(--radius-sm); margin-bottom: 8px;
-      border: 1.5px solid var(--border); transition: all 0.2s;
-    }
+    .leaderboard-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: var(--bg-alt); border-radius: var(--radius-sm); margin-bottom: 8px; border: 1.5px solid var(--border); transition: all 0.2s; }
     .leaderboard-item:hover { background: #fff; border-color: var(--primary); }
     .leaderboard-medal { font-weight: 900; font-size: 1.15rem; width: 40px; text-align: center; flex-shrink: 0; }
     .leaderboard-info { flex: 1; min-width: 0; }
@@ -486,134 +229,61 @@
     .leaderboard-stats { text-align: right; flex-shrink: 0; }
     .leaderboard-qualified { font-weight: 900; color: var(--success); font-size: 1rem; }
     .leaderboard-total { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; margin-top: 2px; }
-
     .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
-    .empty-state .icon {
-      font-size: 3rem; color: var(--border); margin-bottom: 14px;
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 80px; height: 80px; border-radius: 50%; background: var(--bg-alt);
-    }
+    .empty-state .icon { font-size: 3rem; color: var(--border); margin-bottom: 14px; display: inline-flex; align-items: center; justify-content: center; width: 80px; height: 80px; border-radius: 50%; background: var(--bg-alt); }
     .empty-state p { font-size: 0.9rem; font-weight: 700; }
-
-    .nv-user-item {
-      display: flex; justify-content: space-between; padding: 12px 14px;
-      background: linear-gradient(135deg, #fef2f2, #fee2e2);
-      border: 1.5px solid rgba(239, 68, 68, 0.2);
-      border-radius: var(--radius-sm); margin-bottom: 8px; align-items: center; gap: 10px;
-    }
+    .nv-user-item { display: flex; justify-content: space-between; padding: 12px 14px; background: linear-gradient(135deg, #fef2f2, #fee2e2); border: 1.5px solid rgba(239, 68, 68, 0.2); border-radius: var(--radius-sm); margin-bottom: 8px; align-items: center; gap: 10px; }
     .nv-user-name { font-weight: 800; font-size: 0.85rem; color: var(--text); }
     .nv-user-id { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 2px;}
     .nv-user-last { font-size: 0.68rem; color: var(--text-secondary); font-weight: 700; }
-
     .mode-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
-    .mode-option {
-      padding: 16px 12px; border: 2px solid var(--border);
-      border-radius: var(--radius-sm); background: var(--surface);
-      cursor: pointer; transition: all 0.25s; text-align: center; position: relative;
-    }
+    .mode-option { padding: 16px 12px; border: 2px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); cursor: pointer; transition: all 0.25s; text-align: center; position: relative; }
     .mode-option:hover { border-color: var(--primary-light); background: var(--bg-alt); }
-    .mode-option.selected {
-      border-color: var(--primary);
-      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.08));
-      box-shadow: 0 4px 12px rgba(99,102,241,0.2);
-    }
-    .mode-option.selected.deduct-mode {
-      border-color: var(--warning);
-      background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(251,191,36,0.08));
-      box-shadow: 0 4px 12px rgba(245,158,11,0.2);
-    }
+    .mode-option.selected { border-color: var(--primary); background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.08)); box-shadow: 0 4px 12px rgba(99,102,241,0.2); }
+    .mode-option.selected.deduct-mode { border-color: var(--warning); background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(251,191,36,0.08)); box-shadow: 0 4px 12px rgba(245,158,11,0.2); }
     .mode-option .mode-icon { font-size: 1.75rem; margin-bottom: 6px; }
     .mode-option .mode-title { font-weight: 900; font-size: 0.85rem; color: var(--text); margin-bottom: 4px; }
     .mode-option .mode-desc { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; line-height: 1.4; }
-    .mode-option.selected .mode-check {
-      position: absolute; top: 8px; right: 8px; width: 22px; height: 22px;
-      border-radius: 50%; background: var(--primary); color: #fff;
-      display: flex; align-items: center; justify-content: center; font-size: 0.7rem;
-    }
+    .mode-option.selected .mode-check { position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
     .mode-option.selected.deduct-mode .mode-check { background: var(--warning); }
     .mode-option .mode-check { display: none; }
     .mode-option.selected .mode-check { display: flex; }
-
-    .cycle-info-box {
-      background: linear-gradient(135deg, #6C5CE7, #A29BFE); color: #fff;
-      padding: 16px 20px; border-radius: var(--radius); margin-bottom: 16px;
-      position: relative; overflow: hidden;
-    }
-    .cycle-info-box::before {
-      content: ''; position: absolute; width: 150px; height: 150px;
-      background: rgba(255,255,255,0.15); border-radius: 50%;
-      top: -60px; right: -40px;
-    }
+    .cycle-info-box { background: linear-gradient(135deg, #6C5CE7, #A29BFE); color: #fff; padding: 16px 20px; border-radius: var(--radius); margin-bottom: 16px; position: relative; overflow: hidden; }
+    .cycle-info-box::before { content: ''; position: absolute; width: 150px; height: 150px; background: rgba(255,255,255,0.15); border-radius: 50%; top: -60px; right: -40px; }
     .cycle-info-box .cycle-title { font-size: 0.7rem; font-weight: 700; opacity: 0.85; letter-spacing: 1px; text-transform: uppercase; position: relative; }
     .cycle-info-box .cycle-value { font-size: 1.05rem; font-weight: 900; margin-top: 4px; position: relative; }
     .cycle-info-box .cycle-desc { font-size: 0.72rem; opacity: 0.85; margin-top: 8px; font-weight: 600; line-height: 1.4; position: relative; }
-
-    /* ===== MODAL ===== */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 9999;
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-      align-items: center; justify-content: center; padding: 16px;
-      animation: fadeSlide 0.25s ease-out;
-    }
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); align-items: center; justify-content: center; padding: 16px; animation: fadeSlide 0.25s ease-out; }
     .modal-overlay.active { display: flex; }
-    .modal-box {
-      background: var(--surface); width: 100%; max-width: 520px;
-      max-height: 90vh; overflow-y: auto; border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-xl); animation: modalPop 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    @keyframes modalPop {
-      from { opacity: 0; transform: scale(0.94) translateY(20px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-    .modal-header {
-      padding: 20px 22px; display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1px solid var(--border); position: sticky; top: 0;
-      background: var(--surface); z-index: 10;
-    }
+    .modal-box { background: var(--surface); width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; border-radius: var(--radius-lg); box-shadow: var(--shadow-xl); animation: modalPop 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    @keyframes modalPop { from { opacity: 0; transform: scale(0.94) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .modal-header { padding: 20px 22px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--surface); z-index: 10; }
     .modal-title { font-weight: 900; font-size: 1.05rem; display: flex; align-items: center; gap: 10px; color: var(--text); }
-    .modal-close {
-      width: 36px; height: 36px; border-radius: 10px; border: none;
-      background: var(--bg-alt); color: var(--text-secondary);
-      font-size: 1rem; cursor: pointer; display: flex;
-      align-items: center; justify-content: center; transition: all 0.2s;
-    }
+    .modal-close { width: 36px; height: 36px; border-radius: 10px; border: none; background: var(--bg-alt); color: var(--text-secondary); font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
     .modal-close:hover { background: var(--danger-bg); color: var(--danger); }
     .modal-body { padding: 20px 22px; }
-
-    /* ===== DETAIL MODAL STYLES ===== */
     .detail-hero { text-align: center; padding: 16px 0 20px; }
-    .detail-hero-avatar {
-      width: 72px; height: 72px; border-radius: 20px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: #fff; font-weight: 900; font-size: 1.75rem;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 12px; box-shadow: 0 10px 30px rgba(99,102,241,0.3);
-    }
+    .detail-hero-avatar { width: 72px; height: 72px; border-radius: 20px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; font-weight: 900; font-size: 1.75rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; box-shadow: 0 10px 30px rgba(99,102,241,0.3); }
     .detail-hero-name { font-weight: 900; font-size: 1.1rem; color: var(--text); }
     .detail-hero-id { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-top: 4px; }
     .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-    .detail-box {
-      background: var(--bg-alt); padding: 12px 14px; border-radius: 12px;
-      border: 1.5px solid var(--border);
-    }
+    .detail-box { background: var(--bg-alt); padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--border); }
     .detail-box .lbl { font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
     .detail-box .val { font-size: 1.05rem; font-weight: 900; color: var(--text); margin-top: 4px; letter-spacing: -0.02em; }
     .detail-box.info .val { color: var(--primary); }
     .detail-box.green .val { color: var(--success); }
     .detail-box.purple .val { color: var(--secondary); }
     .detail-box.warning .val { color: var(--warning); }
-
-    .comm-history-item {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 10px 14px; background: var(--bg-alt); border-radius: 10px;
-      margin-bottom: 6px; border: 1px solid var(--border);
-    }
+    .comm-history-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--bg-alt); border-radius: 10px; margin-bottom: 6px; border: 1px solid var(--border); }
     .comm-history-item .from { font-weight: 800; font-size: 0.82rem; color: var(--text); }
     .comm-history-item .sub { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
     .comm-history-item .amt { font-weight: 900; color: var(--success); font-size: 0.9rem; text-align: right; }
     .comm-history-item .amt small { display: block; font-size: 0.62rem; color: var(--text-muted); font-weight: 600; }
-
+    .input-data-display { background: var(--bg-alt); padding: 12px 14px; border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--border); font-size: 0.85rem; font-weight: 600; }
+    .input-data-display .row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed var(--border); gap: 10px; }
+    .input-data-display .row:last-child { border-bottom: none; }
+    .input-data-display .key { color: var(--text-muted); flex-shrink: 0; }
+    .input-data-display .val { color: var(--text); font-weight: 700; word-break: break-all; text-align: right; }
     @media (max-width: 400px) {
       .container { padding: 0 12px; }
       .card { padding: 16px; border-radius: 20px; }
@@ -644,7 +314,7 @@
 
   <div class="toast" id="toast">Saved!</div>
 
-  <!-- ✅ MODAL FOR USER DETAILS -->
+  <!-- User Detail Modal -->
   <div class="modal-overlay" id="userDetailModal">
     <div class="modal-box">
       <div class="modal-header">
@@ -658,8 +328,82 @@
     </div>
   </div>
 
+  <!-- Submission Detail Modal -->
+  <div class="modal-overlay" id="submissionDetailModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">
+          <div class="card-title-icon icon-info"><i class="fas fa-file-invoice"></i></div>
+          Submission Review
+        </div>
+        <button class="modal-close" onclick="closeSubmissionModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body" id="submissionModalBody"></div>
+    </div>
+  </div>
+
+  <!-- Edit Task Modal -->
+  <div class="modal-overlay" id="editTaskModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">
+          <div class="card-title-icon icon-warning"><i class="fas fa-pen"></i></div>
+          Edit Task
+        </div>
+        <button class="modal-close" onclick="closeEditTaskModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="etTaskId">
+        <div class="form-group"><label>Task Title *</label><input type="text" id="etTitle"></div>
+        <div class="form-group"><label>Description</label><textarea id="etDesc" rows="2"></textarea></div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <div class="form-group" style="flex:1; min-width:140px;">
+            <label>Task Type</label>
+            <select id="etType" onchange="toggleEditSurveyFields()">
+              <option value="survey">📊 Survey</option>
+              <option value="voice">🎤 Voice</option>
+              <option value="image">🖼️ Image</option>
+              <option value="text">📝 Text</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex:1; min-width:140px;">
+            <label>Category</label>
+            <input type="text" id="etCat">
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <div class="form-group" style="flex:1; min-width:120px;">
+            <label>Reward (TK)</label>
+            <input type="number" id="etReward" step="0.01">
+          </div>
+          <div class="form-group" style="flex:1; min-width:120px;">
+            <label>Total Slots</label>
+            <input type="number" id="etSlots">
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <div class="form-group" style="flex:1; min-width:120px;">
+            <label>Time Limit (Days)</label>
+            <input type="number" id="etTime">
+          </div>
+          <div class="form-group" style="flex:1; min-width:120px;" id="etTimerGroup">
+            <label>⏱️ Timer (Seconds)</label>
+            <input type="number" id="etTimer" min="5">
+          </div>
+        </div>
+        <div class="form-group" id="etLinkGroup">
+          <label>🔗 Survey URL</label>
+          <input type="url" id="etLink">
+        </div>
+        <div style="display:flex; gap:10px; margin-top:8px;">
+          <button class="btn btn-green" onclick="saveEditTask()" style="flex:2;"><i class="fas fa-check"></i> Update Task</button>
+          <button class="btn btn-red" onclick="closeEditTaskModal()" style="flex:1;"><i class="fas fa-times"></i> Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
-    <!-- ===== MODERN TABS ===== -->
     <div class="tabs-wrapper">
       <div class="tabs">
         <div class="tab active" onclick="switchTab('settings', this)"><i class="fas fa-sliders"></i><span>Settings</span></div>
@@ -678,10 +422,7 @@
     <div id="tab-settings" class="tab-content active">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-primary"><i class="fas fa-robot"></i></div>
-            App Configuration
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-robot"></i></div>App Configuration</div>
         </div>
         <div class="form-group"><label>Bot Username (Without @)</label><input type="text" id="botUsername" placeholder="your_bot"></div>
         <div class="form-group"><label>Currency Symbol</label><input type="text" id="currencySymbol" placeholder="TK"></div>
@@ -694,10 +435,7 @@
 
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-success"><i class="fas fa-gift"></i></div>
-            Referral & Bonus
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-gift"></i></div>Referral & Bonus</div>
         </div>
         <div class="form-group"><label>Daily Login Bonus (Amount)</label><input type="number" id="dailyBonusAmount" placeholder="20"></div>
         <div class="form-group"><label>Bonus Per Referral (One-time)</label><input type="number" id="refBonus" placeholder="5"></div>
@@ -706,13 +444,11 @@
           <input type="number" id="minReferralBalance" placeholder="20" value="20">
           <small style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Referral counts as valid only if referred user has this much balance</small>
         </div>
-
         <div class="form-group">
           <label>Commission Rate (%) — Ongoing Earnings</label>
           <input type="number" id="refCommissionRate" placeholder="2" value="2" min="0" max="50" step="0.1">
           <small style="font-size:0.72rem; color:#94a3b8; font-weight:600;">Referred users earn → Referrer gets this % every time</small>
         </div>
-
         <div class="form-group">
           <label>Commission Mode</label>
           <div class="mode-selector">
@@ -730,29 +466,21 @@
             </div>
           </div>
         </div>
-
         <div class="alert-box info" id="modeInfoBox" style="margin-top:4px;">
           <i class="fas fa-info-circle"></i>
-          <div id="modeInfoText">
-            <b>Bonus Mode:</b> Referred user keeps 100% income. Referrer's commission comes from your app margin.
-          </div>
+          <div id="modeInfoText"><b>Bonus Mode:</b> Referred user keeps 100% income. Referrer's commission comes from your app margin.</div>
         </div>
-
         <div class="form-group"><label>Tutorial Video Link</label><input type="text" id="tutorialLink" placeholder="https://youtube.com/..."></div>
         <div class="form-group"><label>Support Channel Link</label><input type="text" id="supportLink" placeholder="https://t.me/your_group"></div>
       </div>
 
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-cyan"><i class="fas fa-money-bill-wave"></i></div>
-            Withdrawal System
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-cyan"><i class="fas fa-money-bill-wave"></i></div>Withdrawal System</div>
         </div>
         <div class="form-group"><label>Minimum Withdraw Amount</label><input type="number" id="minWithdraw" placeholder="10"></div>
         <div class="form-group"><label>Withdraw Notice Text</label><textarea id="withdrawNotice" rows="2" placeholder="Payment will be sent in 30 minutes"></textarea></div>
         <div class="form-group"><label>Payment Methods</label><input type="text" id="paymentMethods" placeholder="Bkash, Nagad, Binance"></div>
-        
         <div style="margin-top:18px; padding:14px; background:linear-gradient(135deg, rgba(99,102,241,0.05), rgba(139,92,246,0.05)); border-radius:14px; border:1.5px solid rgba(99,102,241,0.15);">
           <div style="font-size:0.9rem; color:var(--primary); margin-bottom:10px; font-weight:800; display:flex; align-items:center; gap:8px;">
             <i class="fas fa-layer-group"></i> Withdraw Levels
@@ -770,10 +498,7 @@
     <div id="tab-channels" class="tab-content">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-info"><i class="fas fa-link"></i></div>
-            Verification Channels
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-link"></i></div>Verification Channels</div>
         </div>
         <div class="alert-box info">
           <i class="fas fa-info-circle"></i>
@@ -788,18 +513,10 @@
         <button class="btn btn-warning" onclick="saveChannelsAndForceReverify()" style="margin-top:16px;">
           <i class="fas fa-shield-halved"></i> Save & Force Re-Verify All Users
         </button>
-        <div class="alert-box warning" style="margin-top:12px;">
-          <i class="fas fa-exclamation-triangle"></i>
-          <div><b>Force Re-Verify:</b> All users' verification status will reset. They must rejoin all channels on next open.</div>
-        </div>
       </div>
-
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-success"><i class="fas fa-chart-simple"></i></div>
-            Verification Stats
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-chart-simple"></i></div>Verification Stats</div>
         </div>
         <div class="stats-grid">
           <div class="stat-card green"><div class="num" id="totalVerifiedUsers">0</div><div class="label">Verified Users</div></div>
@@ -807,27 +524,15 @@
         </div>
         <button class="btn btn-info btn-small" onclick="loadVerificationStats()"><i class="fas fa-rotate"></i> Refresh Stats</button>
       </div>
-
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-purple"><i class="fas fa-list"></i></div>
-            Active Channels
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-purple"><i class="fas fa-list"></i></div>Active Channels</div>
         </div>
         <div id="currentChannelsList"></div>
       </div>
-
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-danger"><i class="fas fa-user-slash"></i></div>
-            Not-Verified Users (Top 20)
-          </div>
-        </div>
-        <div class="alert-box warning">
-          <i class="fas fa-info-circle"></i>
-          <div>These users can't access the app until they join all channels.</div>
+          <div class="card-title"><div class="card-title-icon icon-danger"><i class="fas fa-user-slash"></i></div>Not-Verified Users (Top 20)</div>
         </div>
         <div id="notVerifiedUsersList">Loading...</div>
       </div>
@@ -837,10 +542,7 @@
     <div id="tab-analytics" class="tab-content">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-primary"><i class="fas fa-chart-line"></i></div>
-            Ad Activity Overview
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-chart-line"></i></div>Ad Activity Overview</div>
         </div>
         <div class="stats-grid">
           <div class="stat-card info"><div class="num" id="totalUsers">0</div><div class="label">Total Users</div></div>
@@ -851,20 +553,14 @@
         <div style="overflow-x:auto; margin-top:8px;">
           <table class="activity-table">
             <thead><tr><th>User</th><th>Views</th><th>Clicks</th><th>Rate</th><th>Last</th></tr></thead>
-            <tbody id="analyticsTableBody">
-              <tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:30px; font-weight:600;">Loading data...</td></tr>
-            </tbody>
+            <tbody id="analyticsTableBody"><tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:30px; font-weight:600;">Loading data...</td></tr></tbody>
           </table>
         </div>
         <button class="btn btn-info btn-small" onclick="refreshAnalytics()" style="margin-top:14px;"><i class="fas fa-rotate"></i> Refresh Analytics</button>
       </div>
-
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-purple"><i class="fas fa-coins"></i></div>
-            Commission Overview
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-purple"><i class="fas fa-coins"></i></div>Commission Overview</div>
         </div>
         <div class="stat-mini-grid">
           <div class="stat-mini"><div class="num purple" id="totalCommissionPaid">0</div><div class="lbl">Total Paid (TK)</div></div>
@@ -877,10 +573,7 @@
     <div id="tab-users" class="tab-content">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-primary"><i class="fas fa-users"></i></div>
-            All Users
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-users"></i></div>All Users</div>
         </div>
         <div class="search-box">
           <i class="fas fa-search"></i>
@@ -895,19 +588,13 @@
     <div id="tab-withdrawals" class="tab-content">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>
-            Pending Requests
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>Pending Requests</div>
         </div>
         <div id="wd-container">Loading...</div>
       </div>
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-info"><i class="fas fa-clock-rotate-left"></i></div>
-            All Withdrawals
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-clock-rotate-left"></i></div>All Withdrawals</div>
         </div>
         <div id="allWdContainer">Loading...</div>
       </div>
@@ -917,26 +604,21 @@
     <div id="tab-ads" class="tab-content">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-primary"><i class="fas fa-bullhorn"></i></div>
-            Ad Networks Config
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-bullhorn"></i></div>Ad Networks Config</div>
         </div>
         <div class="form-group"><label>Daily Ad Viewing Limit (Per Cycle)</label><input type="number" id="dailyAdLimit" placeholder="10"></div>
         <div class="form-group"><label>Reward Per Ad Watch</label><input type="number" step="0.01" id="adReward" placeholder="0.5"></div>
-
         <div class="cycle-info-box">
           <div class="cycle-title">⚡ AM/PM Ad Cycle</div>
           <div class="cycle-value">🔁 2 Cycles Per Day</div>
           <div class="cycle-desc">🌅 AM Cycle: 12:00 AM - 11:59 AM<br>🌙 PM Cycle: 12:00 PM - 11:59 PM<br>Users get fresh ads after each cycle reset.</div>
         </div>
-
         <div id="adsContainer"></div>
         <button class="btn" onclick="saveAds()"><i class="fas fa-save"></i> Save Ad Settings</button>
       </div>
     </div>
 
-    <!-- ================= TASKS TAB ================= -->
+    <!-- ================= TASKS TAB (FULL SYSTEM FROM BANGLA ADMIN) ================= -->
     <div id="tab-tasks" class="tab-content">
       <!-- Create/Edit Task -->
       <div class="card">
@@ -1003,16 +685,27 @@
       <!-- Active Tasks List -->
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-info"><i class="fas fa-list-check"></i></div>
-            Active Tasks
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-list-check"></i></div>Active Tasks</div>
         </div>
         <div class="alert-box info">
           <i class="fas fa-info-circle"></i>
-          <div>Users who complete a survey automatically receive the reward after the timer ends. No manual approval needed.</div>
+          <div>Users see these tasks in the app. Survey tasks auto-reward. Voice / Image / Text tasks require manual approval from below.</div>
         </div>
         <div id="activeTasksList"></div>
+      </div>
+
+      <!-- Task Submissions Review -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-title-icon icon-purple"><i class="fas fa-file-signature"></i></div>Task Submissions</div>
+        </div>
+        <div style="display:flex; gap:8px; margin-bottom:15px; overflow-x:auto; padding-bottom:5px;">
+          <button class="btn btn-small btn-warning" onclick="filterSubmissions('pending')">Pending</button>
+          <button class="btn btn-small btn-green" onclick="filterSubmissions('approved')">Approved</button>
+          <button class="btn btn-small btn-red" onclick="filterSubmissions('rejected')">Rejected</button>
+          <button class="btn btn-small" style="background:#475569; color:#fff;" onclick="filterSubmissions('all')">All</button>
+        </div>
+        <div id="taskSubmissionsList"></div>
       </div>
     </div>
 
@@ -1020,10 +713,7 @@
     <div id="tab-maintenance" class="tab-content">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-warning"><i class="fas fa-wrench"></i></div>
-            System Maintenance
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-wrench"></i></div>System Maintenance</div>
         </div>
         <div class="form-group">
           <label>Maintenance Mode</label>
@@ -1042,10 +732,7 @@
     <div id="tab-referrals" class="tab-content">
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-warning"><i class="fas fa-trophy"></i></div>
-            Top Referrers
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-trophy"></i></div>Top Referrers</div>
         </div>
         <div class="alert-box success">
           <i class="fas fa-check-circle"></i>
@@ -1055,27 +742,18 @@
           <div class="empty-state"><div class="icon"><i class="fas fa-users"></i></div><p>Loading...</p></div>
         </div>
       </div>
-
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-primary"><i class="fas fa-chart-simple"></i></div>
-            Referral Statistics
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-chart-simple"></i></div>Referral Statistics</div>
         </div>
         <div id="adminRefStats"></div>
       </div>
-
       <div class="card">
         <div class="card-header">
-          <div class="card-title">
-            <div class="card-title-icon icon-info"><i class="fas fa-list-ul"></i></div>
-            Recent Referral Details
-          </div>
+          <div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-list-ul"></i></div>Recent Referral Details</div>
         </div>
         <div id="referralDetailsList"></div>
       </div>
-
       <button class="btn btn-green" onclick="refreshReferralStats()"><i class="fas fa-rotate"></i> Refresh Referral Stats</button>
     </div>
 
@@ -1102,8 +780,11 @@
     let MIN_REFERRAL_BALANCE = 20;
     let selectedCommissionMode = 'bonus';
     
-    // ✅ Task Editing State
+    // ✅ Task & Submission State
     let editingTaskId = null;
+    let allSubmissions = [];
+    let currentSubFilter = 'pending';
+    let currentTaskCache = {};
 
     const REFERRAL_LEVELS = {
       BEGINNER: { min: 0, label: '⭐ BEGINNER', class: 'beginner' },
@@ -1127,6 +808,10 @@
       setTimeout(() => t.classList.remove('show'), 3000);
     }
 
+    function esc(s) {
+      return String(s || '').replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
+    }
+
     function switchTab(id, el) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -1137,7 +822,7 @@
       if(id === 'referrals') loadReferralStats();
       if(id === 'analytics') { loadAnalytics(); loadCommissionOverview(); }
       if(id === 'channels') { loadVerificationStats(); loadNotVerifiedUsers(); renderCurrentChannels(); }
-      if(id === 'tasks') { loadTasksList(); }
+      if(id === 'tasks') { loadTasksList(); loadTaskSubmissions(); }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -1192,13 +877,11 @@
       if (!u) return;
       const modal = document.getElementById('userDetailModal');
       const body = document.getElementById('userDetailBody');
-      
       const initial = (u.name || 'U').charAt(0).toUpperCase();
       const refs = u._qualifiedRefs || 0;
       const totalRefs = u._totalRefs || 0;
       const level = getReferralLevel(refs);
       const sym = configData.currencySymbol || 'TK';
-      
       const commHist = u.commissionHistory || {};
       const commKeys = Object.keys(commHist).sort((a,b) => (commHist[b].timestamp||0) - (commHist[a].timestamp||0));
       let commHtml = '';
@@ -1207,72 +890,51 @@
       } else {
         commKeys.slice(0, 20).forEach(k => {
           const c = commHist[k];
-          commHtml += `<div class="comm-history-item">
-            <div>
-              <div class="from">${c.fromName || 'User'}</div>
-              <div class="sub">${c.source || 'Earning'} • ${c.rate || 2}% • ${new Date(c.timestamp).toLocaleDateString()}</div>
-            </div>
-            <div class="amt">+${Number(c.commission || 0).toFixed(4)}<small>${sym}</small></div>
-          </div>`;
+          commHtml += `<div class="comm-history-item"><div><div class="from">${c.fromName || 'User'}</div><div class="sub">${c.source || 'Earning'} • ${c.rate || 2}% • ${new Date(c.timestamp).toLocaleDateString()}</div></div><div class="amt">+${Number(c.commission || 0).toFixed(4)}<small>${sym}</small></div></div>`;
         });
       }
-      
       body.innerHTML = `
         <div class="detail-hero">
           <div class="detail-hero-avatar">${initial}</div>
           <div class="detail-hero-name">${u.name || 'Unknown'}</div>
           <div class="detail-hero-id">ID: ${u.id}</div>
         </div>
-        
         <div class="detail-grid">
           <div class="detail-box info"><div class="lbl">Balance</div><div class="val">${(u.balance || 0).toFixed(2)} ${sym}</div></div>
           <div class="detail-box green"><div class="lbl">Total Earned</div><div class="val">${(u.totalEarned || 0).toFixed(2)} ${sym}</div></div>
           <div class="detail-box purple"><div class="lbl">Commission</div><div class="val">${(u.totalCommission || 0).toFixed(2)} ${sym}</div></div>
           <div class="detail-box warning"><div class="lbl">Qualified Refs</div><div class="val">${refs}/${totalRefs}</div></div>
         </div>
-        
         <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
           <span class="status-badge ${u.isBanned ? 'banned' : 'active'}">${u.isBanned ? '🚫 Banned' : '✅ Active'}</span>
           <span class="status-badge ${u.channelVerified ? 'verified' : 'notverified'}">${u.channelVerified ? '✅ Verified' : '❌ Not Verified'}</span>
           <span class="ref-level-badge ${level.class}">${level.label}</span>
         </div>
-        
         <div style="background:var(--bg-alt); padding:12px; border-radius:12px; margin-bottom:16px; font-size:0.8rem; font-weight:600; color:var(--text-secondary);">
           <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span>📅 Last Active:</span><b>${u.lastActive || 'Never'}</b></div>
           <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span>📺 Ad Views:</span><b>${u._adViews || 0}</b></div>
           <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span>🖱️ Ad Clicks:</span><b>${u._adClicks || 0}</b></div>
           <div style="display:flex; justify-content:space-between;"><span>💸 Withdrawals:</span><b>${u.withdrawCount || 0}</b></div>
         </div>
-        
         <div style="font-weight:800; font-size:0.85rem; margin-bottom:10px; color:var(--text); display:flex; align-items:center; gap:8px;">
           <i class="fas fa-coins" style="color:var(--warning);"></i> Commission History (Recent ${Math.min(commKeys.length, 20)})
         </div>
         ${commHtml}
       `;
-      
       modal.classList.add('active');
     }
     
-    function closeUserModal() {
-      document.getElementById('userDetailModal').classList.remove('active');
-    }
-    
-    document.getElementById('userDetailModal').addEventListener('click', (e) => {
-      if (e.target.id === 'userDetailModal') closeUserModal();
-    });
+    function closeUserModal() { document.getElementById('userDetailModal').classList.remove('active'); }
+    document.getElementById('userDetailModal').addEventListener('click', (e) => { if (e.target.id === 'userDetailModal') closeUserModal(); });
 
     // ===================================================
-    // ✅ SURVEY TASK MANAGEMENT
-    // Firebase path: config/newTasks/{taskId}
-    // Structure: {title, description, type, category, reward, totalSlots,
-    //             submittedCount, timeLimit, timer, url, createdAt, createdBy}
+    // ✅ TASK SYSTEM (FULL FROM BANGLA ADMIN PANEL)
     // ===================================================
     function toggleSurveyFields() {
       const type = document.getElementById('newTaskType').value;
       const isSurvey = type === 'survey';
       const linkGroup = document.getElementById('surveyLinkGroup');
       const timerGroup = document.getElementById('timerGroup');
-      
       if (isSurvey) {
         linkGroup.style.opacity = '1';
         timerGroup.style.opacity = '1';
@@ -1283,6 +945,24 @@
         timerGroup.style.opacity = '0.4';
         document.getElementById('newTaskLink').disabled = true;
         document.getElementById('newTaskTimer').disabled = true;
+      }
+    }
+
+    function toggleEditSurveyFields() {
+      const type = document.getElementById('etType').value;
+      const isSurvey = type === 'survey';
+      const linkGroup = document.getElementById('etLinkGroup');
+      const timerGroup = document.getElementById('etTimerGroup');
+      if (isSurvey) {
+        linkGroup.style.opacity = '1';
+        timerGroup.style.opacity = '1';
+        document.getElementById('etLink').disabled = false;
+        document.getElementById('etTimer').disabled = false;
+      } else {
+        linkGroup.style.opacity = '0.4';
+        timerGroup.style.opacity = '0.4';
+        document.getElementById('etLink').disabled = true;
+        document.getElementById('etTimer').disabled = true;
       }
     }
 
@@ -1303,15 +983,11 @@
       if (type === 'survey' && timer < 5) return toast('❌ Timer must be at least 5 seconds!');
 
       const taskData = {
-        title: title,
-        description: description,
-        type: type,
-        category: category,
-        reward: reward,
-        totalSlots: totalSlots,
+        title, description, type, category, reward, totalSlots,
         timeLimit: timeLimitDays + ' days',
         timer: type === 'survey' ? timer : 0,
         url: type === 'survey' ? url : '',
+        status: 'active',
         updatedAt: Date.now()
       };
 
@@ -1348,32 +1024,61 @@
       toggleSurveyFields();
     }
 
-    async function editTask(id) {
+    function openEditTaskModal(id) {
+      const t = currentTaskCache[id];
+      if (!t) return toast('Task not found!');
+      editingTaskId = id;
+      document.getElementById('etTaskId').value = id;
+      document.getElementById('etTitle').value = t.title || '';
+      document.getElementById('etDesc').value = t.description || '';
+      document.getElementById('etType').value = t.type || 'survey';
+      document.getElementById('etCat').value = t.category || 'General';
+      document.getElementById('etReward').value = t.reward || 0;
+      document.getElementById('etSlots').value = t.totalSlots || 100;
+      const daysMatch = (t.timeLimit || '7 days').match(/\d+/);
+      document.getElementById('etTime').value = daysMatch ? daysMatch[0] : '7';
+      document.getElementById('etTimer').value = t.timer || 60;
+      document.getElementById('etLink').value = t.url || '';
+      toggleEditSurveyFields();
+      document.getElementById('editTaskModal').classList.add('active');
+    }
+
+    function closeEditTaskModal() {
+      document.getElementById('editTaskModal').classList.remove('active');
+      editingTaskId = null;
+    }
+
+    async function saveEditTask() {
+      const id = document.getElementById('etTaskId').value;
+      if (!id) return toast('No task selected!');
+      const title = document.getElementById('etTitle').value.trim();
+      const description = document.getElementById('etDesc').value.trim();
+      const type = document.getElementById('etType').value;
+      const category = document.getElementById('etCat').value.trim() || 'General';
+      const reward = parseFloat(document.getElementById('etReward').value) || 0;
+      const totalSlots = parseInt(document.getElementById('etSlots').value) || 100;
+      const timeLimitDays = parseInt(document.getElementById('etTime').value) || 7;
+      const timer = parseInt(document.getElementById('etTimer').value) || 60;
+      const url = document.getElementById('etLink').value.trim();
+
+      if (!title || reward <= 0) return toast('❌ Title & reward required!');
+      if (type === 'survey' && !url) return toast('❌ Survey URL required!');
+      if (type === 'survey' && timer < 5) return toast('❌ Timer min 5s!');
+
+      const taskData = {
+        title, description, type, category, reward, totalSlots,
+        timeLimit: timeLimitDays + ' days',
+        timer: type === 'survey' ? timer : 0,
+        url: type === 'survey' ? url : '',
+        updatedAt: Date.now()
+      };
+
       try {
-        const snap = await db.ref('config/newTasks/' + id).once('value');
-        if (!snap.exists()) return toast('Task not found!');
-        const task = snap.val();
-        
-        editingTaskId = id;
-        document.getElementById('newTaskTitle').value = task.title || '';
-        document.getElementById('newTaskDesc').value = task.description || '';
-        document.getElementById('newTaskType').value = task.type || 'survey';
-        document.getElementById('newTaskCat').value = task.category || 'Survey';
-        document.getElementById('newTaskReward').value = task.reward || '';
-        document.getElementById('newTaskSlots').value = task.totalSlots || 100;
-        
-        const daysMatch = (task.timeLimit || '7 days').match(/\d+/);
-        document.getElementById('newTaskTime').value = daysMatch ? daysMatch[0] : '7';
-        document.getElementById('newTaskTimer').value = task.timer || 60;
-        document.getElementById('newTaskLink').value = task.url || '';
-        
-        document.getElementById('taskFormTitle').innerText = 'Edit Task';
-        document.getElementById('saveTaskBtn').innerHTML = '<i class="fas fa-check"></i> Update Task';
-        document.getElementById('cancelTaskBtn').style.display = 'flex';
-        
-        toggleSurveyFields();
-        document.getElementById('tab-tasks').scrollIntoView({ behavior: 'smooth' });
-      } catch(e) { toast('Error loading task: ' + e.message); }
+        await db.ref('config/newTasks/' + id).update(taskData);
+        toast('✅ Task Updated!');
+        closeEditTaskModal();
+        loadTasksList();
+      } catch(e) { toast('❌ Error: ' + e.message); }
     }
 
     async function loadTasksList() {
@@ -1387,7 +1092,12 @@
         }
         let html = '';
         const tasksArr = [];
-        snap.forEach(child => { tasksArr.push({ id: child.key, ...child.val() }); });
+        currentTaskCache = {};
+        snap.forEach(child => {
+          const t = { id: child.key, ...child.val() };
+          tasksArr.push(t);
+          currentTaskCache[child.key] = t;
+        });
         tasksArr.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
         
         tasksArr.forEach(t => {
@@ -1396,24 +1106,30 @@
           const progress = Math.min((submitted / total) * 100, 100);
           const typeClass = t.type || 'survey';
           const typeIcon = t.type === 'survey' ? '📊' : t.type === 'voice' ? '🎤' : t.type === 'image' ? '🖼️' : '📝';
+          const statusBadge = t.status === 'closed'
+            ? '<span class="status-badge closed">CLOSED</span>'
+            : `<span class="status-badge ${typeClass}">${(t.type || 'task').toUpperCase()}</span>`;
           
           html += `<div class="task-admin-item">
             <div class="task-admin-head">
               <div class="task-admin-info">
-                <div class="name">${typeIcon} ${t.title || 'Untitled'}<span class="reward">+${t.reward} TK</span></div>
+                <div class="name">${typeIcon} ${esc(t.title || 'Untitled')}<span class="reward">+${t.reward} TK</span></div>
                 <div class="meta">
-                  <span><i class="fas fa-folder"></i> ${t.category || 'General'}</span>
+                  <span><i class="fas fa-folder"></i> ${esc(t.category || 'General')}</span>
                   <span><i class="fas fa-users"></i> ${submitted}/${total} (${progress.toFixed(0)}%)</span>
                   ${t.type === 'survey' && t.timer ? `<span><i class="fas fa-clock"></i> ${t.timer}s</span>` : ''}
-                  <span><i class="fas fa-calendar"></i> ${t.timeLimit || '7 days'}</span>
+                  <span><i class="fas fa-calendar"></i> ${esc(t.timeLimit || '7 days')}</span>
                 </div>
-                ${t.url ? `<div class="url"><i class="fas fa-link"></i> ${t.url.length > 60 ? t.url.substring(0, 60) + '...' : t.url}</div>` : ''}
+                ${t.url ? `<div class="url"><i class="fas fa-link"></i> ${esc(t.url.length > 60 ? t.url.substring(0, 60) + '...' : t.url)}</div>` : ''}
               </div>
             </div>
-            <div style="display:flex; gap:6px; justify-content:space-between; align-items:center; margin-top:10px;">
-              <span class="status-badge ${typeClass}">${(t.type || 'task').toUpperCase()}</span>
+            <div style="display:flex; gap:6px; justify-content:space-between; align-items:center; margin-top:10px; flex-wrap:wrap;">
+              ${statusBadge}
               <div class="task-admin-actions">
-                <button class="btn btn-info btn-small" onclick="editTask('${t.id}')"><i class="fas fa-pen"></i> Edit</button>
+                <button class="btn btn-info btn-small" onclick="openEditTaskModal('${t.id}')"><i class="fas fa-pen"></i> Edit</button>
+                <button class="btn btn-warning btn-small" onclick="toggleTaskStatus('${t.id}')">
+                  <i class="fas ${t.status === 'closed' ? 'fa-play' : 'fa-pause'}"></i> ${t.status === 'closed' ? 'Open' : 'Close'}
+                </button>
                 <button class="btn btn-red btn-small" onclick="deleteNewTask('${t.id}')"><i class="fas fa-trash"></i></button>
               </div>
             </div>
@@ -1423,10 +1139,136 @@
       } catch(e) { container.innerHTML = '<p style="color:#ef4444; text-align:center; font-weight:600;">Error loading tasks</p>'; }
     }
 
+    async function toggleTaskStatus(id) {
+      try {
+        const snap = await db.ref('config/newTasks/' + id + '/status').once('value');
+        const current = snap.val() || 'active';
+        const newStatus = current === 'active' ? 'closed' : 'active';
+        await db.ref('config/newTasks/' + id).update({ status: newStatus });
+        toast(newStatus === 'active' ? '✅ Task Opened' : '⏸️ Task Closed');
+        loadTasksList();
+      } catch(e) { toast('Error: ' + e.message); }
+    }
+
     function deleteNewTask(id) {
       if(confirm('Delete this task? Users will no longer see it.')) {
         db.ref('config/newTasks/' + id).remove().then(() => { toast('Task Deleted!'); loadTasksList(); });
       }
+    }
+
+    // ===================================================
+    // ✅ SUBMISSIONS REVIEW SYSTEM
+    // ===================================================
+    async function loadTaskSubmissions() {
+      const container = document.getElementById('taskSubmissionsList');
+      container.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:16px; font-weight:600;">Loading...</p>';
+      try {
+        const snap = await db.ref('taskSubmissions').once('value');
+        allSubmissions = [];
+        snap.forEach(child => {
+          const sub = child.val();
+          sub.id = child.key;
+          allSubmissions.push(sub);
+        });
+        allSubmissions.sort((a,b) => (b.createdAt || b.timestamp || 0) - (a.createdAt || a.timestamp || 0));
+        renderSubmissions();
+      } catch(e) { container.innerHTML = '<p style="color:#ef4444; text-align:center; font-weight:600;">Error loading submissions</p>'; }
+    }
+
+    function filterSubmissions(status) {
+      currentSubFilter = status;
+      renderSubmissions();
+    }
+
+    function renderSubmissions() {
+      const container = document.getElementById('taskSubmissionsList');
+      let filtered = currentSubFilter === 'all'
+        ? allSubmissions
+        : allSubmissions.filter(s => s.status === currentSubFilter);
+      
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="icon"><i class="fas fa-file-alt"></i></div><p>No ' + (currentSubFilter === 'all' ? '' : currentSubFilter + ' ') + 'submissions</p></div>';
+        return;
+      }
+      let html = '';
+      filtered.forEach(sub => {
+        let statusBadge = '<span class="status-badge pending">⏳ Pending</span>';
+        if (sub.status === 'approved') statusBadge = '<span class="status-badge approved">✅ Approved</span>';
+        else if (sub.status === 'rejected') statusBadge = '<span class="status-badge rejected">❌ Rejected</span>';
+        
+        const dateStr = sub.createdAt ? new Date(sub.createdAt).toLocaleString() : (sub.timestamp ? new Date(sub.timestamp).toLocaleString() : '');
+        const contentPreview = sub.content ? esc(sub.content).substring(0, 80) : (sub.fileUrl ? '<em>📎 File submitted</em>' : '<em>No content</em>');
+        
+        html += `<div class="submission-card">
+          <div class="submission-header">
+            <div style="flex:1; min-width:0;">
+              <div class="submission-title">${esc(sub.taskTitle || 'Untitled')}</div>
+              <div class="submission-user"><i class="fas fa-user"></i> ${esc(sub.userName || 'User')} ${sub.username ? '(@' + esc(sub.username) + ')' : ''}</div>
+              <div class="submission-meta">ID: ${sub.telegramId || sub.userId || 'N/A'}</div>
+              <div class="submission-meta" style="word-break:break-all; color:var(--text-secondary);">${contentPreview}</div>
+              <div class="submission-meta"><i class="fas fa-clock"></i> ${dateStr}</div>
+            </div>
+            <div class="submission-reward">+${sub.reward || 0} TK</div>
+          </div>
+          <div class="submission-status">
+            ${statusBadge}
+            ${sub.fileUrl ? `<a href="${sub.fileUrl}" target="_blank" style="color:var(--primary); font-weight:700; font-size:0.75rem; text-decoration:underline;"><i class="fas fa-external-link-alt"></i> View File</a>` : ''}
+          </div>
+          ${sub.status === 'pending' ? `
+            <div style="display:flex; gap:8px; margin-top:10px;">
+              <button class="btn btn-green btn-small" onclick="reviewSubmission('${sub.id}', 'approved')" style="flex:1;"><i class="fas fa-check"></i> Approve</button>
+              <button class="btn btn-red btn-small" onclick="reviewSubmission('${sub.id}', 'rejected')" style="flex:1;"><i class="fas fa-times"></i> Reject</button>
+            </div>
+          ` : ''}
+        </div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    async function reviewSubmission(subId, action) {
+      const sub = allSubmissions.find(x => x.id === subId);
+      if (!sub) return toast('Submission not found');
+      
+      let reason = '';
+      if (action === 'rejected') {
+        reason = prompt('Rejection reason (visible to user):') || '';
+      } else {
+        if (!confirm(`Approve this submission and pay ${sub.reward} TK to ${sub.userName}?`)) return;
+      }
+      
+      try {
+        await db.ref('taskSubmissions/' + subId).update({
+          status: action,
+          reason: reason,
+          reviewedAt: Date.now(),
+          reviewedBy: 'admin'
+        });
+        
+        if (action === 'approved') {
+          const userRef = db.ref('users/' + sub.userId);
+          const userSnap = await userRef.once('value');
+          if (userSnap.exists()) {
+            const u = userSnap.val();
+            await userRef.update({
+              balance: Number(u.balance || 0) + Number(sub.reward || 0),
+              totalEarned: Number(u.totalEarned || 0) + Number(sub.reward || 0)
+            });
+          }
+          
+          const taskSnap = await db.ref('config/newTasks/' + sub.taskId).once('value');
+          if (taskSnap.exists()) {
+            const t = taskSnap.val();
+            await db.ref('config/newTasks/' + sub.taskId).update({
+              submittedCount: Number(t.submittedCount || 0) + 1
+            });
+          }
+          toast('✅ Approved & Balance Added!');
+        } else {
+          toast('❌ Submission Rejected');
+        }
+        
+        loadTaskSubmissions();
+      } catch(e) { toast('❌ Error: ' + e.message); }
     }
 
     // ===================================================
@@ -1463,7 +1305,7 @@
     }
 
     // ===================================================
-    // ✅ CHANNELS & SETTINGS
+    // ✅ CHANNELS
     // ===================================================
     function renderChannelLinks() {
       const container = document.getElementById('channelLinksContainer');
@@ -1474,8 +1316,8 @@
       let html = '';
       channelLinks.forEach((link, index) => {
         html += `<div class="channel-item">
-          <input type="text" value="${link.label}" id="channelLabel_${index}" placeholder="Label" style="flex:1;">
-          <input type="text" value="${link.chatId}" id="channelId_${index}" placeholder="Chat ID" style="flex:1;">
+          <input type="text" value="${esc(link.label)}" id="channelLabel_${index}" placeholder="Label" style="flex:1;">
+          <input type="text" value="${esc(link.chatId)}" id="channelId_${index}" placeholder="Chat ID" style="flex:1;">
           <button class="btn btn-red btn-small" onclick="removeChannelLink(${index})" style="flex:0 0 auto; padding:8px 10px;"><i class="fas fa-trash"></i></button>
         </div>`;
       });
@@ -1490,13 +1332,7 @@
       }
       let html = '';
       channelLinks.forEach(link => {
-        html += `<div class="channel-verified-item">
-          <i class="fa-brands fa-telegram"></i>
-          <div class="ch-info">
-            <div class="ch-name">${link.label}</div>
-            <div class="ch-id">@${link.chatId}</div>
-          </div>
-        </div>`;
+        html += `<div class="channel-verified-item"><i class="fa-brands fa-telegram"></i><div class="ch-info"><div class="ch-name">${esc(link.label)}</div><div class="ch-id">@${esc(link.chatId)}</div></div></div>`;
       });
       container.innerHTML = html;
     }
@@ -1533,7 +1369,6 @@
         toast('⏳ Saving channels...');
         await db.ref('config/channelLinks').set(newChannelLinks);
         channelLinks = newChannelLinks;
-        toast('⏳ Force re-verifying users...');
         const usersSnap = await db.ref('users').once('value');
         const updates = {};
         let count = 0;
@@ -1554,10 +1389,7 @@
       try {
         const snap = await db.ref('users').once('value');
         let verified = 0, notVerified = 0;
-        snap.forEach(child => {
-          if (child.val().channelVerified === true) verified++;
-          else notVerified++;
-        });
+        snap.forEach(child => { if (child.val().channelVerified === true) verified++; else notVerified++; });
         document.getElementById('totalVerifiedUsers').textContent = verified;
         document.getElementById('totalNotVerifiedUsers').textContent = notVerified;
       } catch(e) { console.error(e); }
@@ -1575,26 +1407,17 @@
             list.push({ id: child.key, name: u.name || 'User', lastActive: u.lastActive || 'Never' });
           }
         });
-        list.sort((a,b) => (b.lastActive > a.lastActive ? 1 : -1));
         if (list.length === 0) {
           container.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>All users verified! ✅</div></div>';
           return;
         }
         let html = '';
         list.slice(0, 20).forEach(u => {
-          html += `<div class="nv-user-item">
-            <div>
-              <div class="nv-user-name">${u.name}</div>
-              <div class="nv-user-id">ID: ${u.id}</div>
-            </div>
-            <div class="nv-user-last">Last: ${u.lastActive}</div>
-          </div>`;
+          html += `<div class="nv-user-item"><div><div class="nv-user-name">${esc(u.name)}</div><div class="nv-user-id">ID: ${u.id}</div></div><div class="nv-user-last">Last: ${esc(u.lastActive)}</div></div>`;
         });
         if (list.length > 20) html += `<p style="text-align:center; color:#94a3b8; font-size:0.8rem; margin-top:8px; font-weight:600;">+ ${list.length - 20} more...</p>`;
         container.innerHTML = html;
-      } catch(e) {
-        container.innerHTML = '<p style="text-align:center; color:#ef4444; font-weight:600;">Error loading</p>';
-      }
+      } catch(e) { container.innerHTML = '<p style="text-align:center; color:#ef4444; font-weight:600;">Error loading</p>'; }
     }
 
     function renderWithdrawLevels() {
@@ -1615,7 +1438,7 @@
             <input type="number" value="${level.fee}" id="wl_fee_${index}" placeholder="Fee %">
             <input type="number" value="${level.minAmount}" id="wl_min_${index}" placeholder="Min">
             <input type="number" value="${level.maxAmount}" id="wl_max_${index}" placeholder="Max">
-            <input type="text" value="${level.time}" id="wl_time_${index}" placeholder="Time" class="wide">
+            <input type="text" value="${esc(level.time)}" id="wl_time_${index}" placeholder="Time" class="wide">
           </div>
         </div>`;
       });
@@ -1678,11 +1501,9 @@
         document.getElementById('minReferralBalance').value = configData.minReferralBalance || 20;
         MIN_REFERRAL_BALANCE = configData.minReferralBalance || 20;
         document.getElementById('minRefBalNote').textContent = MIN_REFERRAL_BALANCE + '+';
-        
         document.getElementById('refCommissionRate').value = configData.refCommissionRate || 2;
         selectedCommissionMode = configData.refCommissionMode || 'bonus';
         updateCommissionModeUI(selectedCommissionMode);
-        
         document.getElementById('tutorialLink').value = configData.tutorialLink || '';
         document.getElementById('supportLink').value = configData.supportLink || '';
         document.getElementById('minWithdraw').value = configData.minWithdraw || 10;
@@ -1742,11 +1563,7 @@
       try {
         const snap = await db.ref('users').once('value');
         allUsers = [];
-        snap.forEach(child => {
-          let u = child.val();
-          u.id = child.key;
-          allUsers.push(u);
-        });
+        snap.forEach(child => { let u = child.val(); u.id = child.key; allUsers.push(u); });
         await Promise.all(allUsers.map(async (u) => {
           const refs = u.referredUsers || {};
           const keys = Object.keys(refs);
@@ -1797,7 +1614,7 @@
             <div class="user-avatar-row">
               <div class="user-avatar">${initial}</div>
               <div style="min-width:0; flex:1;">
-                <div class="user-name">${u.name || 'Unknown'}</div>
+                <div class="user-name">${esc(u.name || 'Unknown')}</div>
                 <div class="user-id">ID: ${u.id}</div>
               </div>
             </div>
@@ -1896,17 +1713,10 @@
         userData.slice(0, 30).forEach(u => {
           const rate = u.views > 0 ? ((u.clicks / u.views) * 100).toFixed(1) : 0;
           const lastActiveStr = u.lastActive === today ? '🟢 Today' : u.lastActive;
-          html += `<tr>
-            <td class="user-id">${u.name}<br><span style="font-size:0.68rem; color:#94a3b8;">${u.id}</span></td>
-            <td><strong>${u.views}</strong></td>
-            <td><strong>${u.clicks}</strong></td>
-            <td>${rate}%</td>
-            <td style="font-size:0.72rem;">${lastActiveStr}</td>
-          </tr>`;
+          html += `<tr><td class="user-id">${esc(u.name)}<br><span style="font-size:0.68rem; color:#94a3b8;">${u.id}</span></td><td><strong>${u.views}</strong></td><td><strong>${u.clicks}</strong></td><td>${rate}%</td><td style="font-size:0.72rem;">${esc(lastActiveStr)}</td></tr>`;
         });
         tbody.innerHTML = html;
       } catch (e) {
-        console.error('Analytics error:', e);
         document.getElementById('analyticsTableBody').innerHTML = '<tr><td colspan="5" style="text-align:center; color:#ef4444; font-weight:600;">Error loading</td></tr>';
       }
     }
@@ -1920,18 +1730,18 @@
         snap.forEach(child => {
           let req = child.val();
           let key = child.key;
-          let date = new Date(req.timestamp).toLocaleString();
-          const feeText = req.fee ? `Fee: ${req.fee.toFixed(2)}` : '';
+          let date = new Date(req.timestamp || req.createdAt || Date.now()).toLocaleString();
+          const feeText = req.fee ? `Fee: ${Number(req.fee).toFixed(2)}` : '';
           const levelText = req.level ? `Level ${req.level}` : '';
           html += `<div class="wd-card">
             <div class="wd-header">
-              <span class="wd-method"><i class="fas fa-credit-card"></i> ${req.method}</span>
+              <span class="wd-method"><i class="fas fa-credit-card"></i> ${esc(req.method)}</span>
               <span class="wd-amount">${req.amount} TK</span>
             </div>
             <div class="wd-info">
-              <b>Account:</b> <span class="wd-account">${req.account}</span><br>
+              <b>Account:</b> <span class="wd-account">${esc(req.account)}</span><br>
               <b>User ID:</b> ${req.userId}<br>
-              <b>Name:</b> ${req.userName}<br>
+              <b>Name:</b> ${esc(req.userName)}<br>
               <b>Level:</b> ${levelText} | ${feeText}<br>
               <small style="color:#94a3b8;">📅 ${date}</small>
             </div>
@@ -1957,10 +1767,10 @@
             count++;
             const statusColor = req.status === 'approved' ? '#10b981' : req.status === 'pending' ? '#f59e0b' : '#ef4444';
             const statusBg = req.status === 'approved' ? 'rgba(16,185,129,0.1)' : req.status === 'pending' ? 'rgba(245,158,11,0.1)' : 'rgba(239,68,68,0.1)';
-            const feeText = req.fee ? `Fee: ${req.fee.toFixed(2)}` : '';
+            const feeText = req.fee ? `Fee: ${Number(req.fee).toFixed(2)}` : '';
             html += `<div style="border-bottom:1px solid #e2e8f0; padding:12px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; font-size:0.82rem;">
-              <span><b>${req.userName || 'User'}</b> <span style="color:#94a3b8;">(${req.userId})</span></span>
-              <span style="color:#475569;">${req.method} - ${req.account}</span>
+              <span><b>${esc(req.userName || 'User')}</b> <span style="color:#94a3b8;">(${req.userId})</span></span>
+              <span style="color:#475569;">${esc(req.method)} - ${esc(req.account)}</span>
               <span style="font-weight:800; color:var(--primary);">${req.amount} TK ${feeText}</span>
               <span style="color:${statusColor}; font-weight:800; background:${statusBg}; padding:3px 10px; border-radius:20px; font-size:0.7rem; text-transform:uppercase;">${req.status}</span>
             </div>`;
@@ -2041,7 +1851,7 @@
             html += `<div class="leaderboard-item">
               <div class="leaderboard-medal">${medal}</div>
               <div class="leaderboard-info">
-                <div class="leaderboard-name">${u.name}</div>
+                <div class="leaderboard-name">${esc(u.name)}</div>
                 <div class="leaderboard-id">ID: ${u.id}</div>
                 <span class="ref-level-badge ${level.class}" style="margin-top:4px;">${level.label}</span>
               </div>
@@ -2070,16 +1880,14 @@
           allReferralDetails.sort((a,b) => (b.joinedAt || 0) - (a.joinedAt || 0));
           let html = '';
           allReferralDetails.slice(0, 30).forEach(r => {
-            const badge = r.qualified 
-              ? '<span class="ref-qualified">✅ Qualified</span>' 
-              : '<span class="ref-notqualified">❌ Not Qualified</span>';
+            const badge = r.qualified ? '<span class="ref-qualified">✅ Qualified</span>' : '<span class="ref-notqualified">❌ Not Qualified</span>';
             html += `<div class="ref-detail-item">
               <div class="ref-detail-row">
-                <span><span class="ref-detail-name">${r.referrerName}</span><span class="ref-detail-id">(${r.referrerId})</span></span>
+                <span><span class="ref-detail-name">${esc(r.referrerName)}</span><span class="ref-detail-id">(${r.referrerId})</span></span>
                 <span style="color:#94a3b8; font-size:0.7rem;">${new Date(r.joinedAt).toLocaleDateString()}</span>
               </div>
               <div class="ref-detail-row">
-                <span>↳ <span class="ref-detail-name">${r.referredName}</span><span class="ref-detail-id">(${r.referredId})</span></span>
+                <span>↳ <span class="ref-detail-name">${esc(r.referredName)}</span><span class="ref-detail-id">(${r.referredId})</span></span>
                 <span><span class="ref-detail-bal">${r.referredBalance.toFixed(2)} TK</span> ${badge}</span>
               </div>
             </div>`;
@@ -2090,10 +1898,7 @@
       } catch(e) { console.error('Error loading referral stats:', e); }
     }
 
-    function refreshReferralStats() {
-      toast('Refreshing...');
-      loadReferralStats();
-    }
+    function refreshReferralStats() { toast('Refreshing...'); loadReferralStats(); }
 
     // ===== INIT =====
     window.onload = function() {
@@ -2101,7 +1906,22 @@
       loadCommissionOverview();
       loadVerificationStats();
       toggleSurveyFields();
+      // Auto-load submissions periodically
+      setInterval(() => {
+        if (document.getElementById('tab-tasks').classList.contains('active')) {
+          loadTaskSubmissions();
+        }
+      }, 15000);
     };
+
+    // Close modals on backdrop click
+    document.getElementById('submissionDetailModal').addEventListener('click', (e) => {
+      if (e.target.id === 'submissionDetailModal') closeSubmissionModal();
+    });
+    document.getElementById('editTaskModal').addEventListener('click', (e) => {
+      if (e.target.id === 'editTaskModal') closeEditTaskModal();
+    });
+    function closeSubmissionModal() { document.getElementById('submissionDetailModal').classList.remove('active'); }
   </script>
 </body>
 </html>
