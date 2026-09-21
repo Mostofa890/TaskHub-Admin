@@ -132,6 +132,8 @@
     .status-badge.voice { background: rgba(245, 158, 11, 0.12); color: #b45309; }
     .status-badge.image { background: rgba(236, 72, 153, 0.12); color: #be185d; }
     .status-badge.text { background: rgba(6, 182, 212, 0.12); color: #0891b2; }
+    .status-badge.youtube { background: rgba(239, 68, 68, 0.12); color: #b91c1c; }
+    .status-badge.other { background: rgba(139, 92, 246, 0.12); color: #6d28d9; }
     .ref-level-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.02em; }
     .ref-level-badge.beginner { background: rgba(99, 102, 241, 0.12); color: var(--primary); }
     .ref-level-badge.bronze { background: rgba(205, 127, 50, 0.15); color: #b45309; }
@@ -328,20 +330,6 @@
     </div>
   </div>
 
-  <!-- Submission Detail Modal -->
-  <div class="modal-overlay" id="submissionDetailModal">
-    <div class="modal-box">
-      <div class="modal-header">
-        <div class="modal-title">
-          <div class="card-title-icon icon-info"><i class="fas fa-file-invoice"></i></div>
-          Submission Review
-        </div>
-        <button class="modal-close" onclick="closeSubmissionModal()"><i class="fas fa-times"></i></button>
-      </div>
-      <div class="modal-body" id="submissionModalBody"></div>
-    </div>
-  </div>
-
   <!-- Edit Task Modal -->
   <div class="modal-overlay" id="editTaskModal">
     <div class="modal-box">
@@ -357,16 +345,37 @@
         <div class="form-group"><label>Task Title *</label><input type="text" id="etTitle"></div>
         <div class="form-group"><label>Description</label><textarea id="etDesc" rows="2"></textarea></div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <div class="form-group" style="flex:1; min-width:140px;">
+          <div class="form-group" style="flex:1; min-width:180px;">
             <label>Task Type</label>
             <select id="etType" onchange="toggleEditSurveyFields()">
               <option value="survey">📊 Survey</option>
               <option value="voice">🎤 Voice</option>
               <option value="image">🖼️ Image</option>
               <option value="text">📝 Text</option>
+              <option value="youtube_video_view">▶️ YouTube Video View (Timer)</option>
+              <option value="youtube_like">👍 YouTube Like</option>
+              <option value="youtube_comment">💬 YouTube Comment</option>
+              <option value="youtube_subscribe">🔔 YouTube Subscribe</option>
+              <option value="app_download">📱 App Download</option>
+              <option value="app_install">📲 App Install</option>
+              <option value="website_visit">🌐 Website Visit</option>
+              <option value="telegram_join">✈️ Telegram Join</option>
+              <option value="telegram_channel">📢 Telegram Channel</option>
+              <option value="facebook_like">👍 Facebook Like</option>
+              <option value="facebook_follow">👥 Facebook Follow</option>
+              <option value="instagram_follow">👥 Instagram Follow</option>
+              <option value="instagram_like">❤️ Instagram Like</option>
+              <option value="twitter_follow">🐦 Twitter Follow</option>
+              <option value="tiktok_follow">🎵 TikTok Follow</option>
+              <option value="voice_recording">🎙️ Voice Recording</option>
+              <option value="image_upload">📷 Image Upload</option>
+              <option value="text_writing">✍️ Text Writing</option>
+              <option value="sign_up">📝 Sign Up</option>
+              <option value="general">📋 General</option>
+              <option value="other">🔧 Other</option>
             </select>
           </div>
-          <div class="form-group" style="flex:1; min-width:140px;">
+          <div class="form-group" style="flex:1; min-width:180px;">
             <label>Category</label>
             <select id="etCat">
               <option value="General">General</option>
@@ -410,13 +419,14 @@
             <input type="number" id="etTime">
           </div>
           <div class="form-group" style="flex:1; min-width:120px; display:none;" id="etTimerGroup">
-            <label>⏱️ Timer (Seconds)</label>
+            <label>⏱️ Timer (Seconds) *</label>
             <input type="number" id="etTimer" min="5">
+            <small style="font-size:0.68rem; color:#94a3b8; font-weight:600;">YouTube Video View only</small>
           </div>
         </div>
-        <div class="form-group" id="etLinkGroup" style="display:none;">
-          <label>🔗 Survey URL</label>
-          <input type="url" id="etLink">
+        <div class="form-group" id="etLinkGroup">
+          <label>🔗 Task Link / URL *</label>
+          <input type="url" id="etLink" placeholder="https://...">
         </div>
         <div style="display:flex; gap:10px; margin-top:8px;">
           <button class="btn btn-green" onclick="saveEditTask()" style="flex:2;"><i class="fas fa-check"></i> Update Task</button>
@@ -652,20 +662,41 @@
           </div>
         </div>
 
-        <div class="form-group"><label>Task Title *</label><input type="text" id="newTaskTitle" placeholder="e.g. Simple Survey Task"></div>
+        <div class="form-group"><label>Task Title *</label><input type="text" id="newTaskTitle" placeholder="e.g. Watch YouTube Video"></div>
         <div class="form-group"><label>Description</label><textarea id="newTaskDesc" rows="2" placeholder="Short description..."></textarea></div>
 
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <div class="form-group" style="flex:1; min-width:140px;">
+          <div class="form-group" style="flex:1; min-width:180px;">
             <label>Task Type *</label>
             <select id="newTaskType" onchange="toggleSurveyFields()">
               <option value="survey">📊 Survey</option>
               <option value="voice">🎤 Voice</option>
               <option value="image">🖼️ Image</option>
               <option value="text">📝 Text</option>
+              <option value="youtube_video_view">▶️ YouTube Video View (Timer)</option>
+              <option value="youtube_like">👍 YouTube Like</option>
+              <option value="youtube_comment">💬 YouTube Comment</option>
+              <option value="youtube_subscribe">🔔 YouTube Subscribe</option>
+              <option value="app_download">📱 App Download</option>
+              <option value="app_install">📲 App Install</option>
+              <option value="website_visit">🌐 Website Visit</option>
+              <option value="telegram_join">✈️ Telegram Join</option>
+              <option value="telegram_channel">📢 Telegram Channel</option>
+              <option value="facebook_like">👍 Facebook Like</option>
+              <option value="facebook_follow">👥 Facebook Follow</option>
+              <option value="instagram_follow">👥 Instagram Follow</option>
+              <option value="instagram_like">❤️ Instagram Like</option>
+              <option value="twitter_follow">🐦 Twitter Follow</option>
+              <option value="tiktok_follow">🎵 TikTok Follow</option>
+              <option value="voice_recording">🎙️ Voice Recording</option>
+              <option value="image_upload">📷 Image Upload</option>
+              <option value="text_writing">✍️ Text Writing</option>
+              <option value="sign_up">📝 Sign Up</option>
+              <option value="general">📋 General</option>
+              <option value="other">🔧 Other</option>
             </select>
           </div>
-          <div class="form-group" style="flex:1; min-width:140px;">
+          <div class="form-group" style="flex:1; min-width:180px;">
             <label>Category *</label>
             <select id="newTaskCat">
               <option value="General">General</option>
@@ -710,18 +741,18 @@
             <label>Time Limit (Days)</label>
             <input type="number" id="newTaskTime" placeholder="7" value="7">
           </div>
-          <!-- Timer field: hidden by default, shown only for survey -->
+          <!-- Timer field: only for YouTube Video View -->
           <div class="form-group" style="flex:1; min-width:120px; display:none;" id="timerGroup">
             <label>⏱️ Timer (Seconds) *</label>
             <input type="number" id="newTaskTimer" placeholder="60" value="60" min="5">
-            <small style="font-size:0.68rem; color:#94a3b8; font-weight:600;">Time user must wait after opening survey</small>
+            <small style="font-size:0.68rem; color:#94a3b8; font-weight:600;">YouTube Video View only</small>
           </div>
         </div>
 
-        <!-- Link field: hidden by default, shown only for survey -->
-        <div class="form-group" id="surveyLinkGroup" style="display:none;">
-          <label>🔗 Survey URL *</label>
-          <input type="url" id="newTaskLink" placeholder="https://example.com/survey">
+        <!-- Link field: visible for ALL types -->
+        <div class="form-group" id="surveyLinkGroup">
+          <label>🔗 Task Link / URL *</label>
+          <input type="url" id="newTaskLink" placeholder="https://...">
         </div>
 
         <div style="display:flex; gap:10px; margin-top:8px;">
@@ -737,7 +768,7 @@
         </div>
         <div class="alert-box info">
           <i class="fas fa-info-circle"></i>
-          <div>Users see these tasks in the app. Survey tasks auto-reward. Voice / Image / Text tasks require manual approval from below.</div>
+          <div>All task types support a link. Only <b>YouTube Video View</b> includes a timer. Voice / Image / Text tasks require manual approval.</div>
         </div>
         <div id="activeTasksList"></div>
       </div>
@@ -828,7 +859,6 @@
     let MIN_REFERRAL_BALANCE = 20;
     let selectedCommissionMode = 'bonus';
     
-    // Task & Submission State
     let editingTaskId = null;
     let allSubmissions = [];
     let currentSubFilter = 'pending';
@@ -976,33 +1006,70 @@
     document.getElementById('userDetailModal').addEventListener('click', (e) => { if (e.target.id === 'userDetailModal') closeUserModal(); });
 
     // ===================================================
-    // ✅ TASK SYSTEM
+    // ✅ TASK TYPE HELPERS
     // ===================================================
-    // Survey type নির্বাচন করলে Timer ও Link দেখাবে, অন্যথায় সম্পূর্ণ হাইড থাকবে
+    const TASK_TYPE_META = {
+      survey:                { icon: '📊', label: 'Survey' },
+      voice:                 { icon: '🎤', label: 'Voice' },
+      image:                 { icon: '🖼️', label: 'Image' },
+      text:                  { icon: '📝', label: 'Text' },
+      youtube_video_view:    { icon: '▶️', label: 'YouTube Video View', hasTimer: true },
+      youtube_like:          { icon: '👍', label: 'YouTube Like' },
+      youtube_comment:       { icon: '💬', label: 'YouTube Comment' },
+      youtube_subscribe:     { icon: '🔔', label: 'YouTube Subscribe' },
+      app_download:          { icon: '📱', label: 'App Download' },
+      app_install:           { icon: '📲', label: 'App Install' },
+      website_visit:         { icon: '🌐', label: 'Website Visit' },
+      telegram_join:         { icon: '✈️', label: 'Telegram Join' },
+      telegram_channel:      { icon: '📢', label: 'Telegram Channel' },
+      facebook_like:         { icon: '👍', label: 'Facebook Like' },
+      facebook_follow:       { icon: '👥', label: 'Facebook Follow' },
+      instagram_follow:      { icon: '👥', label: 'Instagram Follow' },
+      instagram_like:        { icon: '❤️', label: 'Instagram Like' },
+      twitter_follow:        { icon: '🐦', label: 'Twitter Follow' },
+      tiktok_follow:         { icon: '🎵', label: 'TikTok Follow' },
+      voice_recording:       { icon: '🎙️', label: 'Voice Recording' },
+      image_upload:          { icon: '📷', label: 'Image Upload' },
+      text_writing:          { icon: '✍️', label: 'Text Writing' },
+      sign_up:               { icon: '📝', label: 'Sign Up' },
+      general:               { icon: '📋', label: 'General' },
+      other:                 { icon: '🔧', label: 'Other' }
+    };
+
+    function getTaskTypeIcon(type) {
+      const m = TASK_TYPE_META[type];
+      return m ? m.icon : '📋';
+    }
+
+    // ✅ Toggle visibility: Link always visible, Timer only for youtube_video_view
     function toggleSurveyFields() {
       const type = document.getElementById('newTaskType').value;
-      const isSurvey = type === 'survey';
       const linkGroup = document.getElementById('surveyLinkGroup');
       const timerGroup = document.getElementById('timerGroup');
-      if (isSurvey) {
-        linkGroup.style.display = 'block';
+      
+      // Link always visible
+      linkGroup.style.display = 'block';
+      
+      // Timer only for youtube_video_view
+      if (type === 'youtube_video_view') {
         timerGroup.style.display = 'block';
       } else {
-        linkGroup.style.display = 'none';
         timerGroup.style.display = 'none';
       }
     }
 
     function toggleEditSurveyFields() {
       const type = document.getElementById('etType').value;
-      const isSurvey = type === 'survey';
       const linkGroup = document.getElementById('etLinkGroup');
       const timerGroup = document.getElementById('etTimerGroup');
-      if (isSurvey) {
-        linkGroup.style.display = 'block';
+      
+      // Link always visible
+      linkGroup.style.display = 'block';
+      
+      // Timer only for youtube_video_view
+      if (type === 'youtube_video_view') {
         timerGroup.style.display = 'block';
       } else {
-        linkGroup.style.display = 'none';
         timerGroup.style.display = 'none';
       }
     }
@@ -1020,14 +1087,14 @@
 
       if (!title) return toast('❌ Please enter Task Title!');
       if (reward <= 0) return toast('❌ Please enter a valid reward!');
-      if (type === 'survey' && !url) return toast('❌ Survey URL is required for Survey task!');
-      if (type === 'survey' && timer < 5) return toast('❌ Timer must be at least 5 seconds!');
+      if (!url) return toast('❌ Task Link/URL is required!');
+      if (type === 'youtube_video_view' && timer < 5) return toast('❌ Timer must be at least 5 seconds!');
 
       const taskData = {
         title, description, type, category, reward, totalSlots,
         timeLimit: timeLimitDays + ' days',
-        timer: type === 'survey' ? timer : 0,
-        url: type === 'survey' ? url : '',
+        timer: type === 'youtube_video_view' ? timer : 0,
+        url: url,
         status: 'active',
         updatedAt: Date.now()
       };
@@ -1072,9 +1139,20 @@
       document.getElementById('etTaskId').value = id;
       document.getElementById('etTitle').value = t.title || '';
       document.getElementById('etDesc').value = t.description || '';
-      document.getElementById('etType').value = t.type || 'survey';
       
-      // Category option not থাকলে dynamically অ্যাড করি
+      // Handle legacy types
+      const knownTypes = Object.keys(TASK_TYPE_META);
+      const taskType = t.type || 'survey';
+      const typeSelect = document.getElementById('etType');
+      if (!knownTypes.includes(taskType)) {
+        // Legacy type — add dynamically
+        const newOpt = document.createElement('option');
+        newOpt.value = taskType;
+        newOpt.textContent = '📋 ' + taskType;
+        typeSelect.appendChild(newOpt);
+      }
+      typeSelect.value = taskType;
+      
       const catSelect = document.getElementById('etCat');
       const catValue = t.category || 'General';
       let optionExists = Array.from(catSelect.options).some(o => o.value === catValue);
@@ -1115,14 +1193,14 @@
       const url = document.getElementById('etLink').value.trim();
 
       if (!title || reward <= 0) return toast('❌ Title & reward required!');
-      if (type === 'survey' && !url) return toast('❌ Survey URL required!');
-      if (type === 'survey' && timer < 5) return toast('❌ Timer min 5s!');
+      if (!url) return toast('❌ Task Link/URL is required!');
+      if (type === 'youtube_video_view' && timer < 5) return toast('❌ Timer min 5s!');
 
       const taskData = {
         title, description, type, category, reward, totalSlots,
         timeLimit: timeLimitDays + ' days',
-        timer: type === 'survey' ? timer : 0,
-        url: type === 'survey' ? url : '',
+        timer: type === 'youtube_video_view' ? timer : 0,
+        url: url,
         updatedAt: Date.now()
       };
 
@@ -1157,11 +1235,11 @@
           const submitted = t.submittedCount || 0;
           const total = t.totalSlots || 100;
           const progress = Math.min((submitted / total) * 100, 100);
-          const typeClass = t.type || 'survey';
-          const typeIcon = t.type === 'survey' ? '📊' : t.type === 'voice' ? '🎤' : t.type === 'image' ? '🖼️' : '📝';
+          const typeIcon = getTaskTypeIcon(t.type);
+          const typeLabel = (TASK_TYPE_META[t.type] && TASK_TYPE_META[t.type].label) || t.type || 'Task';
           const statusBadge = t.status === 'closed'
             ? '<span class="status-badge closed">CLOSED</span>'
-            : `<span class="status-badge ${typeClass}">${(t.type || 'task').toUpperCase()}</span>`;
+            : `<span class="status-badge survey">${esc(typeLabel).toUpperCase()}</span>`;
           
           html += `<div class="task-admin-item">
             <div class="task-admin-head">
@@ -1170,7 +1248,7 @@
                 <div class="meta">
                   <span><i class="fas fa-folder"></i> ${esc(t.category || 'General')}</span>
                   <span><i class="fas fa-users"></i> ${submitted}/${total} (${progress.toFixed(0)}%)</span>
-                  ${t.type === 'survey' && t.timer ? `<span><i class="fas fa-clock"></i> ${t.timer}s</span>` : ''}
+                  ${t.timer > 0 ? `<span><i class="fas fa-clock"></i> ${t.timer}s</span>` : ''}
                   <span><i class="fas fa-calendar"></i> ${esc(t.timeLimit || '7 days')}</span>
                 </div>
                 ${t.url ? `<div class="url"><i class="fas fa-link"></i> ${esc(t.url.length > 60 ? t.url.substring(0, 60) + '...' : t.url)}</div>` : ''}
@@ -1248,6 +1326,7 @@
         let statusBadge = '<span class="status-badge pending">⏳ Pending</span>';
         if (sub.status === 'approved') statusBadge = '<span class="status-badge approved">✅ Approved</span>';
         else if (sub.status === 'rejected') statusBadge = '<span class="status-badge rejected">❌ Rejected</span>';
+        else if (sub.status === 'cancelled') statusBadge = '<span class="status-badge closed">⛔ Cancelled</span>';
         
         const dateStr = sub.createdAt ? new Date(sub.createdAt).toLocaleString() : (sub.timestamp ? new Date(sub.timestamp).toLocaleString() : '');
         const contentPreview = sub.content ? esc(sub.content).substring(0, 80) : (sub.fileUrl ? '<em>📎 File submitted</em>' : '<em>No content</em>');
@@ -1959,7 +2038,6 @@
       loadCommissionOverview();
       loadVerificationStats();
       toggleSurveyFields();
-      // Auto-load submissions periodically
       setInterval(() => {
         if (document.getElementById('tab-tasks').classList.contains('active')) {
           loadTaskSubmissions();
@@ -1967,14 +2045,9 @@
       }, 15000);
     };
 
-    // Close modals on backdrop click
-    document.getElementById('submissionDetailModal').addEventListener('click', (e) => {
-      if (e.target.id === 'submissionDetailModal') closeSubmissionModal();
-    });
     document.getElementById('editTaskModal').addEventListener('click', (e) => {
       if (e.target.id === 'editTaskModal') closeEditTaskModal();
     });
-    function closeSubmissionModal() { document.getElementById('submissionDetailModal').classList.remove('active'); }
   </script>
 </body>
 </html>
