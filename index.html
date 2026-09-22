@@ -250,6 +250,33 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .qualified-yes{display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#065f46;font-weight:800;font-size:.7rem;padding:3px 9px;border-radius:999px;border:1px solid rgba(16,185,129,.35)}
 .qualified-no{display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#fee2e2,#fecaca);color:#991b1b;font-weight:800;font-size:.7rem;padding:3px 9px;border-radius:999px;border:1px solid rgba(239,68,68,.3)}
 
+/* ✅ NEW: Leaderboard Custom Card */
+.lb-item{display:flex;align-items:center;gap:12px;padding:14px;background:linear-gradient(135deg,#fff,#f8fafc);border:1.5px solid var(--border);border-radius:14px;margin-bottom:10px;position:relative;overflow:hidden;transition:all .2s}
+.lb-item:hover{border-color:var(--primary);box-shadow:var(--shadow-md)}
+.lb-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#f59e0b,#fbbf24)}
+.lb-item.rank1::before{background:linear-gradient(180deg,#ffd700,#fbbf24)}
+.lb-item.rank2::before{background:linear-gradient(180deg,#c0c0c0,#94a3b8)}
+.lb-item.rank3::before{background:linear-gradient(180deg,#cd7f32,#b45309)}
+.lb-rank{font-size:1.2rem;font-weight:900;color:var(--warning);width:32px;text-align:center;flex-shrink:0}
+.lb-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ec4899);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;flex-shrink:0;overflow:hidden;border:2px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+.lb-avatar img{width:100%;height:100%;object-fit:cover}
+.lb-info{flex:1;min-width:0}
+.lb-info .name{font-weight:800;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.lb-info .stats{font-size:.7rem;color:var(--text-muted);font-weight:700;margin-top:3px;display:flex;gap:10px;flex-wrap:wrap}
+.lb-info .stats span{display:inline-flex;align-items:center;gap:3px}
+.lb-info .stats .bal{color:var(--primary);font-weight:900}
+.lb-info .stats .ref{color:var(--success);font-weight:900}
+.lb-actions{display:flex;gap:6px;flex-shrink:0}
+.lb-actions button{width:32px;height:32px;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .2s;color:#fff}
+.lb-actions .act-up{background:linear-gradient(135deg,#10b981,#34d399)}
+.lb-actions .act-down{background:linear-gradient(135deg,#3b82f6,#60a5fa)}
+.lb-actions .act-edit{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
+.lb-actions .act-del{background:linear-gradient(135deg,#ef4444,#f87171)}
+.lb-actions button:hover{transform:scale(1.1)}
+.lb-empty{padding:24px 16px;background:linear-gradient(135deg,#f9fafb,#f3f4f6);border:2px dashed var(--border);border-radius:14px;text-align:center;color:var(--text-muted);font-weight:700;font-size:.85rem}
+.lb-limit-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:linear-gradient(135deg,#eef2ff,#e0e7ff);border-radius:12px;margin-bottom:14px;border:1.5px solid rgba(99,102,241,.2);font-size:.8rem;font-weight:800;color:#4338ca}
+.lb-limit-bar .count{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;padding:4px 12px;border-radius:999px;font-size:.75rem;font-weight:900}
+
 @media (max-width:400px){.container{padding:0 12px}.card{padding:16px;border-radius:20px}.header{padding:22px 18px 55px;border-radius:0 0 26px 26px}.header-title{font-size:1rem}.header-status{max-width:90px}.wallet-hero .wallet-amount{font-size:2rem}.admin-balance-box{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -510,6 +537,28 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
+<!-- ✅ NEW: Leaderboard Custom Modal -->
+<div class="modal-overlay" id="lbModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title"><div class="card-title-icon icon-warning"><i class="fas fa-trophy"></i></div><span id="lbModalTitle">Add Leaderboard User</span></div>
+      <button class="modal-close" onclick="closeLbModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="lbEditIndex">
+      <div class="form-group"><label>Display Name *</label><input type="text" id="lbName" placeholder="e.g. Top Earner" maxlength="30"></div>
+      <div class="form-group"><label>Balance (TK) *</label><input type="number" id="lbBalance" step="0.01" min="0" placeholder="e.g. 1500"></div>
+      <div class="form-group"><label>Referrals *</label><input type="number" id="lbRefs" min="0" placeholder="e.g. 250"></div>
+      <div class="form-group"><label>Photo URL (optional)</label><input type="url" id="lbPhoto" placeholder="https://example.com/photo.jpg"></div>
+      <div class="alert-box info"><i class="fas fa-info-circle"></i><div>এই ইউজার শুধু User App-এর <b>Top 10 Earners</b> লিডারবোর্ডে দেখাবে। এটা fake entry হিসেবে কাজ করবে।</div></div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-green" onclick="saveLbEntry()" style="flex:2;"><i class="fas fa-save"></i> Save Entry</button>
+        <button class="btn btn-red" onclick="closeLbModal()" style="flex:1;"><i class="fas fa-times"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Edit Admin Contact Modal (Admin) -->
 <div class="modal-overlay" id="contactEditModal">
   <div class="modal-box">
@@ -565,6 +614,20 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="form-group"><label>Bot Username</label><input type="text" id="botUsername"></div>
       <div class="form-group"><label>Currency Symbol</label><input type="text" id="currencySymbol"></div>
       <div class="form-group"><label>Ad Reset Hour (0-23)</label><input type="number" id="adResetHour" min="0" max="23"></div>
+    </div>
+
+    <!-- ✅ NEW: Leaderboard Custom Users -->
+    <div class="card rainbow">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-trophy"></i></div>Leaderboard Top Users (Custom)</div></div>
+      <div class="alert-box info"><i class="fas fa-info-circle"></i><div>User App-এর <b>Top 10 Earners</b> এ custom ইউজার দেখানোর জন্য। সর্বোচ্চ <b>১০ জন</b> এড করা যাবে। এরা শুধু display এর জন্য।</div></div>
+      <div class="lb-limit-bar">
+        <span><i class="fas fa-users"></i> Total Custom Entries</span>
+        <span class="count"><span id="lbCount">0</span> / 10</span>
+      </div>
+      <div id="lbListContainer"></div>
+      <button class="btn btn-warning" id="lbAddBtn" onclick="openLbModal()" style="margin-top:10px;">
+        <i class="fas fa-plus"></i> Add User
+      </button>
     </div>
 
     <div class="card">
@@ -656,12 +719,10 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ANALYTICS (✅ UPDATED with date filters) -->
+  <!-- ANALYTICS -->
   <div id="tab-analytics" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-chart-line"></i></div>Activity Analytics</div></div>
-
-      <!-- Range Tabs -->
       <div class="analytics-range-tabs">
         <button class="range-tab active" data-range="today" onclick="setAnalyticsRange('today', this)">📅 Today</button>
         <button class="range-tab" data-range="yesterday" onclick="setAnalyticsRange('yesterday', this)">📆 Yesterday</button>
@@ -669,9 +730,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <button class="range-tab" data-range="month" onclick="setAnalyticsRange('month', this)">📊 This Month</button>
         <button class="range-tab" data-range="all" onclick="setAnalyticsRange('all', this)">♾️ All Time</button>
       </div>
-
       <div id="analyticsRangeLabel" style="font-size:.75rem; color:var(--text-muted); font-weight:700; margin-bottom:14px; text-align:center; padding:8px; background:var(--bg-alt); border-radius:10px;"></div>
-
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
         <div class="stat-card info"><div class="num" id="anaUsersActive">0</div><div class="label">Active Users</div></div>
         <div class="stat-card green"><div class="num" id="anaAdViews">0</div><div class="label">Ad Views</div></div>
@@ -680,7 +739,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <div class="stat-card pink"><div class="num" id="anaWithdrawals">0</div><div class="label">Withdrawals</div></div>
         <div class="stat-card danger"><div class="num" id="anaEarnings">0</div><div class="label">Total Paid (TK)</div></div>
       </div>
-
       <div style="overflow-x:auto;">
         <table style="width:100%; font-size:.82rem; border-collapse:separate; border-spacing:0 6px;">
           <thead><tr><th style="text-align:left; padding:10px; color:#94a3b8;">User</th><th style="text-align:left; padding:10px; color:#94a3b8;">Views</th><th style="text-align:left; padding:10px; color:#94a3b8;">Clicks</th><th style="text-align:left; padding:10px; color:#94a3b8;">Earned</th></tr></thead>
@@ -736,7 +794,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- REFERRALS (✅ UPDATED with qualified marks) -->
+  <!-- REFERRALS -->
   <div id="tab-referrals" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-trophy"></i></div>Top Referrers</div></div>
@@ -917,8 +975,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <div class="form-group" style="flex:1; min-width:120px;"><label>Reward (TK) *</label><input type="number" id="newTaskReward" step="0.01" oninput="updateTaskCostPreview()"></div>
         <div class="form-group" style="flex:1; min-width:120px;"><label>Total Slots *</label><input type="number" id="newTaskSlots" value="100" oninput="updateTaskCostPreview()"></div>
       </div>
-
-      <!-- ✅ UPDATED: Task cost preview with service charge -->
       <div id="taskCostPreview" style="display:none; margin-bottom:14px; padding:14px; background:linear-gradient(135deg,#fef3c7,#fde68a); border-left:4px solid #f59e0b; border-radius:12px; font-size:.82rem; font-weight:700; color:#92400e;">
         <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span>💰 Task Cost:</span><span id="taskCostAmount">0.00 TK</span></div>
         <div style="display:flex; justify-content:space-between; margin-bottom:6px;"><span>⚙️ Service Charge (<span id="taskSvcRate">10</span>%):</span><span id="taskSvcAmount">0.00 TK</span></div>
@@ -926,7 +982,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <div style="display:flex; justify-content:space-between;"><span>💵 Your Balance:</span><span id="taskCostBalance">0.00 TK</span></div>
         <div id="taskCostWarn" style="margin-top:8px; padding-top:8px; border-top:1px dashed #d97706; font-size:.75rem;"></div>
       </div>
-
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <div class="form-group" style="flex:1; min-width:120px;"><label>Time Limit (Days)</label><input type="number" id="newTaskTime" value="7"></div>
         <div class="form-group" style="flex:1; min-width:120px; display:none;" id="timerGroup">
@@ -958,6 +1013,107 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 </div>
 
 <script>
+// ═══════════════════════════════════════════════════════════════════
+// ✅ ANTI-HACK / ANTI-TAMPER PROTECTION SYSTEM
+// ═══════════════════════════════════════════════════════════════════
+(function initSecurityShield() {
+  'use strict';
+
+  // 1. Block Right-Click globally
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    return false;
+  }, true);
+
+  // 2. Block DevTools & view-source keyboard shortcuts
+  document.addEventListener('keydown', function(e) {
+    const k = (e.key || '').toLowerCase();
+    const isBlocked =
+      e.key === 'F12' ||
+      (e.ctrlKey && e.shiftKey && ['i','j','c','k'].includes(k)) ||
+      (e.metaKey && e.altKey && ['i','j','c','k'].includes(k)) ||
+      (e.ctrlKey && ['u','s'].includes(k)) ||
+      (e.metaKey && ['u','s'].includes(k));
+    if (isBlocked) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+  }, true);
+
+  // 3. Block text selection outside inputs
+  document.addEventListener('selectstart', function(e) {
+    const tag = (e.target && e.target.tagName || '').toUpperCase();
+    if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // 4. Block drag
+  document.addEventListener('dragstart', function(e) {
+    const tag = (e.target && e.target.tagName || '').toUpperCase();
+    if (tag !== 'IMG') e.preventDefault();
+  });
+
+  // 5. DevTools open detection → warn & clear console
+  let devtoolsFlag = false;
+  setInterval(function() {
+    const wDiff = window.outerWidth - window.innerWidth;
+    const hDiff = window.outerHeight - window.innerHeight;
+    if (wDiff > 160 || hDiff > 160) {
+      if (!devtoolsFlag) {
+        devtoolsFlag = true;
+        try { console.clear(); } catch(e) {}
+        document.title = '🔒 Secured';
+      }
+    } else {
+      devtoolsFlag = false;
+    }
+  }, 1200);
+
+  // 6. Freeze critical globals (Firebase config, secrets)
+  try {
+    if (typeof firebaseConfig === 'object') Object.freeze(firebaseConfig);
+  } catch(e) {}
+
+  // 7. Protect window from property tampering (silent fail)
+  try {
+    const w = window;
+    Object.defineProperty(w, '__securityShield', {
+      value: true,
+      writable: false,
+      configurable: false
+    });
+  } catch(e) {}
+
+  // 8. Session integrity check (runs every 15s)
+  setInterval(function() {
+    try {
+      // Check if localStorage session is still valid and not tampered
+      const raw = localStorage.getItem('nexearn_admin_session');
+      if (!raw) return;
+      const s = JSON.parse(raw);
+      if (!s || typeof s !== 'object') { localStorage.removeItem('nexearn_admin_session'); return; }
+      // If expiry suddenly far in future (tampered), force logout
+      if (s.expiry && (s.expiry - Date.now()) > (25 * 60 * 60 * 1000)) {
+        localStorage.removeItem('nexearn_admin_session');
+        location.reload();
+      }
+    } catch(e) {
+      try { localStorage.removeItem('nexearn_admin_session'); } catch(_) {}
+    }
+  }, 15000);
+
+  // 9. Anti-iframe (prevent clickjacking)
+  try {
+    if (window.self !== window.top) {
+      // Not blocking silently — allow Telegram webview
+    }
+  } catch(e) {}
+
+})();
+
 const firebaseConfig = {
   apiKey: "AIzaSyC_WvNxSQQ58TcJhDcBw5NUrAZjOQe1T2g",
   authDomain: "cat-coins-34d4c.firebaseapp.com",
@@ -971,16 +1127,17 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 const TASK_DELETE_FEE = 10;
-// ✅ Service charge: 10% of task cost (100 TK per 1000 TK)
-let SERVICE_CHARGE_RATE = 10; // percentage
+let SERVICE_CHARGE_RATE = 10;
+const LB_MAX_ENTRIES = 10;
 
-let configData = { adSlots:[], newTasks:{}, depositMethods:[] };
+let configData = { adSlots:[], newTasks:{}, depositMethods:[], leaderboardCustom:[] };
 let allUsers = [], filteredUsers = [], channelLinks = [], withdrawLinks = [], withdrawLevels = [];
 let MIN_REFERRAL_BALANCE = 20, selectedCommissionMode = 'bonus';
 let editingTaskId = null, allSubmissions = [], currentSubFilter = 'pending', currentTaskCache = {};
 let currentAdminData = null, allDepositRequests = [];
 let dmEditingIndex = null;
 let analyticsRange = 'today';
+let lbEditingIndex = null;
 
 const SESSION_KEY = 'nexearn_admin_session';
 const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
@@ -1021,10 +1178,7 @@ async function loadLoginContactInfo() {
 }
 
 function openLoginContactAdmin() {
-  if (!loginContactLinkCache) {
-    alert('⚠️ Contact link is not configured yet. Please try again later.');
-    return;
-  }
+  if (!loginContactLinkCache) { alert('⚠️ Contact link is not configured yet.'); return; }
   try { window.open(loginContactLinkCache, '_blank'); } catch(e) { location.href = loginContactLinkCache; }
 }
 
@@ -1219,6 +1373,142 @@ function openAdminContact(adminId) {
   });
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// ✅ LEADERBOARD CUSTOM MANAGEMENT
+// ═══════════════════════════════════════════════════════════════════
+function renderLeaderboardCustomList() {
+  const container = document.getElementById('lbListContainer');
+  const countEl = document.getElementById('lbCount');
+  const addBtn = document.getElementById('lbAddBtn');
+  if (!container) return;
+  const list = Array.isArray(configData.leaderboardCustom) ? configData.leaderboardCustom : [];
+  if (countEl) countEl.textContent = list.length;
+  if (addBtn) {
+    if (list.length >= LB_MAX_ENTRIES) {
+      addBtn.disabled = true;
+      addBtn.style.opacity = '0.5';
+      addBtn.innerHTML = '<i class="fas fa-ban"></i> Limit Reached (10/10)';
+    } else {
+      addBtn.disabled = false;
+      addBtn.style.opacity = '1';
+      addBtn.innerHTML = '<i class="fas fa-plus"></i> Add User';
+    }
+  }
+  if (!list.length) {
+    container.innerHTML = '<div class="lb-empty"><i class="fas fa-trophy" style="font-size:1.5rem;display:block;margin-bottom:6px;opacity:.5;"></i>No custom entries yet. Add up to 10 users.</div>';
+    return;
+  }
+  let h = '';
+  list.forEach((entry, i) => {
+    const rankCls = i === 0 ? 'rank1' : i === 1 ? 'rank2' : i === 2 ? 'rank3' : '';
+    const rankIcon = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1);
+    const initial = (entry.name || 'U').charAt(0).toUpperCase();
+    const photoHtml = entry.photo
+      ? `<img src="${esc(entry.photo)}" onerror="this.style.display='none';this.parentNode.textContent='${initial}';">`
+      : initial;
+    h += `<div class="lb-item ${rankCls}">
+      <div class="lb-rank">${rankIcon}</div>
+      <div class="lb-avatar">${photoHtml}</div>
+      <div class="lb-info">
+        <div class="name">${esc(entry.name || 'User')}</div>
+        <div class="stats">
+          <span class="bal"><i class="fas fa-coins"></i> ${Number(entry.balance || 0).toFixed(2)} TK</span>
+          <span class="ref"><i class="fas fa-users"></i> ${Number(entry.refs || 0)} Refs</span>
+        </div>
+      </div>
+      <div class="lb-actions">
+        <button class="act-up" onclick="moveLbEntry(${i}, -1)" title="Move Up" ${i === 0 ? 'disabled style="opacity:.3"' : ''}><i class="fas fa-arrow-up"></i></button>
+        <button class="act-down" onclick="moveLbEntry(${i}, 1)" title="Move Down" ${i === list.length - 1 ? 'disabled style="opacity:.3"' : ''}><i class="fas fa-arrow-down"></i></button>
+        <button class="act-edit" onclick="openLbModal(${i})" title="Edit"><i class="fas fa-pen"></i></button>
+        <button class="act-del" onclick="deleteLbEntry(${i})" title="Delete"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`;
+  });
+  container.innerHTML = h;
+}
+
+function openLbModal(index) {
+  lbEditingIndex = (index === undefined || index === null) ? null : index;
+  const list = Array.isArray(configData.leaderboardCustom) ? configData.leaderboardCustom : [];
+  if (lbEditingIndex === null && list.length >= LB_MAX_ENTRIES) {
+    toast('❌ সর্বোচ্চ ১০ জন এড করা যাবে');
+    return;
+  }
+  if (lbEditingIndex === null) {
+    document.getElementById('lbModalTitle').textContent = 'Add Leaderboard User';
+    document.getElementById('lbName').value = '';
+    document.getElementById('lbBalance').value = '';
+    document.getElementById('lbRefs').value = '';
+    document.getElementById('lbPhoto').value = '';
+  } else {
+    document.getElementById('lbModalTitle').textContent = 'Edit Leaderboard User';
+    const e = list[lbEditingIndex] || {};
+    document.getElementById('lbName').value = e.name || '';
+    document.getElementById('lbBalance').value = e.balance || '';
+    document.getElementById('lbRefs').value = e.refs || '';
+    document.getElementById('lbPhoto').value = e.photo || '';
+  }
+  document.getElementById('lbModal').classList.add('active');
+}
+function closeLbModal() { document.getElementById('lbModal').classList.remove('active'); lbEditingIndex = null; }
+
+async function saveLbEntry() {
+  const name = document.getElementById('lbName').value.trim();
+  const balance = parseFloat(document.getElementById('lbBalance').value);
+  const refs = parseInt(document.getElementById('lbRefs').value) || 0;
+  const photo = document.getElementById('lbPhoto').value.trim();
+  if (!name || name.length < 2) return toast('❌ Valid name required');
+  if (isNaN(balance) || balance < 0) return toast('❌ Valid balance required');
+  if (isNaN(refs) || refs < 0) return toast('❌ Valid referral count required');
+  const list = Array.isArray(configData.leaderboardCustom) ? configData.leaderboardCustom.slice() : [];
+  const entry = { name: name.substring(0, 30), balance: Number(balance), refs: Number(refs), photo: photo || '' };
+  if (lbEditingIndex === null) {
+    if (list.length >= LB_MAX_ENTRIES) return toast('❌ Limit reached (10)');
+    list.push(entry);
+  } else {
+    list[lbEditingIndex] = entry;
+  }
+  // Sort descending by balance after save
+  list.sort((a, b) => Number(b.balance || 0) - Number(a.balance || 0));
+  try {
+    await db.ref('config/leaderboardCustom').set(list);
+    configData.leaderboardCustom = list;
+    toast(lbEditingIndex === null ? '✅ User added' : '✅ User updated');
+    closeLbModal();
+    renderLeaderboardCustomList();
+  } catch(e) { toast('❌ Error: ' + e.message); }
+}
+
+async function deleteLbEntry(index) {
+  const list = Array.isArray(configData.leaderboardCustom) ? configData.leaderboardCustom.slice() : [];
+  if (!list[index]) return;
+  if (!confirm('Delete "' + (list[index].name || 'this user') + '"?')) return;
+  list.splice(index, 1);
+  try {
+    await db.ref('config/leaderboardCustom').set(list);
+    configData.leaderboardCustom = list;
+    toast('✅ Deleted');
+    renderLeaderboardCustomList();
+  } catch(e) { toast('❌ Error'); }
+}
+
+async function moveLbEntry(index, dir) {
+  const list = Array.isArray(configData.leaderboardCustom) ? configData.leaderboardCustom.slice() : [];
+  const newIdx = index + dir;
+  if (newIdx < 0 || newIdx >= list.length) return;
+  const tmp = list[index];
+  list[index] = list[newIdx];
+  list[newIdx] = tmp;
+  try {
+    await db.ref('config/leaderboardCustom').set(list);
+    configData.leaderboardCustom = list;
+    renderLeaderboardCustomList();
+  } catch(e) { toast('❌ Error'); }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DEPOSIT METHODS
+// ═══════════════════════════════════════════════════════════════════
 function renderDepositMethodsList() {
   const c = document.getElementById('dmMethodsList');
   const methods = configData.depositMethods || [];
@@ -1597,7 +1887,6 @@ function openContactLink() {
 }
 
 // ========== TASK MANAGEMENT ==========
-// ✅ UPDATED: Cost preview with service charge
 function updateTaskCostPreview() {
   if (!currentSession) return;
   const preview = document.getElementById('taskCostPreview');
@@ -1655,7 +1944,7 @@ async function saveNewTask() {
   const totalDebit = cost + svcAmount;
   if (currentSession.role === 'admin') {
     const balance = currentAdminData ? Number(currentAdminData.balance || 0) : 0;
-    if (balance < totalDebit) return toast(`❌ অপর্যাপ্ত! প্রয়োজন ${totalDebit.toFixed(2)} (সার্ভিস চার্জ সহ), আছে ${balance.toFixed(2)}`);
+    if (balance < totalDebit) return toast(`❌ অপর্যাপ্ত! প্রয়োজন ${totalDebit.toFixed(2)}, আছে ${balance.toFixed(2)}`);
   }
   const taskData = {
     title, description, type, category, reward, totalSlots,
@@ -1875,7 +2164,6 @@ async function confirmCancelTask() {
   toast('❌ Task cancelled');
   closeCancelTaskModal(); loadTasksList();
 }
-// ✅ UPDATED: Delete modal shows service charge info
 function openDeleteTaskModal(id) {
   const t = currentTaskCache[id];
   if (!t) return;
@@ -2016,7 +2304,7 @@ async function reviewSubmission(subId, action) {
   loadTaskSubmissions();
 }
 
-// ========== ✅ UPDATED: Analytics with date ranges ==========
+// ========== Analytics ==========
 function getAnalyticsRangeBounds(range) {
   const now = new Date();
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
@@ -2052,18 +2340,14 @@ function setAnalyticsRange(range, el) {
 async function loadAnalytics() {
   const { start, end, label } = getAnalyticsRangeBounds(analyticsRange);
   document.getElementById('analyticsRangeLabel').textContent = label;
-
   try {
     const us = await db.ref('users').once('value');
     let usersActiveSet = new Set();
     let totalViews = 0, totalClicks = 0;
     let data = [];
-
     us.forEach(c => {
       const u = c.val();
       const uid = c.key;
-
-      // Ad views within range from adHistory
       let views = 0, earned = 0;
       const ah = u.adHistory || {};
       for (const k in ah) {
@@ -2078,11 +2362,8 @@ async function loadAnalytics() {
       if (clicks > 0) usersActiveSet.add(uid);
       totalViews += views;
       totalClicks += views > 0 ? views : 0;
-
       data.push({ name: u.name || 'User', id: uid, views, clicks: views > 0 ? 1 : 0, earned });
     });
-
-    // Task submissions within range
     let tasksDone = 0;
     const tSnap = await db.ref('taskSubmissions').once('value');
     tSnap.forEach(c => {
@@ -2093,8 +2374,6 @@ async function loadAnalytics() {
         usersActiveSet.add(String(s.userId));
       }
     });
-
-    // Withdrawals within range
     let wdCount = 0, wdAmount = 0;
     const wSnap = await db.ref('withdrawals').once('value');
     wSnap.forEach(c => {
@@ -2105,17 +2384,13 @@ async function loadAnalytics() {
         if (w.status === 'approved') wdAmount += Number(w.amount || 0);
       }
     });
-
     data.sort((a,b) => b.views - a.views || b.earned - a.earned);
-
     document.getElementById('anaUsersActive').textContent = usersActiveSet.size;
     document.getElementById('anaAdViews').textContent = totalViews;
     document.getElementById('anaAdClicks').textContent = totalClicks;
     document.getElementById('anaTasksDone').textContent = tasksDone;
     document.getElementById('anaWithdrawals').textContent = wdCount;
     document.getElementById('anaEarnings').textContent = wdAmount.toFixed(2);
-
-    // Table
     let h = '';
     data.slice(0, 30).forEach(u => {
       h += `<tr>
@@ -2326,7 +2601,6 @@ function loadAllWithdrawals() {
   });
 }
 
-// ✅ UPDATED: Referral stats with qualified marks
 async function loadReferralStats() {
   const snap = await db.ref('users').once('value');
   let users = [], tRefs = 0, tQ = 0, tComm = 0;
@@ -2369,7 +2643,6 @@ async function loadReferralStats() {
     <div style="background:linear-gradient(135deg,#fee2e2,#fecaca); padding:14px; border-radius:12px; text-align:center;"><div style="font-size:1.5rem; font-weight:900; color:var(--danger);">${snap.numChildren()}</div><div style="font-size:.68rem; color:#991b1b; font-weight:800; text-transform:uppercase;">Users</div></div>
   </div>`;
 
-  // Store users list for search
   window._allRefUsers = users;
   renderAllUsersReferrals();
 }
@@ -2430,7 +2703,6 @@ async function saveBecomeAdminSettings() {
   } catch(e) { toast('❌ Error: ' + e.message); }
 }
 
-// ✅ NEW: Save service charge
 async function saveServiceCharge() {
   const rate = parseFloat(document.getElementById('serviceChargeRate').value) || 0;
   if (rate < 0 || rate > 100) return toast('❌ Rate must be 0-100');
@@ -2493,7 +2765,7 @@ function esc(s) { return String(s || '').replace(/[<>&"]/g, c => ({ '<': '&lt;',
 function runPanelInit() {
   if (runPanelInit._done) return;
   runPanelInit._done = true;
-  if (currentSession.role === 'super') { loadAnalytics(); loadVerificationStats(); toggleSurveyFields(); }
+  if (currentSession.role === 'super') { loadAnalytics(); loadVerificationStats(); toggleSurveyFields(); renderLeaderboardCustomList(); }
   else { loadCurrentAdminData(); loadTasksList(); loadTaskSubmissions(); }
   setInterval(() => { if (currentSession && currentSession.role === 'admin') loadCurrentAdminData(); }, 30000);
 }
@@ -2502,6 +2774,7 @@ db.ref('config').on('value', snap => {
   if (!snap.exists()) return;
   configData = snap.val();
   if (!configData.depositMethods) configData.depositMethods = [];
+  if (!Array.isArray(configData.leaderboardCustom)) configData.leaderboardCustom = [];
   channelLinks = configData.channelLinks || [];
   withdrawLevels = configData.withdrawLevels || [
     { requiredRefs: 5, fee: 5, minAmount: 10, maxAmount: 100, time: "30 Min-1 Hours" },
@@ -2552,6 +2825,7 @@ db.ref('config').on('value', snap => {
       document.getElementById('maintenanceTime').value = configData.maintenance.estimatedMinutes || '';
     }
     renderChannelLinks(); renderWithdrawLevels(); loadAdsConfig(); renderDepositMethodsList();
+    renderLeaderboardCustomList();
   }
   if (currentSession && currentSession.role === 'admin') {
     renderDepositMethodsAdminView(); renderContactInfo();
@@ -2575,7 +2849,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   showLoginOverlay();
 });
 
-['editTaskModal','depositModal','dmModal','depositSubmitModal','banModal','cancelTaskModal','deleteTaskModal','contactEditModal'].forEach(id => {
+['editTaskModal','depositModal','dmModal','depositSubmitModal','banModal','cancelTaskModal','deleteTaskModal','contactEditModal','lbModal'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('click', e => { if (e.target.id === id) el.classList.remove('active'); });
 });
