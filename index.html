@@ -545,6 +545,25 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="form-group"><label>Currency Symbol</label><input type="text" id="currencySymbol"></div>
       <div class="form-group"><label>Ad Reset Hour (0-23)</label><input type="number" id="adResetHour" min="0" max="23"></div>
     </div>
+
+    <!-- ✅ NEW: Become Admin Slider Settings -->
+    <div class="card rainbow">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-crown"></i></div>Become Admin Slider</div></div>
+      <div class="alert-box info"><i class="fas fa-info-circle"></i><div>User app-এ উপরের দিক থেকে একটা <b>animated slider</b> নিচে নামবে। এখানে link সেট করলে slider-এর Apply button-এ ক্লিক করলে ওই লিংকে চলে যাবে।</div></div>
+      <div class="form-group">
+        <label>Slider Status</label>
+        <select id="becomeAdminEnabled">
+          <option value="true">✅ Enabled (slider দেখাবে)</option>
+          <option value="false">🚫 Disabled (slider বন্ধ)</option>
+        </select>
+      </div>
+      <div class="form-group"><label>🔗 Admin Application Link *</label><input type="url" id="becomeAdminLink" placeholder="https://t.me/YourUsername"></div>
+      <div class="form-group"><label>Slider Title</label><input type="text" id="becomeAdminTitle" placeholder="🎉 এডমিন হতে চান?"></div>
+      <div class="form-group"><label>Slider Subtitle</label><input type="text" id="becomeAdminSub" placeholder="Apply now to become an admin"></div>
+      <div class="form-group"><label>Apply Button Text</label><input type="text" id="becomeAdminBtnText" placeholder="Apply"></div>
+      <button class="btn btn-warning" onclick="saveBecomeAdminSettings()"><i class="fas fa-save"></i> Save Slider Settings</button>
+    </div>
+
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-pink"><i class="fas fa-headset"></i></div>Contact / Support</div></div>
       <div class="form-group"><label>📞 Contact Link URL *</label><input type="url" id="contactLink" placeholder="https://t.me/YourUsername"></div>
@@ -1095,12 +1114,10 @@ async function saveContactInfo() {
 }
 function openAdminContact(adminId) {
   const a = allUsers.find(x => x.id === adminId);
-  // Fetch fresh from DB
   db.ref('admins/' + adminId + '/adminContact').once('value').then(snap => {
     if (!snap.exists()) return toast('❌ Admin contact not set');
     const c = snap.val();
     if (!c.value) return toast('❌ Admin contact not set');
-    // Open link
     let url = c.value;
     if (c.type === 'telegram') {
       url = c.value.startsWith('@') ? 'https://t.me/' + c.value.slice(1) : (c.value.startsWith('http') ? c.value : 'https://t.me/' + c.value);
@@ -1792,7 +1809,6 @@ async function confirmDeleteTask() {
       }
     }
     await db.ref('config/newTasks/' + id).remove();
-    // Save refund log
     const refundId = 'ref_' + Date.now();
     await db.ref('refundLogs/' + refundId).set({
       taskId: id, taskTitle: t.title, adminId: creatorId, adminName: t.createdByName,
@@ -2121,6 +2137,33 @@ async function loadReferralStats() {
     <div style="background:linear-gradient(135deg,#fee2e2,#fecaca); padding:14px; border-radius:12px; text-align:center;"><div style="font-size:1.5rem; font-weight:900; color:var(--danger);">${snap.numChildren()}</div><div style="font-size:.68rem; color:#991b1b; font-weight:800; text-transform:uppercase;">Users</div></div>
   </div>`;
 }
+
+// ========== ✅ NEW: Save Become Admin Slider Settings ==========
+async function saveBecomeAdminSettings() {
+  const enabled = document.getElementById('becomeAdminEnabled').value === 'true';
+  const link = document.getElementById('becomeAdminLink').value.trim();
+  const title = document.getElementById('becomeAdminTitle').value.trim();
+  const sub = document.getElementById('becomeAdminSub').value.trim();
+  const btnText = document.getElementById('becomeAdminBtnText').value.trim();
+  if (enabled && !link) return toast('❌ Link required when enabled');
+  if (enabled && !/^https?:\/\//i.test(link)) return toast('❌ Link must start with http:// or https://');
+  try {
+    await db.ref('config').update({
+      becomeAdminEnabled: enabled,
+      becomeAdminLink: link,
+      becomeAdminTitle: title || '🎉 এডমিন হতে চান?',
+      becomeAdminSub: sub || 'Apply now to become an admin',
+      becomeAdminBtnText: btnText || 'Apply'
+    });
+    configData.becomeAdminEnabled = enabled;
+    configData.becomeAdminLink = link;
+    configData.becomeAdminTitle = title || '🎉 এডমিন হতে চান?';
+    configData.becomeAdminSub = sub || 'Apply now to become an admin';
+    configData.becomeAdminBtnText = btnText || 'Apply';
+    toast('✅ Slider settings saved!');
+  } catch(e) { toast('❌ Error: ' + e.message); }
+}
+
 function saveSettings() {
   const methods = document.getElementById('paymentMethods').value.split(',').map(m => m.trim());
   const levels = getWithdrawLevelsFromUI();
@@ -2209,6 +2252,12 @@ db.ref('config').on('value', snap => {
     document.getElementById('adResetHour').value = configData.adResetHour || 0;
     document.getElementById('dailyAdLimit').value = configData.dailyAdLimit || 10;
     document.getElementById('adReward').value = configData.adReward || 0.5;
+    // ✅ Load Become Admin Slider values
+    document.getElementById('becomeAdminEnabled').value = String(configData.becomeAdminEnabled === true);
+    document.getElementById('becomeAdminLink').value = configData.becomeAdminLink || '';
+    document.getElementById('becomeAdminTitle').value = configData.becomeAdminTitle || '';
+    document.getElementById('becomeAdminSub').value = configData.becomeAdminSub || '';
+    document.getElementById('becomeAdminBtnText').value = configData.becomeAdminBtnText || '';
     if (configData.maintenance) {
       document.getElementById('maintenanceMode').value = configData.maintenance.active ? 'true' : 'false';
       document.getElementById('maintenanceMsg').value = configData.maintenance.message || '';
