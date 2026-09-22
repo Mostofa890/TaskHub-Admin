@@ -112,8 +112,8 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .modal-close{width:36px;height:36px;border-radius:10px;border:none;background:var(--bg-alt);color:var(--text-secondary);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .modal-close:hover{background:var(--danger-bg);color:var(--danger)}
 .modal-body{padding:20px 22px}
-.login-overlay{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(1200px 700px at 20% 20%,rgba(99,102,241,.4),transparent 55%),radial-gradient(900px 600px at 80% 70%,rgba(236,72,153,.35),transparent 55%),radial-gradient(700px 500px at 50% 50%,rgba(6,182,212,.25),transparent 60%),linear-gradient(135deg,#05060a,#0b0d18 40%,#090a12);overflow:hidden}
-.login-card{position:relative;z-index:2;width:100%;max-width:400px;border-radius:26px;padding:32px 26px 26px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 80px rgba(0,0,0,.6);backdrop-filter:blur(16px)}
+.login-overlay{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(1200px 700px at 20% 20%,rgba(99,102,241,.4),transparent 55%),radial-gradient(900px 600px at 80% 70%,rgba(236,72,153,.35),transparent 55%),radial-gradient(700px 500px at 50% 50%,rgba(6,182,212,.25),transparent 60%),linear-gradient(135deg,#05060a,#0b0d18 40%,#090a12);overflow-y:auto}
+.login-card{position:relative;z-index:2;width:100%;max-width:400px;border-radius:26px;padding:32px 26px 26px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 80px rgba(0,0,0,.6);backdrop-filter:blur(16px);margin:auto}
 .login-brand{text-align:center;margin-bottom:24px}
 .login-logo{width:68px;height:68px;margin:0 auto 14px;border-radius:20px;background:linear-gradient(135deg,#fbbf24,#ec4899,#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.75rem;box-shadow:0 18px 40px rgba(236,72,153,.55)}
 .login-brand h1{color:#fff;font-size:1.35rem;font-weight:900;margin-bottom:4px}
@@ -129,6 +129,18 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .login-error.show{display:block}
 .login-hint{margin-top:18px;padding:12px 14px;border-radius:12px;background:rgba(99,102,241,.14);border:1px solid rgba(99,102,241,.25);color:rgba(199,210,254,.95);font-size:.75rem;font-weight:600;display:flex;gap:10px;line-height:1.5}
 .login-hint i{color:#f472b6;font-size:1rem;flex-shrink:0}
+
+/* ✅ NEW: Contact Admin Section on Login */
+.login-divider{display:flex;align-items:center;gap:12px;margin:18px 0 14px;color:rgba(255,255,255,.4);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px}
+.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent)}
+.login-contact-btn{width:100%;padding:13px;border-radius:14px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);color:#fff;font-weight:800;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;font-family:inherit;text-decoration:none}
+.login-contact-btn:hover{background:rgba(255,255,255,.15);border-color:rgba(251,191,36,.6);transform:translateY(-1px);box-shadow:0 10px 24px rgba(251,191,36,.2)}
+.login-contact-btn:active{transform:scale(.98)}
+.login-contact-btn i{color:#fbbf24;font-size:1rem}
+.login-contact-btn:disabled{opacity:.4;cursor:not-allowed;transform:none !important}
+.login-contact-note{margin-top:10px;text-align:center;font-size:.68rem;color:rgba(255,255,255,.5);font-weight:600;line-height:1.5}
+.login-contact-note b{color:#fbbf24}
+
 .admin-item{display:flex;flex-direction:column;padding:16px;background:linear-gradient(135deg,#fff,#f8fafc);border:1.5px solid var(--border);border-radius:var(--radius-sm);margin-bottom:12px;gap:12px;transition:all .25s;position:relative;overflow:hidden}
 .admin-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#6366f1,#ec4899)}
 .admin-item:hover{background:#fff;border-color:var(--primary);box-shadow:var(--shadow-md);transform:translateX(2px)}
@@ -260,6 +272,19 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       </button>
       <div class="login-error" id="loginError"></div>
     </form>
+
+    <!-- ✅ NEW: Contact Admin Section -->
+    <div id="loginContactSection" style="display:none;">
+      <div class="login-divider">OR</div>
+      <button type="button" class="login-contact-btn" id="loginContactBtn" onclick="openLoginContactAdmin()">
+        <i class="fas fa-headset"></i>
+        <span>Contact Admin</span>
+      </button>
+      <p class="login-contact-note">
+        Don't have an account? <b>Contact the Super Admin</b> to get your ID &amp; password.
+      </p>
+    </div>
+
     <div class="login-hint" id="loginHint">
       <i class="fas fa-shield-halved"></i>
       <span>First time setup: create your <b>Super Admin</b> account.</span>
@@ -546,7 +571,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="form-group"><label>Ad Reset Hour (0-23)</label><input type="number" id="adResetHour" min="0" max="23"></div>
     </div>
 
-    <!-- ✅ NEW: Become Admin Slider Settings -->
+    <!-- ✅ Become Admin Slider Settings -->
     <div class="card rainbow">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-crown"></i></div>Become Admin Slider</div></div>
       <div class="alert-box info"><i class="fas fa-info-circle"></i><div>User app-এ উপরের দিক থেকে একটা <b>animated slider</b> নিচে নামবে। এখানে link সেট করলে slider-এর Apply button-এ ক্লিক করলে ওই লিংকে চলে যাবে।</div></div>
@@ -942,6 +967,41 @@ function showLoginOverlay() { document.getElementById('loginOverlay').style.disp
 function hideLoginOverlay() { document.getElementById('loginOverlay').style.display = 'none'; }
 function setLoginError(msg) { const el = document.getElementById('loginError'); if (msg) { el.textContent = msg; el.classList.add('show'); } else el.classList.remove('show'); }
 
+// ✅ Load contact link for login page
+let loginContactLinkCache = '';
+
+async function loadLoginContactInfo() {
+  try {
+    const snap = await db.ref('config').once('value');
+    if (!snap.exists()) return;
+    const cfg = snap.val() || {};
+    loginContactLinkCache = cfg.contactLink || '';
+    const section = document.getElementById('loginContactSection');
+    const btn = document.getElementById('loginContactBtn');
+    if (loginContactLinkCache && /^https?:\/\//i.test(loginContactLinkCache)) {
+      section.style.display = 'block';
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-headset"></i><span>Contact Admin</span>';
+    } else {
+      section.style.display = 'none';
+    }
+  } catch(e) {
+    // Silent fail
+  }
+}
+
+function openLoginContactAdmin() {
+  if (!loginContactLinkCache) {
+    alert('⚠️ Contact link is not configured yet. Please try again later.');
+    return;
+  }
+  try {
+    window.open(loginContactLinkCache, '_blank');
+  } catch(e) {
+    location.href = loginContactLinkCache;
+  }
+}
+
 async function initializeAuthUI() {
   const superAdmin = await getSuperAdminData();
   const form = document.getElementById('loginForm');
@@ -953,6 +1013,8 @@ async function initializeAuthUI() {
     document.getElementById('loginBtnIcon').className = 'fas fa-user-plus';
     confirmField.style.display = 'block'; document.getElementById('loginConfirmPassword').required = true;
     form.dataset.mode = 'setup';
+    // Hide contact section during setup
+    document.getElementById('loginContactSection').style.display = 'none';
   } else {
     document.getElementById('loginTitle').textContent = 'Admin Login';
     document.getElementById('loginSubtitle').textContent = 'Earn Wallet Control Center';
@@ -960,6 +1022,8 @@ async function initializeAuthUI() {
     document.getElementById('loginBtnIcon').className = 'fas fa-sign-in-alt';
     confirmField.style.display = 'none'; document.getElementById('loginConfirmPassword').required = false;
     form.dataset.mode = 'login';
+    // ✅ Load contact admin section for returning users
+    await loadLoginContactInfo();
   }
 }
 
@@ -2138,7 +2202,7 @@ async function loadReferralStats() {
   </div>`;
 }
 
-// ========== ✅ NEW: Save Become Admin Slider Settings ==========
+// ========== Save Become Admin Slider Settings ==========
 async function saveBecomeAdminSettings() {
   const enabled = document.getElementById('becomeAdminEnabled').value === 'true';
   const link = document.getElementById('becomeAdminLink').value.trim();
@@ -2232,6 +2296,16 @@ db.ref('config').on('value', snap => {
     { requiredRefs: 7, fee: 1, minAmount: 10, maxAmount: 500, time: "30 Min-1 Hours" }
   ];
   MIN_REFERRAL_BALANCE = configData.minReferralBalance || 20;
+  // ✅ Keep login contact link cache updated
+  loginContactLinkCache = configData.contactLink || '';
+  const loginContactSection = document.getElementById('loginContactSection');
+  if (loginContactSection && loginContactLinkCache && /^https?:\/\//i.test(loginContactLinkCache)) {
+    // Only show if not in setup mode
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm && loginForm.dataset.mode !== 'setup') {
+      loginContactSection.style.display = 'block';
+    }
+  }
   if (currentSession && currentSession.role === 'super') {
     document.getElementById('botUsername').value = configData.botUsername || '';
     document.getElementById('currencySymbol').value = configData.currencySymbol || 'TK';
@@ -2252,7 +2326,6 @@ db.ref('config').on('value', snap => {
     document.getElementById('adResetHour').value = configData.adResetHour || 0;
     document.getElementById('dailyAdLimit').value = configData.dailyAdLimit || 10;
     document.getElementById('adReward').value = configData.adReward || 0.5;
-    // ✅ Load Become Admin Slider values
     document.getElementById('becomeAdminEnabled').value = String(configData.becomeAdminEnabled === true);
     document.getElementById('becomeAdminLink').value = configData.becomeAdminLink || '';
     document.getElementById('becomeAdminTitle').value = configData.becomeAdminTitle || '';
