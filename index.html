@@ -35,14 +35,19 @@
     .header { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%); color: #fff; padding: 28px 24px 60px; text-align: left; position: relative; overflow: hidden; border-radius: 0 0 32px 32px; margin-bottom: -32px; z-index: 1; box-shadow: 0 20px 40px -10px rgba(67, 56, 202, 0.4); }
     .header::before { content: ''; position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(139, 92, 246, 0.5), transparent 70%); top: -100px; right: -60px; border-radius: 50%; filter: blur(20px); }
     .header::after { content: ''; position: absolute; width: 150px; height: 150px; background: radial-gradient(circle, rgba(6, 182, 212, 0.3), transparent 70%); bottom: -80px; left: -40px; border-radius: 50%; filter: blur(20px); }
-    .header-content { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; }
+    .header-content { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
     .header-brand { display: flex; align-items: center; gap: 12px; }
     .header-logo { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, #a78bfa, #6366f1); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4); }
     .header-title { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em; }
     .header-subtitle { font-size: 0.72rem; font-weight: 500; color: rgba(255, 255, 255, 0.7); margin-top: 2px; }
-    .header-status { display: flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.15); padding: 6px 12px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); }
-    .header-status .dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; animation: pulse 2s infinite; }
+    .header-right { display: flex; align-items: center; gap: 8px; }
+    .header-status { display: flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, 0.15); padding: 6px 12px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px); max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .header-status .dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; animation: pulse 2s infinite; flex-shrink: 0; }
+    .header-status .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .header-status .crown { color: #fbbf24; }
     @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.1); } }
+    .header-logout-btn { width: 38px; height: 38px; border-radius: 50%; background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; transition: all 0.2s; backdrop-filter: blur(10px); flex-shrink: 0; }
+    .header-logout-btn:hover { background: rgba(239, 68, 68, 0.45); border-color: rgba(239, 68, 68, 0.65); }
     .tabs-wrapper { position: relative; z-index: 2; margin-top: 16px; padding: 0 4px; }
     .tabs { display: flex; overflow-x: auto; background: var(--surface); border-radius: 20px; padding: 6px; gap: 4px; box-shadow: var(--shadow-lg); scrollbar-width: none; -ms-overflow-style: none; border: 1px solid var(--border); }
     .tabs::-webkit-scrollbar { display: none; }
@@ -51,6 +56,7 @@
     .tab:hover { background: var(--bg-alt); color: var(--text-secondary); }
     .tab.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35); }
     .tab.active i { transform: scale(1.1); }
+    .tab.super-only.hidden { display: none !important; }
     .tab-content { display: none; padding-top: 24px; animation: fadeSlide 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
     .tab-content.active { display: block; }
     @keyframes fadeSlide { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
@@ -129,11 +135,8 @@
     .status-badge.rejected { background: var(--danger-bg); color: #b91c1c; }
     .status-badge.closed { background: rgba(148,163,184,0.2); color: #475569; }
     .status-badge.survey { background: rgba(99, 102, 241, 0.12); color: var(--primary); }
-    .status-badge.voice { background: rgba(245, 158, 11, 0.12); color: #b45309; }
-    .status-badge.image { background: rgba(236, 72, 153, 0.12); color: #be185d; }
-    .status-badge.text { background: rgba(6, 182, 212, 0.12); color: #0891b2; }
-    .status-badge.youtube { background: rgba(239, 68, 68, 0.12); color: #b91c1c; }
-    .status-badge.other { background: rgba(139, 92, 246, 0.12); color: #6d28d9; }
+    .status-badge.superadmin { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #fff; }
+    .status-badge.admin { background: rgba(99, 102, 241, 0.12); color: var(--primary); }
     .ref-level-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.02em; }
     .ref-level-badge.beginner { background: rgba(99, 102, 241, 0.12); color: var(--primary); }
     .ref-level-badge.bronze { background: rgba(205, 127, 50, 0.15); color: #b45309; }
@@ -286,6 +289,45 @@
     .input-data-display .row:last-child { border-bottom: none; }
     .input-data-display .key { color: var(--text-muted); flex-shrink: 0; }
     .input-data-display .val { color: var(--text); font-weight: 700; word-break: break-all; text-align: right; }
+
+    /* ================= LOGIN OVERLAY ================= */
+    .login-overlay { position: fixed; inset: 0; z-index: 100000; display: flex; align-items: center; justify-content: center; padding: 20px; background: radial-gradient(1200px 700px at 20% 20%, rgba(99,102,241,0.35), transparent 55%), radial-gradient(900px 600px at 80% 70%, rgba(139,92,246,0.28), transparent 55%), linear-gradient(135deg, #05060a, #0b0d18 40%, #090a12); overflow: hidden; }
+    .login-overlay::before { content: ''; position: absolute; width: 320px; height: 320px; left: -100px; top: -80px; background: radial-gradient(circle, rgba(99,102,241,0.6), transparent 70%); border-radius: 50%; filter: blur(30px); animation: floatOrb 6s ease-in-out infinite; }
+    .login-overlay::after { content: ''; position: absolute; width: 280px; height: 280px; right: -80px; bottom: -60px; background: radial-gradient(circle, rgba(139,92,246,0.5), transparent 70%); border-radius: 50%; filter: blur(30px); animation: floatOrb 8s ease-in-out infinite reverse; }
+    @keyframes floatOrb { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(15px, -15px); } }
+    .login-card { position: relative; z-index: 2; width: 100%; max-width: 400px; border-radius: 26px; padding: 32px 26px 26px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 30px 80px rgba(0,0,0,0.55); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+    .login-brand { text-align: center; margin-bottom: 24px; }
+    .login-logo { width: 68px; height: 68px; margin: 0 auto 14px; border-radius: 20px; background: linear-gradient(135deg, #a78bfa, #6366f1); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.75rem; box-shadow: 0 18px 40px rgba(99,102,241,0.5); }
+    .login-brand h1 { color: #fff; font-size: 1.35rem; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 4px; }
+    .login-brand p { color: rgba(255,255,255,0.6); font-size: 0.78rem; font-weight: 600; }
+    .login-field { margin-bottom: 16px; }
+    .login-field label { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.75); font-size: 0.78rem; font-weight: 700; margin-bottom: 8px; }
+    .login-field label i { color: #a78bfa; }
+    .login-field input { width: 100%; padding: 14px 16px; border: 1.5px solid rgba(255,255,255,0.12); border-radius: 14px; font-size: 0.92rem; font-family: inherit; outline: none; background: rgba(255,255,255,0.05); color: #fff; font-weight: 600; transition: all 0.2s; }
+    .login-field input::placeholder { color: rgba(255,255,255,0.35); font-weight: 500; }
+    .login-field input:focus { border-color: #a78bfa; background: rgba(255,255,255,0.08); box-shadow: 0 0 0 4px rgba(99,102,241,0.2); }
+    .login-btn { width: 100%; padding: 15px; border-radius: 14px; border: none; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; font-weight: 800; font-size: 0.95rem; font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 10px 26px rgba(99,102,241,0.45); transition: all 0.2s; margin-top: 8px; }
+    .login-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(99,102,241,0.55); }
+    .login-btn:active { transform: translateY(0) scale(0.98); }
+    .login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .login-error { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; font-size: 0.8rem; font-weight: 700; text-align: center; display: none; }
+    .login-error.show { display: block; animation: shake 0.4s; }
+    @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+    .login-hint { margin-top: 18px; padding: 12px 14px; border-radius: 12px; background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2); color: rgba(199,210,254,0.9); font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 10px; line-height: 1.5; }
+    .login-hint i { color: #a78bfa; font-size: 1rem; flex-shrink: 0; }
+    .login-hint b { color: #fff; font-weight: 800; }
+
+    /* ================= ADMIN LIST ================= */
+    .admin-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; background: var(--bg-alt); border: 1.5px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 10px; gap: 10px; transition: all 0.2s; }
+    .admin-item:hover { background: #fff; border-color: var(--primary); box-shadow: var(--shadow-sm); }
+    .admin-item.super { background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(251,191,36,0.06)); border-color: rgba(245,158,11,0.35); }
+    .admin-item-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+    .admin-item-avatar { width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1rem; flex-shrink: 0; }
+    .admin-item.super .admin-item-avatar { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+    .admin-item-info { min-width: 0; flex: 1; }
+    .admin-item-info .name { font-weight: 800; font-size: 0.9rem; color: var(--text); display: flex; align-items: center; gap: 6px; }
+    .admin-item-info .meta { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; margin-top: 3px; }
+
     @media (max-width: 400px) {
       .container { padding: 0 12px; }
       .card { padding: 16px; border-radius: 20px; }
@@ -293,10 +335,45 @@
       .header-title { font-size: 1rem; }
       .stat-card .num { font-size: 1.5rem; }
       .detail-grid { grid-template-columns: 1fr; }
+      .header-status { max-width: 90px; }
     }
   </style>
 </head>
 <body>
+
+  <!-- ================= LOGIN OVERLAY ================= -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-card">
+      <div class="login-brand">
+        <div class="login-logo"><i class="fas fa-shield-halved"></i></div>
+        <h1 id="loginTitle">Admin Login</h1>
+        <p id="loginSubtitle">Earn Wallet Control Center</p>
+      </div>
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="login-field">
+          <label><i class="fas fa-user"></i> Username</label>
+          <input type="text" id="loginUsername" placeholder="Enter username" autocomplete="username" required>
+        </div>
+        <div class="login-field">
+          <label><i class="fas fa-lock"></i> Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="current-password" required>
+        </div>
+        <div class="login-field" id="loginConfirmField" style="display:none;">
+          <label><i class="fas fa-lock"></i> Confirm Password</label>
+          <input type="password" id="loginConfirmPassword" placeholder="Re-enter password" autocomplete="new-password">
+        </div>
+        <button type="submit" class="login-btn" id="loginBtn">
+          <i class="fas fa-sign-in-alt" id="loginBtnIcon"></i>
+          <span id="loginBtnText">Login</span>
+        </button>
+        <div class="login-error" id="loginError"></div>
+      </form>
+      <div class="login-hint" id="loginHint">
+        <i class="fas fa-shield-halved"></i>
+        <span>First time setup: create your <b>Super Admin</b> account with username and password.</span>
+      </div>
+    </div>
+  </div>
 
   <div class="header">
     <div class="header-content">
@@ -307,9 +384,15 @@
           <div class="header-subtitle">Earn Wallet Control Center</div>
         </div>
       </div>
-      <div class="header-status">
-        <span class="dot"></span>
-        <span>Live</span>
+      <div class="header-right">
+        <div class="header-status">
+          <span class="dot"></span>
+          <span class="name" id="headerAdminName">Admin</span>
+          <span class="crown" id="headerCrown" style="display:none;">👑</span>
+        </div>
+        <button class="header-logout-btn" onclick="handleLogout()" title="Logout">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
       </div>
     </div>
   </div>
@@ -448,6 +531,7 @@
         <div class="tab" onclick="switchTab('tasks', this)"><i class="fas fa-briefcase"></i><span>Tasks</span></div>
         <div class="tab" onclick="switchTab('maintenance', this)"><i class="fas fa-wrench"></i><span>System</span></div>
         <div class="tab" onclick="switchTab('referrals', this)"><i class="fas fa-user-group"></i><span>Referrals</span></div>
+        <div class="tab super-only hidden" id="tabBtnAdmins" onclick="switchTab('admins', this)"><i class="fas fa-user-shield"></i><span>Admins</span></div>
       </div>
     </div>
 
@@ -653,7 +737,6 @@
 
     <!-- ================= TASKS TAB ================= -->
     <div id="tab-tasks" class="tab-content">
-      <!-- Create/Edit Task -->
       <div class="card">
         <div class="card-header">
           <div class="card-title">
@@ -741,7 +824,6 @@
             <label>Time Limit (Days)</label>
             <input type="number" id="newTaskTime" placeholder="7" value="7">
           </div>
-          <!-- Timer field: only for YouTube Video View -->
           <div class="form-group" style="flex:1; min-width:120px; display:none;" id="timerGroup">
             <label>⏱️ Timer (Seconds) *</label>
             <input type="number" id="newTaskTimer" placeholder="60" value="60" min="5">
@@ -749,7 +831,6 @@
           </div>
         </div>
 
-        <!-- Link field: visible for ALL types -->
         <div class="form-group" id="surveyLinkGroup">
           <label>🔗 Task Link / URL *</label>
           <input type="url" id="newTaskLink" placeholder="https://...">
@@ -761,7 +842,6 @@
         </div>
       </div>
 
-      <!-- Active Tasks List -->
       <div class="card">
         <div class="card-header">
           <div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-list-check"></i></div>Active Tasks</div>
@@ -773,7 +853,6 @@
         <div id="activeTasksList"></div>
       </div>
 
-      <!-- Task Submissions Review -->
       <div class="card">
         <div class="card-header">
           <div class="card-title"><div class="card-title-icon icon-purple"><i class="fas fa-file-signature"></i></div>Task Submissions</div>
@@ -836,6 +915,69 @@
       <button class="btn btn-green" onclick="refreshReferralStats()"><i class="fas fa-rotate"></i> Refresh Referral Stats</button>
     </div>
 
+    <!-- ================= ADMINS TAB (Super Admin Only) ================= -->
+    <div id="tab-admins" class="tab-content">
+      <!-- Change Super Admin Password -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-key"></i></div>Change Super Admin Password</div>
+        </div>
+        <div class="alert-box warning">
+          <i class="fas fa-exclamation-triangle"></i>
+          <div>আপনার Super Admin পাসওয়ার্ড পরিবর্তন করুন। পাসওয়ার্ড সহজে অনুমান করা যায় এমন কিছু দেবেন না।</div>
+        </div>
+        <div class="form-group">
+          <label>Current Password</label>
+          <input type="password" id="curSuperPw" placeholder="বর্তমান পাসওয়ার্ড">
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <input type="password" id="newSuperPw" placeholder="নতুন পাসওয়ার্ড (min 4 chars)">
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password</label>
+          <input type="password" id="confSuperPw" placeholder="নতুন পাসওয়ার্ড আবার লিখুন">
+        </div>
+        <button class="btn btn-warning" onclick="changeSuperPassword()">
+          <i class="fas fa-key"></i> Change Password
+        </button>
+      </div>
+
+      <!-- Add New Admin -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-user-plus"></i></div>Add New Admin</div>
+        </div>
+        <div class="alert-box info">
+          <i class="fas fa-info-circle"></i>
+          <div>নতুন এডমিন যোগ করুন। সে এই username + password দিয়ে লগইন করতে পারবে। কিন্তু সে <b>অন্য এডমিন যোগ বা ডিলিট করতে পারবে না</b>।</div>
+        </div>
+        <div class="form-group">
+          <label>Username *</label>
+          <input type="text" id="newAdminUsername" placeholder="e.g. john_admin" autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label>Password *</label>
+          <input type="password" id="newAdminPassword" placeholder="Min 4 characters" autocomplete="new-password">
+        </div>
+        <div class="form-group">
+          <label>Confirm Password *</label>
+          <input type="password" id="newAdminConfirmPassword" placeholder="Re-enter password" autocomplete="new-password">
+        </div>
+        <button class="btn btn-green" onclick="addNewAdmin()">
+          <i class="fas fa-user-plus"></i> Add Admin
+        </button>
+      </div>
+
+      <!-- Existing Admins List -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-users-gear"></i></div>All Admins</div>
+        </div>
+        <div id="adminsListContainer">Loading...</div>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -863,6 +1005,339 @@
     let allSubmissions = [];
     let currentSubFilter = 'pending';
     let currentTaskCache = {};
+
+    // ==================== AUTH SYSTEM ====================
+    const SESSION_KEY = 'nexearn_admin_session';
+    const SESSION_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
+    let currentSession = null;
+
+    // SHA-256 hashing
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function saveSession(data) {
+      const sess = { ...data, expiry: Date.now() + SESSION_DURATION_MS };
+      localStorage.setItem(SESSION_KEY, JSON.stringify(sess));
+      currentSession = sess;
+      return sess;
+    }
+
+    function getStoredSession() {
+      try {
+        const raw = localStorage.getItem(SESSION_KEY);
+        if (!raw) return null;
+        const s = JSON.parse(raw);
+        if (!s || !s.expiry || s.expiry <= Date.now()) {
+          localStorage.removeItem(SESSION_KEY);
+          return null;
+        }
+        return s;
+      } catch(e) { return null; }
+    }
+
+    function clearSession() {
+      localStorage.removeItem(SESSION_KEY);
+      currentSession = null;
+    }
+
+    async function getSuperAdminData() {
+      const snap = await db.ref('config/superAdmin').once('value');
+      return snap.exists() ? snap.val() : null;
+    }
+
+    function showLoginOverlay() {
+      document.getElementById('loginOverlay').style.display = 'flex';
+    }
+
+    function hideLoginOverlay() {
+      document.getElementById('loginOverlay').style.display = 'none';
+    }
+
+    function setLoginError(msg) {
+      const el = document.getElementById('loginError');
+      if (msg) { el.textContent = msg; el.classList.add('show'); }
+      else { el.classList.remove('show'); }
+    }
+
+    async function initializeAuthUI() {
+      const superAdmin = await getSuperAdminData();
+      const form = document.getElementById('loginForm');
+      const confirmField = document.getElementById('loginConfirmField');
+      const title = document.getElementById('loginTitle');
+      const subtitle = document.getElementById('loginSubtitle');
+      const btnText = document.getElementById('loginBtnText');
+      const btnIcon = document.getElementById('loginBtnIcon');
+      const hint = document.getElementById('loginHint');
+      const confirmInput = document.getElementById('loginConfirmPassword');
+
+      if (!superAdmin) {
+        // Setup mode
+        title.textContent = 'Setup Super Admin';
+        subtitle.textContent = 'Create your master account';
+        btnText.textContent = 'Create Super Admin';
+        btnIcon.className = 'fas fa-user-plus';
+        confirmField.style.display = 'block';
+        confirmInput.required = true;
+        hint.innerHTML = '<i class="fas fa-shield-halved"></i><span>প্রথমবার সেটআপ: আপনার <b>Super Admin</b> অ্যাকাউন্ট তৈরি করুন। এই পাসওয়ার্ড দিয়ে সবকিছু নিয়ন্ত্রণ করবেন।</span>';
+        form.dataset.mode = 'setup';
+      } else {
+        // Login mode
+        title.textContent = 'Admin Login';
+        subtitle.textContent = 'Earn Wallet Control Center';
+        btnText.textContent = 'Login';
+        btnIcon.className = 'fas fa-sign-in-alt';
+        confirmField.style.display = 'none';
+        confirmInput.required = false;
+        confirmInput.value = '';
+        hint.innerHTML = '<i class="fas fa-shield-halved"></i><span>আপনার <b>Username</b> এবং <b>Password</b> দিয়ে লগইন করুন।</span>';
+        form.dataset.mode = 'login';
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      setLoginError('');
+      const mode = document.getElementById('loginForm').dataset.mode || 'login';
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const confirmPassword = document.getElementById('loginConfirmPassword').value;
+      const btn = document.getElementById('loginBtn');
+      const btnText = document.getElementById('loginBtnText');
+
+      if (!username || username.length < 3) return setLoginError('❌ Username must be at least 3 characters');
+      if (!password || password.length < 4) return setLoginError('❌ Password must be at least 4 characters');
+
+      btn.disabled = true;
+      const originalText = btnText.textContent;
+      btnText.textContent = 'Please wait...';
+
+      try {
+        const hash = await sha256(password);
+
+        if (mode === 'setup') {
+          if (password !== confirmPassword) {
+            setLoginError('❌ Passwords do not match');
+            return;
+          }
+          const existing = await getSuperAdminData();
+          if (existing) {
+            setLoginError('❌ Super admin already exists. Please login.');
+            await initializeAuthUI();
+            return;
+          }
+          await db.ref('config/superAdmin').set({
+            username: username,
+            passwordHash: hash,
+            createdAt: Date.now(),
+            updatedAt: Date.now()
+          });
+          const sess = saveSession({ username, role: 'super', adminId: 'super' });
+          onLoginSuccess(sess, true);
+        } else {
+          // Login flow
+          const superAdmin = await getSuperAdminData();
+          if (superAdmin && superAdmin.username === username && superAdmin.passwordHash === hash) {
+            const sess = saveSession({ username, role: 'super', adminId: 'super' });
+            onLoginSuccess(sess, false);
+            return;
+          }
+          // Check other admins
+          const adminsSnap = await db.ref('admins').once('value');
+          let matched = null;
+          adminsSnap.forEach(child => {
+            const a = child.val();
+            if (a.username === username && a.passwordHash === hash && a.isActive !== false) {
+              matched = { id: child.key, ...a };
+            }
+          });
+          if (matched) {
+            const sess = saveSession({ username, role: 'admin', adminId: matched.id });
+            onLoginSuccess(sess, false);
+            return;
+          }
+          setLoginError('❌ Invalid username or password');
+        }
+      } catch(err) {
+        console.error(err);
+        setLoginError('❌ Error: ' + (err.message || 'Try again'));
+      } finally {
+        btn.disabled = false;
+        btnText.textContent = originalText;
+      }
+    }
+
+    function onLoginSuccess(session, isNewSetup) {
+      currentSession = session;
+      setLoginError('');
+      hideLoginOverlay();
+
+      // Update header
+      document.getElementById('headerAdminName').textContent = session.username;
+      document.getElementById('headerCrown').style.display = session.role === 'super' ? 'inline' : 'none';
+
+      // Show admins tab for super only
+      const adminsTabBtn = document.getElementById('tabBtnAdmins');
+      if (session.role === 'super') {
+        adminsTabBtn.classList.remove('hidden');
+      } else {
+        adminsTabBtn.classList.add('hidden');
+        // If on admins tab, switch to settings
+        if (document.getElementById('tab-admins').classList.contains('active')) {
+          const settingsTab = document.querySelector('.tab');
+          switchTab('settings', settingsTab);
+        }
+      }
+
+      // Run init once
+      if (isNewSetup) toast('👑 Super Admin তৈরি হয়েছে! স্বাগতম।');
+      else toast('✅ স্বাগতম, ' + session.username);
+
+      runPanelInit();
+    }
+
+    function handleLogout() {
+      if (!confirm('Are you sure you want to logout?')) return;
+      clearSession();
+      location.reload();
+    }
+
+    // ==================== ADMIN MANAGEMENT ====================
+    async function loadAdminsList() {
+      const container = document.getElementById('adminsListContainer');
+      container.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:16px; font-weight:600;">Loading...</p>';
+      try {
+        const superAdmin = await getSuperAdminData();
+        const adminsSnap = await db.ref('admins').once('value');
+        let html = '';
+
+        if (superAdmin) {
+          html += `<div class="admin-item super">
+            <div class="admin-item-left">
+              <div class="admin-item-avatar">${(superAdmin.username || 'S').charAt(0).toUpperCase()}</div>
+              <div class="admin-item-info">
+                <div class="name">${esc(superAdmin.username)} <span class="status-badge superadmin">👑 SUPER</span></div>
+                <div class="meta">Created: ${superAdmin.createdAt ? new Date(superAdmin.createdAt).toLocaleDateString() : 'N/A'}</div>
+              </div>
+            </div>
+            <div style="font-size:0.72rem; color:#94a3b8; font-weight:700;">Main Account</div>
+          </div>`;
+        }
+
+        let adminCount = 0;
+        adminsSnap.forEach(child => {
+          adminCount++;
+          const a = child.val();
+          html += `<div class="admin-item">
+            <div class="admin-item-left">
+              <div class="admin-item-avatar">${(a.username || 'A').charAt(0).toUpperCase()}</div>
+              <div class="admin-item-info">
+                <div class="name">${esc(a.username)} <span class="status-badge admin">ADMIN</span></div>
+                <div class="meta">Created: ${a.createdAt ? new Date(a.createdAt).toLocaleDateString() : 'N/A'} • By: ${esc(a.createdBy || 'admin')}</div>
+              </div>
+            </div>
+            <button class="btn btn-red btn-small" onclick="deleteAdmin('${child.key}')">
+              <i class="fas fa-trash"></i> Remove
+            </button>
+          </div>`;
+        });
+
+        if (adminCount === 0) {
+          html += '<div class="empty-state" style="padding:20px;"><div class="icon" style="width:60px;height:60px;font-size:1.5rem;"><i class="fas fa-users"></i></div><p style="font-size:0.82rem;">No additional admins yet</p></div>';
+        }
+
+        container.innerHTML = html;
+      } catch(e) {
+        container.innerHTML = '<p style="color:#ef4444; text-align:center; font-weight:600;">Error loading admins</p>';
+      }
+    }
+
+    async function addNewAdmin() {
+      if (!currentSession || currentSession.role !== 'super') return toast('❌ Only Super Admin can add admins');
+      const username = document.getElementById('newAdminUsername').value.trim();
+      const password = document.getElementById('newAdminPassword').value;
+      const confirm = document.getElementById('newAdminConfirmPassword').value;
+
+      if (!username || username.length < 3) return toast('❌ Username must be at least 3 characters');
+      if (!password || password.length < 4) return toast('❌ Password must be at least 4 characters');
+      if (password !== confirm) return toast('❌ Passwords do not match');
+
+      try {
+        // Check duplicate with super admin
+        const superAdmin = await getSuperAdminData();
+        if (superAdmin && superAdmin.username.toLowerCase() === username.toLowerCase()) {
+          return toast('❌ Username already taken');
+        }
+        // Check duplicate with other admins
+        const adminsSnap = await db.ref('admins').once('value');
+        let duplicate = false;
+        adminsSnap.forEach(child => {
+          if (child.val().username.toLowerCase() === username.toLowerCase()) duplicate = true;
+        });
+        if (duplicate) return toast('❌ Username already exists');
+
+        const hash = await sha256(password);
+        await db.ref('admins').push({
+          username,
+          passwordHash: hash,
+          role: 'admin',
+          isActive: true,
+          createdAt: Date.now(),
+          createdBy: currentSession.username
+        });
+
+        toast('✅ Admin added: ' + username);
+        document.getElementById('newAdminUsername').value = '';
+        document.getElementById('newAdminPassword').value = '';
+        document.getElementById('newAdminConfirmPassword').value = '';
+        loadAdminsList();
+      } catch(e) {
+        toast('❌ Error: ' + e.message);
+      }
+    }
+
+    async function deleteAdmin(adminId) {
+      if (!currentSession || currentSession.role !== 'super') return toast('❌ Only Super Admin can delete admins');
+      if (!confirm('Delete this admin? They will not be able to login anymore.')) return;
+      try {
+        await db.ref('admins/' + adminId).remove();
+        toast('✅ Admin deleted');
+        loadAdminsList();
+      } catch(e) { toast('❌ Error: ' + e.message); }
+    }
+
+    async function changeSuperPassword() {
+      if (!currentSession || currentSession.role !== 'super') return toast('❌ Only Super Admin');
+      const curPw = document.getElementById('curSuperPw').value;
+      const newPw = document.getElementById('newSuperPw').value;
+      const confPw = document.getElementById('confSuperPw').value;
+
+      if (!curPw) return toast('❌ Enter current password');
+      if (!newPw || newPw.length < 4) return toast('❌ New password min 4 chars');
+      if (newPw !== confPw) return toast('❌ Passwords do not match');
+
+      try {
+        const curHash = await sha256(curPw);
+        const superAdmin = await getSuperAdminData();
+        if (!superAdmin || superAdmin.passwordHash !== curHash) {
+          return toast('❌ Current password is incorrect');
+        }
+        const newHash = await sha256(newPw);
+        await db.ref('config/superAdmin').update({
+          passwordHash: newHash,
+          updatedAt: Date.now()
+        });
+        toast('✅ Password changed!');
+        document.getElementById('curSuperPw').value = '';
+        document.getElementById('newSuperPw').value = '';
+        document.getElementById('confSuperPw').value = '';
+      } catch(e) { toast('❌ Error: ' + e.message); }
+    }
+
+    // ==================== END AUTH ====================
 
     const REFERRAL_LEVELS = {
       BEGINNER: { min: 0, label: '⭐ BEGINNER', class: 'beginner' },
@@ -901,12 +1376,16 @@
       if(id === 'analytics') { loadAnalytics(); loadCommissionOverview(); }
       if(id === 'channels') { loadVerificationStats(); loadNotVerifiedUsers(); renderCurrentChannels(); }
       if(id === 'tasks') { loadTasksList(); loadTaskSubmissions(); }
+      if(id === 'admins') {
+        if (!currentSession || currentSession.role !== 'super') {
+          toast('❌ Only Super Admin');
+          return;
+        }
+        loadAdminsList();
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // ===================================================
-    // ✅ COMMISSION MODE SELECTOR
-    // ===================================================
     function selectCommissionMode(mode) {
       selectedCommissionMode = mode;
       const bonusEl = document.getElementById('modeOption-bonus');
@@ -928,9 +1407,6 @@
     }
     function updateCommissionModeUI(mode) { selectCommissionMode(mode); }
 
-    // ===================================================
-    // ✅ COMMISSION OVERVIEW
-    // ===================================================
     async function loadCommissionOverview() {
       try {
         const snap = await db.ref('users').once('value');
@@ -947,9 +1423,6 @@
       } catch(e) { console.error(e); }
     }
 
-    // ===================================================
-    // ✅ USER DETAIL MODAL
-    // ===================================================
     async function showUserDetail(userId) {
       const u = allUsers.find(x => x.id === userId);
       if (!u) return;
@@ -1005,35 +1478,32 @@
     function closeUserModal() { document.getElementById('userDetailModal').classList.remove('active'); }
     document.getElementById('userDetailModal').addEventListener('click', (e) => { if (e.target.id === 'userDetailModal') closeUserModal(); });
 
-    // ===================================================
-    // ✅ TASK TYPE HELPERS
-    // ===================================================
     const TASK_TYPE_META = {
-      survey:                { icon: '📊', label: 'Survey' },
-      voice:                 { icon: '🎤', label: 'Voice' },
-      image:                 { icon: '🖼️', label: 'Image' },
-      text:                  { icon: '📝', label: 'Text' },
-      youtube_video_view:    { icon: '▶️', label: 'YouTube Video View', hasTimer: true },
-      youtube_like:          { icon: '👍', label: 'YouTube Like' },
-      youtube_comment:       { icon: '💬', label: 'YouTube Comment' },
-      youtube_subscribe:     { icon: '🔔', label: 'YouTube Subscribe' },
-      app_download:          { icon: '📱', label: 'App Download' },
-      app_install:           { icon: '📲', label: 'App Install' },
-      website_visit:         { icon: '🌐', label: 'Website Visit' },
-      telegram_join:         { icon: '✈️', label: 'Telegram Join' },
-      telegram_channel:      { icon: '📢', label: 'Telegram Channel' },
-      facebook_like:         { icon: '👍', label: 'Facebook Like' },
-      facebook_follow:       { icon: '👥', label: 'Facebook Follow' },
-      instagram_follow:      { icon: '👥', label: 'Instagram Follow' },
-      instagram_like:        { icon: '❤️', label: 'Instagram Like' },
-      twitter_follow:        { icon: '🐦', label: 'Twitter Follow' },
-      tiktok_follow:         { icon: '🎵', label: 'TikTok Follow' },
-      voice_recording:       { icon: '🎙️', label: 'Voice Recording' },
-      image_upload:          { icon: '📷', label: 'Image Upload' },
-      text_writing:          { icon: '✍️', label: 'Text Writing' },
-      sign_up:               { icon: '📝', label: 'Sign Up' },
-      general:               { icon: '📋', label: 'General' },
-      other:                 { icon: '🔧', label: 'Other' }
+      survey: { icon: '📊', label: 'Survey' },
+      voice: { icon: '🎤', label: 'Voice' },
+      image: { icon: '🖼️', label: 'Image' },
+      text: { icon: '📝', label: 'Text' },
+      youtube_video_view: { icon: '▶️', label: 'YouTube Video View', hasTimer: true },
+      youtube_like: { icon: '👍', label: 'YouTube Like' },
+      youtube_comment: { icon: '💬', label: 'YouTube Comment' },
+      youtube_subscribe: { icon: '🔔', label: 'YouTube Subscribe' },
+      app_download: { icon: '📱', label: 'App Download' },
+      app_install: { icon: '📲', label: 'App Install' },
+      website_visit: { icon: '🌐', label: 'Website Visit' },
+      telegram_join: { icon: '✈️', label: 'Telegram Join' },
+      telegram_channel: { icon: '📢', label: 'Telegram Channel' },
+      facebook_like: { icon: '👍', label: 'Facebook Like' },
+      facebook_follow: { icon: '👥', label: 'Facebook Follow' },
+      instagram_follow: { icon: '👥', label: 'Instagram Follow' },
+      instagram_like: { icon: '❤️', label: 'Instagram Like' },
+      twitter_follow: { icon: '🐦', label: 'Twitter Follow' },
+      tiktok_follow: { icon: '🎵', label: 'TikTok Follow' },
+      voice_recording: { icon: '🎙️', label: 'Voice Recording' },
+      image_upload: { icon: '📷', label: 'Image Upload' },
+      text_writing: { icon: '✍️', label: 'Text Writing' },
+      sign_up: { icon: '📝', label: 'Sign Up' },
+      general: { icon: '📋', label: 'General' },
+      other: { icon: '🔧', label: 'Other' }
     };
 
     function getTaskTypeIcon(type) {
@@ -1041,37 +1511,22 @@
       return m ? m.icon : '📋';
     }
 
-    // ✅ Toggle visibility: Link always visible, Timer only for youtube_video_view
     function toggleSurveyFields() {
       const type = document.getElementById('newTaskType').value;
       const linkGroup = document.getElementById('surveyLinkGroup');
       const timerGroup = document.getElementById('timerGroup');
-      
-      // Link always visible
       linkGroup.style.display = 'block';
-      
-      // Timer only for youtube_video_view
-      if (type === 'youtube_video_view') {
-        timerGroup.style.display = 'block';
-      } else {
-        timerGroup.style.display = 'none';
-      }
+      if (type === 'youtube_video_view') timerGroup.style.display = 'block';
+      else timerGroup.style.display = 'none';
     }
 
     function toggleEditSurveyFields() {
       const type = document.getElementById('etType').value;
       const linkGroup = document.getElementById('etLinkGroup');
       const timerGroup = document.getElementById('etTimerGroup');
-      
-      // Link always visible
       linkGroup.style.display = 'block';
-      
-      // Timer only for youtube_video_view
-      if (type === 'youtube_video_view') {
-        timerGroup.style.display = 'block';
-      } else {
-        timerGroup.style.display = 'none';
-      }
+      if (type === 'youtube_video_view') timerGroup.style.display = 'block';
+      else timerGroup.style.display = 'none';
     }
 
     async function saveNewTask() {
@@ -1139,20 +1594,16 @@
       document.getElementById('etTaskId').value = id;
       document.getElementById('etTitle').value = t.title || '';
       document.getElementById('etDesc').value = t.description || '';
-      
-      // Handle legacy types
       const knownTypes = Object.keys(TASK_TYPE_META);
       const taskType = t.type || 'survey';
       const typeSelect = document.getElementById('etType');
       if (!knownTypes.includes(taskType)) {
-        // Legacy type — add dynamically
         const newOpt = document.createElement('option');
         newOpt.value = taskType;
         newOpt.textContent = '📋 ' + taskType;
         typeSelect.appendChild(newOpt);
       }
       typeSelect.value = taskType;
-      
       const catSelect = document.getElementById('etCat');
       const catValue = t.category || 'General';
       let optionExists = Array.from(catSelect.options).some(o => o.value === catValue);
@@ -1163,7 +1614,6 @@
         catSelect.appendChild(newOpt);
       }
       catSelect.value = catValue;
-      
       document.getElementById('etReward').value = t.reward || 0;
       document.getElementById('etSlots').value = t.totalSlots || 100;
       const daysMatch = (t.timeLimit || '7 days').match(/\d+/);
@@ -1287,9 +1737,6 @@
       }
     }
 
-    // ===================================================
-    // ✅ SUBMISSIONS REVIEW SYSTEM
-    // ===================================================
     async function loadTaskSubmissions() {
       const container = document.getElementById('taskSubmissionsList');
       container.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:16px; font-weight:600;">Loading...</p>';
@@ -1403,9 +1850,6 @@
       } catch(e) { toast('❌ Error: ' + e.message); }
     }
 
-    // ===================================================
-    // ✅ ADS MANAGEMENT (6 SLOTS)
-    // ===================================================
     function loadAdsConfig() {
       let adHtml = '';
       for(let i=0; i<6; i++) {
@@ -1436,9 +1880,6 @@
       }).then(() => toast('✅ Ad Settings Saved (6 Slots)!'));
     }
 
-    // ===================================================
-    // ✅ CHANNELS
-    // ===================================================
     function renderChannelLinks() {
       const container = document.getElementById('channelLinksContainer');
       if (!channelLinks.length) {
@@ -1654,7 +2095,6 @@
       }
     });
 
-    // ===== SAVE =====
     function saveSettings() {
       let methods = document.getElementById('paymentMethods').value.split(',').map(m => m.trim());
       const levels = getWithdrawLevelsFromUI();
@@ -1690,7 +2130,6 @@
       }).then(() => toast('✅ Maintenance Updated!'));
     }
 
-    // ===== USERS =====
     async function loadUsers() {
       try {
         const snap = await db.ref('users').once('value');
@@ -1810,7 +2249,6 @@
       }
     }
 
-    // ===== ANALYTICS =====
     async function loadAnalytics() {
       try {
         const usersSnap = await db.ref('users').once('value');
@@ -1855,7 +2293,6 @@
 
     function refreshAnalytics() { toast('Refreshing...'); loadAnalytics(); loadCommissionOverview(); }
 
-    // ===== WITHDRAWALS =====
     db.ref('withdrawals').orderByChild('status').equalTo('pending').on('value', snap => {
       let html = '';
       if(snap.exists()) {
@@ -1932,7 +2369,6 @@
       }
     }
 
-    // ===== REFERRALS =====
     async function loadReferralStats() {
       try {
         const snap = await db.ref('users').once('value');
@@ -2032,8 +2468,11 @@
 
     function refreshReferralStats() { toast('Refreshing...'); loadReferralStats(); }
 
-    // ===== INIT =====
-    window.onload = function() {
+    // ===== PANEL INIT (called after login) =====
+    let panelInitialized = false;
+    function runPanelInit() {
+      if (panelInitialized) return;
+      panelInitialized = true;
       loadAnalytics();
       loadCommissionOverview();
       loadVerificationStats();
@@ -2043,7 +2482,44 @@
           loadTaskSubmissions();
         }
       }, 15000);
-    };
+    }
+
+    // ===== BOOT =====
+    window.addEventListener('DOMContentLoaded', async () => {
+      // Check for existing valid session
+      const stored = getStoredSession();
+      if (stored) {
+        currentSession = stored;
+        // Verify the admin still exists / not deleted
+        try {
+          if (stored.role === 'admin' && stored.adminId) {
+            const adminSnap = await db.ref('admins/' + stored.adminId).once('value');
+            if (!adminSnap.exists() || adminSnap.val().isActive === false) {
+              clearSession();
+              await initializeAuthUI();
+              showLoginOverlay();
+              return;
+            }
+          } else if (stored.role === 'super') {
+            const sa = await getSuperAdminData();
+            if (!sa) { clearSession(); }
+          }
+          if (currentSession) {
+            onLoginSuccess(currentSession, false);
+            return;
+          }
+        } catch(e) {
+          // If we can't verify, allow use with stored session
+          if (currentSession) {
+            onLoginSuccess(currentSession, false);
+            return;
+          }
+        }
+      }
+      // No valid session → show login/setup
+      await initializeAuthUI();
+      showLoginOverlay();
+    });
 
     document.getElementById('editTaskModal').addEventListener('click', (e) => {
       if (e.target.id === 'editTaskModal') closeEditTaskModal();
