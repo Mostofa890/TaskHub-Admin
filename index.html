@@ -129,8 +129,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .login-error.show{display:block}
 .login-hint{margin-top:18px;padding:12px 14px;border-radius:12px;background:rgba(99,102,241,.14);border:1px solid rgba(99,102,241,.25);color:rgba(199,210,254,.95);font-size:.75rem;font-weight:600;display:flex;gap:10px;line-height:1.5}
 .login-hint i{color:#f472b6;font-size:1rem;flex-shrink:0}
-
-/* ✅ NEW: Contact Admin Section on Login */
 .login-divider{display:flex;align-items:center;gap:12px;margin:18px 0 14px;color:rgba(255,255,255,.4);font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px}
 .login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent)}
 .login-contact-btn{width:100%;padding:13px;border-radius:14px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);color:#fff;font-weight:800;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;font-family:inherit;text-decoration:none}
@@ -140,7 +138,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .login-contact-btn:disabled{opacity:.4;cursor:not-allowed;transform:none !important}
 .login-contact-note{margin-top:10px;text-align:center;font-size:.68rem;color:rgba(255,255,255,.5);font-weight:600;line-height:1.5}
 .login-contact-note b{color:#fbbf24}
-
 .admin-item{display:flex;flex-direction:column;padding:16px;background:linear-gradient(135deg,#fff,#f8fafc);border:1.5px solid var(--border);border-radius:var(--radius-sm);margin-bottom:12px;gap:12px;transition:all .25s;position:relative;overflow:hidden}
 .admin-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#6366f1,#ec4899)}
 .admin-item:hover{background:#fff;border-color:var(--primary);box-shadow:var(--shadow-md);transform:translateX(2px)}
@@ -272,8 +269,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       </button>
       <div class="login-error" id="loginError"></div>
     </form>
-
-    <!-- ✅ NEW: Contact Admin Section -->
     <div id="loginContactSection" style="display:none;">
       <div class="login-divider">OR</div>
       <button type="button" class="login-contact-btn" id="loginContactBtn" onclick="openLoginContactAdmin()">
@@ -284,7 +279,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         Don't have an account? <b>Contact the Super Admin</b> to get your ID &amp; password.
       </p>
     </div>
-
     <div class="login-hint" id="loginHint">
       <i class="fas fa-shield-halved"></i>
       <span>First time setup: create your <b>Super Admin</b> account.</span>
@@ -315,17 +309,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 </div>
 
 <div class="toast" id="toast">Saved!</div>
-
-<!-- User Detail Modal -->
-<div class="modal-overlay" id="userDetailModal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-title"><div class="card-title-icon icon-primary"><i class="fas fa-user"></i></div>User Details</div>
-      <button class="modal-close" onclick="closeUserModal()"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="modal-body" id="userDetailBody"></div>
-  </div>
-</div>
 
 <!-- Edit Task Modal -->
 <div class="modal-overlay" id="editTaskModal">
@@ -571,7 +554,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="form-group"><label>Ad Reset Hour (0-23)</label><input type="number" id="adResetHour" min="0" max="23"></div>
     </div>
 
-    <!-- ✅ Become Admin Slider Settings -->
     <div class="card rainbow">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-crown"></i></div>Become Admin Slider</div></div>
       <div class="alert-box info"><i class="fas fa-info-circle"></i><div>User app-এ উপরের দিক থেকে একটা <b>animated slider</b> নিচে নামবে। এখানে link সেট করলে slider-এর Apply button-এ ক্লিক করলে ওই লিংকে চলে যাবে।</div></div>
@@ -967,7 +949,6 @@ function showLoginOverlay() { document.getElementById('loginOverlay').style.disp
 function hideLoginOverlay() { document.getElementById('loginOverlay').style.display = 'none'; }
 function setLoginError(msg) { const el = document.getElementById('loginError'); if (msg) { el.textContent = msg; el.classList.add('show'); } else el.classList.remove('show'); }
 
-// ✅ Load contact link for login page
 let loginContactLinkCache = '';
 
 async function loadLoginContactInfo() {
@@ -985,9 +966,7 @@ async function loadLoginContactInfo() {
     } else {
       section.style.display = 'none';
     }
-  } catch(e) {
-    // Silent fail
-  }
+  } catch(e) {}
 }
 
 function openLoginContactAdmin() {
@@ -995,11 +974,7 @@ function openLoginContactAdmin() {
     alert('⚠️ Contact link is not configured yet. Please try again later.');
     return;
   }
-  try {
-    window.open(loginContactLinkCache, '_blank');
-  } catch(e) {
-    location.href = loginContactLinkCache;
-  }
+  try { window.open(loginContactLinkCache, '_blank'); } catch(e) { location.href = loginContactLinkCache; }
 }
 
 async function initializeAuthUI() {
@@ -1013,7 +988,6 @@ async function initializeAuthUI() {
     document.getElementById('loginBtnIcon').className = 'fas fa-user-plus';
     confirmField.style.display = 'block'; document.getElementById('loginConfirmPassword').required = true;
     form.dataset.mode = 'setup';
-    // Hide contact section during setup
     document.getElementById('loginContactSection').style.display = 'none';
   } else {
     document.getElementById('loginTitle').textContent = 'Admin Login';
@@ -1022,7 +996,6 @@ async function initializeAuthUI() {
     document.getElementById('loginBtnIcon').className = 'fas fa-sign-in-alt';
     confirmField.style.display = 'none'; document.getElementById('loginConfirmPassword').required = false;
     form.dataset.mode = 'login';
-    // ✅ Load contact admin section for returning users
     await loadLoginContactInfo();
   }
 }
@@ -1134,7 +1107,6 @@ function renderDepositHistory() {
 }
 function handleLogout() { if (!confirm('Logout?')) return; clearSession(); location.reload(); }
 
-// ========== ADMIN CONTACT ==========
 function renderMyContact() {
   const boxes = ['myContactBox', 'myContactBoxContact'];
   const c = currentAdminData && currentAdminData.adminContact;
@@ -1177,7 +1149,6 @@ async function saveContactInfo() {
   } catch(e) { toast('❌ Error'); }
 }
 function openAdminContact(adminId) {
-  const a = allUsers.find(x => x.id === adminId);
   db.ref('admins/' + adminId + '/adminContact').once('value').then(snap => {
     if (!snap.exists()) return toast('❌ Admin contact not set');
     const c = snap.val();
@@ -1197,7 +1168,6 @@ function openAdminContact(adminId) {
   });
 }
 
-// ========== SUPER: Deposit Methods ==========
 function renderDepositMethodsList() {
   const c = document.getElementById('dmMethodsList');
   const methods = configData.depositMethods || [];
@@ -1265,7 +1235,6 @@ async function deleteDepositMethod(i) {
   toast('✅ Deleted'); renderDepositMethodsList();
 }
 
-// ========== Deposit Requests ==========
 async function loadAllDepositRequests() {
   const pending = document.getElementById('pendingDepositReqList');
   const all = document.getElementById('allDepositReqList');
@@ -1331,7 +1300,6 @@ async function rejectDepositReq(reqId) {
   toast('❌ Rejected'); loadAllDepositRequests();
 }
 
-// ========== Admins List ==========
 async function loadAdminsList() {
   const c = document.getElementById('adminsListContainer');
   c.innerHTML = '<p style="text-align:center; padding:16px; color:#94a3b8;">Loading...</p>';
@@ -1486,7 +1454,6 @@ async function changeSuperPassword() {
   document.getElementById('confSuperPw').value = '';
 }
 
-// ========== Admin Deposit ==========
 function renderDepositMethodsAdminView() {
   const c = document.getElementById('dmMethodsAdminView');
   const methods = (configData.depositMethods || []).filter(m => m.isActive !== false);
@@ -1562,7 +1529,6 @@ async function renderMyDepositRequests() {
   } catch(e) {}
 }
 
-// ========== Contact ==========
 function renderContactInfo() {
   const link = configData.contactLink || '';
   const btnText = configData.contactBtnText || 'Message Super Admin';
@@ -1579,7 +1545,7 @@ function openContactLink() {
   window.open(link, '_blank');
 }
 
-// ========== Task Management ==========
+// ========== TASK MANAGEMENT ==========
 function updateTaskCostPreview() {
   if (!currentSession) return;
   const preview = document.getElementById('taskCostPreview');
@@ -1597,16 +1563,21 @@ function updateTaskCostPreview() {
   if (balance >= cost) { warn.innerHTML = '✅ আপনি এই টাস্কটি তৈরি করতে পারবেন।'; warn.style.color = '#065f46'; }
   else { warn.innerHTML = `❌ আরও <b>${(cost - balance).toFixed(2)} TK</b> প্রয়োজন।`; warn.style.color = '#991b1b'; }
 }
+
+// ✅ FIX: Timer field now shows for BOTH survey AND youtube_video_view
 function toggleSurveyFields() {
   const t = document.getElementById('newTaskType').value;
   document.getElementById('surveyLinkGroup').style.display = 'block';
-  document.getElementById('timerGroup').style.display = t === 'youtube_video_view' ? 'block' : 'none';
+  const needsTimer = (t === 'youtube_video_view' || t === 'survey');
+  document.getElementById('timerGroup').style.display = needsTimer ? 'block' : 'none';
 }
 function toggleEditSurveyFields() {
   const t = document.getElementById('etType').value;
   document.getElementById('etLinkGroup').style.display = 'block';
-  document.getElementById('etTimerGroup').style.display = t === 'youtube_video_view' ? 'block' : 'none';
+  const needsTimer = (t === 'youtube_video_view' || t === 'survey');
+  document.getElementById('etTimerGroup').style.display = needsTimer ? 'block' : 'none';
 }
+
 async function saveNewTask() {
   const title = document.getElementById('newTaskTitle').value.trim();
   const description = document.getElementById('newTaskDesc').value.trim();
@@ -1620,7 +1591,8 @@ async function saveNewTask() {
   if (!title) return toast('❌ Title required');
   if (reward <= 0) return toast('❌ Valid reward');
   if (!url) return toast('❌ URL required');
-  if (type === 'youtube_video_view' && timer < 5) return toast('❌ Timer min 5s');
+  const needsTimer = (type === 'youtube_video_view' || type === 'survey');
+  if (needsTimer && timer < 5) return toast('❌ Timer min 5s');
   if (currentSession.role === 'admin') {
     const cost = reward * totalSlots;
     const balance = currentAdminData ? Number(currentAdminData.balance || 0) : 0;
@@ -1629,7 +1601,8 @@ async function saveNewTask() {
   const taskData = {
     title, description, type, category, reward, totalSlots,
     timeLimit: timeLimitDays + ' days',
-    timer: type === 'youtube_video_view' ? timer : 0,
+    // ✅ FIX: Save timer for both survey AND youtube_video_view
+    timer: needsTimer ? timer : 0,
     url, status: 'active', updatedAt: Date.now(),
     createdByAdminId: currentSession.adminId,
     createdByName: currentSession.username
@@ -1708,10 +1681,12 @@ async function saveEditTask() {
   const timer = parseInt(document.getElementById('etTimer').value) || 60;
   const url = document.getElementById('etLink').value.trim();
   if (!title || reward <= 0 || !url) return toast('❌ Required fields');
+  const needsTimer = (type === 'youtube_video_view' || type === 'survey');
   await db.ref('config/newTasks/' + id).update({
     title, description, type, category, reward, totalSlots,
     timeLimit: timeLimitDays + ' days',
-    timer: type === 'youtube_video_view' ? timer : 0,
+    // ✅ FIX: Save timer for both survey AND youtube_video_view
+    timer: needsTimer ? timer : 0,
     url, updatedAt: Date.now()
   });
   toast('✅ Updated');
@@ -1957,7 +1932,6 @@ async function reviewSubmission(subId, action) {
   loadTaskSubmissions();
 }
 
-// ========== Super only misc ==========
 function loadAdsConfig() {
   let h = '';
   for (let i=0; i<6; i++) {
@@ -2202,7 +2176,6 @@ async function loadReferralStats() {
   </div>`;
 }
 
-// ========== Save Become Admin Slider Settings ==========
 async function saveBecomeAdminSettings() {
   const enabled = document.getElementById('becomeAdminEnabled').value === 'true';
   const link = document.getElementById('becomeAdminLink').value.trim();
@@ -2296,11 +2269,9 @@ db.ref('config').on('value', snap => {
     { requiredRefs: 7, fee: 1, minAmount: 10, maxAmount: 500, time: "30 Min-1 Hours" }
   ];
   MIN_REFERRAL_BALANCE = configData.minReferralBalance || 20;
-  // ✅ Keep login contact link cache updated
   loginContactLinkCache = configData.contactLink || '';
   const loginContactSection = document.getElementById('loginContactSection');
   if (loginContactSection && loginContactLinkCache && /^https?:\/\//i.test(loginContactLinkCache)) {
-    // Only show if not in setup mode
     const loginForm = document.getElementById('loginForm');
     if (loginForm && loginForm.dataset.mode !== 'setup') {
       loginContactSection.style.display = 'block';
