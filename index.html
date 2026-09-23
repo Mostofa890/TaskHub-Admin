@@ -555,6 +555,34 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
+<!-- ✅ NEW: Instant Delete Super Task Modal -->
+<div class="modal-overlay" id="instantDeleteModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title"><div class="card-title-icon icon-danger"><i class="fas fa-bolt"></i></div>Instant Delete</div>
+      <button class="modal-close" onclick="closeInstantDeleteModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="idtTaskId">
+      <div style="background:linear-gradient(135deg,#fef2f2,#fee2e2); padding:14px; border-radius:12px; margin-bottom:14px; border-left:4px solid #ef4444;">
+        <div style="font-weight:900; font-size:.95rem; color:#991b1b; margin-bottom:8px;">⚡ Instant Delete</div>
+        <div style="font-size:.82rem; color:#7f1d1d; font-weight:700; line-height:1.6;">
+          এটা <b>Super Admin</b>-এর নিজের task। কোনো refund calculation নেই, কোনো fee নেই। সাথে সাথে delete হয়ে যাবে।
+        </div>
+      </div>
+      <div id="idtTaskInfo" style="background:var(--bg-alt); padding:12px 14px; border-radius:12px; margin-bottom:14px; border:1px solid var(--border); font-size:.85rem; font-weight:700;"></div>
+      <div class="alert-box danger">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div>এই কাজটি <b>undo করা যাবে না</b>। Task user-দের থেকে permanently মুছে যাবে।</div>
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-red" onclick="confirmInstantDelete()" style="flex:2;"><i class="fas fa-bolt"></i> Delete Instantly</button>
+        <button class="btn btn-info" onclick="closeInstantDeleteModal()" style="flex:1; background:#64748b;"><i class="fas fa-times"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Leaderboard Custom Modal -->
 <div class="modal-overlay" id="lbModal">
   <div class="modal-box">
@@ -1125,8 +1153,6 @@ const db = firebase.database();
 const TASK_DELETE_FEE = 10;
 let SERVICE_CHARGE_RATE = 10;
 const LB_MAX_ENTRIES = 10;
-
-// ✅ NEW: Minimum reward constant
 const MIN_TASK_REWARD = 0.10;
 
 let configData = { adSlots:[], newTasks:{}, depositMethods:[], leaderboardCustom:[] };
@@ -1143,31 +1169,18 @@ const SESSION_KEY = 'nexearn_admin_session';
 const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
 let currentSession = null;
 
-// ═══════════════════════════════════════════════════════════════════
-// ✅ NEW: MAX DAYS CALCULATOR — Reward অনুযায়ী সর্বোচ্চ দিন
-// ═══════════════════════════════════════════════════════════════════
-// Rules:
-//   0.10 TK  → 30 days
-//   +0.10 TK → +7 days (until 45 cap reached at 0.40+)
-//   1.00 TK  → 45 days
-//   1.10+ TK → +3 days per 0.10 step (until 60 cap at 1.50+)
-//   2.00 TK  → 60 days
-//   >2.00 TK → 70 days (absolute max)
+// ✅ MAX DAYS CALCULATOR
 function getMaxDaysForReward(reward) {
   const r = Math.round((Number(reward) || 0) * 100) / 100;
   if (r < MIN_TASK_REWARD) return 0;
   if (r > 2.00) return 70;
   if (r >= 1.00) {
-    // 1.00 → 45, +3 per 0.10 step, cap 60
     const steps = Math.floor((r - 1.00 + 0.0001) / 0.10);
     return Math.min(45 + steps * 3, 60);
   }
-  // 0.10 → 30, +7 per 0.10 step, cap 45
   const steps = Math.floor((r - MIN_TASK_REWARD + 0.0001) / 0.10);
   return Math.min(30 + steps * 7, 45);
 }
-
-// ✅ NEW: Update max-days hint near Time Limit input
 function updateMaxDaysHint(rewardInputId, timeInputId, hintId) {
   const rewardEl = document.getElementById(rewardInputId);
   const timeEl = document.getElementById(timeInputId);
@@ -1418,9 +1431,7 @@ function openAdminContact(adminId) {
   });
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// ✅ LEADERBOARD CUSTOM MANAGEMENT
-// ═══════════════════════════════════════════════════════════════════
+// ========== LEADERBOARD CUSTOM ==========
 function renderLeaderboardCustomList() {
   const container = document.getElementById('lbListContainer');
   const countEl = document.getElementById('lbCount');
@@ -1516,9 +1527,7 @@ async function moveLbEntry(index, dir) {
   try { await db.ref('config/leaderboardCustom').set(list); configData.leaderboardCustom = list; renderLeaderboardCustomList(); } catch(e) { toast('❌ Error'); }
 }
 
-// ═══════════════════════════════════════════════════════════════════
-// DEPOSIT METHODS
-// ═══════════════════════════════════════════════════════════════════
+// ========== DEPOSIT METHODS ==========
 function renderDepositMethodsList() {
   const c = document.getElementById('dmMethodsList');
   const methods = configData.depositMethods || [];
@@ -1887,7 +1896,6 @@ function updateTaskCostPreview() {
   if (!preview) return;
   const adminNotice = document.getElementById('adminTaskNotice');
   if (adminNotice) adminNotice.style.display = (currentSession.role === 'admin') ? 'flex' : 'none';
-  // ✅ NEW: Always update max days hint
   updateMaxDaysHint('newTaskReward','newTaskTime','taskMaxDaysHint');
   if (currentSession.role === 'super') { preview.style.display = 'none'; return; }
   const reward = parseFloat(document.getElementById('newTaskReward').value) || 0;
@@ -1933,9 +1941,7 @@ async function saveNewTask() {
   const timer = parseInt(document.getElementById('newTaskTimer').value) || 60;
   const url = document.getElementById('newTaskLink').value.trim();
   if (!title) return toast('❌ Title required');
-  // ✅ NEW: Minimum reward validation
   if (reward < MIN_TASK_REWARD) return toast(`❌ Reward সর্বনিম্ন ${MIN_TASK_REWARD.toFixed(2)} TK হতে হবে`);
-  // ✅ NEW: Max days validation
   const maxDays = getMaxDaysForReward(reward);
   if (timeLimitDays > maxDays) return toast(`❌ ${reward.toFixed(2)} TK reward-এর জন্য সর্বোচ্চ ${maxDays} দিন দেওয়া যাবে`);
   if (!url) return toast('❌ URL required');
@@ -2044,7 +2050,6 @@ function openEditTaskModal(id) {
   document.getElementById('etLink').value = t.url || '';
   const warn = document.getElementById('etPendingWarn');
   if (warn) warn.style.display = (currentSession.role === 'admin') ? 'flex' : 'none';
-  // ✅ NEW: Update max days hint on edit modal open
   updateMaxDaysHint('etReward','etTime','etMaxDaysHint');
   toggleEditSurveyFields();
   document.getElementById('editTaskModal').classList.add('active');
@@ -2064,9 +2069,7 @@ async function saveEditTask() {
   const timer = parseInt(document.getElementById('etTimer').value) || 60;
   const url = document.getElementById('etLink').value.trim();
   if (!title) return toast('❌ Title required');
-  // ✅ NEW: Minimum reward validation
   if (reward < MIN_TASK_REWARD) return toast(`❌ Reward সর্বনিম্ন ${MIN_TASK_REWARD.toFixed(2)} TK হতে হবে`);
-  // ✅ NEW: Max days validation
   const maxDays = getMaxDaysForReward(reward);
   if (timeLimitDays > maxDays) return toast(`❌ ${reward.toFixed(2)} TK reward-এর জন্য সর্বোচ্চ ${maxDays} দিন দেওয়া যাবে`);
   if (!url) return toast('❌ Required fields');
@@ -2122,6 +2125,44 @@ async function approveTask(taskId) {
       updatedAt: Date.now()
     });
     toast('✅ Task approved & LIVE!');
+    loadTasksList();
+  } catch(e) { toast('❌ Error: ' + e.message); }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ✅ NEW: INSTANT DELETE FOR SUPER ADMIN'S OWN TASKS
+// ═══════════════════════════════════════════════════════════════════
+function openInstantDeleteModal(taskId) {
+  if (!currentSession || currentSession.role !== 'super') return toast('❌ Only Super Admin');
+  const t = currentTaskCache[taskId];
+  if (!t) return toast('❌ Task not found');
+  const isSuperOwned = (t.createdByAdminId === 'super' || !t.createdByAdminId);
+  if (!isSuperOwned) return toast('❌ This task belongs to an admin. Use Delete & Refund.');
+  document.getElementById('idtTaskId').value = taskId;
+  const reward = Number(t.reward || 0);
+  const totalSlots = Number(t.totalSlots || 0);
+  const submitted = Number(t.submittedCount || 0);
+  const icon = ({survey:'📊',voice:'🎤',image:'🖼️',text:'📝',youtube_video_view:'▶️'})[t.type] || '📋';
+  document.getElementById('idtTaskInfo').innerHTML = `
+    <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #e2e8f0;"><span style="color:#94a3b8;">📋 Task:</span><b style="text-align:right; word-break:break-word;">${icon} ${esc(t.title || 'Untitled')}</b></div>
+    <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #e2e8f0;"><span style="color:#94a3b8;">💰 Reward:</span><b>${reward.toFixed(2)} TK</b></div>
+    <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #e2e8f0;"><span style="color:#94a3b8;">👥 Progress:</span><b>${submitted}/${totalSlots} slots</b></div>
+    <div style="display:flex; justify-content:space-between; padding:4px 0;"><span style="color:#94a3b8;">👤 Owner:</span><b style="color:#92400e;">👑 Super Admin (You)</b></div>
+  `;
+  document.getElementById('instantDeleteModal').classList.add('active');
+}
+function closeInstantDeleteModal() { document.getElementById('instantDeleteModal').classList.remove('active'); }
+async function confirmInstantDelete() {
+  if (!currentSession || currentSession.role !== 'super') return toast('❌ Access denied');
+  const id = document.getElementById('idtTaskId').value;
+  const t = currentTaskCache[id];
+  if (!t) return toast('❌ Task not found');
+  const isSuperOwned = (t.createdByAdminId === 'super' || !t.createdByAdminId);
+  if (!isSuperOwned) return toast('❌ Not your task');
+  try {
+    await db.ref('config/newTasks/' + id).remove();
+    toast('⚡ Task deleted instantly!');
+    closeInstantDeleteModal();
     loadTasksList();
   } catch(e) { toast('❌ Error: ' + e.message); }
 }
@@ -2189,12 +2230,13 @@ async function loadTasksList() {
       const svcHtml = (t.serviceCharge && Number(t.serviceCharge) > 0 && isSuperView)
         ? `<div style="font-size:.68rem; color:#7c3aed; font-weight:800; margin-top:4px;"><i class="fas fa-percent"></i> Service Charge: ${Number(t.serviceCharge).toFixed(2)} TK</div>`
         : '';
-      // ✅ NEW: Show max days info in task card
       const maxDaysInfo = `<span style="color:#0ea5e9;"><i class="fas fa-calendar-alt"></i> Max: ${getMaxDaysForReward(t.reward || 0)} days</span>`;
 
       const isSuper = currentSession.role === 'super';
       const isOwner = t.createdByAdminId === currentSession.adminId;
       const canEdit = isSuper || isOwner;
+      // ✅ NEW: Determine if this task belongs to Super Admin
+      const isSuperOwnedTask = (t.createdByAdminId === 'super' || !t.createdByAdminId);
 
       let actions = '';
       if (canEdit) {
@@ -2204,10 +2246,15 @@ async function loadTasksList() {
         actions += `<button class="btn btn-info btn-small" onclick="openEditTaskModal('${t.id}')"><i class="fas fa-pen"></i></button>`;
 
         if (isSuper) {
+          // ✅ NEW: Super Admin — instant delete for own tasks, refund modal for admin tasks
+          const deleteBtnHtml = isSuperOwnedTask
+            ? `<button class="btn btn-red btn-small" onclick="openInstantDeleteModal('${t.id}')" title="Delete Instantly"><i class="fas fa-bolt"></i></button>`
+            : `<button class="btn btn-red btn-small" onclick="openDeleteTaskModal('${t.id}')" title="Delete & Refund"><i class="fas fa-trash"></i></button>`;
+
           actions += `
             ${status !== 'pending' ? `<button class="btn btn-warning btn-small" onclick="setTaskPending('${t.id}')" title="Set Pending"><i class="fas fa-pause"></i></button>` : ''}
             ${status !== 'cancelled' ? `<button class="btn btn-pink btn-small" onclick="openCancelTaskModal('${t.id}')" title="Cancel with reason"><i class="fas fa-times-circle"></i></button>` : ''}
-            <button class="btn btn-red btn-small" onclick="openDeleteTaskModal('${t.id}')" title="Delete & Refund"><i class="fas fa-trash"></i></button>
+            ${deleteBtnHtml}
           `;
         } else {
           if (status === 'pending') {
@@ -2951,7 +2998,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   showLoginOverlay();
 });
 
-['editTaskModal','depositModal','dmModal','depositSubmitModal','banModal','cancelTaskModal','deleteTaskModal','contactEditModal','lbModal'].forEach(id => {
+['editTaskModal','depositModal','dmModal','depositSubmitModal','banModal','cancelTaskModal','deleteTaskModal','contactEditModal','lbModal','instantDeleteModal'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('click', e => { if (e.target.id === id) el.classList.remove('active'); });
 });
