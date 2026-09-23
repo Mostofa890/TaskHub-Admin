@@ -478,7 +478,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
           <label>⏱️ Timer (Seconds) *</label><input type="number" id="etTimer" min="5">
         </div>
       </div>
-      <div class="form-group" id="etLinkGroup"><label>🔗 Task Link / URL *</label><input type="url" id="etLink"></div>
+      <div class="form-group" id="etLinkGroup"><label id="etLinkLabel">🔗 Task Link / URL *</label><input type="url" id="etLink"><small id="etLinkHint" style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);"></small></div>
       <div class="alert-box warning" id="etPendingWarn" style="display:none;">
         <i class="fas fa-exclamation-triangle"></i>
         <div>এই task-টি edit করলে <b>আবার Super Admin approval-এ যাবে</b>। Approve না হওয়া পর্যন্ত user panel-এ live হবে না।</div>
@@ -1101,7 +1101,11 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
           <label>⏱️ Timer (Seconds)</label><input type="number" id="newTaskTimer" value="60" min="5">
         </div>
       </div>
-      <div class="form-group" id="surveyLinkGroup"><label>🔗 Task Link *</label><input type="url" id="newTaskLink"></div>
+      <div class="form-group" id="surveyLinkGroup">
+        <label id="newTaskLinkLabel">🔗 Task Link *</label>
+        <input type="url" id="newTaskLink">
+        <small id="newTaskLinkHint" style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);"></small>
+      </div>
       <div style="display:flex; gap:10px; margin-top:8px;">
         <button class="btn btn-green" id="saveTaskBtn" onclick="saveNewTask()" style="flex:2;"><i class="fas fa-save"></i> Save Task</button>
         <button class="btn btn-red" id="cancelTaskBtn" onclick="resetTaskForm()" style="flex:1; display:none;"><i class="fas fa-times"></i> Cancel</button>
@@ -1226,7 +1230,7 @@ const SESSION_KEY = 'nexearn_admin_session';
 const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
 let currentSession = null;
 
-// ✅ MAX DAYS CALCULATOR (used for validation on admin/super)
+// ✅ Max days calculator (admin validation only)
 function getMaxDaysForReward(reward) {
   const r = Math.round((Number(reward) || 0) * 100) / 100;
   if (r < MIN_TASK_REWARD) return 0;
@@ -1239,14 +1243,12 @@ function getMaxDaysForReward(reward) {
   return Math.min(30 + steps * 7, 45);
 }
 
-// ✅ NEW: Only used as a HINT for Admin (not Super)
 function updateMaxDaysHint(rewardInputId, timeInputId, hintId) {
   const rewardEl = document.getElementById(rewardInputId);
   const timeEl = document.getElementById(timeInputId);
   const hintEl = document.getElementById(hintId);
   if (!rewardEl || !hintEl) return;
 
-  // ✅ Super Admin: no max days limit → show info only
   if (currentSession && currentSession.role === 'super') {
     const r = parseFloat(rewardEl.value) || 0;
     if (r <= 0) { hintEl.innerHTML = '👑 Super Admin: কোনো লিমিট নেই'; hintEl.style.color = '#7c3aed'; return; }
@@ -1256,27 +1258,15 @@ function updateMaxDaysHint(rewardInputId, timeInputId, hintId) {
     return;
   }
 
-  // Regular Admin: show max days hint
   const reward = parseFloat(rewardEl.value) || 0;
-  if (reward <= 0) {
-    hintEl.innerHTML = '💰 Reward input করুন';
-    hintEl.style.color = 'var(--text-muted)';
-    return;
-  }
-  if (reward < MIN_TASK_REWARD) {
-    hintEl.innerHTML = `❌ Reward সর্বনিম্ন <b>${MIN_TASK_REWARD.toFixed(2)} TK</b> হতে হবে`;
-    hintEl.style.color = '#ef4444';
-    return;
-  }
+  if (reward <= 0) { hintEl.innerHTML = '💰 Reward input করুন'; hintEl.style.color = 'var(--text-muted)'; return; }
+  if (reward < MIN_TASK_REWARD) { hintEl.innerHTML = `❌ Reward সর্বনিম্ন <b>${MIN_TASK_REWARD.toFixed(2)} TK</b> হতে হবে`; hintEl.style.color = '#ef4444'; return; }
   const maxDays = getMaxDaysForReward(reward);
   let html = `📅 <b>${reward.toFixed(2)} TK</b> reward-এর জন্য সর্বোচ্চ <b>${maxDays} দিন</b>`;
   let color = '#10b981';
   if (timeEl) {
     const t = parseInt(timeEl.value) || 0;
-    if (t > maxDays) {
-      html += ` <span style="color:#ef4444;">(আপনার ${t} দিন বেশি!)</span>`;
-      color = '#f59e0b';
-    }
+    if (t > maxDays) { html += ` <span style="color:#ef4444;">(আপনার ${t} দিন বেশি!)</span>`; color = '#f59e0b'; }
   }
   hintEl.innerHTML = html;
   hintEl.style.color = color;
@@ -1988,17 +1978,47 @@ function updateTaskCostPreview() {
   else { warn.innerHTML = `❌ আরও <b>${(totalDebit - balance).toFixed(2)} TK</b> প্রয়োজন।`; warn.style.color = '#991b1b'; }
 }
 
+// ✅ NEW: Handle per-type link/timer visibility & requirement
+const TYPE_LINK_OPTIONAL = ['general', 'other'];   // Link optional
+const TYPE_NO_LINK = ['voice_recording', 'text_writing', 'voice', 'text', 'audio']; // No link field
+const TYPE_TIMER_NEEDED = ['youtube_video_view', 'survey'];
+
+function applyLinkRulesForType(type, prefix) {
+  // prefix: 'newTask' | 'et'  → reflects the two forms
+  const linkGroup = document.getElementById(prefix === 'newTask' ? 'surveyLinkGroup' : 'etLinkGroup');
+  const linkInput = document.getElementById(prefix === 'newTask' ? 'newTaskLink' : 'etLink');
+  const linkLabel = document.getElementById(prefix === 'newTask' ? 'newTaskLinkLabel' : 'etLinkLabel');
+  const linkHint  = document.getElementById(prefix === 'newTask' ? 'newTaskLinkHint' : 'etLinkHint');
+
+  if (TYPE_NO_LINK.includes(type)) {
+    if (linkGroup) linkGroup.style.display = 'none';
+    if (linkInput) { linkInput.value = ''; linkInput.required = false; }
+    if (linkHint) { linkHint.textContent = ''; }
+    return;
+  }
+
+  if (linkGroup) linkGroup.style.display = 'block';
+  const isOptional = TYPE_LINK_OPTIONAL.includes(type);
+  if (linkLabel) linkLabel.textContent = isOptional ? '🔗 Task Link (Optional)' : '🔗 Task Link / URL *';
+  if (linkInput) linkInput.required = !isOptional;
+  if (linkHint) {
+    if (isOptional) { linkHint.style.color = '#7c3aed'; linkHint.textContent = 'ℹ️ এই টাস্কে লিংক অপশনাল — চাইলে খালি রাখতে পারেন।'; }
+    else if (type === 'image' || type === 'image_upload') { linkHint.style.color = '#0ea5e9'; linkHint.textContent = 'ℹ️ Image task: লিংক না দিলে ইউজার স্ক্রিনশট আপলোড করবে।'; }
+    else { linkHint.textContent = ''; }
+  }
+}
+
 function toggleSurveyFields() {
   const t = document.getElementById('newTaskType').value;
-  document.getElementById('surveyLinkGroup').style.display = 'block';
-  const needsTimer = (t === 'youtube_video_view' || t === 'survey');
+  const needsTimer = TYPE_TIMER_NEEDED.includes(t);
   document.getElementById('timerGroup').style.display = needsTimer ? 'block' : 'none';
+  applyLinkRulesForType(t, 'newTask');
 }
 function toggleEditSurveyFields() {
   const t = document.getElementById('etType').value;
-  document.getElementById('etLinkGroup').style.display = 'block';
-  const needsTimer = (t === 'youtube_video_view' || t === 'survey');
+  const needsTimer = TYPE_TIMER_NEEDED.includes(t);
   document.getElementById('etTimerGroup').style.display = needsTimer ? 'block' : 'none';
+  applyLinkRulesForType(t, 'et');
 }
 
 async function saveNewTask() {
@@ -2015,15 +2035,17 @@ async function saveNewTask() {
   if (reward < MIN_TASK_REWARD) return toast(`❌ Reward সর্বনিম্ন ${MIN_TASK_REWARD.toFixed(2)} TK হতে হবে`);
 
   const isSuper = currentSession.role === 'super';
-
-  // ✅ Super Admin: no max days limit. Only validate for Admin.
   if (!isSuper) {
     const maxDays = getMaxDaysForReward(reward);
     if (timeLimitDays > maxDays) return toast(`❌ ${reward.toFixed(2)} TK reward-এর জন্য সর্বোচ্চ ${maxDays} দিন দেওয়া যাবে`);
   }
 
-  if (!url) return toast('❌ URL required');
-  const needsTimer = (type === 'youtube_video_view' || type === 'survey');
+  // ✅ URL required only when the type needs it
+  const noLink = TYPE_NO_LINK.includes(type);
+  const optionalLink = TYPE_LINK_OPTIONAL.includes(type);
+  if (!noLink && !optionalLink && !url) return toast('❌ Task Link required for this task type');
+
+  const needsTimer = TYPE_TIMER_NEEDED.includes(type);
   if (needsTimer && timer < 5) return toast('❌ Timer min 5s');
 
   const cost = reward * totalSlots;
@@ -2084,11 +2106,8 @@ async function saveNewTask() {
         updateWalletUI();
       }
       await db.ref('config/newTasks').push(taskData);
-      if (isSuper) {
-        toast(`✅ Task Created & LIVE!`);
-      } else {
-        toast(`⏸️ Task submitted for approval!`);
-      }
+      if (isSuper) toast(`✅ Task Created & LIVE!`);
+      else toast(`⏸️ Task submitted for approval!`);
     }
     resetTaskForm(); loadTasksList();
   } catch(e) { toast('❌ Error: ' + e.message); }
@@ -2149,15 +2168,17 @@ async function saveEditTask() {
   if (reward < MIN_TASK_REWARD) return toast(`❌ Reward সর্বনিম্ন ${MIN_TASK_REWARD.toFixed(2)} TK হতে হবে`);
 
   const isSuper = currentSession.role === 'super';
-
-  // ✅ Super Admin: no max days limit on edit either
   if (!isSuper) {
     const maxDays = getMaxDaysForReward(reward);
     if (timeLimitDays > maxDays) return toast(`❌ ${reward.toFixed(2)} TK reward-এর জন্য সর্বোচ্চ ${maxDays} দিন দেওয়া যাবে`);
   }
 
-  if (!url) return toast('❌ Required fields');
-  const needsTimer = (type === 'youtube_video_view' || type === 'survey');
+  // ✅ Link validation by type
+  const noLink = TYPE_NO_LINK.includes(type);
+  const optionalLink = TYPE_LINK_OPTIONAL.includes(type);
+  if (!noLink && !optionalLink && !url) return toast('❌ Task Link required for this task type');
+
+  const needsTimer = TYPE_TIMER_NEEDED.includes(type);
   const newCost = reward * totalSlots;
 
   const updateData = {
@@ -2310,7 +2331,6 @@ async function loadTasksList() {
       const svcHtml = (t.serviceCharge && Number(t.serviceCharge) > 0 && isSuperView)
         ? `<div style="font-size:.68rem; color:#7c3aed; font-weight:800; margin-top:4px;"><i class="fas fa-percent"></i> Service Charge: ${Number(t.serviceCharge).toFixed(2)} TK</div>`
         : '';
-      // ✅ Show actual configured days (max days info only meaningful for Admin)
       const maxDaysInfo = isSuperView
         ? `<span style="color:#7c3aed;"><i class="fas fa-crown"></i> Super: unlimited days</span>`
         : `<span style="color:#0ea5e9;"><i class="fas fa-calendar-alt"></i> Max: ${getMaxDaysForReward(t.reward || 0)} days</span>`;
@@ -3000,7 +3020,6 @@ function runPanelInit() {
   if (currentSession.role === 'super') { loadAnalytics(); loadVerificationStats(); toggleSurveyFields(); renderLeaderboardCustomList(); }
   else { loadCurrentAdminData(); loadTasksList(); loadTaskSubmissions(); }
   setInterval(() => { if (currentSession && currentSession.role === 'admin') loadCurrentAdminData(); }, 30000);
-  // ✅ Refresh max days hint for the currently logged in role
   updateMaxDaysHint('newTaskReward','newTaskTime','taskMaxDaysHint');
   updateMaxDaysHint('etReward','etTime','etMaxDaysHint');
 }
@@ -3063,10 +3082,12 @@ db.ref('config').on('value', snap => {
   if (currentSession && currentSession.role === 'admin') {
     renderDepositMethodsAdminView(); renderContactInfo();
   }
-  // ✅ Refresh hint after config or role change
   if (currentSession) {
     updateMaxDaysHint('newTaskReward','newTaskTime','taskMaxDaysHint');
     updateMaxDaysHint('etReward','etTime','etMaxDaysHint');
+    // apply current selected type link rules (in case of role/config reload)
+    const nt = document.getElementById('newTaskType'); if (nt) applyLinkRulesForType(nt.value, 'newTask');
+    const et = document.getElementById('etType'); if (et) applyLinkRulesForType(et.value, 'et');
   }
 });
 
