@@ -208,6 +208,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .task-admin-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#6366f1,#ec4899)}
 .task-admin-item.active::before{background:linear-gradient(180deg,#10b981,#34d399)}
 .task-admin-item.pending::before{background:linear-gradient(180deg,#f59e0b,#fbbf24)}
+.task-admin-item.pending{border-color:rgba(245,158,11,.35);background:linear-gradient(135deg,#fff,#fffbeb)}
 .task-admin-item.closed::before{background:linear-gradient(180deg,#94a3b8,#64748b)}
 .task-admin-item.cancelled::before{background:linear-gradient(180deg,#ef4444,#dc2626)}
 .task-admin-item:hover{background:#fff;border-color:var(--primary);box-shadow:var(--shadow-md);transform:translateY(-2px)}
@@ -219,6 +220,24 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .task-admin-info .url{font-size:.72rem;color:var(--primary);word-break:break-all;margin-top:6px;font-weight:600}
 .creator-tag{display:inline-flex;align-items:center;gap:4px;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);color:#4338ca;font-size:.68rem;font-weight:800;padding:3px 9px;border-radius:6px}
 .creator-tag.super{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e}
+
+/* ✅ NEW: Task List Tabs (Live / Pending) */
+.task-list-tabs{display:flex;gap:6px;margin-bottom:16px;padding:5px;background:var(--bg-alt);border-radius:14px;border:1px solid var(--border)}
+.task-list-tab{flex:1;padding:11px 10px;border:none;background:transparent;border-radius:10px;font-weight:800;font-size:.78rem;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;font-family:inherit}
+.task-list-tab:hover{color:var(--text-secondary);background:rgba(255,255,255,.6)}
+.task-list-tab.active{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;box-shadow:0 6px 16px rgba(99,102,241,.35)}
+.task-list-tab.active.pending-active{background:linear-gradient(135deg,#f59e0b,#fbbf24);box-shadow:0 6px 16px rgba(245,158,11,.4)}
+.tlt-count{background:rgba(255,255,255,.28);padding:1px 7px;border-radius:999px;font-size:.68rem;font-weight:900;min-width:20px;text-align:center;line-height:1.4}
+.task-list-tab.active .tlt-count{background:rgba(255,255,255,.35)}
+
+/* ✅ Approve button */
+.approve-task-btn{background:linear-gradient(135deg,#10b981,#34d399);color:#fff;border:none;padding:8px 14px;border-radius:10px;font-weight:800;font-size:.75rem;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:inherit;box-shadow:0 6px 16px rgba(16,185,129,.4);transition:all .2s}
+.approve-task-btn:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(16,185,129,.5)}
+.approve-task-btn:active{transform:scale(.97)}
+.waiting-approval-tag{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;font-weight:800;font-size:.72rem;padding:6px 12px;border-radius:8px;border:1px solid rgba(245,158,11,.35)}
+.pending-pulse{animation:pendingPulse 2.2s ease-in-out infinite}
+@keyframes pendingPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.45)}50%{box-shadow:0 0 0 8px rgba(245,158,11,0)}}
+
 .stat-card{background:var(--surface);padding:18px 14px;border-radius:var(--radius);text-align:center;border:1px solid var(--border);position:relative;overflow:hidden;transition:all .3s}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--secondary))}
 .stat-card.green::before{background:linear-gradient(90deg,#10b981,#34d399)}
@@ -239,18 +258,15 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .contact-info-box i{color:#8b5cf6;font-size:1.1rem}
 .contact-info-box .val{color:#0f172a;font-family:'Courier New',monospace;word-break:break-all}
 
-/* ✅ NEW: Analytics Date Filter Tabs */
 .analytics-range-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:12px;margin-bottom:14px;scrollbar-width:none}
 .analytics-range-tabs::-webkit-scrollbar{display:none}
 .range-tab{flex:0 0 auto;padding:8px 14px;font-size:.75rem;font-weight:800;color:var(--text-secondary);background:var(--surface);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;white-space:nowrap}
 .range-tab:hover{border-color:var(--primary);color:var(--primary)}
 .range-tab.active{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border-color:transparent;box-shadow:0 6px 14px rgba(99,102,241,.35)}
 
-/* ✅ NEW: Referral Qualified Badge */
 .qualified-yes{display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#065f46;font-weight:800;font-size:.7rem;padding:3px 9px;border-radius:999px;border:1px solid rgba(16,185,129,.35)}
 .qualified-no{display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#fee2e2,#fecaca);color:#991b1b;font-weight:800;font-size:.7rem;padding:3px 9px;border-radius:999px;border:1px solid rgba(239,68,68,.3)}
 
-/* ✅ NEW: Leaderboard Custom Card */
 .lb-item{display:flex;align-items:center;gap:12px;padding:14px;background:linear-gradient(135deg,#fff,#f8fafc);border:1.5px solid var(--border);border-radius:14px;margin-bottom:10px;position:relative;overflow:hidden;transition:all .2s}
 .lb-item:hover{border-color:var(--primary);box-shadow:var(--shadow-md)}
 .lb-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#f59e0b,#fbbf24)}
@@ -408,6 +424,10 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         </div>
       </div>
       <div class="form-group" id="etLinkGroup"><label>🔗 Task Link / URL *</label><input type="url" id="etLink"></div>
+      <div class="alert-box warning" id="etPendingWarn" style="display:none;">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div>এই task-টি edit করলে <b>আবার Super Admin approval-এ যাবে</b>। Approve না হওয়া পর্যন্ত user panel-এ live হবে না।</div>
+      </div>
       <div style="display:flex; gap:10px; margin-top:8px;">
         <button class="btn btn-green" onclick="saveEditTask()" style="flex:2;"><i class="fas fa-check"></i> Update Task</button>
         <button class="btn btn-red" onclick="closeEditTaskModal()" style="flex:1;"><i class="fas fa-times"></i> Cancel</button>
@@ -537,7 +557,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- ✅ NEW: Leaderboard Custom Modal -->
+<!-- Leaderboard Custom Modal -->
 <div class="modal-overlay" id="lbModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -559,7 +579,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- Edit Admin Contact Modal (Admin) -->
+<!-- Edit Admin Contact Modal -->
 <div class="modal-overlay" id="contactEditModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -616,7 +636,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="form-group"><label>Ad Reset Hour (0-23)</label><input type="number" id="adResetHour" min="0" max="23"></div>
     </div>
 
-    <!-- ✅ NEW: Leaderboard Custom Users -->
     <div class="card rainbow">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-trophy"></i></div>Leaderboard Top Users (Custom)</div></div>
       <div class="alert-box info"><i class="fas fa-info-circle"></i><div>User App-এর <b>Top 10 Earners</b> এ custom ইউজার দেখানোর জন্য। সর্বোচ্চ <b>১০ জন</b> এড করা যাবে। এরা শুধু display এর জন্য।</div></div>
@@ -918,7 +937,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div style="font-size:.85rem; color:var(--text-secondary); line-height:1.9; font-weight:600;">
         <div style="display:flex; gap:10px; margin-bottom:8px;"><span>💳</span><span>Deposit approve না হলে</span></div>
         <div style="display:flex; gap:10px; margin-bottom:8px;"><span>💰</span><span>Balance সমস্যা হলে</span></div>
-        <div style="display:flex; gap:10px; margin-bottom:8px;"><span>🎯</span><span>Task বানাতে সমস্যা হলে</span></div>
+        <div style="display:flex; gap:10px; margin-bottom:8px;"><span>🎯</span><span>Task approve না হলে</span></div>
         <div style="display:flex; gap:10px;"><span>❓</span><span>অন্য যেকোনো জিজ্ঞাসা</span></div>
       </div>
     </div>
@@ -932,6 +951,10 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       </div>
       <div id="taskWalletInfo" class="alert-box success" style="display:none;">
         <i class="fas fa-wallet"></i><div>Current Balance: <b><span id="taskWalletBal">0.00</span> TK</b></div>
+      </div>
+      <div id="adminTaskNotice" class="alert-box warning" style="display:none;">
+        <i class="fas fa-info-circle"></i>
+        <div>⏳ আপনি <b>Admin</b> হিসেবে task বানাচ্ছেন। Save করার পর task <b>Super Admin-এর কাছে pending</b> যাবে। Approve হলে user panel-এ live হবে।</div>
       </div>
       <div class="form-group"><label>Task Title *</label><input type="text" id="newTaskTitle"></div>
       <div class="form-group"><label>Description</label><textarea id="newTaskDesc" rows="2"></textarea></div>
@@ -994,10 +1017,30 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <button class="btn btn-red" id="cancelTaskBtn" onclick="resetTaskForm()" style="flex:1; display:none;"><i class="fas fa-times"></i> Cancel</button>
       </div>
     </div>
+
+    <!-- ✅ NEW: Task List with Live/Pending Tabs -->
     <div class="card">
-      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-list-check"></i></div><span id="activeTasksTitle">Active Tasks</span></div></div>
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-title-icon icon-info"><i class="fas fa-list-check"></i></div>
+          <span id="activeTasksTitle">Task Manager</span>
+        </div>
+      </div>
+      <div class="task-list-tabs">
+        <button type="button" class="task-list-tab active" data-tlt="live" onclick="switchTaskListTab('live', this)">
+          <i class="fas fa-circle-check"></i>
+          <span>Live Tasks</span>
+          <span class="tlt-count" id="liveTasksCount">0</span>
+        </button>
+        <button type="button" class="task-list-tab" data-tlt="pending" onclick="switchTaskListTab('pending', this)" id="pendingTasksTabBtn">
+          <i class="fas fa-hourglass-half"></i>
+          <span>Pending</span>
+          <span class="tlt-count" id="pendingTasksCount">0</span>
+        </button>
+      </div>
       <div id="activeTasksList"></div>
     </div>
+
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-purple"><i class="fas fa-file-signature"></i></div>Task Submissions</div></div>
       <div style="display:flex; gap:8px; margin-bottom:15px; overflow-x:auto;">
@@ -1018,14 +1061,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 // ═══════════════════════════════════════════════════════════════════
 (function initSecurityShield() {
   'use strict';
-
-  // 1. Block Right-Click globally
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    return false;
-  }, true);
-
-  // 2. Block DevTools & view-source keyboard shortcuts
+  document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; }, true);
   document.addEventListener('keydown', function(e) {
     const k = (e.key || '').toLowerCase();
     const isBlocked =
@@ -1034,84 +1070,40 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       (e.metaKey && e.altKey && ['i','j','c','k'].includes(k)) ||
       (e.ctrlKey && ['u','s'].includes(k)) ||
       (e.metaKey && ['u','s'].includes(k));
-    if (isBlocked) {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    }
+    if (isBlocked) { e.preventDefault(); e.stopPropagation(); return false; }
   }, true);
-
-  // 3. Block text selection outside inputs
   document.addEventListener('selectstart', function(e) {
     const tag = (e.target && e.target.tagName || '').toUpperCase();
-    if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
-      e.preventDefault();
-      return false;
-    }
+    if (tag !== 'INPUT' && tag !== 'TEXTAREA') { e.preventDefault(); return false; }
   });
-
-  // 4. Block drag
   document.addEventListener('dragstart', function(e) {
     const tag = (e.target && e.target.tagName || '').toUpperCase();
     if (tag !== 'IMG') e.preventDefault();
   });
-
-  // 5. DevTools open detection → warn & clear console
   let devtoolsFlag = false;
   setInterval(function() {
     const wDiff = window.outerWidth - window.innerWidth;
     const hDiff = window.outerHeight - window.innerHeight;
     if (wDiff > 160 || hDiff > 160) {
-      if (!devtoolsFlag) {
-        devtoolsFlag = true;
-        try { console.clear(); } catch(e) {}
-        document.title = '🔒 Secured';
-      }
-    } else {
-      devtoolsFlag = false;
-    }
+      if (!devtoolsFlag) { devtoolsFlag = true; try { console.clear(); } catch(e) {} document.title = '🔒 Secured'; }
+    } else { devtoolsFlag = false; }
   }, 1200);
-
-  // 6. Freeze critical globals (Firebase config, secrets)
+  try { if (typeof firebaseConfig === 'object') Object.freeze(firebaseConfig); } catch(e) {}
   try {
-    if (typeof firebaseConfig === 'object') Object.freeze(firebaseConfig);
+    Object.defineProperty(window, '__securityShield', { value: true, writable: false, configurable: false });
   } catch(e) {}
-
-  // 7. Protect window from property tampering (silent fail)
-  try {
-    const w = window;
-    Object.defineProperty(w, '__securityShield', {
-      value: true,
-      writable: false,
-      configurable: false
-    });
-  } catch(e) {}
-
-  // 8. Session integrity check (runs every 15s)
   setInterval(function() {
     try {
-      // Check if localStorage session is still valid and not tampered
       const raw = localStorage.getItem('nexearn_admin_session');
       if (!raw) return;
       const s = JSON.parse(raw);
       if (!s || typeof s !== 'object') { localStorage.removeItem('nexearn_admin_session'); return; }
-      // If expiry suddenly far in future (tampered), force logout
       if (s.expiry && (s.expiry - Date.now()) > (25 * 60 * 60 * 1000)) {
         localStorage.removeItem('nexearn_admin_session');
         location.reload();
       }
-    } catch(e) {
-      try { localStorage.removeItem('nexearn_admin_session'); } catch(_) {}
-    }
+    } catch(e) { try { localStorage.removeItem('nexearn_admin_session'); } catch(_) {} }
   }, 15000);
-
-  // 9. Anti-iframe (prevent clickjacking)
-  try {
-    if (window.self !== window.top) {
-      // Not blocking silently — allow Telegram webview
-    }
-  } catch(e) {}
-
 })();
 
 const firebaseConfig = {
@@ -1138,6 +1130,9 @@ let currentAdminData = null, allDepositRequests = [];
 let dmEditingIndex = null;
 let analyticsRange = 'today';
 let lbEditingIndex = null;
+
+// ✅ NEW: Task list tab state (live | pending)
+let currentTaskListTab = 'live';
 
 const SESSION_KEY = 'nexearn_admin_session';
 const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
@@ -1171,12 +1166,9 @@ async function loadLoginContactInfo() {
       section.style.display = 'block';
       btn.disabled = false;
       btn.innerHTML = '<i class="fas fa-headset"></i><span>Contact Admin</span>';
-    } else {
-      section.style.display = 'none';
-    }
+    } else { section.style.display = 'none'; }
   } catch(e) {}
 }
-
 function openLoginContactAdmin() {
   if (!loginContactLinkCache) { alert('⚠️ Contact link is not configured yet.'); return; }
   try { window.open(loginContactLinkCache, '_blank'); } catch(e) { location.href = loginContactLinkCache; }
@@ -1348,9 +1340,7 @@ async function saveContactInfo() {
   if (!value || value.length < 3) return toast('❌ Valid contact required');
   try {
     await db.ref('admins/' + currentSession.adminId + '/adminContact').set({ type, value, note, updatedAt: Date.now() });
-    toast('✅ Contact saved');
-    closeContactEditModal();
-    loadCurrentAdminData();
+    toast('✅ Contact saved'); closeContactEditModal(); loadCurrentAdminData();
   } catch(e) { toast('❌ Error'); }
 }
 function openAdminContact(adminId) {
@@ -1359,15 +1349,10 @@ function openAdminContact(adminId) {
     const c = snap.val();
     if (!c.value) return toast('❌ Admin contact not set');
     let url = c.value;
-    if (c.type === 'telegram') {
-      url = c.value.startsWith('@') ? 'https://t.me/' + c.value.slice(1) : (c.value.startsWith('http') ? c.value : 'https://t.me/' + c.value);
-    } else if (c.type === 'whatsapp') {
-      url = 'https://wa.me/' + c.value.replace(/[^\d]/g, '');
-    } else if (c.type === 'phone') {
-      url = 'tel:' + c.value;
-    } else if (c.type === 'email') {
-      url = 'mailto:' + c.value;
-    }
+    if (c.type === 'telegram') { url = c.value.startsWith('@') ? 'https://t.me/' + c.value.slice(1) : (c.value.startsWith('http') ? c.value : 'https://t.me/' + c.value); }
+    else if (c.type === 'whatsapp') { url = 'https://wa.me/' + c.value.replace(/[^\d]/g, ''); }
+    else if (c.type === 'phone') { url = 'tel:' + c.value; }
+    else if (c.type === 'email') { url = 'mailto:' + c.value; }
     window.open(url, '_blank');
     toast('📞 Opening contact: ' + c.value);
   });
@@ -1385,27 +1370,20 @@ function renderLeaderboardCustomList() {
   if (countEl) countEl.textContent = list.length;
   if (addBtn) {
     if (list.length >= LB_MAX_ENTRIES) {
-      addBtn.disabled = true;
-      addBtn.style.opacity = '0.5';
+      addBtn.disabled = true; addBtn.style.opacity = '0.5';
       addBtn.innerHTML = '<i class="fas fa-ban"></i> Limit Reached (10/10)';
     } else {
-      addBtn.disabled = false;
-      addBtn.style.opacity = '1';
+      addBtn.disabled = false; addBtn.style.opacity = '1';
       addBtn.innerHTML = '<i class="fas fa-plus"></i> Add User';
     }
   }
-  if (!list.length) {
-    container.innerHTML = '<div class="lb-empty"><i class="fas fa-trophy" style="font-size:1.5rem;display:block;margin-bottom:6px;opacity:.5;"></i>No custom entries yet. Add up to 10 users.</div>';
-    return;
-  }
+  if (!list.length) { container.innerHTML = '<div class="lb-empty"><i class="fas fa-trophy" style="font-size:1.5rem;display:block;margin-bottom:6px;opacity:.5;"></i>No custom entries yet. Add up to 10 users.</div>'; return; }
   let h = '';
   list.forEach((entry, i) => {
     const rankCls = i === 0 ? 'rank1' : i === 1 ? 'rank2' : i === 2 ? 'rank3' : '';
     const rankIcon = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1);
     const initial = (entry.name || 'U').charAt(0).toUpperCase();
-    const photoHtml = entry.photo
-      ? `<img src="${esc(entry.photo)}" onerror="this.style.display='none';this.parentNode.textContent='${initial}';">`
-      : initial;
+    const photoHtml = entry.photo ? `<img src="${esc(entry.photo)}" onerror="this.style.display='none';this.parentNode.textContent='${initial}';">` : initial;
     h += `<div class="lb-item ${rankCls}">
       <div class="lb-rank">${rankIcon}</div>
       <div class="lb-avatar">${photoHtml}</div>
@@ -1426,32 +1404,23 @@ function renderLeaderboardCustomList() {
   });
   container.innerHTML = h;
 }
-
 function openLbModal(index) {
   lbEditingIndex = (index === undefined || index === null) ? null : index;
   const list = Array.isArray(configData.leaderboardCustom) ? configData.leaderboardCustom : [];
-  if (lbEditingIndex === null && list.length >= LB_MAX_ENTRIES) {
-    toast('❌ সর্বোচ্চ ১০ জন এড করা যাবে');
-    return;
-  }
+  if (lbEditingIndex === null && list.length >= LB_MAX_ENTRIES) { toast('❌ সর্বোচ্চ ১০ জন এড করা যাবে'); return; }
   if (lbEditingIndex === null) {
     document.getElementById('lbModalTitle').textContent = 'Add Leaderboard User';
-    document.getElementById('lbName').value = '';
-    document.getElementById('lbBalance').value = '';
-    document.getElementById('lbRefs').value = '';
-    document.getElementById('lbPhoto').value = '';
+    document.getElementById('lbName').value = ''; document.getElementById('lbBalance').value = '';
+    document.getElementById('lbRefs').value = ''; document.getElementById('lbPhoto').value = '';
   } else {
     document.getElementById('lbModalTitle').textContent = 'Edit Leaderboard User';
     const e = list[lbEditingIndex] || {};
-    document.getElementById('lbName').value = e.name || '';
-    document.getElementById('lbBalance').value = e.balance || '';
-    document.getElementById('lbRefs').value = e.refs || '';
-    document.getElementById('lbPhoto').value = e.photo || '';
+    document.getElementById('lbName').value = e.name || ''; document.getElementById('lbBalance').value = e.balance || '';
+    document.getElementById('lbRefs').value = e.refs || ''; document.getElementById('lbPhoto').value = e.photo || '';
   }
   document.getElementById('lbModal').classList.add('active');
 }
 function closeLbModal() { document.getElementById('lbModal').classList.remove('active'); lbEditingIndex = null; }
-
 async function saveLbEntry() {
   const name = document.getElementById('lbName').value.trim();
   const balance = parseFloat(document.getElementById('lbBalance').value);
@@ -1462,48 +1431,29 @@ async function saveLbEntry() {
   if (isNaN(refs) || refs < 0) return toast('❌ Valid referral count required');
   const list = Array.isArray(configData.leaderboardCustom) ? configData.leaderboardCustom.slice() : [];
   const entry = { name: name.substring(0, 30), balance: Number(balance), refs: Number(refs), photo: photo || '' };
-  if (lbEditingIndex === null) {
-    if (list.length >= LB_MAX_ENTRIES) return toast('❌ Limit reached (10)');
-    list.push(entry);
-  } else {
-    list[lbEditingIndex] = entry;
-  }
-  // Sort descending by balance after save
+  if (lbEditingIndex === null) { if (list.length >= LB_MAX_ENTRIES) return toast('❌ Limit reached (10)'); list.push(entry); }
+  else { list[lbEditingIndex] = entry; }
   list.sort((a, b) => Number(b.balance || 0) - Number(a.balance || 0));
   try {
     await db.ref('config/leaderboardCustom').set(list);
     configData.leaderboardCustom = list;
     toast(lbEditingIndex === null ? '✅ User added' : '✅ User updated');
-    closeLbModal();
-    renderLeaderboardCustomList();
+    closeLbModal(); renderLeaderboardCustomList();
   } catch(e) { toast('❌ Error: ' + e.message); }
 }
-
 async function deleteLbEntry(index) {
   const list = Array.isArray(configData.leaderboardCustom) ? configData.leaderboardCustom.slice() : [];
   if (!list[index]) return;
   if (!confirm('Delete "' + (list[index].name || 'this user') + '"?')) return;
   list.splice(index, 1);
-  try {
-    await db.ref('config/leaderboardCustom').set(list);
-    configData.leaderboardCustom = list;
-    toast('✅ Deleted');
-    renderLeaderboardCustomList();
-  } catch(e) { toast('❌ Error'); }
+  try { await db.ref('config/leaderboardCustom').set(list); configData.leaderboardCustom = list; toast('✅ Deleted'); renderLeaderboardCustomList(); } catch(e) { toast('❌ Error'); }
 }
-
 async function moveLbEntry(index, dir) {
   const list = Array.isArray(configData.leaderboardCustom) ? configData.leaderboardCustom.slice() : [];
   const newIdx = index + dir;
   if (newIdx < 0 || newIdx >= list.length) return;
-  const tmp = list[index];
-  list[index] = list[newIdx];
-  list[newIdx] = tmp;
-  try {
-    await db.ref('config/leaderboardCustom').set(list);
-    configData.leaderboardCustom = list;
-    renderLeaderboardCustomList();
-  } catch(e) { toast('❌ Error'); }
+  const tmp = list[index]; list[index] = list[newIdx]; list[newIdx] = tmp;
+  try { await db.ref('config/leaderboardCustom').set(list); configData.leaderboardCustom = list; renderLeaderboardCustomList(); } catch(e) { toast('❌ Error'); }
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -1536,18 +1486,14 @@ function openDmModal(index) {
   dmEditingIndex = (index === undefined || index === null) ? null : index;
   if (dmEditingIndex === null) {
     document.getElementById('dmModalTitle').textContent = 'Add Deposit Method';
-    document.getElementById('dmName').value = '';
-    document.getElementById('dmAccount').value = '';
-    document.getElementById('dmMin').value = '';
-    document.getElementById('dmInstructions').value = '';
+    document.getElementById('dmName').value = ''; document.getElementById('dmAccount').value = '';
+    document.getElementById('dmMin').value = ''; document.getElementById('dmInstructions').value = '';
     document.getElementById('dmActive').value = 'true';
   } else {
     document.getElementById('dmModalTitle').textContent = 'Edit Deposit Method';
     const m = (configData.depositMethods || [])[dmEditingIndex] || {};
-    document.getElementById('dmName').value = m.name || '';
-    document.getElementById('dmAccount').value = m.account || '';
-    document.getElementById('dmMin').value = m.minAmount || '';
-    document.getElementById('dmInstructions').value = m.instructions || '';
+    document.getElementById('dmName').value = m.name || ''; document.getElementById('dmAccount').value = m.account || '';
+    document.getElementById('dmMin').value = m.minAmount || ''; document.getElementById('dmInstructions').value = m.instructions || '';
     document.getElementById('dmActive').value = String(m.isActive !== false);
   }
   document.getElementById('dmModal').classList.add('active');
@@ -1683,12 +1629,8 @@ async function loadAdminsList() {
         <div class="admin-item-actions">
           <button class="btn btn-green btn-small" onclick="openDepositModal('${child.key}')"><i class="fas fa-plus"></i> Add</button>
           <button class="btn btn-purple btn-small" onclick="openAdminContact('${child.key}')"><i class="fas fa-address-card"></i> Contact</button>
-          ${banned
-            ? `<button class="btn btn-green btn-small" onclick="unbanAdmin('${child.key}')"><i class="fas fa-unlock"></i> Unban</button>`
-            : `<button class="btn btn-red btn-small" onclick="openBanModal('${child.key}', '${esc(a.username)}', 'ban')"><i class="fas fa-ban"></i> Ban</button>`}
-          ${suspended
-            ? `<button class="btn btn-green btn-small" onclick="unsuspendAdmin('${child.key}')"><i class="fas fa-play"></i> Resume</button>`
-            : `<button class="btn btn-warning btn-small" onclick="openBanModal('${child.key}', '${esc(a.username)}', 'suspend')"><i class="fas fa-pause"></i> Suspend</button>`}
+          ${banned ? `<button class="btn btn-green btn-small" onclick="unbanAdmin('${child.key}')"><i class="fas fa-unlock"></i> Unban</button>` : `<button class="btn btn-red btn-small" onclick="openBanModal('${child.key}', '${esc(a.username)}', 'ban')"><i class="fas fa-ban"></i> Ban</button>`}
+          ${suspended ? `<button class="btn btn-green btn-small" onclick="unsuspendAdmin('${child.key}')"><i class="fas fa-play"></i> Resume</button>` : `<button class="btn btn-warning btn-small" onclick="openBanModal('${child.key}', '${esc(a.username)}', 'suspend')"><i class="fas fa-pause"></i> Suspend</button>`}
           <button class="btn btn-red btn-small" onclick="deleteAdmin('${child.key}')"><i class="fas fa-trash"></i> Delete</button>
         </div>
       </div>`;
@@ -1723,9 +1665,7 @@ function openDepositModal(adminId) {
     const a = snap.val();
     document.getElementById('depAdminId').value = adminId;
     document.getElementById('depAdminName').value = a.username + ' (Bal: ' + Number(a.balance || 0).toFixed(2) + ')';
-    document.getElementById('depAccount').value = '';
-    document.getElementById('depAmount').value = '';
-    document.getElementById('depNote').value = '';
+    document.getElementById('depAccount').value = ''; document.getElementById('depAmount').value = ''; document.getElementById('depNote').value = '';
     document.getElementById('depositModal').classList.add('active');
   });
 }
@@ -1769,9 +1709,7 @@ async function addNewAdmin() {
     createdAt: Date.now(), createdBy: currentSession.username
   });
   toast('✅ Admin added: ' + username);
-  document.getElementById('newAdminUsername').value = '';
-  document.getElementById('newAdminPassword').value = '';
-  document.getElementById('newAdminConfirmPassword').value = '';
+  document.getElementById('newAdminUsername').value = ''; document.getElementById('newAdminPassword').value = ''; document.getElementById('newAdminConfirmPassword').value = '';
   loadAdminsList();
 }
 async function deleteAdmin(id) {
@@ -1790,9 +1728,7 @@ async function changeSuperPassword() {
   const newHash = await sha256(np);
   await db.ref('config/superAdmin').update({ passwordHash: newHash, updatedAt: Date.now() });
   toast('✅ Changed');
-  document.getElementById('curSuperPw').value = '';
-  document.getElementById('newSuperPw').value = '';
-  document.getElementById('confSuperPw').value = '';
+  document.getElementById('curSuperPw').value = ''; document.getElementById('newSuperPw').value = ''; document.getElementById('confSuperPw').value = '';
 }
 
 function renderDepositMethodsAdminView() {
@@ -1823,9 +1759,7 @@ function openDepositSubmitModal(methodIndex) {
     <div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px dashed #e2e8f0;"><span style="color:#94a3b8;">Number:</span><b style="color:#dc2626;">${esc(m.account)}</b></div>
     <div style="display:flex; justify-content:space-between; padding:4px 0;"><span style="color:#94a3b8;">Min:</span><b>${Number(m.minAmount).toFixed(2)} TK</b></div>
   `;
-  document.getElementById('dsAmount').value = '';
-  document.getElementById('dsTxnId').value = '';
-  document.getElementById('dsNote').value = '';
+  document.getElementById('dsAmount').value = ''; document.getElementById('dsTxnId').value = ''; document.getElementById('dsNote').value = '';
   document.getElementById('depositSubmitModal').classList.add('active');
 }
 function closeDepositSubmitModal() { document.getElementById('depositSubmitModal').classList.remove('active'); }
@@ -1891,6 +1825,8 @@ function updateTaskCostPreview() {
   if (!currentSession) return;
   const preview = document.getElementById('taskCostPreview');
   if (!preview) return;
+  const adminNotice = document.getElementById('adminTaskNotice');
+  if (adminNotice) adminNotice.style.display = (currentSession.role === 'admin') ? 'flex' : 'none';
   if (currentSession.role === 'super') { preview.style.display = 'none'; return; }
   const reward = parseFloat(document.getElementById('newTaskReward').value) || 0;
   const slots = parseInt(document.getElementById('newTaskSlots').value) || 0;
@@ -1939,27 +1875,47 @@ async function saveNewTask() {
   if (!url) return toast('❌ URL required');
   const needsTimer = (type === 'youtube_video_view' || type === 'survey');
   if (needsTimer && timer < 5) return toast('❌ Timer min 5s');
+
   const cost = reward * totalSlots;
   const svcAmount = cost * (SERVICE_CHARGE_RATE / 100);
   const totalDebit = cost + svcAmount;
+
+  // Deduct from admin balance only for admin role
   if (currentSession.role === 'admin') {
     const balance = currentAdminData ? Number(currentAdminData.balance || 0) : 0;
     if (balance < totalDebit) return toast(`❌ অপর্যাপ্ত! প্রয়োজন ${totalDebit.toFixed(2)}, আছে ${balance.toFixed(2)}`);
   }
+
+  const isSuper = currentSession.role === 'super';
+
+  // ✅ NEW: Super Admin → active (live immediately), Admin → pending (needs approval)
+  const taskStatus = isSuper ? 'active' : 'pending';
+
   const taskData = {
     title, description, type, category, reward, totalSlots,
     timeLimit: timeLimitDays + ' days',
     timer: needsTimer ? timer : 0,
-    url, status: 'active', updatedAt: Date.now(),
+    url,
+    status: taskStatus,
+    updatedAt: Date.now(),
     createdByAdminId: currentSession.adminId,
     createdByName: currentSession.username,
     taskCost: cost,
-    serviceCharge: svcAmount
+    serviceCharge: svcAmount,
+    approvedBy: isSuper ? currentSession.username : null,
+    approvedAt: isSuper ? Date.now() : null
   };
+
   try {
     if (editingTaskId) {
+      // Editing: for admins, force back to pending; super keeps current state (active)
+      if (!isSuper) {
+        taskData.status = 'pending';
+        taskData.approvedBy = null;
+        taskData.approvedAt = null;
+      }
       await db.ref('config/newTasks/' + editingTaskId).update(taskData);
-      toast('✅ Updated!');
+      toast(isSuper ? '✅ Updated!' : '⏸️ Updated — sent for Super Admin approval');
     } else {
       taskData.createdAt = Date.now();
       taskData.submittedCount = 0;
@@ -1982,7 +1938,11 @@ async function saveNewTask() {
         updateWalletUI();
       }
       await db.ref('config/newTasks').push(taskData);
-      toast(`✅ Task Created! (Service charge: ${svcAmount.toFixed(2)} TK)`);
+      if (isSuper) {
+        toast(`✅ Task Created & LIVE! (Service charge: ${svcAmount.toFixed(2)} TK)`);
+      } else {
+        toast(`⏸️ Task submitted for approval! (Service charge: ${svcAmount.toFixed(2)} TK)`);
+      }
     }
     resetTaskForm(); loadTasksList();
   } catch(e) { toast('❌ Error: ' + e.message); }
@@ -2019,6 +1979,9 @@ function openEditTaskModal(id) {
   document.getElementById('etTime').value = dm ? dm[0] : '7';
   document.getElementById('etTimer').value = t.timer || 60;
   document.getElementById('etLink').value = t.url || '';
+  // ✅ NEW: Show warning if admin will push task back to pending
+  const warn = document.getElementById('etPendingWarn');
+  if (warn) warn.style.display = (currentSession.role === 'admin') ? 'flex' : 'none';
   toggleEditSurveyFields();
   document.getElementById('editTaskModal').classList.add('active');
 }
@@ -2039,69 +2002,159 @@ async function saveEditTask() {
   if (!title || reward <= 0 || !url) return toast('❌ Required fields');
   const needsTimer = (type === 'youtube_video_view' || type === 'survey');
   const newCost = reward * totalSlots;
-  await db.ref('config/newTasks/' + id).update({
+  const isSuper = currentSession.role === 'super';
+
+  const updateData = {
     title, description, type, category, reward, totalSlots,
     timeLimit: timeLimitDays + ' days',
     timer: needsTimer ? timer : 0,
     url, updatedAt: Date.now(),
     taskCost: newCost
-  });
-  toast('✅ Updated');
+  };
+
+  // ✅ NEW: Admin edit → task goes back to pending for re-approval
+  if (!isSuper) {
+    updateData.status = 'pending';
+    updateData.approvedBy = null;
+    updateData.approvedAt = null;
+    updateData.resubmittedAt = Date.now();
+  }
+
+  await db.ref('config/newTasks/' + id).update(updateData);
+  toast(isSuper ? '✅ Updated' : '⏸️ Updated — sent for Super Admin approval');
   closeEditTaskModal(); loadTasksList();
 }
+
+// ✅ NEW: Switch task list tab (Live / Pending)
+function switchTaskListTab(tab, el) {
+  currentTaskListTab = tab;
+  document.querySelectorAll('.task-list-tab').forEach(t => {
+    t.classList.remove('active');
+    t.classList.remove('pending-active');
+  });
+  if (el) {
+    el.classList.add('active');
+    if (tab === 'pending') el.classList.add('pending-active');
+  }
+  loadTasksList();
+}
+
+// ✅ NEW: Approve pending task (Super Admin only)
+async function approveTask(taskId) {
+  if (!currentSession || currentSession.role !== 'super') return toast('❌ শুধু Super Admin approve করতে পারবে');
+  const t = currentTaskCache[taskId];
+  if (!t) return toast('❌ Task not found');
+  if ((t.status || 'active') !== 'pending') return toast('❌ Task pending নয়');
+  if (!confirm('এই task-টি approve করে live করবেন?')) return;
+  try {
+    await db.ref('config/newTasks/' + taskId).update({
+      status: 'active',
+      approvedBy: currentSession.username,
+      approvedAt: Date.now(),
+      updatedAt: Date.now()
+    });
+    toast('✅ Task approved & LIVE!');
+    loadTasksList();
+  } catch(e) { toast('❌ Error: ' + e.message); }
+}
+
 async function loadTasksList() {
   const c = document.getElementById('activeTasksList');
   c.innerHTML = '<p style="text-align:center; padding:16px; color:#94a3b8;">Loading...</p>';
   try {
     const snap = await db.ref('config/newTasks').once('value');
     const tasksArr = []; currentTaskCache = {};
+    let liveCount = 0, pendingCount = 0;
+
     snap.forEach(x => {
       const t = { id: x.key, ...x.val() };
       currentTaskCache[x.key] = t;
       if (currentSession.role === 'admin' && t.createdByAdminId !== currentSession.adminId) return;
+      const s = t.status || 'active';
+      if (s === 'active') liveCount++;
+      else if (s === 'pending') pendingCount++;
       tasksArr.push(t);
     });
-    tasksArr.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
-    document.getElementById('activeTasksTitle').textContent = currentSession.role === 'super' ? 'All Tasks' : 'My Tasks';
-    if (!tasksArr.length) { c.innerHTML = '<div class="empty-state"><div class="icon"><i class="fas fa-briefcase"></i></div><p>No tasks yet</p></div>'; return; }
+
+    // ✅ Update tab counts
+    const lcEl = document.getElementById('liveTasksCount');
+    const pcEl = document.getElementById('pendingTasksCount');
+    if (lcEl) lcEl.textContent = liveCount;
+    if (pcEl) pcEl.textContent = pendingCount;
+
+    // ✅ Filter by current tab
+    const filtered = tasksArr.filter(t => {
+      const s = t.status || 'active';
+      if (currentTaskListTab === 'live') return s === 'active' || s === 'closed' || s === 'cancelled';
+      return s === 'pending';
+    });
+    filtered.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+    const isSuperView = currentSession.role === 'super';
+    document.getElementById('activeTasksTitle').textContent = isSuperView ? 'All Tasks Manager' : 'My Tasks';
+
+    if (!filtered.length) {
+      c.innerHTML = currentTaskListTab === 'pending'
+        ? '<div class="empty-state"><div class="icon"><i class="fas fa-hourglass-half"></i></div><p>No pending tasks</p><p style="font-size:.75rem; color:#cbd5e1; margin-top:6px;">Admin-দের নতুন task এখানে আসবে approve-এর জন্য</p></div>'
+        : '<div class="empty-state"><div class="icon"><i class="fas fa-briefcase"></i></div><p>No live tasks</p></div>';
+      return;
+    }
+
     const ICONS = { survey: '📊', voice: '🎤', image: '🖼️', text: '📝', youtube_video_view: '▶️', youtube_like: '👍', youtube_comment: '💬', youtube_subscribe: '🔔', app_download: '📱', app_install: '📲', website_visit: '🌐', telegram_join: '✈️', telegram_channel: '📢', facebook_like: '👍', facebook_follow: '👥', instagram_follow: '👥', instagram_like: '❤️', twitter_follow: '🐦', tiktok_follow: '🎵', voice_recording: '🎙️', image_upload: '📷', text_writing: '✍️', sign_up: '📝', general: '📋', other: '🔧' };
     let h = '';
-    tasksArr.forEach(t => {
+    filtered.forEach(t => {
       const submitted = t.submittedCount || 0, total = t.totalSlots || 100;
       const icon = ICONS[t.type] || '📋';
       const status = t.status || 'active';
       let statusBadge = '';
       if (status === 'closed') statusBadge = '<span class="status-badge closed">CLOSED</span>';
-      else if (status === 'pending') statusBadge = '<span class="status-badge pending">⏸️ PENDING</span>';
+      else if (status === 'pending') statusBadge = '<span class="status-badge pending pending-pulse">⏸️ PENDING APPROVAL</span>';
       else if (status === 'cancelled') statusBadge = '<span class="status-badge cancelled">❌ CANCELLED</span>';
-      else statusBadge = '<span class="status-badge active">✅ ACTIVE</span>';
-      const isSuperView = currentSession.role === 'super';
+      else statusBadge = '<span class="status-badge active">✅ LIVE</span>';
+
       const creatorTag = isSuperView && t.createdByName
         ? (t.createdByAdminId === 'super' || !t.createdByAdminId
             ? `<span class="creator-tag super"><i class="fas fa-crown"></i> Super Admin</span>`
             : `<span class="creator-tag"><i class="fas fa-user"></i> ${esc(t.createdByName)}</span>`)
         : '';
+
       const cancelReasonHtml = status === 'cancelled' && t.cancelReason ? `<div style="margin-top:8px; padding:10px; background:linear-gradient(135deg,#fef2f2,#fee2e2); border-left:3px solid #ef4444; border-radius:8px; font-size:.75rem; color:#991b1b; font-weight:700;">❌ Cancelled: ${esc(t.cancelReason)}</div>` : '';
+      const pendingInfoHtml = (status === 'pending' && isSuperView) ? `<div style="margin-top:8px; padding:10px; background:linear-gradient(135deg,#fef3c7,#fde68a); border-left:3px solid #f59e0b; border-radius:8px; font-size:.75rem; color:#92400e; font-weight:700;"><i class="fas fa-hourglass-half"></i> এই task approve-এর জন্য অপেক্ষায় আছে</div>` : '';
       const svcHtml = (t.serviceCharge && Number(t.serviceCharge) > 0 && isSuperView)
         ? `<div style="font-size:.68rem; color:#7c3aed; font-weight:800; margin-top:4px;"><i class="fas fa-percent"></i> Service Charge: ${Number(t.serviceCharge).toFixed(2)} TK</div>`
         : '';
+
       const isSuper = currentSession.role === 'super';
       const isOwner = t.createdByAdminId === currentSession.adminId;
       const canEdit = isSuper || isOwner;
+
       let actions = '';
       if (canEdit) {
-        actions = `
-          <button class="btn btn-info btn-small" onclick="openEditTaskModal('${t.id}')"><i class="fas fa-pen"></i></button>
-          ${isSuper ? `
-            ${status !== 'pending' ? `<button class="btn btn-warning btn-small" onclick="setTaskPending('${t.id}')" title="Set Pending"><i class="fas fa-pause"></i></button>` : `<button class="btn btn-green btn-small" onclick="setTaskActive('${t.id}')" title="Activate"><i class="fas fa-play"></i></button>`}
+        // ✅ Approve button (first, prominent) for super on pending tasks
+        if (isSuper && status === 'pending') {
+          actions += `<button class="approve-task-btn" onclick="approveTask('${t.id}')"><i class="fas fa-check-circle"></i> Approve</button>`;
+        }
+        actions += `<button class="btn btn-info btn-small" onclick="openEditTaskModal('${t.id}')"><i class="fas fa-pen"></i></button>`;
+
+        if (isSuper) {
+          actions += `
+            ${status !== 'pending' ? `<button class="btn btn-warning btn-small" onclick="setTaskPending('${t.id}')" title="Set Pending"><i class="fas fa-pause"></i></button>` : ''}
             ${status !== 'cancelled' ? `<button class="btn btn-pink btn-small" onclick="openCancelTaskModal('${t.id}')" title="Cancel with reason"><i class="fas fa-times-circle"></i></button>` : ''}
             <button class="btn btn-red btn-small" onclick="openDeleteTaskModal('${t.id}')" title="Delete & Refund"><i class="fas fa-trash"></i></button>
-          ` : `
-            <button class="btn btn-warning btn-small" onclick="toggleTaskStatus('${t.id}')"><i class="fas fa-pause"></i></button>
-            <button class="btn btn-red btn-small" onclick="deleteNewTask('${t.id}')"><i class="fas fa-trash"></i></button>
-          `}
-        `;
+          `;
+        } else {
+          // Admin: pending tasks — can't toggle/delete, just wait
+          if (status === 'pending') {
+            actions += `<span class="waiting-approval-tag"><i class="fas fa-hourglass-half"></i> Waiting approval</span>`;
+          } else {
+            actions += `
+              <button class="btn btn-warning btn-small" onclick="toggleTaskStatus('${t.id}')"><i class="fas fa-pause"></i></button>
+              <button class="btn btn-red btn-small" onclick="deleteNewTask('${t.id}')"><i class="fas fa-trash"></i></button>
+            `;
+          }
+        }
       }
+
       h += `<div class="task-admin-item ${status}">
         <div class="task-admin-head">
           <div class="task-admin-info">
@@ -2119,12 +2172,14 @@ async function loadTasksList() {
           ${statusBadge}
           <div style="display:flex; gap:6px; flex-wrap:wrap;">${actions}</div>
         </div>
+        ${pendingInfoHtml}
         ${cancelReasonHtml}
       </div>`;
     });
     c.innerHTML = h;
   } catch(e) { c.innerHTML = '<p style="text-align:center; color:#ef4444;">Error</p>'; }
 }
+
 async function toggleTaskStatus(id) {
   const t = currentTaskCache[id];
   if (currentSession.role === 'admin' && t && t.createdByAdminId !== currentSession.adminId) return;
@@ -2325,18 +2380,13 @@ function getAnalyticsRangeBounds(range) {
     default: return { start: 0, end: Date.now() + 24*60*60*1000, label: '♾️ All Time' };
   }
 }
-
 function setAnalyticsRange(range, el) {
   analyticsRange = range;
   document.querySelectorAll('.range-tab').forEach(b => b.classList.remove('active'));
   if (el) el.classList.add('active');
-  else {
-    const target = document.querySelector(`.range-tab[data-range="${range}"]`);
-    if (target) target.classList.add('active');
-  }
+  else { const target = document.querySelector(`.range-tab[data-range="${range}"]`); if (target) target.classList.add('active'); }
   loadAnalytics();
 }
-
 async function loadAnalytics() {
   const { start, end, label } = getAnalyticsRangeBounds(analyticsRange);
   document.getElementById('analyticsRangeLabel').textContent = label;
@@ -2605,13 +2655,7 @@ async function loadReferralStats() {
   const snap = await db.ref('users').once('value');
   let users = [], tRefs = 0, tQ = 0, tComm = 0;
   const bMap = {};
-  const uMap = {};
-  snap.forEach(c => {
-    const u = c.val();
-    bMap[c.key] = Number(u.balance || 0);
-    uMap[c.key] = u;
-    tComm += Number(u.totalCommission || 0);
-  });
+  snap.forEach(c => { const u = c.val(); bMap[c.key] = Number(u.balance || 0); tComm += Number(u.totalCommission || 0); });
   snap.forEach(c => {
     const u = c.val(), id = c.key;
     const refs = u.referredUsers || {}; const keys = Object.keys(refs);
@@ -2620,7 +2664,6 @@ async function loadReferralStats() {
     tRefs += keys.length; tQ += q;
   });
   users.sort((a,b) => b.qualifiedReferrals - a.qualifiedReferrals || b.totalReferrals - a.totalReferrals);
-
   const leader = document.getElementById('adminRefLeaderboard');
   if (!users.length) leader.innerHTML = '<div class="empty-state"><p>No users</p></div>';
   else {
@@ -2642,11 +2685,9 @@ async function loadReferralStats() {
     <div style="background:linear-gradient(135deg,#f3e8ff,#e9d5ff); padding:14px; border-radius:12px; text-align:center;"><div style="font-size:1.5rem; font-weight:900; color:var(--secondary);">${tComm.toFixed(2)}</div><div style="font-size:.68rem; color:#6d28d9; font-weight:800; text-transform:uppercase;">Commission</div></div>
     <div style="background:linear-gradient(135deg,#fee2e2,#fecaca); padding:14px; border-radius:12px; text-align:center;"><div style="font-size:1.5rem; font-weight:900; color:var(--danger);">${snap.numChildren()}</div><div style="font-size:.68rem; color:#991b1b; font-weight:800; text-transform:uppercase;">Users</div></div>
   </div>`;
-
   window._allRefUsers = users;
   renderAllUsersReferrals();
 }
-
 function renderAllUsersReferrals() {
   const c = document.getElementById('allUsersReferralList');
   if (!c) return;
@@ -2658,9 +2699,7 @@ function renderAllUsersReferrals() {
   let h = '';
   list.slice(0, 100).forEach(u => {
     const hasQ = u.qualifiedReferrals > 0;
-    const qBadge = hasQ
-      ? `<span class="qualified-yes"><i class="fas fa-check-circle"></i> Qualified</span>`
-      : `<span class="qualified-no"><i class="fas fa-times-circle"></i> Not Qualified</span>`;
+    const qBadge = hasQ ? `<span class="qualified-yes"><i class="fas fa-check-circle"></i> Qualified</span>` : `<span class="qualified-no"><i class="fas fa-times-circle"></i> Not Qualified</span>`;
     h += `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:linear-gradient(135deg,#fff,#f8fafc); border-radius:12px; margin-bottom:8px; border:1px solid var(--border); gap:10px;">
       <div style="flex:1; min-width:0;">
         <div style="font-weight:800; font-size:.88rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(u.name)}</div>
@@ -2668,10 +2707,7 @@ function renderAllUsersReferrals() {
       </div>
       <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
         ${qBadge}
-        <div style="text-align:right;">
-          <div style="font-weight:900; color:var(--primary); font-size:.95rem;">${u.qualifiedReferrals}/${u.totalReferrals}</div>
-          <div style="font-size:.65rem; color:#94a3b8; font-weight:700;">Qualified/Total</div>
-        </div>
+        <div style="text-align:right;"><div style="font-weight:900; color:var(--primary); font-size:.95rem;">${u.qualifiedReferrals}/${u.totalReferrals}</div><div style="font-size:.65rem; color:#94a3b8; font-weight:700;">Qualified/Total</div></div>
       </div>
     </div>`;
   });
@@ -2688,33 +2724,28 @@ async function saveBecomeAdminSettings() {
   if (enabled && !/^https?:\/\//i.test(link)) return toast('❌ Link must start with http:// or https://');
   try {
     await db.ref('config').update({
-      becomeAdminEnabled: enabled,
-      becomeAdminLink: link,
+      becomeAdminEnabled: enabled, becomeAdminLink: link,
       becomeAdminTitle: title || '🎉 এডমিন হতে চান?',
       becomeAdminSub: sub || 'Apply now to become an admin',
       becomeAdminBtnText: btnText || 'Apply'
     });
-    configData.becomeAdminEnabled = enabled;
-    configData.becomeAdminLink = link;
+    configData.becomeAdminEnabled = enabled; configData.becomeAdminLink = link;
     configData.becomeAdminTitle = title || '🎉 এডমিন হতে চান?';
     configData.becomeAdminSub = sub || 'Apply now to become an admin';
     configData.becomeAdminBtnText = btnText || 'Apply';
     toast('✅ Slider settings saved!');
   } catch(e) { toast('❌ Error: ' + e.message); }
 }
-
 async function saveServiceCharge() {
   const rate = parseFloat(document.getElementById('serviceChargeRate').value) || 0;
   if (rate < 0 || rate > 100) return toast('❌ Rate must be 0-100');
   try {
     await db.ref('config').update({ serviceChargeRate: rate });
-    SERVICE_CHARGE_RATE = rate;
-    configData.serviceChargeRate = rate;
+    SERVICE_CHARGE_RATE = rate; configData.serviceChargeRate = rate;
     toast(`✅ Service charge set to ${rate}%`);
     updateTaskCostPreview();
   } catch(e) { toast('❌ Error: ' + e.message); }
 }
-
 function saveSettings() {
   const methods = document.getElementById('paymentMethods').value.split(',').map(m => m.trim());
   const levels = getWithdrawLevelsFromUI();
@@ -2751,7 +2782,14 @@ function switchTab(id, el) {
   if (id === 'referrals') loadReferralStats();
   if (id === 'analytics') loadAnalytics();
   if (id === 'channels') loadVerificationStats();
-  if (id === 'tasks') { loadTasksList(); loadTaskSubmissions(); updateTaskCostPreview(); }
+  if (id === 'tasks') {
+    // ✅ Reset to live tab on fresh open
+    currentTaskListTab = 'live';
+    document.querySelectorAll('.task-list-tab').forEach(t => { t.classList.remove('active'); t.classList.remove('pending-active'); });
+    const liveTab = document.querySelector('.task-list-tab[data-tlt="live"]');
+    if (liveTab) liveTab.classList.add('active');
+    loadTasksList(); loadTaskSubmissions(); updateTaskCostPreview();
+  }
   if (id === 'admins') loadAdminsList();
   if (id === 'depositmgmt') { renderDepositMethodsList(); loadAllDepositRequests(); }
   if (id === 'wallet') { loadCurrentAdminData(); renderMyContact(); }
@@ -2789,9 +2827,7 @@ db.ref('config').on('value', snap => {
   const loginContactSection = document.getElementById('loginContactSection');
   if (loginContactSection && loginContactLinkCache && /^https?:\/\//i.test(loginContactLinkCache)) {
     const loginForm = document.getElementById('loginForm');
-    if (loginForm && loginForm.dataset.mode !== 'setup') {
-      loginContactSection.style.display = 'block';
-    }
+    if (loginForm && loginForm.dataset.mode !== 'setup') loginContactSection.style.display = 'block';
   }
   if (currentSession && currentSession.role === 'super') {
     document.getElementById('botUsername').value = configData.botUsername || '';
