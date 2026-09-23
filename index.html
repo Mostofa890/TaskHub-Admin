@@ -220,8 +220,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .task-admin-info .url{font-size:.72rem;color:var(--primary);word-break:break-all;margin-top:6px;font-weight:600}
 .creator-tag{display:inline-flex;align-items:center;gap:4px;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);color:#4338ca;font-size:.68rem;font-weight:800;padding:3px 9px;border-radius:6px}
 .creator-tag.super{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e}
-
-/* ✅ NEW: Task List Tabs (Live / Pending) */
 .task-list-tabs{display:flex;gap:6px;margin-bottom:16px;padding:5px;background:var(--bg-alt);border-radius:14px;border:1px solid var(--border)}
 .task-list-tab{flex:1;padding:11px 10px;border:none;background:transparent;border-radius:10px;font-weight:800;font-size:.78rem;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;font-family:inherit}
 .task-list-tab:hover{color:var(--text-secondary);background:rgba(255,255,255,.6)}
@@ -229,15 +227,12 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .task-list-tab.active.pending-active{background:linear-gradient(135deg,#f59e0b,#fbbf24);box-shadow:0 6px 16px rgba(245,158,11,.4)}
 .tlt-count{background:rgba(255,255,255,.28);padding:1px 7px;border-radius:999px;font-size:.68rem;font-weight:900;min-width:20px;text-align:center;line-height:1.4}
 .task-list-tab.active .tlt-count{background:rgba(255,255,255,.35)}
-
-/* ✅ Approve button */
 .approve-task-btn{background:linear-gradient(135deg,#10b981,#34d399);color:#fff;border:none;padding:8px 14px;border-radius:10px;font-weight:800;font-size:.75rem;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:inherit;box-shadow:0 6px 16px rgba(16,185,129,.4);transition:all .2s}
 .approve-task-btn:hover{transform:translateY(-1px);box-shadow:0 10px 22px rgba(16,185,129,.5)}
 .approve-task-btn:active{transform:scale(.97)}
 .waiting-approval-tag{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#fef3c7,#fde68a);color:#92400e;font-weight:800;font-size:.72rem;padding:6px 12px;border-radius:8px;border:1px solid rgba(245,158,11,.35)}
 .pending-pulse{animation:pendingPulse 2.2s ease-in-out infinite}
 @keyframes pendingPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.45)}50%{box-shadow:0 0 0 8px rgba(245,158,11,0)}}
-
 .stat-card{background:var(--surface);padding:18px 14px;border-radius:var(--radius);text-align:center;border:1px solid var(--border);position:relative;overflow:hidden;transition:all .3s}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--secondary))}
 .stat-card.green::before{background:linear-gradient(90deg,#10b981,#34d399)}
@@ -257,16 +252,13 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .contact-info-box{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid rgba(139,92,246,.3);border-radius:12px;padding:12px 14px;margin-top:10px;font-size:.8rem;font-weight:700;color:#5b21b6;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .contact-info-box i{color:#8b5cf6;font-size:1.1rem}
 .contact-info-box .val{color:#0f172a;font-family:'Courier New',monospace;word-break:break-all}
-
 .analytics-range-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:12px;margin-bottom:14px;scrollbar-width:none}
 .analytics-range-tabs::-webkit-scrollbar{display:none}
 .range-tab{flex:0 0 auto;padding:8px 14px;font-size:.75rem;font-weight:800;color:var(--text-secondary);background:var(--surface);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;white-space:nowrap}
 .range-tab:hover{border-color:var(--primary);color:var(--primary)}
 .range-tab.active{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;border-color:transparent;box-shadow:0 6px 14px rgba(99,102,241,.35)}
-
 .qualified-yes{display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#065f46;font-weight:800;font-size:.7rem;padding:3px 9px;border-radius:999px;border:1px solid rgba(16,185,129,.35)}
 .qualified-no{display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#fee2e2,#fecaca);color:#991b1b;font-weight:800;font-size:.7rem;padding:3px 9px;border-radius:999px;border:1px solid rgba(239,68,68,.3)}
-
 .lb-item{display:flex;align-items:center;gap:12px;padding:14px;background:linear-gradient(135deg,#fff,#f8fafc);border:1.5px solid var(--border);border-radius:14px;margin-bottom:10px;position:relative;overflow:hidden;transition:all .2s}
 .lb-item:hover{border-color:var(--primary);box-shadow:var(--shadow-md)}
 .lb-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#f59e0b,#fbbf24)}
@@ -292,7 +284,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .lb-empty{padding:24px 16px;background:linear-gradient(135deg,#f9fafb,#f3f4f6);border:2px dashed var(--border);border-radius:14px;text-align:center;color:var(--text-muted);font-weight:700;font-size:.85rem}
 .lb-limit-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:linear-gradient(135deg,#eef2ff,#e0e7ff);border-radius:12px;margin-bottom:14px;border:1.5px solid rgba(99,102,241,.2);font-size:.8rem;font-weight:800;color:#4338ca}
 .lb-limit-bar .count{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;padding:4px 12px;border-radius:999px;font-size:.75rem;font-weight:900}
-
 @media (max-width:400px){.container{padding:0 12px}.card{padding:16px;border-radius:20px}.header{padding:22px 18px 55px;border-radius:0 0 26px 26px}.header-title{font-size:1rem}.header-status{max-width:90px}.wallet-hero .wallet-amount{font-size:2rem}.admin-balance-box{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -414,11 +405,18 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         </div>
       </div>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <div class="form-group" style="flex:1; min-width:120px;"><label>Reward (TK)</label><input type="number" id="etReward" step="0.01"></div>
+        <div class="form-group" style="flex:1; min-width:120px;">
+          <label>Reward (TK)</label>
+          <input type="number" id="etReward" step="0.01" min="0.10" oninput="updateMaxDaysHint('etReward','etTime','etMaxDaysHint');">
+        </div>
         <div class="form-group" style="flex:1; min-width:120px;"><label>Total Slots</label><input type="number" id="etSlots"></div>
       </div>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <div class="form-group" style="flex:1; min-width:120px;"><label>Time Limit (Days)</label><input type="number" id="etTime"></div>
+        <div class="form-group" style="flex:1; min-width:120px;">
+          <label>Time Limit (Days)</label>
+          <input type="number" id="etTime" min="1" oninput="updateMaxDaysHint('etReward','etTime','etMaxDaysHint');">
+          <small id="etMaxDaysHint" style="display:block; margin-top:6px; font-size:.7rem; font-weight:700;"></small>
+        </div>
         <div class="form-group" style="flex:1; min-width:120px; display:none;" id="etTimerGroup">
           <label>⏱️ Timer (Seconds) *</label><input type="number" id="etTimer" min="5">
         </div>
@@ -995,7 +993,10 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         </div>
       </div>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <div class="form-group" style="flex:1; min-width:120px;"><label>Reward (TK) *</label><input type="number" id="newTaskReward" step="0.01" oninput="updateTaskCostPreview()"></div>
+        <div class="form-group" style="flex:1; min-width:120px;">
+          <label>Reward (TK) * <span style="font-weight:600; color:var(--text-muted); font-size:.68rem;">(min 0.10)</span></label>
+          <input type="number" id="newTaskReward" step="0.01" min="0.10" oninput="updateTaskCostPreview(); updateMaxDaysHint('newTaskReward','newTaskTime','taskMaxDaysHint');">
+        </div>
         <div class="form-group" style="flex:1; min-width:120px;"><label>Total Slots *</label><input type="number" id="newTaskSlots" value="100" oninput="updateTaskCostPreview()"></div>
       </div>
       <div id="taskCostPreview" style="display:none; margin-bottom:14px; padding:14px; background:linear-gradient(135deg,#fef3c7,#fde68a); border-left:4px solid #f59e0b; border-radius:12px; font-size:.82rem; font-weight:700; color:#92400e;">
@@ -1006,7 +1007,11 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <div id="taskCostWarn" style="margin-top:8px; padding-top:8px; border-top:1px dashed #d97706; font-size:.75rem;"></div>
       </div>
       <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <div class="form-group" style="flex:1; min-width:120px;"><label>Time Limit (Days)</label><input type="number" id="newTaskTime" value="7"></div>
+        <div class="form-group" style="flex:1; min-width:120px;">
+          <label>Time Limit (Days)</label>
+          <input type="number" id="newTaskTime" value="7" min="1" oninput="updateMaxDaysHint('newTaskReward','newTaskTime','taskMaxDaysHint');">
+          <small id="taskMaxDaysHint" style="display:block; margin-top:6px; font-size:.7rem; font-weight:700;"></small>
+        </div>
         <div class="form-group" style="flex:1; min-width:120px; display:none;" id="timerGroup">
           <label>⏱️ Timer (Seconds)</label><input type="number" id="newTaskTimer" value="60" min="5">
         </div>
@@ -1018,7 +1023,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       </div>
     </div>
 
-    <!-- ✅ NEW: Task List with Live/Pending Tabs -->
     <div class="card">
       <div class="card-header">
         <div class="card-title">
@@ -1122,6 +1126,9 @@ const TASK_DELETE_FEE = 10;
 let SERVICE_CHARGE_RATE = 10;
 const LB_MAX_ENTRIES = 10;
 
+// ✅ NEW: Minimum reward constant
+const MIN_TASK_REWARD = 0.10;
+
 let configData = { adSlots:[], newTasks:{}, depositMethods:[], leaderboardCustom:[] };
 let allUsers = [], filteredUsers = [], channelLinks = [], withdrawLinks = [], withdrawLevels = [];
 let MIN_REFERRAL_BALANCE = 20, selectedCommissionMode = 'bonus';
@@ -1130,13 +1137,66 @@ let currentAdminData = null, allDepositRequests = [];
 let dmEditingIndex = null;
 let analyticsRange = 'today';
 let lbEditingIndex = null;
-
-// ✅ NEW: Task list tab state (live | pending)
 let currentTaskListTab = 'live';
 
 const SESSION_KEY = 'nexearn_admin_session';
 const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
 let currentSession = null;
+
+// ═══════════════════════════════════════════════════════════════════
+// ✅ NEW: MAX DAYS CALCULATOR — Reward অনুযায়ী সর্বোচ্চ দিন
+// ═══════════════════════════════════════════════════════════════════
+// Rules:
+//   0.10 TK  → 30 days
+//   +0.10 TK → +7 days (until 45 cap reached at 0.40+)
+//   1.00 TK  → 45 days
+//   1.10+ TK → +3 days per 0.10 step (until 60 cap at 1.50+)
+//   2.00 TK  → 60 days
+//   >2.00 TK → 70 days (absolute max)
+function getMaxDaysForReward(reward) {
+  const r = Math.round((Number(reward) || 0) * 100) / 100;
+  if (r < MIN_TASK_REWARD) return 0;
+  if (r > 2.00) return 70;
+  if (r >= 1.00) {
+    // 1.00 → 45, +3 per 0.10 step, cap 60
+    const steps = Math.floor((r - 1.00 + 0.0001) / 0.10);
+    return Math.min(45 + steps * 3, 60);
+  }
+  // 0.10 → 30, +7 per 0.10 step, cap 45
+  const steps = Math.floor((r - MIN_TASK_REWARD + 0.0001) / 0.10);
+  return Math.min(30 + steps * 7, 45);
+}
+
+// ✅ NEW: Update max-days hint near Time Limit input
+function updateMaxDaysHint(rewardInputId, timeInputId, hintId) {
+  const rewardEl = document.getElementById(rewardInputId);
+  const timeEl = document.getElementById(timeInputId);
+  const hintEl = document.getElementById(hintId);
+  if (!rewardEl || !hintEl) return;
+  const reward = parseFloat(rewardEl.value) || 0;
+  if (reward <= 0) {
+    hintEl.innerHTML = '💰 Reward input করুন';
+    hintEl.style.color = 'var(--text-muted)';
+    return;
+  }
+  if (reward < MIN_TASK_REWARD) {
+    hintEl.innerHTML = `❌ Reward সর্বনিম্ন <b>${MIN_TASK_REWARD.toFixed(2)} TK</b> হতে হবে`;
+    hintEl.style.color = '#ef4444';
+    return;
+  }
+  const maxDays = getMaxDaysForReward(reward);
+  let html = `📅 <b>${reward.toFixed(2)} TK</b> reward-এর জন্য সর্বোচ্চ <b>${maxDays} দিন</b>`;
+  let color = '#10b981';
+  if (timeEl) {
+    const t = parseInt(timeEl.value) || 0;
+    if (t > maxDays) {
+      html += ` <span style="color:#ef4444;">(আপনার ${t} দিন বেশি!)</span>`;
+      color = '#f59e0b';
+    }
+  }
+  hintEl.innerHTML = html;
+  hintEl.style.color = color;
+}
 
 async function sha256(message) {
   const msgBuffer = new TextEncoder().encode(message);
@@ -1827,6 +1887,8 @@ function updateTaskCostPreview() {
   if (!preview) return;
   const adminNotice = document.getElementById('adminTaskNotice');
   if (adminNotice) adminNotice.style.display = (currentSession.role === 'admin') ? 'flex' : 'none';
+  // ✅ NEW: Always update max days hint
+  updateMaxDaysHint('newTaskReward','newTaskTime','taskMaxDaysHint');
   if (currentSession.role === 'super') { preview.style.display = 'none'; return; }
   const reward = parseFloat(document.getElementById('newTaskReward').value) || 0;
   const slots = parseInt(document.getElementById('newTaskSlots').value) || 0;
@@ -1871,7 +1933,11 @@ async function saveNewTask() {
   const timer = parseInt(document.getElementById('newTaskTimer').value) || 60;
   const url = document.getElementById('newTaskLink').value.trim();
   if (!title) return toast('❌ Title required');
-  if (reward <= 0) return toast('❌ Valid reward');
+  // ✅ NEW: Minimum reward validation
+  if (reward < MIN_TASK_REWARD) return toast(`❌ Reward সর্বনিম্ন ${MIN_TASK_REWARD.toFixed(2)} TK হতে হবে`);
+  // ✅ NEW: Max days validation
+  const maxDays = getMaxDaysForReward(reward);
+  if (timeLimitDays > maxDays) return toast(`❌ ${reward.toFixed(2)} TK reward-এর জন্য সর্বোচ্চ ${maxDays} দিন দেওয়া যাবে`);
   if (!url) return toast('❌ URL required');
   const needsTimer = (type === 'youtube_video_view' || type === 'survey');
   if (needsTimer && timer < 5) return toast('❌ Timer min 5s');
@@ -1880,20 +1946,18 @@ async function saveNewTask() {
   const svcAmount = cost * (SERVICE_CHARGE_RATE / 100);
   const totalDebit = cost + svcAmount;
 
-  // Deduct from admin balance only for admin role
   if (currentSession.role === 'admin') {
     const balance = currentAdminData ? Number(currentAdminData.balance || 0) : 0;
     if (balance < totalDebit) return toast(`❌ অপর্যাপ্ত! প্রয়োজন ${totalDebit.toFixed(2)}, আছে ${balance.toFixed(2)}`);
   }
 
   const isSuper = currentSession.role === 'super';
-
-  // ✅ NEW: Super Admin → active (live immediately), Admin → pending (needs approval)
   const taskStatus = isSuper ? 'active' : 'pending';
 
   const taskData = {
     title, description, type, category, reward, totalSlots,
     timeLimit: timeLimitDays + ' days',
+    timeLimitDays: timeLimitDays,
     timer: needsTimer ? timer : 0,
     url,
     status: taskStatus,
@@ -1908,7 +1972,6 @@ async function saveNewTask() {
 
   try {
     if (editingTaskId) {
-      // Editing: for admins, force back to pending; super keeps current state (active)
       if (!isSuper) {
         taskData.status = 'pending';
         taskData.approvedBy = null;
@@ -1939,9 +2002,9 @@ async function saveNewTask() {
       }
       await db.ref('config/newTasks').push(taskData);
       if (isSuper) {
-        toast(`✅ Task Created & LIVE! (Service charge: ${svcAmount.toFixed(2)} TK)`);
+        toast(`✅ Task Created & LIVE!`);
       } else {
-        toast(`⏸️ Task submitted for approval! (Service charge: ${svcAmount.toFixed(2)} TK)`);
+        toast(`⏸️ Task submitted for approval!`);
       }
     }
     resetTaskForm(); loadTasksList();
@@ -1979,9 +2042,10 @@ function openEditTaskModal(id) {
   document.getElementById('etTime').value = dm ? dm[0] : '7';
   document.getElementById('etTimer').value = t.timer || 60;
   document.getElementById('etLink').value = t.url || '';
-  // ✅ NEW: Show warning if admin will push task back to pending
   const warn = document.getElementById('etPendingWarn');
   if (warn) warn.style.display = (currentSession.role === 'admin') ? 'flex' : 'none';
+  // ✅ NEW: Update max days hint on edit modal open
+  updateMaxDaysHint('etReward','etTime','etMaxDaysHint');
   toggleEditSurveyFields();
   document.getElementById('editTaskModal').classList.add('active');
 }
@@ -1999,7 +2063,13 @@ async function saveEditTask() {
   const timeLimitDays = parseInt(document.getElementById('etTime').value) || 7;
   const timer = parseInt(document.getElementById('etTimer').value) || 60;
   const url = document.getElementById('etLink').value.trim();
-  if (!title || reward <= 0 || !url) return toast('❌ Required fields');
+  if (!title) return toast('❌ Title required');
+  // ✅ NEW: Minimum reward validation
+  if (reward < MIN_TASK_REWARD) return toast(`❌ Reward সর্বনিম্ন ${MIN_TASK_REWARD.toFixed(2)} TK হতে হবে`);
+  // ✅ NEW: Max days validation
+  const maxDays = getMaxDaysForReward(reward);
+  if (timeLimitDays > maxDays) return toast(`❌ ${reward.toFixed(2)} TK reward-এর জন্য সর্বোচ্চ ${maxDays} দিন দেওয়া যাবে`);
+  if (!url) return toast('❌ Required fields');
   const needsTimer = (type === 'youtube_video_view' || type === 'survey');
   const newCost = reward * totalSlots;
   const isSuper = currentSession.role === 'super';
@@ -2007,12 +2077,12 @@ async function saveEditTask() {
   const updateData = {
     title, description, type, category, reward, totalSlots,
     timeLimit: timeLimitDays + ' days',
+    timeLimitDays: timeLimitDays,
     timer: needsTimer ? timer : 0,
     url, updatedAt: Date.now(),
     taskCost: newCost
   };
 
-  // ✅ NEW: Admin edit → task goes back to pending for re-approval
   if (!isSuper) {
     updateData.status = 'pending';
     updateData.approvedBy = null;
@@ -2025,7 +2095,6 @@ async function saveEditTask() {
   closeEditTaskModal(); loadTasksList();
 }
 
-// ✅ NEW: Switch task list tab (Live / Pending)
 function switchTaskListTab(tab, el) {
   currentTaskListTab = tab;
   document.querySelectorAll('.task-list-tab').forEach(t => {
@@ -2039,7 +2108,6 @@ function switchTaskListTab(tab, el) {
   loadTasksList();
 }
 
-// ✅ NEW: Approve pending task (Super Admin only)
 async function approveTask(taskId) {
   if (!currentSession || currentSession.role !== 'super') return toast('❌ শুধু Super Admin approve করতে পারবে');
   const t = currentTaskCache[taskId];
@@ -2076,13 +2144,11 @@ async function loadTasksList() {
       tasksArr.push(t);
     });
 
-    // ✅ Update tab counts
     const lcEl = document.getElementById('liveTasksCount');
     const pcEl = document.getElementById('pendingTasksCount');
     if (lcEl) lcEl.textContent = liveCount;
     if (pcEl) pcEl.textContent = pendingCount;
 
-    // ✅ Filter by current tab
     const filtered = tasksArr.filter(t => {
       const s = t.status || 'active';
       if (currentTaskListTab === 'live') return s === 'active' || s === 'closed' || s === 'cancelled';
@@ -2123,6 +2189,8 @@ async function loadTasksList() {
       const svcHtml = (t.serviceCharge && Number(t.serviceCharge) > 0 && isSuperView)
         ? `<div style="font-size:.68rem; color:#7c3aed; font-weight:800; margin-top:4px;"><i class="fas fa-percent"></i> Service Charge: ${Number(t.serviceCharge).toFixed(2)} TK</div>`
         : '';
+      // ✅ NEW: Show max days info in task card
+      const maxDaysInfo = `<span style="color:#0ea5e9;"><i class="fas fa-calendar-alt"></i> Max: ${getMaxDaysForReward(t.reward || 0)} days</span>`;
 
       const isSuper = currentSession.role === 'super';
       const isOwner = t.createdByAdminId === currentSession.adminId;
@@ -2130,7 +2198,6 @@ async function loadTasksList() {
 
       let actions = '';
       if (canEdit) {
-        // ✅ Approve button (first, prominent) for super on pending tasks
         if (isSuper && status === 'pending') {
           actions += `<button class="approve-task-btn" onclick="approveTask('${t.id}')"><i class="fas fa-check-circle"></i> Approve</button>`;
         }
@@ -2143,7 +2210,6 @@ async function loadTasksList() {
             <button class="btn btn-red btn-small" onclick="openDeleteTaskModal('${t.id}')" title="Delete & Refund"><i class="fas fa-trash"></i></button>
           `;
         } else {
-          // Admin: pending tasks — can't toggle/delete, just wait
           if (status === 'pending') {
             actions += `<span class="waiting-approval-tag"><i class="fas fa-hourglass-half"></i> Waiting approval</span>`;
           } else {
@@ -2163,6 +2229,7 @@ async function loadTasksList() {
               <span><i class="fas fa-folder"></i> ${esc(t.category || 'General')}</span>
               <span><i class="fas fa-users"></i> ${submitted}/${total}</span>
               ${t.timer > 0 ? `<span><i class="fas fa-clock"></i> ${t.timer}s</span>` : ''}
+              ${maxDaysInfo}
               ${t.taskCost ? `<span style="color:#7c3aed;"><i class="fas fa-coins"></i> Cost: ${Number(t.taskCost).toFixed(2)} TK</span>` : ''}
             </div>
             ${svcHtml}
@@ -2783,7 +2850,6 @@ function switchTab(id, el) {
   if (id === 'analytics') loadAnalytics();
   if (id === 'channels') loadVerificationStats();
   if (id === 'tasks') {
-    // ✅ Reset to live tab on fresh open
     currentTaskListTab = 'live';
     document.querySelectorAll('.task-list-tab').forEach(t => { t.classList.remove('active'); t.classList.remove('pending-active'); });
     const liveTab = document.querySelector('.task-list-tab[data-tlt="live"]');
