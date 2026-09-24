@@ -80,6 +80,8 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .btn-info{background:linear-gradient(135deg,#3b82f6,#60a5fa);box-shadow:0 6px 16px rgba(59,130,246,.35)}
 .btn-pink{background:linear-gradient(135deg,#ec4899,#f472b6);box-shadow:0 6px 16px rgba(236,72,153,.35)}
 .btn-purple{background:linear-gradient(135deg,#8b5cf6,#a78bfa);box-shadow:0 6px 16px rgba(139,92,246,.35)}
+.btn-orange{background:linear-gradient(135deg,#f97316,#fb923c);box-shadow:0 6px 16px rgba(249,115,22,.35)}
+.btn-orange:hover{box-shadow:0 10px 22px rgba(249,115,22,.45)}
 .btn-small{width:auto;padding:9px 14px;font-size:.78rem;border-radius:10px}
 .btn-xs{width:auto;padding:6px 10px;font-size:.68rem;border-radius:8px}
 .status-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:.65rem;font-weight:800;text-transform:uppercase}
@@ -93,6 +95,8 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .status-badge.suspended{background:rgba(148,163,184,.3);color:#475569}
 .status-badge.superadmin{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff}
 .status-badge.admin{background:rgba(99,102,241,.15);color:var(--primary)}
+.status-badge.enabled{background:var(--success-bg);color:#047857}
+.status-badge.disabled{background:rgba(148,163,184,.25);color:#475569}
 .alert-box{padding:14px 16px;border-radius:var(--radius-sm);font-size:.8rem;font-weight:600;margin-bottom:14px;line-height:1.55;display:flex;align-items:flex-start;gap:12px;border-left:4px solid}
 .alert-box i{font-size:1.15rem;flex-shrink:0}
 .alert-box.warning{background:var(--warning-bg);border-color:var(--warning);color:#92400e}
@@ -310,8 +314,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .lb-empty{padding:24px 16px;background:linear-gradient(135deg,#f9fafb,#f3f4f6);border:2px dashed var(--border);border-radius:14px;text-align:center;color:var(--text-muted);font-weight:700;font-size:.85rem}
 .lb-limit-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:linear-gradient(135deg,#eef2ff,#e0e7ff);border-radius:12px;margin-bottom:14px;border:1.5px solid rgba(99,102,241,.2);font-size:.8rem;font-weight:800;color:#4338ca}
 .lb-limit-bar .count{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;padding:4px 12px;border-radius:999px;font-size:.75rem;font-weight:900}
-
-/* ✅ NEW: User Card Styles */
 .user-card-v2{background:linear-gradient(135deg,#fff,#f8fafc);border:1.5px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden;transition:all .25s;position:relative}
 .user-card-v2:hover{border-color:var(--primary);box-shadow:var(--shadow-md)}
 .user-card-v2::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#6366f1,#8b5cf6,#ec4899)}
@@ -332,8 +334,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .user-stat-cell .lbl{font-size:.55rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin-top:3px;letter-spacing:.05em}
 .user-actions-row{display:flex;gap:6px;padding:10px 14px 14px;flex-wrap:wrap}
 .user-actions-row .btn{flex:1;min-width:70px;padding:8px 10px;font-size:.72rem}
-
-/* ✅ Referral mini list */
 .ref-mini-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:linear-gradient(135deg,#f9f9ff,#f2f4ff);border-radius:10px;margin-bottom:6px;border:1px solid rgba(99,102,241,.15)}
 .ref-mini-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;flex-shrink:0}
 .ref-mini-info{flex:1;min-width:0}
@@ -342,21 +342,29 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .ref-mini-bal{font-size:.78rem;font-weight:900;padding:3px 8px;border-radius:6px}
 .ref-mini-bal.qualified{background:var(--success-bg);color:var(--success)}
 .ref-mini-bal.not-qualified{background:var(--danger-bg);color:var(--danger)}
-
-/* ✅ Copy button */
 .copy-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;padding:3px 8px;border-radius:6px;font-size:.68rem;font-weight:800;cursor:pointer;margin-left:6px;transition:all .2s}
 .copy-btn:hover{background:rgba(255,255,255,.3)}
 .copy-btn.inline{background:var(--bg-alt);border:1px solid var(--border);color:var(--text-secondary)}
 .copy-btn.inline:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
-
-/* ✅ Info display box */
 .info-display-box{background:linear-gradient(135deg,#f8fafc,#f1f5f9);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:.8rem;font-weight:700;color:var(--text-secondary);line-height:1.7;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .info-display-box .label{color:var(--text-muted);font-weight:800;text-transform:uppercase;font-size:.65rem;letter-spacing:.05em;min-width:80px}
 .info-display-box .value{color:var(--text);font-family:'Courier New',monospace;word-break:break-all;flex:1;min-width:0}
-
-/* section divider in modal */
 .section-divider{margin:20px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:900;color:var(--primary)}
 .section-divider i{font-size:1rem}
+
+/* ✅ Extra Rewards Preview Card */
+.extra-preview-card{margin:14px 0;background:linear-gradient(135deg,#f39c12,#e84393);color:#fff;padding:16px;border-radius:16px;position:relative;overflow:hidden;box-shadow:0 12px 28px rgba(232,67,147,.35)}
+.extra-preview-card::before{content:'';position:absolute;width:130px;height:130px;background:rgba(255,255,255,.15);border-radius:50%;top:-60px;right:-40px}
+.extra-preview-card::after{content:'';position:absolute;width:80px;height:80px;background:rgba(255,255,255,.1);border-radius:50%;bottom:-40px;left:-20px}
+.extra-preview-card .ep-header{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;margin-bottom:6px}
+.extra-preview-card .ep-label{font-size:.68rem;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;opacity:.95;display:flex;align-items:center;gap:6px}
+.extra-preview-card .ep-count{background:rgba(255,255,255,.25);padding:3px 9px;border-radius:20px;font-size:.68rem;font-weight:900}
+.extra-preview-card .ep-title{font-size:1rem;font-weight:900;margin:2px 0 4px;position:relative;z-index:1;text-shadow:0 2px 8px rgba(0,0,0,.2)}
+.extra-preview-card .ep-amt{font-size:1.7rem;font-weight:900;margin:2px 0 4px;text-shadow:0 3px 10px rgba(0,0,0,.2);position:relative;z-index:1}
+.extra-preview-card .ep-amt small{font-size:.8rem;font-weight:700;opacity:.9}
+.extra-preview-card .ep-info{font-size:.7rem;font-weight:700;opacity:.95;position:relative;z-index:1;background:rgba(0,0,0,.15);padding:7px 10px;border-radius:9px;display:flex;align-items:center;gap:7px;margin-bottom:10px;line-height:1.4}
+.extra-preview-card .ep-btn{width:100%;padding:12px;border-radius:12px;border:none;font-weight:900;font-size:.85rem;background:#fff;color:#e84393;box-shadow:0 8px 20px rgba(0,0,0,.18);position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:7px;cursor:default;font-family:inherit}
+.preview-label{font-size:.7rem;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:1px;text-align:center;margin-bottom:8px}
 
 @media (max-width:400px){.container{padding:0 12px}.card{padding:16px;border-radius:20px}.header{padding:22px 18px 55px;border-radius:0 0 26px 26px}.header-title{font-size:1rem}.header-status{max-width:90px}.user-stats-grid{grid-template-columns:1fr 1fr}.legal-body{padding:20px 18px 26px}}
 </style>
@@ -453,10 +461,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 
 <div class="toast" id="toast">Saved!</div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     ✅ NEW MODALS: USER FULL VIEW / EDIT / DETAILS
-     ═══════════════════════════════════════════════════════════ -->
-
 <!-- User Full View Modal -->
 <div class="modal-overlay" id="userViewModal">
   <div class="modal-box" style="max-width:640px;">
@@ -512,7 +516,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- User Details Modal (Referral Chain + Ads + Tasks) -->
+<!-- User Details Modal -->
 <div class="modal-overlay" id="userDetailsModal">
   <div class="modal-box" style="max-width:620px;">
     <div class="modal-header">
@@ -523,7 +527,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- Admin Full View Modal (with Password Copy) -->
+<!-- Admin Full View Modal -->
 <div class="modal-overlay" id="adminViewModal">
   <div class="modal-box" style="max-width:600px;">
     <div class="modal-header">
@@ -844,6 +848,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="tab super-only" data-tab="users" onclick="switchTab('users', this)"><i class="fas fa-users"></i><span>Users</span></div>
       <div class="tab super-only" data-tab="withdrawals" onclick="switchTab('withdrawals', this)"><i class="fas fa-money-bill-transfer"></i><span>Payouts</span></div>
       <div class="tab super-only" data-tab="ads" onclick="switchTab('ads', this)"><i class="fas fa-rectangle-ad"></i><span>Ads</span></div>
+      <div class="tab super-only" data-tab="extrareward" onclick="switchTab('extrareward', this)"><i class="fas fa-bolt"></i><span>Extra Rewards</span></div>
       <div class="tab super-only" data-tab="maintenance" onclick="switchTab('maintenance', this)"><i class="fas fa-wrench"></i><span>System</span></div>
       <div class="tab super-only" data-tab="referrals" onclick="switchTab('referrals', this)"><i class="fas fa-user-group"></i><span>Referrals</span></div>
       <div class="tab super-only" data-tab="admins" onclick="switchTab('admins', this)"><i class="fas fa-user-shield"></i><span>Admins</span></div>
@@ -1026,6 +1031,72 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="form-group"><label>Reward Per Ad</label><input type="number" step="0.01" id="adReward"></div>
       <div id="adsContainer"></div>
       <button class="btn btn-purple" onclick="saveAds()"><i class="fas fa-save"></i> Save</button>
+    </div>
+  </div>
+
+  <!-- ✅ EXTRA REWARDS (NEW TAB) -->
+  <div id="tab-extrareward" class="tab-content super-only">
+    <div class="card rainbow">
+      <div class="card-header">
+        <div class="card-title"><div class="card-title-icon icon-orange"><i class="fas fa-bolt"></i></div>Extra Rewards (Monetag Pop-up)</div>
+      </div>
+
+      <div class="alert-box info">
+        <i class="fas fa-info-circle"></i>
+        <div>এই সেটিংস দিয়ে <b>User App</b>-এর Home পেজে একটি আলাদা <b>"Extra Rewards"</b> কার্ড যোগ হবে। ইউজার Monetag Pop-up Ad দেখে টাকা আয় করবে।</div>
+      </div>
+
+      <div class="form-group">
+        <label>Feature Status</label>
+        <select id="extraRewardEnabled">
+          <option value="true">✅ Enabled (Show Card)</option>
+          <option value="false">🚫 Disabled (Hide Card)</option>
+        </select>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-group">
+          <label>Reward Per Ad (TK) *</label>
+          <input type="number" id="extraRewardAmount" step="0.01" min="0.01" placeholder="0.50">
+        </div>
+        <div class="form-group">
+          <label>Daily Limit (Times) *</label>
+          <input type="number" id="extraRewardLimit" min="1" placeholder="5">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Card Title</label>
+        <input type="text" id="extraRewardTitle" placeholder="Pop-up Ad দেখে আয় করুন">
+      </div>
+
+      <div class="form-group">
+        <label>Info Text</label>
+        <textarea id="extraRewardInfo" rows="2" placeholder="Pop-up Ad সম্পূর্ণ দেখলেই রিওয়ার্ড পাবেন।"></textarea>
+      </div>
+
+      <div class="preview-label">📱 Live Preview (User App-এ এমন দেখাবে)</div>
+      <div class="extra-preview-card">
+        <div class="ep-header">
+          <div class="ep-label"><i class="fas fa-bolt"></i> EXTRA REWARDS</div>
+          <div class="ep-count" id="prevCount">0/5</div>
+        </div>
+        <div class="ep-title" id="prevTitle">Pop-up Ad দেখে আয় করুন</div>
+        <div class="ep-amt"><span id="prevAmount">0.50</span> <small>TK / view</small></div>
+        <div class="ep-info">
+          <i class="fas fa-info-circle"></i>
+          <span id="prevInfo">Pop-up Ad সম্পূর্ণ দেখলেই রিওয়ার্ড পাবেন।</span>
+        </div>
+        <div class="ep-btn"><i class="fas fa-play-circle"></i> Watch Ad & Earn</div>
+      </div>
+
+      <div class="alert-box warning" style="margin-top:16px;">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div><b>High-CPM Tips:</b> Reward amount 0.10 - 5.00 TK এর মধ্যে রাখুন। বেশি দিলে profit কমবে, কম দিলে ইউজার আগ্রহ হারাবে। Daily limit 3-10 এর মধ্যে ভালো।</div>
+      </div>
+
+      <button class="btn btn-orange" onclick="saveExtraRewardSettings()"><i class="fas fa-save"></i> Save Extra Rewards</button>
+      <button class="btn btn-info" onclick="loadExtraRewardPreview()" style="margin-top:10px;"><i class="fas fa-sync"></i> Refresh Preview</button>
     </div>
   </div>
 
@@ -1318,7 +1389,7 @@ let dmEditingIndex = null;
 let analyticsRange = 'today';
 let lbEditingIndex = null;
 let currentTaskListTab = 'live';
-let currentUserCache = {};  // ✅ id → user data
+let currentUserCache = {};
 
 const SESSION_KEY = 'nexearn_admin_session';
 const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
@@ -1576,9 +1647,6 @@ function openAdminContact(adminId) {
   });
 }
 
-// ═══════════════════════════════════════════════════════════
-// ✅ COPY HELPER
-// ═══════════════════════════════════════════════════════════
 function copyToClipboard(text, label) {
   try {
     navigator.clipboard.writeText(text).then(() => toast('📋 ' + (label || 'Copied') + '!'));
@@ -1588,6 +1656,51 @@ function copyToClipboard(text, label) {
     document.execCommand('copy'); document.body.removeChild(ta);
     toast('📋 Copied!');
   }
+}
+
+// ═══════════════════════════════════════════════════════════
+// ✅ EXTRA REWARDS — Admin Control Functions
+// ═══════════════════════════════════════════════════════════
+function loadExtraRewardPreview() {
+  const enabled = document.getElementById('extraRewardEnabled').value === 'true';
+  const amount = parseFloat(document.getElementById('extraRewardAmount').value) || 0.5;
+  const limit = parseInt(document.getElementById('extraRewardLimit').value) || 5;
+  const title = document.getElementById('extraRewardTitle').value.trim() || 'Pop-up Ad দেখে আয় করুন';
+  const info = document.getElementById('extraRewardInfo').value.trim() || 'Pop-up Ad সম্পূর্ণ দেখলেই রিওয়ার্ড পাবেন।';
+
+  document.getElementById('prevCount').textContent = '0/' + limit;
+  document.getElementById('prevTitle').textContent = title;
+  document.getElementById('prevAmount').textContent = amount.toFixed(2);
+  document.getElementById('prevInfo').textContent = info;
+
+  const card = document.querySelector('.extra-preview-card');
+  if (card) card.style.opacity = enabled ? '1' : '0.4';
+}
+
+async function saveExtraRewardSettings() {
+  const enabled = document.getElementById('extraRewardEnabled').value === 'true';
+  const amount = parseFloat(document.getElementById('extraRewardAmount').value);
+  const dailyLimit = parseInt(document.getElementById('extraRewardLimit').value);
+  const title = document.getElementById('extraRewardTitle').value.trim() || 'Pop-up Ad দেখে আয় করুন';
+  const infoText = document.getElementById('extraRewardInfo').value.trim() || 'Pop-up Ad সম্পূর্ণ দেখলেই রিওয়ার্ড পাবেন।';
+
+  if (isNaN(amount) || amount <= 0) return toast('❌ Reward amount > 0');
+  if (isNaN(dailyLimit) || dailyLimit <= 0) return toast('❌ Daily limit > 0');
+  if (dailyLimit > 100) return toast('❌ Daily limit 100-এর বেশি না');
+
+  try {
+    await db.ref('config/extraReward').set({
+      enabled: enabled,
+      amount: Number(amount),
+      dailyLimit: Number(dailyLimit),
+      title: title,
+      infoText: infoText,
+      updatedAt: Date.now(),
+      updatedBy: currentSession.username
+    });
+    toast('✅ Extra Rewards saved!');
+    loadExtraRewardPreview();
+  } catch(e) { toast('❌ Error: ' + e.message); }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1670,9 +1783,7 @@ async function deleteLbEntry(index) {
   toast('✅ Deleted'); renderLeaderboardCustomList();
 }
 
-// ═══════════════════════════════════════════════════════════
 // DEPOSIT METHODS
-// ═══════════════════════════════════════════════════════════
 function renderDepositMethodsList() {
   const c = document.getElementById('dmMethodsList');
   const methods = configData.depositMethods || [];
@@ -1789,9 +1900,6 @@ async function rejectDepositReq(reqId) {
   toast('❌ Rejected'); loadAllDepositRequests();
 }
 
-// ═══════════════════════════════════════════════════════════
-// ✅ ADMINS LIST — with FULL VIEW + Password Copy
-// ═══════════════════════════════════════════════════════════
 async function loadAdminsList() {
   const c = document.getElementById('adminsListContainer');
   c.innerHTML = '<p style="text-align:center; padding:16px; color:#94a3b8;">Loading...</p>';
@@ -1845,12 +1953,10 @@ async function loadAdminsList() {
   c.innerHTML = html;
 }
 
-// ✅ Admin Full View Modal
 async function viewAdminFull(adminId) {
   const snap = await db.ref('admins/' + adminId).once('value');
   if (!snap.exists()) return toast('❌ Not found');
   const a = snap.val();
-  currentAdminData = currentAdminData || {};
   const deposits = a.deposits || {};
   const depKeys = Object.keys(deposits).sort((x,y) => (deposits[y].timestamp||0) - (deposits[x].timestamp||0));
   let depositsHtml = '';
@@ -1884,7 +1990,6 @@ async function viewAdminFull(adminId) {
       <div style="font-weight:900; font-size:1.1rem;">${esc(a.username)}</div>
       <div style="font-size:.72rem; color:#94a3b8; margin-top:4px;">ID: <span style="font-family:monospace;">${adminId}</span></div>
     </div>
-
     <div class="section-divider"><i class="fas fa-key"></i> Login Credentials</div>
     <div class="info-display-box">
       <span class="label">Username</span>
@@ -1896,10 +2001,6 @@ async function viewAdminFull(adminId) {
       <span class="value" style="font-size:.65rem; color:#92400e;">${esc(a.passwordHash || 'N/A')}</span>
       <button class="copy-btn inline" style="background:#fff; border-color:#f59e0b; color:#92400e;" onclick="copyToClipboard('${esc(a.passwordHash || '').replace(/'/g,"\\'")}', 'Password Hash')"><i class="fas fa-copy"></i></button>
     </div>
-    <div style="font-size:.68rem; color:#92400e; background:#fef3c7; padding:8px 10px; border-radius:8px; margin-bottom:14px;">
-      ⚠️ SHA-256 hash copy করা যাবে। Actual password recover করা যাবে না। New password set করতে Edit ব্যবহার করুন।
-    </div>
-
     <div class="section-divider"><i class="fas fa-wallet"></i> Financial Info</div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
       <div class="stat-card green"><div class="num">${Number(a.balance||0).toFixed(2)}</div><div class="label">Balance</div></div>
@@ -1909,31 +2010,10 @@ async function viewAdminFull(adminId) {
       <div class="stat-card pink"><div class="num">${Number(a.totalFees||0).toFixed(2)}</div><div class="label">Fees Paid</div></div>
       <div class="stat-card danger"><div class="num">${Number(a.totalServiceCharges||0).toFixed(2)}</div><div class="label">Service Charges</div></div>
     </div>
-
     <div class="section-divider"><i class="fas fa-address-card"></i> Contact Info</div>
     ${contactHtml}
-
     <div class="section-divider"><i class="fas fa-money-bill-wave"></i> Deposit History</div>
     ${depositsHtml}
-
-    <div class="section-divider"><i class="fas fa-info-circle"></i> Status</div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:.82rem; font-weight:700;">
-      <div style="padding:10px; background:${a.isBanned ? '#fee2e2' : '#d1fae5'}; border-radius:8px; text-align:center;">
-        ${a.isBanned ? '🚫 Banned' : '✅ Active'}
-        ${a.banReason ? `<div style="font-size:.7rem; font-weight:600; margin-top:4px;">${esc(a.banReason)}</div>` : ''}
-      </div>
-      <div style="padding:10px; background:${a.isSuspended ? '#f1f5f9' : '#d1fae5'}; border-radius:8px; text-align:center;">
-        ${a.isSuspended ? '⏸️ Suspended' : '▶️ Running'}
-        ${a.suspendReason ? `<div style="font-size:.7rem; font-weight:600; margin-top:4px;">${esc(a.suspendReason)}</div>` : ''}
-      </div>
-      <div style="padding:10px; background:#f8fafc; border-radius:8px; text-align:center;">
-        📅 Created<br><span style="font-size:.7rem; color:#94a3b8;">${a.createdAt ? new Date(a.createdAt).toLocaleString() : 'N/A'}</span>
-      </div>
-      <div style="padding:10px; background:#f8fafc; border-radius:8px; text-align:center;">
-        👤 By<br><span style="font-size:.7rem; color:#94a3b8;">${esc(a.createdBy || 'N/A')}</span>
-      </div>
-    </div>
-
     <div style="display:flex; gap:10px; margin-top:16px;">
       <button class="btn btn-warning" onclick="closeAdminViewModal(); openAdminEditModal('${adminId}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button>
       <button class="btn btn-red" onclick="closeAdminViewModal(); deleteAdminFull('${adminId}')" style="flex:1;"><i class="fas fa-trash"></i> Delete</button>
@@ -1943,7 +2023,6 @@ async function viewAdminFull(adminId) {
 }
 function closeAdminViewModal() { document.getElementById('adminViewModal').classList.remove('active'); }
 
-// ✅ Admin Full Edit Modal
 async function openAdminEditModal(adminId) {
   const snap = await db.ref('admins/' + adminId).once('value');
   if (!snap.exists()) return toast('❌ Not found');
@@ -1993,7 +2072,6 @@ async function saveAdminFullEdit() {
 async function deleteAdminFull(adminId) {
   if (!confirm('⚠️ এই Admin এবং তার সব Task/Submission delete হবে। Continue?')) return;
   try {
-    // Delete admin's tasks
     const tSnap = await db.ref('config/newTasks').once('value');
     const delPromises = [];
     tSnap.forEach(c => {
@@ -2100,10 +2178,7 @@ function renderDepositMethodsAdminView() {
   methods.forEach(m => {
     const originalIndex = (configData.depositMethods || []).indexOf(m);
     h += `<div class="dm-card">
-      <div class="dm-head">
-        <div class="dm-name">${esc(m.name)}</div>
-        <div class="dm-min">Min ${Number(m.minAmount).toFixed(2)} TK</div>
-      </div>
+      <div class="dm-head"><div class="dm-name">${esc(m.name)}</div><div class="dm-min">Min ${Number(m.minAmount).toFixed(2)} TK</div></div>
       <div class="dm-row"><span class="lbl">📱 Number:</span><span class="val dm-account">${esc(m.account)}</span></div>
       <button class="btn btn-green btn-small" style="margin-top:12px; width:100%;" onclick="openDepositSubmitModal(${originalIndex})"><i class="fas fa-paper-plane"></i> I've Sent Money</button>
     </div>`;
@@ -2833,14 +2908,10 @@ function selectCommissionMode(mode) {
   else { d.style.borderColor = 'var(--warning)'; d.style.background = 'rgba(245,158,11,.08)'; b.style.borderColor = 'var(--border)'; b.style.background = ''; }
 }
 
-// ═══════════════════════════════════════════════════════════
-// ✅ USERS LOAD & RENDER WITH FULL DATA
-// ═══════════════════════════════════════════════════════════
 async function loadUsers() {
   const snap = await db.ref('users').once('value');
   allUsers = []; currentUserCache = {};
   snap.forEach(c => { const u = c.val(); u.id = c.key; allUsers.push(u); currentUserCache[c.key] = u; });
-  // Fetch qualified counts for each user
   await Promise.all(allUsers.map(async u => {
     const refs = u.referredUsers || {}; const keys = Object.keys(refs);
     let q = 0;
@@ -2897,7 +2968,6 @@ function renderUsers() {
   c.innerHTML = h;
 }
 
-// ✅ View User Full
 function viewUserFull(userId) {
   const u = currentUserCache[userId];
   if (!u) return toast('❌ Not found');
@@ -2924,7 +2994,6 @@ function viewUserFull(userId) {
         ${u.channelVerified ? '<span class="status-badge active" style="margin-left:4px;">✅ VERIFIED</span>' : ''}
       </div>
     </div>
-
     <div class="section-divider"><i class="fas fa-wallet"></i> Financial</div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
       <div class="stat-card green"><div class="num">${(u.balance||0).toFixed(2)}</div><div class="label">Balance</div></div>
@@ -2934,7 +3003,6 @@ function viewUserFull(userId) {
       <div class="stat-card pink"><div class="num">${(u.totalCommission||0).toFixed(2)}</div><div class="label">Commission</div></div>
       <div class="stat-card danger"><div class="num">${u.withdrawCount||0}</div><div class="label">Withdraws</div></div>
     </div>
-
     <div class="section-divider"><i class="fas fa-users"></i> Referral Info</div>
     <div class="info-display-box">
       <span class="label">Referred By</span>
@@ -2946,7 +3014,6 @@ function viewUserFull(userId) {
       <div class="stat-card info"><div class="num">${u._totalRefs || 0}</div><div class="label">Total Refs</div></div>
       <div class="stat-card green"><div class="num">${(u._qualifiedRefs || 0) > 0 ? 'Yes' : 'No'}</div><div class="label">Qualified</div></div>
     </div>
-
     <div class="section-divider"><i class="fas fa-play-circle"></i> Ad Stats</div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
       <div class="stat-card blue"><div class="num">${u._adViews || 0}</div><div class="label">Total Views</div></div>
@@ -2954,7 +3021,6 @@ function viewUserFull(userId) {
     </div>
     <div style="font-size:.75rem; font-weight:800; color:var(--text-muted); margin-bottom:6px;">Per Slot Views</div>
     ${adViewsHtml}
-
     <div class="section-divider"><i class="fas fa-info-circle"></i> Other</div>
     <div class="info-display-box">
       <span class="label">Device ID</span>
@@ -2965,12 +3031,6 @@ function viewUserFull(userId) {
       <span class="label">Last Active</span>
       <span class="value">${u.lastActive || 'N/A'}</span>
     </div>
-    <div class="info-display-box">
-      <span class="label">Photo URL</span>
-      <span class="value" style="font-size:.68rem;">${esc(u.photo || 'N/A')}</span>
-      ${u.photo ? `<button class="copy-btn inline" onclick="copyToClipboard('${esc(u.photo).replace(/'/g,"\\'")}', 'Photo URL')"><i class="fas fa-copy"></i></button>` : ''}
-    </div>
-
     <div style="display:flex; gap:10px; margin-top:16px;">
       <button class="btn btn-warning" onclick="closeUserViewModal(); openUserEditModal('${u.id}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button>
       <button class="btn btn-purple" onclick="closeUserViewModal(); viewUserDetails('${u.id}')" style="flex:1;"><i class="fas fa-sitemap"></i> Details</button>
@@ -2981,14 +3041,12 @@ function viewUserFull(userId) {
 }
 function closeUserViewModal() { document.getElementById('userViewModal').classList.remove('active'); }
 
-// ✅ View User Details (Referral Chain + Ads + Tasks)
 async function viewUserDetails(userId) {
   const u = currentUserCache[userId];
   if (!u) return toast('❌ Not found');
   document.getElementById('userDetailsBody').innerHTML = '<p style="text-align:center; padding:20px; color:#94a3b8;">Loading details...</p>';
   document.getElementById('userDetailsModal').classList.add('active');
   try {
-    // Referrals (who this user referred)
     const referredUsers = u.referredUsers || {};
     const refKeys = Object.keys(referredUsers);
     let refsHtml = '';
@@ -3010,18 +3068,12 @@ async function viewUserDetails(userId) {
         </div>`;
       }
     }
-
-    // Who referred this user
     let referredByHtml = 'N/A';
     if (u.referredBy) {
       const rs = await db.ref('users/' + u.referredBy).once('value');
-      if (rs.exists()) {
-        const ru = rs.val();
-        referredByHtml = `${esc(ru.name || 'User')} (ID: ${u.referredBy})`;
-      } else referredByHtml = `Unknown (ID: ${u.referredBy})`;
+      if (rs.exists()) { const ru = rs.val(); referredByHtml = `${esc(ru.name || 'User')} (ID: ${u.referredBy})`; }
+      else referredByHtml = `Unknown (ID: ${u.referredBy})`;
     }
-
-    // Task history
     const taskSnap = await db.ref('taskSubmissions').orderByChild('userId').equalTo(userId).once('value');
     let tasksApproved = 0, tasksPending = 0, tasksRejected = 0;
     let taskListHtml = '';
@@ -3042,8 +3094,6 @@ async function viewUserDetails(userId) {
       </div>`;
     });
     if (!taskListHtml) taskListHtml = '<div style="text-align:center; color:#94a3b8; padding:12px; font-size:.8rem;">No task submissions</div>';
-
-    // Withdrawal history
     const wdSnap = await db.ref('withdrawals').orderByChild('userId').equalTo(userId).once('value');
     let wdListHtml = '';
     const wdList = [];
@@ -3057,23 +3107,18 @@ async function viewUserDetails(userId) {
       </div>`;
     });
     if (!wdListHtml) wdListHtml = '<div style="text-align:center; color:#94a3b8; padding:12px; font-size:.8rem;">No withdrawals</div>';
-
-    // Deposit requests (for admin only — users don't have)
     document.getElementById('userDetailsBody').innerHTML = `
       <div style="text-align:center; margin-bottom:16px;">
         <div style="font-weight:900; font-size:1.05rem;">${esc(u.name || 'User')}</div>
         <div style="font-size:.72rem; color:#94a3b8;">ID: ${u.id}</div>
       </div>
-
-      <div class="section-divider"><i class="fas fa-arrow-up"></i> Referred By (Who referred this user)</div>
+      <div class="section-divider"><i class="fas fa-arrow-up"></i> Referred By</div>
       <div class="info-display-box" style="background:linear-gradient(135deg,#fef3c7,#fde68a); border-color:rgba(245,158,11,.4);">
         <span class="label" style="color:#92400e;">Referrer</span>
         <span class="value" style="color:#92400e;">${referredByHtml}</span>
       </div>
-
       <div class="section-divider"><i class="fas fa-arrow-down"></i> Referred Users (${refKeys.length})</div>
       ${refsHtml}
-
       <div class="section-divider"><i class="fas fa-tasks"></i> Task Stats</div>
       <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px;">
         <div class="stat-card green"><div class="num">${tasksApproved}</div><div class="label">Approved</div></div>
@@ -3082,10 +3127,8 @@ async function viewUserDetails(userId) {
       </div>
       <div style="font-size:.75rem; font-weight:800; color:var(--text-muted); margin-bottom:6px;">Recent Task Submissions</div>
       ${taskListHtml}
-
       <div class="section-divider"><i class="fas fa-money-bill-transfer"></i> Withdrawals</div>
       ${wdListHtml}
-
       <div style="display:flex; gap:10px; margin-top:16px;">
         <button class="btn btn-warning" onclick="closeUserDetailsModal(); openUserEditModal('${u.id}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button>
         <button class="btn btn-info" onclick="closeUserDetailsModal()" style="flex:1;"><i class="fas fa-times"></i> Close</button>
@@ -3095,7 +3138,6 @@ async function viewUserDetails(userId) {
 }
 function closeUserDetailsModal() { document.getElementById('userDetailsModal').classList.remove('active'); }
 
-// ✅ Open User Edit Modal
 function openUserEditModal(userId) {
   const u = currentUserCache[userId];
   if (!u) return toast('❌ Not found');
@@ -3154,85 +3196,29 @@ async function deleteUserFull(id) {
   if (!confirm('⚠️ এই User এবং তার সব submissions, withdrawals, referrals ডিলিট হবে। Continue?')) return;
   try {
     const u = currentUserCache[id];
-    // Remove from referrer's referredUsers
     if (u && u.referredBy) {
       await db.ref('users/' + u.referredBy + '/referredUsers/' + id).remove();
       const rSnap = await db.ref('users/' + u.referredBy + '/referrals').once('value');
-      if (rSnap.exists()) {
-        await db.ref('users/' + u.referredBy + '/referrals').set(Math.max(0, Number(rSnap.val()) - 1));
-      }
+      if (rSnap.exists()) await db.ref('users/' + u.referredBy + '/referrals').set(Math.max(0, Number(rSnap.val()) - 1));
     }
-    // Remove this user's referredUsers entries
     if (u && u.referredUsers) {
       const refIds = Object.keys(u.referredUsers);
-      for (const rid of refIds) {
-        await db.ref('users/' + rid + '/referredBy').remove();
-      }
+      for (const rid of refIds) await db.ref('users/' + rid + '/referredBy').remove();
     }
-    // Remove task submissions
     const ts = await db.ref('taskSubmissions').orderByChild('userId').equalTo(id).once('value');
     const dels = [];
     ts.forEach(c => dels.push(db.ref('taskSubmissions/' + c.key).remove()));
     await Promise.all(dels);
-    // Remove withdrawals
     const ws = await db.ref('withdrawals').orderByChild('userId').equalTo(id).once('value');
     const wdels = [];
     ws.forEach(c => wdels.push(db.ref('withdrawals/' + c.key).remove()));
     await Promise.all(wdels);
-    // Remove user
     await db.ref('users/' + id).remove();
     toast('✅ User deleted');
     loadUsers();
   } catch(e) { toast('❌ ' + e.message); }
 }
 
-// ✅ Referral Chains Render
-async function renderAllUsersReferralChains() {
-  const container = document.getElementById('referralChainsList');
-  if (!container) return;
-  container.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:16px;">Loading chains...</p>';
-  await loadUsers(); // refresh cache
-  const usrSnap = await db.ref('users').once('value');
-  const allU = {};
-  usrSnap.forEach(c => allU[c.key] = c.val());
-  let h = '';
-  let chainsCount = 0;
-  Object.keys(allU).forEach(uid => {
-    const u = allU[uid];
-    const refs = u.referredUsers || {};
-    const refKeys = Object.keys(refs);
-    if (!refKeys.length) return;
-    chainsCount++;
-    h += `<div style="background:linear-gradient(135deg,#fff,#f8fafc); border:1.5px solid var(--border); border-radius:14px; padding:14px; margin-bottom:12px; border-left:4px solid #6366f1;">
-      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-        <div style="width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900;">${(u.name || 'U').charAt(0).toUpperCase()}</div>
-        <div style="flex:1;">
-          <div style="font-weight:900; font-size:.9rem;">${esc(u.name || 'User')}</div>
-          <div style="font-size:.68rem; color:#94a3b8;">ID: ${uid} • ${refKeys.length} referrals</div>
-        </div>
-      </div>
-      <div style="border-top:1px dashed #e2e8f0; padding-top:10px;">`;
-    refKeys.forEach(rid => {
-      const ru = allU[rid] || {};
-      const bal = Number(ru.balance || 0);
-      const qualified = bal >= MIN_REFERRAL_BALANCE;
-      const qLabel = qualified ? '<span class="qualified-yes">✅ Qualified</span>' : '<span class="qualified-no">⏳ Not Qualified</span>';
-      h += `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:#f8fafc; border-radius:8px; margin-bottom:6px; font-size:.78rem;">
-        <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:0;">
-          <span style="color:#6366f1;">↳</span>
-          <div style="min-width:0; flex:1;">
-            <b>${esc(ru.name || 'User')}</b>
-            <div style="font-size:.65rem; color:#94a3b8;">ID: ${rid}</div>
-          </div>
-        </div>
-        <div style="text-align:right;">${qLabel}<div style="font-weight:900; color:#6366f1; font-size:.8rem; margin-top:2px;">${bal.toFixed(2)} TK</div></div>
-      </div>`;
-    });
-    h += `</div></div>`;
-  });
-  if (!chainsCount) h = '<div class="empty-state"><div class="icon"><i class="fas fa-sitemap"></i></div><p>No referral chains yet</p></div>';
-  container.innerHTML = h;
-}
 function renderAllUsersReferralChains() { renderAllUsersReferralChainsImpl(); }
 
 async function loadReferralStats() {
@@ -3303,10 +3289,7 @@ async function renderAllUsersReferralChainsImpl() {
       h += `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:#f8fafc; border-radius:8px; margin-bottom:6px; font-size:.78rem;">
         <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:0;">
           <span style="color:#6366f1;">↳</span>
-          <div style="min-width:0; flex:1;">
-            <b>${esc(ru.name || 'User')}</b>
-            <div style="font-size:.65rem; color:#94a3b8;">ID: ${rid}</div>
-          </div>
+          <div style="min-width:0; flex:1;"><b>${esc(ru.name || 'User')}</b><div style="font-size:.65rem; color:#94a3b8;">ID: ${rid}</div></div>
         </div>
         <div style="text-align:right;">${qLabel}<div style="font-weight:900; color:#6366f1; font-size:.8rem; margin-top:2px;">${bal.toFixed(2)} TK</div></div>
       </div>`;
@@ -3415,6 +3398,7 @@ function switchTab(id, el) {
   if (id === 'referrals') loadReferralStats();
   if (id === 'analytics') loadAnalytics();
   if (id === 'channels') loadVerificationStats();
+  if (id === 'extrareward') loadExtraRewardPreview();
   if (id === 'tasks') {
     currentTaskListTab = 'live';
     document.querySelectorAll('.task-list-tab').forEach(t => { t.classList.remove('active'); t.classList.remove('pending-active'); });
@@ -3435,7 +3419,7 @@ function esc(s) { return String(s || '').replace(/[<>&"]/g, c => ({ '<': '&lt;',
 function runPanelInit() {
   if (runPanelInit._done) return;
   runPanelInit._done = true;
-  if (currentSession.role === 'super') { loadAnalytics(); loadVerificationStats(); toggleSurveyFields(); renderLeaderboardCustomList(); }
+  if (currentSession.role === 'super') { loadAnalytics(); loadVerificationStats(); toggleSurveyFields(); renderLeaderboardCustomList(); loadExtraRewardPreview(); }
   else { loadCurrentAdminData(); loadTasksList(); loadTaskSubmissions(); }
   setInterval(() => { if (currentSession && currentSession.role === 'admin') loadCurrentAdminData(); }, 30000);
   updateMaxDaysHint('newTaskReward','newTaskTime','taskMaxDaysHint');
@@ -3483,6 +3467,20 @@ db.ref('config').on('value', snap => {
       document.getElementById('maintenanceMsg').value = configData.maintenance.message || '';
       document.getElementById('maintenanceTime').value = configData.maintenance.estimatedMinutes || '';
     }
+    // ✅ Extra Rewards form লোড
+    const er = configData.extraReward || {};
+    const enabledEl = document.getElementById('extraRewardEnabled');
+    const amountEl = document.getElementById('extraRewardAmount');
+    const limitEl = document.getElementById('extraRewardLimit');
+    const titleEl = document.getElementById('extraRewardTitle');
+    const infoEl = document.getElementById('extraRewardInfo');
+    if (enabledEl) enabledEl.value = String(er.enabled !== false);
+    if (amountEl) amountEl.value = er.amount !== undefined ? er.amount : 0.5;
+    if (limitEl) limitEl.value = er.dailyLimit !== undefined ? er.dailyLimit : 5;
+    if (titleEl) titleEl.value = er.title || 'Pop-up Ad দেখে আয় করুন';
+    if (infoEl) infoEl.value = er.infoText || 'Pop-up Ad সম্পূর্ণ দেখলেই রিওয়ার্ড পাবেন।';
+    loadExtraRewardPreview();
+
     renderChannelLinks(); renderWithdrawLevels(); loadAdsConfig(); renderDepositMethodsList();
     renderLeaderboardCustomList();
   }
@@ -3519,9 +3517,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (el) el.addEventListener('click', e => { if (e.target.id === id) el.classList.remove('active'); });
 });
 
-// ═══════════════════════════════════════════════════════════
 // LEGAL MODAL
-// ═══════════════════════════════════════════════════════════
 const LEGAL_CONTENT = {
   privacy: `<span class="last-updated">📅 Last Updated: Sep/23/2026</span><h1>📄 PRIVACY POLICY</h1>
   <h2>১. ভূমিকা</h2><p><strong>Earn Wallet / NexEarn</strong> একটি Telegram-ভিত্তিক মাইক্রো-টাস্ক ও রিওয়ার্ড প্ল্যাটফর্ম।</p>
