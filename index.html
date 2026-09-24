@@ -168,13 +168,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .legal-body .last-updated{display:inline-block;background:linear-gradient(135deg,#ede9fe,#ddd6fe);color:#5b21b6;font-weight:800;font-size:.75rem;padding:6px 14px;border-radius:999px;margin-bottom:16px;border:1px solid rgba(139,92,246,.3)}
 .legal-body .warn-box{background:linear-gradient(135deg,#fffbeb,#fef3c7);border-left:4px solid #f59e0b;padding:14px 16px;border-radius:12px;margin:14px 0;font-weight:600;color:#92400e;font-size:.84rem}
 .legal-body .danger-box{background:linear-gradient(135deg,#fef2f2,#fee2e2);border-left:4px solid #ef4444;padding:14px 16px;border-radius:12px;margin:14px 0;font-weight:600;color:#991b1b;font-size:.84rem}
-.legal-body .summary-table{width:100%;border-collapse:separate;border-spacing:0 6px;margin:14px 0;font-size:.8rem}
-.legal-body .summary-table td{padding:10px 12px;background:linear-gradient(135deg,#f8fafc,#f1f5f9);font-weight:600;color:#334155}
-.legal-body .summary-table td:first-child{border-radius:10px 0 0 10px;font-weight:800;color:#4c1d95;width:34%}
-.legal-body .summary-table td:last-child{border-radius:0 10px 10px 0}
 .legal-body a{color:#6366f1;font-weight:700;text-decoration:none;word-break:break-all}
-.legal-body .consent-box{background:linear-gradient(135deg,#eef2ff,#e0e7ff);border:2px solid rgba(99,102,241,.3);border-radius:16px;padding:18px 20px;margin-top:20px}
-.legal-body .consent-box h3{color:#4338ca;margin-top:0}
 .legal-footer{padding:16px 28px 24px;text-align:center;color:#94a3b8;font-size:.72rem;font-weight:700;border-top:1px solid #f1f5f9}
 .admin-item{display:flex;flex-direction:column;padding:16px;background:linear-gradient(135deg,#fff,#f8fafc);border:1.5px solid var(--border);border-radius:var(--radius-sm);margin-bottom:12px;gap:12px;transition:all .25s;position:relative;overflow:hidden}
 .admin-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#6366f1,#ec4899)}
@@ -351,8 +345,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .info-display-box .value{color:var(--text);font-family:'Courier New',monospace;word-break:break-all;flex:1;min-width:0}
 .section-divider{margin:20px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:900;color:var(--primary)}
 .section-divider i{font-size:1rem}
-
-/* ✅ Extra Rewards Preview Card */
 .extra-preview-card{margin:14px 0;background:linear-gradient(135deg,#f39c12,#e84393);color:#fff;padding:16px;border-radius:16px;position:relative;overflow:hidden;box-shadow:0 12px 28px rgba(232,67,147,.35)}
 .extra-preview-card::before{content:'';position:absolute;width:130px;height:130px;background:rgba(255,255,255,.15);border-radius:50%;top:-60px;right:-40px}
 .extra-preview-card::after{content:'';position:absolute;width:80px;height:80px;background:rgba(255,255,255,.1);border-radius:50%;bottom:-40px;left:-20px}
@@ -365,7 +357,17 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .extra-preview-card .ep-info{font-size:.7rem;font-weight:700;opacity:.95;position:relative;z-index:1;background:rgba(0,0,0,.15);padding:7px 10px;border-radius:9px;display:flex;align-items:center;gap:7px;margin-bottom:10px;line-height:1.4}
 .extra-preview-card .ep-btn{width:100%;padding:12px;border-radius:12px;border:none;font-weight:900;font-size:.85rem;background:#fff;color:#e84393;box-shadow:0 8px 20px rgba(0,0,0,.18);position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:7px;cursor:default;font-family:inherit}
 .preview-label{font-size:.7rem;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:1px;text-align:center;margin-bottom:8px}
-
+.ad-slot-card{background:linear-gradient(135deg,#faf5ff,#f3e8ff);padding:16px;border-radius:14px;margin-bottom:14px;border:1.5px solid rgba(139,92,246,.25);position:relative;overflow:hidden}
+.ad-slot-card.custom-active{background:linear-gradient(135deg,#fef3c7,#fde68a);border-color:rgba(245,158,11,.4)}
+.ad-slot-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.ad-slot-name{font-weight:900;color:var(--secondary);font-size:.95rem;display:flex;align-items:center;gap:8px}
+.ad-slot-name .num-badge{background:linear-gradient(135deg,#8b5cf6,#a78bfa);color:#fff;font-size:.65rem;padding:3px 9px;border-radius:999px;font-weight:900}
+.ad-slot-status{font-size:.65rem;font-weight:900;padding:4px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.5px}
+.ad-slot-status.ok{background:var(--success-bg);color:#065f46}
+.ad-slot-status.off{background:rgba(148,163,184,.25);color:#475569}
+.ad-slot-status.custom{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff}
+.ad-custom-hint{background:rgba(255,255,255,.7);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:.72rem;line-height:1.6;font-weight:600;color:#5b21b6;border-left:3px solid var(--secondary)}
+.ad-custom-hint code{background:rgba(139,92,246,.15);padding:1px 6px;border-radius:4px;font-weight:800;color:#6d28d9;font-family:'Courier New',monospace}
 @media (max-width:400px){.container{padding:0 12px}.card{padding:16px;border-radius:20px}.header{padding:22px 18px 55px;border-radius:0 0 26px 26px}.header-title{font-size:1rem}.header-status{max-width:90px}.user-stats-grid{grid-template-columns:1fr 1fr}.legal-body{padding:20px 18px 26px}}
 </style>
 </head>
@@ -461,7 +463,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 
 <div class="toast" id="toast">Saved!</div>
 
-<!-- User Full View Modal -->
+<!-- User View Modal -->
 <div class="modal-overlay" id="userViewModal">
   <div class="modal-box" style="max-width:640px;">
     <div class="modal-header">
@@ -472,7 +474,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- User Full Edit Modal -->
 <div class="modal-overlay" id="userEditModal">
   <div class="modal-box" style="max-width:560px;">
     <div class="modal-header">
@@ -516,7 +517,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- User Details Modal -->
 <div class="modal-overlay" id="userDetailsModal">
   <div class="modal-box" style="max-width:620px;">
     <div class="modal-header">
@@ -527,7 +527,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- Admin Full View Modal -->
 <div class="modal-overlay" id="adminViewModal">
   <div class="modal-box" style="max-width:600px;">
     <div class="modal-header">
@@ -538,7 +537,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- Admin Full Edit Modal -->
 <div class="modal-overlay" id="adminEditModal">
   <div class="modal-box" style="max-width:560px;">
     <div class="modal-header">
@@ -583,7 +581,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- Edit Task Modal -->
 <div class="modal-overlay" id="editTaskModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -660,7 +657,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- Deposit Modal -->
 <div class="modal-overlay" id="depositModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -684,7 +680,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- Deposit Method Modal -->
 <div class="modal-overlay" id="dmModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -706,7 +701,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- Deposit Request Submit Modal -->
 <div class="modal-overlay" id="depositSubmitModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -725,7 +719,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- Ban/Suspend Modal -->
 <div class="modal-overlay" id="banModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -742,7 +735,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- Cancel Task Modal -->
 <div class="modal-overlay" id="cancelTaskModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -757,7 +749,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- Delete Task with Refund Modal -->
 <div class="modal-overlay" id="deleteTaskModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -773,7 +764,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- Instant Delete Super Task Modal -->
 <div class="modal-overlay" id="instantDeleteModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -791,7 +781,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- Leaderboard Custom Modal -->
 <div class="modal-overlay" id="lbModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -812,7 +801,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- Edit Admin Contact Modal -->
 <div class="modal-overlay" id="contactEditModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -1023,18 +1011,62 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ADS -->
+  <!-- ✅ ADS (UPDATED) -->
   <div id="tab-ads" class="tab-content super-only">
     <div class="card">
-      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-bullhorn"></i></div>Ad Networks</div></div>
-      <div class="form-group"><label>Daily Ad Limit</label><input type="number" id="dailyAdLimit"></div>
-      <div class="form-group"><label>Reward Per Ad</label><input type="number" step="0.01" id="adReward"></div>
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-bullhorn"></i></div>Ad Networks & Custom Code</div></div>
+      
+      <div class="form-group"><label>Daily Ad Limit (per slot)</label><input type="number" id="dailyAdLimit"></div>
+      <div class="form-group"><label>Reward Per Ad (TK)</label><input type="number" step="0.01" id="adReward"></div>
+
+      <div class="alert-box info">
+        <i class="fas fa-info-circle"></i>
+        <div>
+          <b>⚙️ Custom Ad Code System:</b> যেকোনো network-এর জন্য নিজের JavaScript কোড লিখুন। 
+          User App-এ <code style="background:rgba(59,130,246,.15); padding:1px 6px; border-radius:4px; font-weight:800;">resolve()</code> / <code style="background:rgba(59,130,246,.15); padding:1px 6px; border-radius:4px; font-weight:800;">adResolve()</code> call → Ad সফল। 
+          <code style="background:rgba(239,68,68,.15); padding:1px 6px; border-radius:4px; font-weight:800;">reject('msg')</code> / <code style="background:rgba(239,68,68,.15); padding:1px 6px; border-radius:4px; font-weight:800;">adReject('msg')</code> call → Ad fail। Promise return করলেও auto-detect হবে (90s timeout)।
+        </div>
+      </div>
+
       <div id="adsContainer"></div>
-      <button class="btn btn-purple" onclick="saveAds()"><i class="fas fa-save"></i> Save</button>
+      <button class="btn btn-purple" onclick="saveAds()"><i class="fas fa-save"></i> Save Ad Settings</button>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-code"></i></div>Custom Code Examples</div></div>
+      <div style="font-size:.78rem; line-height:1.8; color:var(--text-secondary); font-weight:600;">
+
+        <div class="section-divider" style="font-size:.8rem;"><i class="fas fa-play"></i> Example 1 — Monetag Pop-up</div>
+        <pre style="background:#1e293b; color:#e2e8f0; padding:12px; border-radius:10px; font-size:.72rem; overflow-x:auto; font-family:'Courier New',monospace; line-height:1.6;">window.show_11878844('pop')
+  .then(() => resolve())
+  .catch(() => reject('Ad closed'));</pre>
+
+        <div class="section-divider" style="font-size:.8rem; margin-top:16px;"><i class="fas fa-play"></i> Example 2 — Adsgram</div>
+        <pre style="background:#1e293b; color:#e2e8f0; padding:12px; border-radius:10px; font-size:.72rem; overflow-x:auto; font-family:'Courier New',monospace; line-height:1.6;">const ctrl = Adsgram.init({ blockId: '23393' });
+const res = await ctrl.show();
+if (res && res.done) resolve();
+else reject('Closed');</pre>
+
+        <div class="section-divider" style="font-size:.8rem; margin-top:16px;"><i class="fas fa-play"></i> Example 3 — Any Custom Popup</div>
+        <pre style="background:#1e293b; color:#e2e8f0; padding:12px; border-radius:10px; font-size:.72rem; overflow-x:auto; font-family:'Courier New',monospace; line-height:1.6;">// Load your own SDK
+const s = document.createElement('script');
+s.src = 'https://your-ad-network.com/sdk.js';
+document.head.appendChild(s);
+s.onload = () => {
+  window.MyAdNet.show()
+    .then(() => resolve())
+    .catch(() => reject('Closed'));
+};</pre>
+
+        <div class="alert-box success" style="margin-top:16px;">
+          <i class="fas fa-check-circle"></i>
+          <div>Custom Code দিলে সেটি <b>সবসময় Network-এর চেয়ে অগ্রাধিকার পাবে</b>। Network field শুধু fallback হিসেবে রাখা হয়।</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- ✅ EXTRA REWARDS (NEW TAB) -->
+  <!-- EXTRA REWARDS -->
   <div id="tab-extrareward" class="tab-content super-only">
     <div class="card rainbow">
       <div class="card-header">
@@ -1659,7 +1691,7 @@ function copyToClipboard(text, label) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// ✅ EXTRA REWARDS — Admin Control Functions
+// ✅ EXTRA REWARDS
 // ═══════════════════════════════════════════════════════════
 function loadExtraRewardPreview() {
   const enabled = document.getElementById('extraRewardEnabled').value === 'true';
@@ -1701,6 +1733,90 @@ async function saveExtraRewardSettings() {
     toast('✅ Extra Rewards saved!');
     loadExtraRewardPreview();
   } catch(e) { toast('❌ Error: ' + e.message); }
+}
+
+// ═══════════════════════════════════════════════════════════
+// ✅ ADS CONFIG (UPDATED — CUSTOM CODE SUPPORT)
+// ═══════════════════════════════════════════════════════════
+const AD_SLOT_COUNT = 6;
+
+function loadAdsConfig() {
+  const container = document.getElementById('adsContainer');
+  if (!container) return;
+  let h = '';
+  const slots = configData.adSlots || [];
+  for (let i = 0; i < AD_SLOT_COUNT; i++) {
+    const s = slots[i] || { network: 'none', id: '', customCode: '' };
+    const hasCode = s.customCode && String(s.customCode).trim().length > 0;
+    const isCustom = s.network === 'custom' || hasCode;
+    const isConfigured = hasCode || (s.network && s.network !== 'none');
+    let statusClass = 'off', statusText = 'Disabled';
+    if (hasCode) { statusClass = 'custom'; statusText = '⚙️ Custom Code'; }
+    else if (isConfigured) { statusClass = 'ok'; statusText = '✅ ' + s.network; }
+    h += `<div class="ad-slot-card ${hasCode ? 'custom-active' : ''}">
+      <div class="ad-slot-head">
+        <div class="ad-slot-name"><i class="fas fa-rectangle-ad"></i> Ad Slot ${i+1} <span class="num-badge">#${i+1}</span></div>
+        <div class="ad-slot-status ${statusClass}">${statusText}</div>
+      </div>
+
+      <label>Network Type</label>
+      <select id="adNet_${i}" onchange="toggleCustomCodeField(${i})" style="margin-bottom:10px;">
+        <option value="none" ${s.network==='none'&&!hasCode?'selected':''}>🚫 Disabled</option>
+        <option value="adsgram" ${s.network==='adsgram'?'selected':''}>📺 Adsgram</option>
+        <option value="monetag" ${s.network==='monetag'?'selected':''}>💰 Monetag</option>
+        <option value="gigapub" ${s.network==='gigapub'?'selected':''}>🌐 GigaPub</option>
+        <option value="custom" ${isCustom?'selected':''}>⚙️ Custom Code Only</option>
+      </select>
+
+      <label>Block / Zone ID <span style="color:var(--text-muted); font-weight:500;">(network-specific)</span></label>
+      <input type="text" id="adId_${i}" value="${esc(s.id||'')}" placeholder="e.g. 11878844" style="margin-bottom:10px;">
+
+      <div id="adCustomWrap_${i}" style="display:${isCustom ? 'block' : 'none'};">
+        <label>⚙️ Custom Ad Code (JavaScript)</label>
+        <textarea id="adCode_${i}" rows="8" placeholder="// Example:&#10;// await window.show_11878844('pop');&#10;// resolve();   // Ad সফল&#10;// reject('Ad closed');  // Ad ফেইল" style="font-family:'Courier New',monospace; font-size:.78rem; line-height:1.55;"></textarea>
+        <div class="ad-custom-hint">
+          <b>💡 Helper Functions:</b><br>
+          • <code>resolve()</code> বা <code>adResolve()</code> → Ad সফল ঘোষণা করুন<br>
+          • <code>reject('reason')</code> বা <code>adReject('reason')</code> → Ad ফেইল ঘোষণা করুন<br>
+          • <code>async/await</code> + <code>return</code> Promise ও কাজ করবে<br>
+          • 90 সেকেন্ড timeout-এর ভেতরে resolve/reject করতে হবে<br>
+          • <b>Custom Code থাকলে সেটি Network-এর উপর প্রাধান্য পাবে</b>
+        </div>
+      </div>
+    </div>`;
+  }
+  container.innerHTML = h;
+
+  // Set values programmatically to avoid HTML escaping issues
+  for (let i = 0; i < AD_SLOT_COUNT; i++) {
+    const s = slots[i] || {};
+    const ta = document.getElementById('adCode_' + i);
+    if (ta) ta.value = s.customCode || '';
+  }
+}
+
+function toggleCustomCodeField(i) {
+  const net = document.getElementById('adNet_' + i).value;
+  const wrap = document.getElementById('adCustomWrap_' + i);
+  if (wrap) wrap.style.display = (net === 'custom') ? 'block' : 'none';
+}
+
+function saveAds() {
+  const slots = [];
+  for (let i = 0; i < AD_SLOT_COUNT; i++) {
+    const netEl = document.getElementById('adNet_' + i);
+    const idEl = document.getElementById('adId_' + i);
+    const codeEl = document.getElementById('adCode_' + i);
+    const network = netEl ? netEl.value : 'none';
+    const id = idEl ? idEl.value.trim() : '';
+    const customCode = codeEl ? codeEl.value : '';
+    slots.push({ network, id, customCode });
+  }
+  const dailyAdLimit = Number(document.getElementById('dailyAdLimit').value) || 10;
+  const adReward = Number(document.getElementById('adReward').value) || 0.5;
+  db.ref('config').update({ dailyAdLimit, adReward, adSlots: slots })
+    .then(() => { toast('✅ Ad settings saved!'); configData.adSlots = slots; loadAdsConfig(); })
+    .catch(e => toast('❌ ' + e.message));
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2252,7 +2368,7 @@ function openContactLink() {
   window.open(link, '_blank');
 }
 
-// ========== TASK MANAGEMENT ==========
+// TASK MANAGEMENT
 function updateTaskCostPreview() {
   if (!currentSession) return;
   const preview = document.getElementById('taskCostPreview');
@@ -2721,7 +2837,6 @@ async function reviewSubmission(subId, action) {
   loadTaskSubmissions();
 }
 
-// ========== Analytics ==========
 function getAnalyticsRangeBounds(range) {
   const now = new Date();
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
@@ -2804,28 +2919,6 @@ async function loadAnalytics() {
   document.getElementById('analyticsTableBody').innerHTML = h || '<tr><td colspan="4" style="text-align:center; padding:20px; color:#94a3b8;">No data</td></tr>';
 }
 
-function loadAdsConfig() {
-  let h = '';
-  for (let i=0; i<6; i++) {
-    const s = (configData.adSlots || [])[i] || { network: 'none', id: '' };
-    h += `<div style="background:#faf5ff; padding:16px; border-radius:12px; margin-bottom:12px;">
-      <div style="font-weight:800; color:var(--primary); margin-bottom:12px;">Slot ${i+1}</div>
-      <select id="adNet_${i}" style="margin-bottom:8px;">
-        <option value="none" ${s.network==='none'?'selected':''}>Disabled</option>
-        <option value="adsgram" ${s.network==='adsgram'?'selected':''}>Adsgram</option>
-        <option value="monetag" ${s.network==='monetag'?'selected':''}>Monetag</option>
-        <option value="gigapub" ${s.network==='gigapub'?'selected':''}>GigaPub</option>
-      </select>
-      <input type="text" id="adId_${i}" value="${s.id||''}" placeholder="Block/Zone ID">
-    </div>`;
-  }
-  document.getElementById('adsContainer').innerHTML = h;
-}
-function saveAds() {
-  const slots = [];
-  for (let i=0; i<6; i++) slots.push({ network: document.getElementById(`adNet_${i}`).value, id: document.getElementById(`adId_${i}`).value });
-  db.ref('config').update({ dailyAdLimit: Number(document.getElementById('dailyAdLimit').value), adReward: Number(document.getElementById('adReward').value), adSlots: slots }).then(() => toast('✅ Saved'));
-}
 function renderChannelLinks() {
   const c = document.getElementById('channelLinksContainer');
   if (!channelLinks.length) { c.innerHTML = '<p style="text-align:center;color:#94a3b8;">No channels</p>'; return; }
@@ -2977,9 +3070,9 @@ function viewUserFull(userId) {
   let adViewsHtml = '';
   for (let i = 0; i < Math.min(6, adSlots.length); i++) {
     const s = adSlots[i];
-    if (!s || !s.network || s.network === 'none') continue;
+    if (!s || (!s.network || s.network === 'none') && !s.customCode) continue;
     adViewsHtml += `<div style="display:flex; justify-content:space-between; padding:6px 10px; background:#f8fafc; border-radius:6px; margin-bottom:4px; font-size:.78rem;">
-      <span>Slot ${i+1} (${s.network})</span><b>${Number(da[i] || 0)} views</b>
+      <span>Slot ${i+1} (${s.network === 'custom' ? 'Custom' : s.network})</span><b>${Number(da[i] || 0)} views</b>
     </div>`;
   }
   if (!adViewsHtml) adViewsHtml = '<div style="text-align:center; color:#94a3b8; padding:8px; font-size:.75rem;">No ad slots configured</div>';
@@ -3399,6 +3492,7 @@ function switchTab(id, el) {
   if (id === 'analytics') loadAnalytics();
   if (id === 'channels') loadVerificationStats();
   if (id === 'extrareward') loadExtraRewardPreview();
+  if (id === 'ads') loadAdsConfig();
   if (id === 'tasks') {
     currentTaskListTab = 'live';
     document.querySelectorAll('.task-list-tab').forEach(t => { t.classList.remove('active'); t.classList.remove('pending-active'); });
@@ -3419,7 +3513,7 @@ function esc(s) { return String(s || '').replace(/[<>&"]/g, c => ({ '<': '&lt;',
 function runPanelInit() {
   if (runPanelInit._done) return;
   runPanelInit._done = true;
-  if (currentSession.role === 'super') { loadAnalytics(); loadVerificationStats(); toggleSurveyFields(); renderLeaderboardCustomList(); loadExtraRewardPreview(); }
+  if (currentSession.role === 'super') { loadAnalytics(); loadVerificationStats(); toggleSurveyFields(); renderLeaderboardCustomList(); loadExtraRewardPreview(); loadAdsConfig(); }
   else { loadCurrentAdminData(); loadTasksList(); loadTaskSubmissions(); }
   setInterval(() => { if (currentSession && currentSession.role === 'admin') loadCurrentAdminData(); }, 30000);
   updateMaxDaysHint('newTaskReward','newTaskTime','taskMaxDaysHint');
@@ -3431,6 +3525,7 @@ db.ref('config').on('value', snap => {
   configData = snap.val();
   if (!configData.depositMethods) configData.depositMethods = [];
   if (!Array.isArray(configData.leaderboardCustom)) configData.leaderboardCustom = [];
+  if (!Array.isArray(configData.adSlots)) configData.adSlots = [];
   channelLinks = configData.channelLinks || [];
   withdrawLevels = configData.withdrawLevels || [];
   MIN_REFERRAL_BALANCE = configData.minReferralBalance || 20;
@@ -3467,7 +3562,6 @@ db.ref('config').on('value', snap => {
       document.getElementById('maintenanceMsg').value = configData.maintenance.message || '';
       document.getElementById('maintenanceTime').value = configData.maintenance.estimatedMinutes || '';
     }
-    // ✅ Extra Rewards form লোড
     const er = configData.extraReward || {};
     const enabledEl = document.getElementById('extraRewardEnabled');
     const amountEl = document.getElementById('extraRewardAmount');
@@ -3481,7 +3575,14 @@ db.ref('config').on('value', snap => {
     if (infoEl) infoEl.value = er.infoText || 'Pop-up Ad সম্পূর্ণ দেখলেই রিওয়ার্ড পাবেন।';
     loadExtraRewardPreview();
 
-    renderChannelLinks(); renderWithdrawLevels(); loadAdsConfig(); renderDepositMethodsList();
+    renderChannelLinks(); renderWithdrawLevels();
+    // Only re-render ads if the tab is currently active (avoid overwriting user edits)
+    if (document.getElementById('tab-ads') && document.getElementById('tab-ads').classList.contains('active')) {
+      // skip re-render to preserve in-flight editing
+    } else {
+      loadAdsConfig();
+    }
+    renderDepositMethodsList();
     renderLeaderboardCustomList();
   }
   if (currentSession && currentSession.role === 'admin') {
@@ -3517,7 +3618,6 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (el) el.addEventListener('click', e => { if (e.target.id === id) el.classList.remove('active'); });
 });
 
-// LEGAL MODAL
 const LEGAL_CONTENT = {
   privacy: `<span class="last-updated">📅 Last Updated: Sep/23/2026</span><h1>📄 PRIVACY POLICY</h1>
   <h2>১. ভূমিকা</h2><p><strong>Earn Wallet / NexEarn</strong> একটি Telegram-ভিত্তিক মাইক্রো-টাস্ক ও রিওয়ার্ড প্ল্যাটফর্ম।</p>
