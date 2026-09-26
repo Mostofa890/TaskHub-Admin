@@ -138,14 +138,12 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent)}
 .login-contact-btn{width:100%;padding:13px;border-radius:14px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.18);color:#fff;font-weight:800;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;font-family:inherit;text-decoration:none}
 .login-contact-btn:hover{background:rgba(255,255,255,.15);border-color:rgba(251,191,36,.6);transform:translateY(-1px);box-shadow:0 10px 24px rgba(251,191,36,.2)}
-.login-contact-btn:active{transform:scale(.98)}
 .login-contact-btn i{color:#fbbf24;font-size:1rem}
-.login-contact-btn:disabled{opacity:.4;cursor:not-allowed;transform:none !important}
 .login-contact-note{margin-top:10px;text-align:center;font-size:.68rem;color:rgba(255,255,255,.5);font-weight:600;line-height:1.5}
 .login-contact-note b{color:#fbbf24}
 .login-legal-row{display:flex;gap:10px;margin-top:16px}
 .login-legal-btn{flex:1;padding:10px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);color:rgba(255,255,255,.85);font-weight:700;font-size:.7rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;font-family:inherit}
-.login-legal-btn:hover{background:rgba(255,255,255,.14);border-color:rgba(251,191,36,.5);color:#fff;transform:translateY(-1px)}
+.login-legal-btn:hover{background:rgba(255,255,255,.14);border-color:rgba(251,191,36,.5);color:#fff}
 .login-legal-btn i{color:#fbbf24;font-size:.85rem}
 .legal-modal-overlay{display:none;position:fixed;inset:0;z-index:100001;background:rgba(5,6,10,.88);backdrop-filter:blur(10px);align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
 .legal-modal-overlay.active{display:flex}
@@ -288,9 +286,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .qualified-no{display:inline-flex;align-items:center;gap:3px;background:linear-gradient(135deg,#fee2e2,#fecaca);color:#991b1b;font-weight:800;font-size:.7rem;padding:3px 9px;border-radius:999px;border:1px solid rgba(239,68,68,.3)}
 .lb-item{display:flex;align-items:center;gap:12px;padding:14px;background:linear-gradient(135deg,#fff,#f8fafc);border:1.5px solid var(--border);border-radius:14px;margin-bottom:10px;position:relative;overflow:hidden}
 .lb-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#f59e0b,#fbbf24)}
-.lb-item.rank1::before{background:linear-gradient(180deg,#ffd700,#fbbf24)}
-.lb-item.rank2::before{background:linear-gradient(180deg,#c0c0c0,#94a3b8)}
-.lb-item.rank3::before{background:linear-gradient(180deg,#cd7f32,#b45309)}
 .lb-rank{font-size:1.2rem;font-weight:900;color:var(--warning);width:32px;text-align:center;flex-shrink:0}
 .lb-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#ec4899);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;flex-shrink:0;overflow:hidden;border:2px solid #fff}
 .lb-avatar img{width:100%;height:100%;object-fit:cover}
@@ -301,8 +296,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .lb-info .stats .ref{color:var(--success);font-weight:900}
 .lb-actions{display:flex;gap:6px;flex-shrink:0}
 .lb-actions button{width:32px;height:32px;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;color:#fff}
-.lb-actions .act-up{background:linear-gradient(135deg,#10b981,#34d399)}
-.lb-actions .act-down{background:linear-gradient(135deg,#3b82f6,#60a5fa)}
 .lb-actions .act-edit{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
 .lb-actions .act-del{background:linear-gradient(135deg,#ef4444,#f87171)}
 .lb-empty{padding:24px 16px;background:linear-gradient(135deg,#f9fafb,#f3f4f6);border:2px dashed var(--border);border-radius:14px;text-align:center;color:var(--text-muted);font-weight:700;font-size:.85rem}
@@ -368,6 +361,10 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .ad-slot-status.custom{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff}
 .ad-custom-hint{background:rgba(255,255,255,.7);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:.72rem;line-height:1.6;font-weight:600;color:#5b21b6;border-left:3px solid var(--secondary)}
 .ad-custom-hint code{background:rgba(139,92,246,.15);padding:1px 6px;border-radius:4px;font-weight:800;color:#6d28d9;font-family:'Courier New',monospace}
+.min-watch-box{background:linear-gradient(135deg,#fef3c7,#fde68a);padding:16px;border-radius:12px;margin-bottom:16px;border-left:4px solid #f59e0b}
+.min-watch-box label{color:#92400e;font-size:.85rem;display:flex;align-items:center;gap:8px}
+.min-watch-box input{background:#fff;border-color:#f59e0b}
+.min-watch-box small{display:block;margin-top:8px;font-size:.72rem;font-weight:700;color:#92400e;line-height:1.5}
 @media (max-width:400px){.container{padding:0 12px}.card{padding:16px;border-radius:20px}.header{padding:22px 18px 55px;border-radius:0 0 26px 26px}.header-title{font-size:1rem}.header-status{max-width:90px}.user-stats-grid{grid-template-columns:1fr 1fr}.legal-body{padding:20px 18px 26px}}
 </style>
 </head>
@@ -463,7 +460,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 
 <div class="toast" id="toast">Saved!</div>
 
-<!-- User View Modal -->
 <div class="modal-overlay" id="userViewModal">
   <div class="modal-box" style="max-width:640px;">
     <div class="modal-header">
@@ -1011,7 +1007,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ✅ ADS (UPDATED) -->
+  <!-- ✅ ADS (UPDATED with Minimum Watch Time) -->
   <div id="tab-ads" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-bullhorn"></i></div>Ad Networks & Custom Code</div></div>
@@ -1019,12 +1015,22 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="form-group"><label>Daily Ad Limit (per slot)</label><input type="number" id="dailyAdLimit"></div>
       <div class="form-group"><label>Reward Per Ad (TK)</label><input type="number" step="0.01" id="adReward"></div>
 
+      <div class="min-watch-box">
+        <label><i class="fas fa-hourglass-half"></i> ⏱️ Minimum Ad Watch Time (Seconds) *</label>
+        <input type="number" id="minAdWatchSeconds" min="3" max="120" placeholder="10">
+        <small>
+          ইউজারকে কমপক্ষে এই সময় অ্যাড দেখতে হবে। কম দেখলে <b>reward পাবে না</b>।<br>
+          • Recommended: <b>10-15 seconds</b><br>
+          • সর্বনিম্ন: <b>3 seconds</b> | সর্বোচ্চ: <b>120 seconds</b>
+        </small>
+      </div>
+
       <div class="alert-box info">
         <i class="fas fa-info-circle"></i>
         <div>
           <b>⚙️ Custom Ad Code System:</b> যেকোনো network-এর জন্য নিজের JavaScript কোড লিখুন। 
           User App-এ <code style="background:rgba(59,130,246,.15); padding:1px 6px; border-radius:4px; font-weight:800;">resolve()</code> / <code style="background:rgba(59,130,246,.15); padding:1px 6px; border-radius:4px; font-weight:800;">adResolve()</code> call → Ad সফল। 
-          <code style="background:rgba(239,68,68,.15); padding:1px 6px; border-radius:4px; font-weight:800;">reject('msg')</code> / <code style="background:rgba(239,68,68,.15); padding:1px 6px; border-radius:4px; font-weight:800;">adReject('msg')</code> call → Ad fail। Promise return করলেও auto-detect হবে (90s timeout)।
+          <code style="background:rgba(239,68,68,.15); padding:1px 6px; border-radius:4px; font-weight:800;">reject('msg')</code> / <code style="background:rgba(239,68,68,.15); padding:1px 6px; border-radius:4px; font-weight:800;">adReject('msg')</code> call → Ad fail।
         </div>
       </div>
 
@@ -1036,18 +1042,32 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-code"></i></div>Custom Code Examples</div></div>
       <div style="font-size:.78rem; line-height:1.8; color:var(--text-secondary); font-weight:600;">
 
-        <div class="section-divider" style="font-size:.8rem;"><i class="fas fa-play"></i> Example 1 — Monetag Pop-up</div>
+        <div class="section-divider" style="font-size:.8rem;"><i class="fas fa-play"></i> Example 1 — External Ad Page (Auto Track) ⭐ BEST</div>
+        <pre style="background:#1e293b; color:#e2e8f0; padding:12px; border-radius:10px; font-size:.72rem; overflow-x:auto; font-family:'Courier New',monospace; line-height:1.6;">// ✅ External ad-এর জন্য openExternal() ব্যবহার করুন
+openExternal('https://your-ad-page.com/xyz');
+
+// এটি automatic track করবে:
+// - User external page-এ কতক্ষণ ছিল সেটা count হবে
+// - Minimum time পূর্ণ হলে auto-resolve
+// - কম হলে auto-reject</pre>
+
+        <div class="alert-box success" style="margin-top:14px;">
+          <i class="fas fa-check-circle"></i>
+          <div><b>openExternal() কীভাবে কাজ করে:</b><br>১. External page খোলার আগে timer track করে<br>২. User পেজে যতক্ষণ থাকে সেটা count করে<br>৩. ফিরে আসলে automatic resolve/reject হয়<br>৪. Minimum time পূর্ণ হলে reward, নাহলে skip block</div>
+        </div>
+
+        <div class="section-divider" style="font-size:.8rem; margin-top:16px;"><i class="fas fa-play"></i> Example 2 — Monetag Pop-up</div>
         <pre style="background:#1e293b; color:#e2e8f0; padding:12px; border-radius:10px; font-size:.72rem; overflow-x:auto; font-family:'Courier New',monospace; line-height:1.6;">window.show_11878844('pop')
   .then(() => resolve())
   .catch(() => reject('Ad closed'));</pre>
 
-        <div class="section-divider" style="font-size:.8rem; margin-top:16px;"><i class="fas fa-play"></i> Example 2 — Adsgram</div>
+        <div class="section-divider" style="font-size:.8rem; margin-top:16px;"><i class="fas fa-play"></i> Example 3 — Adsgram</div>
         <pre style="background:#1e293b; color:#e2e8f0; padding:12px; border-radius:10px; font-size:.72rem; overflow-x:auto; font-family:'Courier New',monospace; line-height:1.6;">const ctrl = Adsgram.init({ blockId: '23393' });
 const res = await ctrl.show();
 if (res && res.done) resolve();
 else reject('Closed');</pre>
 
-        <div class="section-divider" style="font-size:.8rem; margin-top:16px;"><i class="fas fa-play"></i> Example 3 — Any Custom Popup</div>
+        <div class="section-divider" style="font-size:.8rem; margin-top:16px;"><i class="fas fa-play"></i> Example 4 — Custom SDK</div>
         <pre style="background:#1e293b; color:#e2e8f0; padding:12px; border-radius:10px; font-size:.72rem; overflow-x:auto; font-family:'Courier New',monospace; line-height:1.6;">// Load your own SDK
 const s = document.createElement('script');
 s.src = 'https://your-ad-network.com/sdk.js';
@@ -1058,9 +1078,9 @@ s.onload = () => {
     .catch(() => reject('Closed'));
 };</pre>
 
-        <div class="alert-box success" style="margin-top:16px;">
-          <i class="fas fa-check-circle"></i>
-          <div>Custom Code দিলে সেটি <b>সবসময় Network-এর চেয়ে অগ্রাধিকার পাবে</b>। Network field শুধু fallback হিসেবে রাখা হয়।</div>
+        <div class="alert-box warning" style="margin-top:16px;">
+          <i class="fas fa-exclamation-triangle"></i>
+          <div><b>⚠️ গুরুত্বপূর্ণ:</b> External page-এর জন্য <b>সবসময় <code style="background:rgba(245,158,11,.2); padding:1px 6px; border-radius:4px; font-weight:800;">openExternal()</code> ব্যবহার করুন</b>। সরাসরি <code style="background:rgba(239,68,68,.2); padding:1px 6px; border-radius:4px; font-weight:800;">window.open()</code> বা <code style="background:rgba(239,68,68,.2); padding:1px 6px; border-radius:4px; font-weight:800;">tg.openLink()</code> ব্যবহার করলে minimum time tracking কাজ করবে না।</div>
         </div>
       </div>
     </div>
@@ -1412,7 +1432,7 @@ let SERVICE_CHARGE_RATE = 10;
 const LB_MAX_ENTRIES = 10;
 const MIN_TASK_REWARD = 0.10;
 
-let configData = { adSlots:[], newTasks:{}, depositMethods:[], leaderboardCustom:[] };
+let configData = { adSlots:[], newTasks:{}, depositMethods:[], leaderboardCustom:[], minAdWatchSeconds: 10 };
 let allUsers = [], filteredUsers = [], channelLinks = [], withdrawLevels = [];
 let MIN_REFERRAL_BALANCE = 20, selectedCommissionMode = 'bonus';
 let editingTaskId = null, allSubmissions = [], currentSubFilter = 'pending', currentTaskCache = {};
@@ -1691,7 +1711,7 @@ function copyToClipboard(text, label) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// ✅ EXTRA REWARDS
+// EXTRA REWARDS
 // ═══════════════════════════════════════════════════════════
 function loadExtraRewardPreview() {
   const enabled = document.getElementById('extraRewardEnabled').value === 'true';
@@ -1736,7 +1756,7 @@ async function saveExtraRewardSettings() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// ✅ ADS CONFIG (UPDATED — CUSTOM CODE SUPPORT)
+// ADS CONFIG — with Minimum Watch Time
 // ═══════════════════════════════════════════════════════════
 const AD_SLOT_COUNT = 6;
 
@@ -1773,21 +1793,20 @@ function loadAdsConfig() {
 
       <div id="adCustomWrap_${i}" style="display:${isCustom ? 'block' : 'none'};">
         <label>⚙️ Custom Ad Code (JavaScript)</label>
-        <textarea id="adCode_${i}" rows="8" placeholder="// Example:&#10;// await window.show_11878844('pop');&#10;// resolve();   // Ad সফল&#10;// reject('Ad closed');  // Ad ফেইল" style="font-family:'Courier New',monospace; font-size:.78rem; line-height:1.55;"></textarea>
+        <textarea id="adCode_${i}" rows="8" placeholder="// ✅ External ad-এর জন্য:&#10;// openExternal('https://ad-page.com/xyz');&#10;//&#10;// ✅ In-app ad-এর জন্য:&#10;// await window.show_11878844('pop');&#10;// resolve();" style="font-family:'Courier New',monospace; font-size:.78rem; line-height:1.55;"></textarea>
         <div class="ad-custom-hint">
           <b>💡 Helper Functions:</b><br>
-          • <code>resolve()</code> বা <code>adResolve()</code> → Ad সফল ঘোষণা করুন<br>
-          • <code>reject('reason')</code> বা <code>adReject('reason')</code> → Ad ফেইল ঘোষণা করুন<br>
+          • <code>openExternal(url)</code> → External ad পেজ খুলুন (auto-tracked) ⭐<br>
+          • <code>resolve()</code> / <code>adResolve()</code> → Ad সফল ঘোষণা<br>
+          • <code>reject('reason')</code> / <code>adReject('reason')</code> → Ad ফেইল<br>
           • <code>async/await</code> + <code>return</code> Promise ও কাজ করবে<br>
-          • 90 সেকেন্ড timeout-এর ভেতরে resolve/reject করতে হবে<br>
-          • <b>Custom Code থাকলে সেটি Network-এর উপর প্রাধান্য পাবে</b>
+          • 90 সেকেন্ড timeout-এর ভেতরে resolve/reject করতে হবে
         </div>
       </div>
     </div>`;
   }
   container.innerHTML = h;
 
-  // Set values programmatically to avoid HTML escaping issues
   for (let i = 0; i < AD_SLOT_COUNT; i++) {
     const s = slots[i] || {};
     const ta = document.getElementById('adCode_' + i);
@@ -1814,9 +1833,28 @@ function saveAds() {
   }
   const dailyAdLimit = Number(document.getElementById('dailyAdLimit').value) || 10;
   const adReward = Number(document.getElementById('adReward').value) || 0.5;
-  db.ref('config').update({ dailyAdLimit, adReward, adSlots: slots })
-    .then(() => { toast('✅ Ad settings saved!'); configData.adSlots = slots; loadAdsConfig(); })
-    .catch(e => toast('❌ ' + e.message));
+  
+  // ✅ Minimum watch time
+  const minAdWatchSecondsEl = document.getElementById('minAdWatchSeconds');
+  let minAdWatchSeconds = 10;
+  if (minAdWatchSecondsEl) {
+    const v = Number(minAdWatchSecondsEl.value);
+    if (!isNaN(v) && v >= 3 && v <= 120) minAdWatchSeconds = v;
+  }
+  
+  db.ref('config').update({ 
+    dailyAdLimit, 
+    adReward, 
+    adSlots: slots,
+    minAdWatchSeconds: minAdWatchSeconds
+  })
+  .then(() => { 
+    toast('✅ Ad settings saved! (Min: ' + minAdWatchSeconds + 's)'); 
+    configData.adSlots = slots; 
+    configData.minAdWatchSeconds = minAdWatchSeconds;
+    loadAdsConfig(); 
+  })
+  .catch(e => toast('❌ ' + e.message));
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -3557,6 +3595,11 @@ db.ref('config').on('value', snap => {
     document.getElementById('becomeAdminTitle').value = configData.becomeAdminTitle || '';
     document.getElementById('becomeAdminSub').value = configData.becomeAdminSub || '';
     document.getElementById('becomeAdminBtnText').value = configData.becomeAdminBtnText || '';
+    // ✅ Minimum watch time
+    const minAdWatchSec = configData.minAdWatchSeconds !== undefined ? configData.minAdWatchSeconds : 10;
+    const minAdWatchEl = document.getElementById('minAdWatchSeconds');
+    if (minAdWatchEl) minAdWatchEl.value = minAdWatchSec;
+    
     if (configData.maintenance) {
       document.getElementById('maintenanceMode').value = configData.maintenance.active ? 'true' : 'false';
       document.getElementById('maintenanceMsg').value = configData.maintenance.message || '';
@@ -3576,9 +3619,8 @@ db.ref('config').on('value', snap => {
     loadExtraRewardPreview();
 
     renderChannelLinks(); renderWithdrawLevels();
-    // Only re-render ads if the tab is currently active (avoid overwriting user edits)
     if (document.getElementById('tab-ads') && document.getElementById('tab-ads').classList.contains('active')) {
-      // skip re-render to preserve in-flight editing
+      // skip re-render
     } else {
       loadAdsConfig();
     }
