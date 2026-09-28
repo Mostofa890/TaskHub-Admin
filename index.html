@@ -391,6 +391,16 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .link-gen-box .lg-actions .btn{flex:1;min-width:120px}
 .link-preview-code{background:#1e293b;color:#a7f3d0;padding:14px;border-radius:12px;font-family:'Courier New',monospace;font-size:.75rem;overflow-x:auto;line-height:1.7;border-left:4px solid #10b981;margin-bottom:14px}
 .subadmin-req-item{background:linear-gradient(135deg,#fff,#fffbeb);border:1.5px solid rgba(245,158,11,.4);border-radius:14px;padding:14px;margin-bottom:12px;border-left:4px solid #f59e0b;position:relative}
+.req-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;padding:10px;background:rgba(99,102,241,.05);border-radius:10px;border:1px dashed rgba(99,102,241,.25)}
+.req-info-cell{font-size:.72rem;font-weight:700;color:var(--text-secondary)}
+.req-info-cell b{display:block;color:var(--text);font-size:.85rem;font-weight:900;margin-top:2px}
+.req-info-cell.green b{color:var(--success)}
+.req-info-cell.warn b{color:var(--warning)}
+.req-info-cell.gold b{color:#f59e0b}
+.balance-check-box{padding:12px 14px;border-radius:12px;margin-top:10px;font-weight:800;font-size:.78rem;display:flex;align-items:center;gap:10px;border-left:4px solid}
+.balance-check-box.ok{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-color:#10b981;color:#065f46}
+.balance-check-box.fail{background:linear-gradient(135deg,#fef2f2,#fee2e2);border-color:#ef4444;color:#991b1b}
+.balance-check-box i{font-size:1.15rem}
 @media (max-width:400px){.container{padding:0 12px}.card{padding:16px;border-radius:20px}.header{padding:22px 18px 55px;border-radius:0 0 26px 26px}.header-title{font-size:1rem}.header-status{max-width:90px}.user-stats-grid{grid-template-columns:1fr 1fr}.legal-body{padding:20px 18px 26px}.admin-balance-box{grid-template-columns:1fr 1fr}.revenue-stats{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -496,7 +506,11 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <div class="modal-body">
       <div class="alert-box warning">
         <i class="fas fa-hourglass-half"></i>
-        <div>Sub-Admin তৈরি করলে <b>Super Admin এর কাছে pending যাবে</b>। Approve করলে Sub-Admin login করতে পারবে। Sub-Admin-ও নিজের নিচে Sub-Admin বানাতে পারবে।</div>
+        <div>Sub-Admin তৈরি করলে <b>Super Admin এর কাছে pending যাবে</b>। Approve হলে Sub-Admin login করতে পারবে।</div>
+      </div>
+      <div id="csaCostInfo" class="info-display-box gold" style="display:none;">
+        <span class="label">Cost</span>
+        <span class="value" id="csaCostText">—</span>
       </div>
       <div class="form-group"><label>Sub-Admin Username *</label><input type="text" id="csaUsername" placeholder="Min 3 characters"></div>
       <div class="form-group"><label>Password *</label><input type="password" id="csaPassword" placeholder="Min 4 characters"></div>
@@ -975,6 +989,28 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="form-group"><label>Currency Symbol</label><input type="text" id="currencySymbol"></div>
       <div class="form-group"><label>Ad Reset Hour (0-23)</label><input type="number" id="adResetHour" min="0" max="23"></div>
     </div>
+
+    <!-- 🔴 NEW: SUB-ADMIN CREATION COST SETTINGS -->
+    <div class="card rainbow">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-gold"><i class="fas fa-users-gear"></i></div>Sub-Admin Creation Settings</div></div>
+      <div class="alert-box info" style="margin-bottom:16px;">
+        <i class="fas fa-info-circle"></i>
+        <div>এই সেটিংস থেকে নির্ধারণ হবে — Admin/Sub-Admin যখন নতুন Sub-Admin বানাবে, তার <b>নিজের একাউন্ট থেকে কত টাকা কাটা হবে</b> এবং Sub-Admin-এর <b>Revenue Share কত %</b> হবে। টাকা না থাকলে Sub-Admin বানাতে পারবে না।</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-group"><label>💰 Sub-Admin Creation Cost (TK) *</label><input type="number" id="subAdminCreationCost" step="0.01" min="0" value="50" placeholder="50"></div>
+        <div class="form-group"><label>📊 Default Sub-Admin Share (%) *</label><input type="number" id="subAdminDefaultShare" step="1" min="0" max="100" value="30" placeholder="30"></div>
+      </div>
+      <div class="form-group"><label>🔓 Sub-Admin Can Create Sub-Admin?</label>
+        <select id="subAdminNestedEnabled">
+          <option value="true">✅ Enabled</option>
+          <option value="false">🚫 Disabled</option>
+        </select>
+      </div>
+      <button class="btn btn-gold" onclick="saveSubAdminSettings()"><i class="fas fa-save"></i> Save Sub-Admin Settings</button>
+    </div>
+    <!-- END NEW -->
+
     <div class="card rainbow">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-gold"><i class="fas fa-handshake-angle"></i></div>Revenue Share System</div></div>
       <div class="alert-box info" style="margin-bottom:16px;">
@@ -1070,7 +1106,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       </div>
       <div class="alert-box warning">
         <i class="fas fa-info-circle"></i>
-        <div>Admin/Sub-Admin-রা Sub-Admin তৈরি করলে এখানে আসবে। Approve করার আগে Initial Balance এবং Share % সেট করুন।</div>
+        <div>Admin/Sub-Admin-রা Sub-Admin তৈরি করলে এখানে আসবে। <b>Parent-এর Balance চেক করুন</b> — না থাকলে Approve হবে না।</div>
       </div>
       <div id="pendingSubAdminReqList"></div>
     </div>
@@ -1142,7 +1178,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-cyan"><i class="fas fa-globe"></i></div>Referral Link Base URL Setup</div></div>
       <div class="alert-box info">
         <i class="fas fa-info-circle"></i>
-        <div>এখানে User App / Bot-এর Base URL সেট করুন। Admin এবং Sub-Admin এই URL-এর সাথে তাদের Referral Code যুক্ত করে <b>Link Generate</b> করবে। শুধু Referral Code দিয়ে ইউজার Account করতে পারবে না, অবশ্যই <b>Link</b> লাগবে।</div>
+        <div>এখানে User App / Bot-এর Base URL সেট করুন। Admin এবং Sub-Admin এই URL-এর সাথে তাদের Referral Code যুক্ত করে <b>Link Generate</b> করবে।</div>
       </div>
       <div class="form-group"><label>Base URL *</label>
         <input type="url" id="baseUrlInputTab" placeholder="https://t.me/YourBotName/app" />
@@ -1154,14 +1190,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <div class="link-preview-code" id="baseUrlPreviewTab">—</div>
       </div>
       <button class="btn" onclick="saveBaseUrlFromTab()" style="background:linear-gradient(135deg,#06b6d4,#22d3ee);"><i class="fas fa-save"></i> Save Base URL</button>
-    </div>
-    <div class="card">
-      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-link"></i></div>Link Format Examples</div></div>
-      <div class="link-preview-code">
-        <div>🔗 Base URL: <span id="exampleBaseUrl">https://t.me/YourBot/app</span></div>
-        <div>👤 Admin Link: https://t.me/YourBot/app?ref=ADM_XXXXXX_XXXXX</div>
-        <div>📊 Sub-Admin Link: https://t.me/YourBot/app?ref=SUB_XXXXXX_XXXXX</div>
-      </div>
     </div>
   </div>
 
@@ -1372,7 +1400,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-link"></i></div>Generate Referral Link</div></div>
       <div class="alert-box info">
         <i class="fas fa-info-circle"></i>
-        <div>এই লিংক শেয়ার করলে ইউজাররা ক্লিক করে সরাসরি <b>Account করতে পারবে</b> এবং তারা আপনার Referred User হবে। <b>Referral Code নয়, শুধু Link শেয়ার করুন।</b></div>
+        <div>এই লিংক শেয়ার করলে ইউজাররা ক্লিক করে সরাসরি <b>Account করতে পারবে</b> এবং তারা আপনার Referred User হবে।</div>
       </div>
       <div class="link-gen-box">
         <div class="lg-label"><i class="fas fa-globe"></i> Your Referral Link</div>
@@ -1386,10 +1414,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <label>👥 আপনার Referred User Count</label>
         <div class="info-display-box" style="margin-bottom:0;"><span class="label">Users</span><span class="value" id="myLinkUserCount">0</span></div>
       </div>
-      <div class="alert-box warning">
-        <i class="fas fa-exclamation-triangle"></i>
-        <div>Super Admin <b>Link Base URL</b> সেট না করলে লিংক জেনারেট হবে না।</div>
-      </div>
     </div>
   </div>
 
@@ -1399,9 +1423,13 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-user-plus"></i></div>Create Sub-Admin</div></div>
       <div class="alert-box info">
         <i class="fas fa-info-circle"></i>
-        <div>Sub-Admin তৈরি করলে <b>Super Admin approve করবে</b>। Sub-Admin-ও তার নিচে Sub-Admin বানাতে পারবে।</div>
+        <div>Sub-Admin তৈরি করলে <b>Super Admin approve করবে</b>। টাকা না থাকলে Approve হবে না।</div>
       </div>
-      <button class="btn btn-info" onclick="openCreateSubAdminModal()"><i class="fas fa-user-plus"></i> Create Sub-Admin</button>
+      <div id="mySubAdminCostBox" class="balance-check-box ok" style="display:none;">
+        <i class="fas fa-info-circle"></i>
+        <span id="mySubAdminCostText">Cost: 0 TK</span>
+      </div>
+      <button class="btn btn-info" onclick="openCreateSubAdminModal()" id="createSubAdminBtn" style="margin-top:10px;"><i class="fas fa-user-plus"></i> Create Sub-Admin</button>
     </div>
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-users-gear"></i></div>My Sub-Admins</div></div>
@@ -1624,7 +1652,7 @@ let SERVICE_CHARGE_RATE = 10;
 const LB_MAX_ENTRIES = 10;
 const MIN_TASK_REWARD = 0.10;
 
-let configData = { adSlots:[], newTasks:{}, depositMethods:[], leaderboardCustom:[], minAdWatchSeconds: 10, baseUrl: '', baseUrlParam: 'ref' };
+let configData = { adSlots:[], newTasks:{}, depositMethods:[], leaderboardCustom:[], minAdWatchSeconds: 10, baseUrl: '', baseUrlParam: 'ref', subAdminCreationCost: 50, subAdminDefaultShare: 30, subAdminNestedEnabled: true };
 let allUsers = [], filteredUsers = [], channelLinks = [], withdrawLevels = [];
 let MIN_REFERRAL_BALANCE = 20, selectedCommissionMode = 'bonus';
 let editingTaskId = null, allSubmissions = [], currentSubFilter = 'pending', currentTaskCache = {};
@@ -1693,6 +1721,35 @@ function generateAdminRefCode(username) {
 function generateSubAdminRefCode(username) {
   const rand = Math.random().toString(36).substring(2, 7).toUpperCase();
   return 'SUB_' + (username || 'USER').toUpperCase().slice(0, 6) + '_' + rand;
+}
+
+// ═══════════════════════════════════════════════════════════
+// 🔴 NEW: SUB-ADMIN SETTINGS
+// ═══════════════════════════════════════════════════════════
+function getSubAdminCreationCost() {
+  return Number(configData.subAdminCreationCost || 50);
+}
+function getSubAdminDefaultShare() {
+  return Number(configData.subAdminDefaultShare || 30);
+}
+function isSubAdminNestedEnabled() {
+  return configData.subAdminNestedEnabled !== false;
+}
+async function saveSubAdminSettings() {
+  if (!currentSession || currentSession.role !== 'super') return;
+  const cost = Math.max(0, parseFloat(document.getElementById('subAdminCreationCost').value) || 0);
+  const share = Math.max(0, Math.min(100, parseFloat(document.getElementById('subAdminDefaultShare').value) || 30));
+  const nested = document.getElementById('subAdminNestedEnabled').value === 'true';
+  await db.ref('config').update({
+    subAdminCreationCost: cost,
+    subAdminDefaultShare: share,
+    subAdminNestedEnabled: nested,
+    subAdminSettingsUpdatedAt: Date.now()
+  });
+  configData.subAdminCreationCost = cost;
+  configData.subAdminDefaultShare = share;
+  configData.subAdminNestedEnabled = nested;
+  toast('✅ Sub-Admin সেটিংস সেভ হয়েছে!');
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1834,7 +1891,6 @@ async function handleLogin(e) {
             if (sub.username === username && sub.passwordHash === hash) {
               matchedSubAdmin = { id: subId, ...sub, parentAdminId: child.key };
             }
-            // Nested sub-admin check
             if (sub.subAdmins) {
               Object.keys(sub.subAdmins).forEach(nestedId => {
                 const nested = sub.subAdmins[nestedId];
@@ -1905,7 +1961,6 @@ async function loadCurrentAdminData() {
     if (currentSession.role === 'admin') {
       snap = await db.ref('admins/' + currentSession.adminId).once('value');
     } else {
-      // Sub-Admin data
       if (currentSession.parentSubAdminId) {
         snap = await db.ref('admins/' + currentSession.parentAdminId + '/subAdmins/' + currentSession.parentSubAdminId + '/subAdmins/' + currentSession.adminId).once('value');
       } else {
@@ -1916,8 +1971,37 @@ async function loadCurrentAdminData() {
     currentAdminData = { id: currentSession.adminId, ...snap.val() };
     updateWalletUI(); renderDepositHistory(); renderMyDepositRequests(); renderMyContact(); renderMyRevenue();
     renderLinkGenerationForAdmin();
+    renderMySubAdminCostBox();
   } catch(e) { console.error(e); }
 }
+
+// 🔴 NEW: Render sub-admin cost box in mysubadmins tab
+function renderMySubAdminCostBox() {
+  const box = document.getElementById('mySubAdminCostBox');
+  const txt = document.getElementById('mySubAdminCostText');
+  const btn = document.getElementById('createSubAdminBtn');
+  if (!box || !txt) return;
+  const cost = getSubAdminCreationCost();
+  const balance = currentAdminData ? Number(currentAdminData.balance || 0) : 0;
+  const nested = isSubAdminNestedEnabled();
+  box.style.display = 'flex';
+  if (!nested && currentSession.role === 'subadmin') {
+    box.className = 'balance-check-box fail';
+    txt.innerHTML = '⚠️ Sub-Admin তৈরি করা <b>Disabled</b> — Super Admin থেকে অনুমতি নেই।';
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+    return;
+  }
+  if (balance >= cost) {
+    box.className = 'balance-check-box ok';
+    txt.innerHTML = `✅ আপনার Balance: <b>${balance.toFixed(2)} TK</b> — Sub-Admin বানাতে <b>${cost.toFixed(2)} TK</b> লাগবে। যথেষ্ট আছে।`;
+    if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
+  } else {
+    box.className = 'balance-check-box fail';
+    txt.innerHTML = `❌ আপনার Balance: <b>${balance.toFixed(2)} TK</b> — Sub-Admin বানাতে <b>${cost.toFixed(2)} TK</b> লাগবে। আরও <b>${(cost - balance).toFixed(2)} TK</b> প্রয়োজন!`;
+    if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+  }
+}
+
 function updateWalletUI() {
   if (!currentAdminData) return;
   document.getElementById('walletBalance').textContent = (currentAdminData.balance || 0).toFixed(2);
@@ -1926,6 +2010,7 @@ function updateWalletUI() {
   const tw = document.getElementById('taskWalletInfo');
   if (tw) { tw.style.display = 'block'; document.getElementById('taskWalletBal').textContent = (currentAdminData.balance || 0).toFixed(2); }
   updateTaskCostPreview();
+  renderMySubAdminCostBox();
 }
 function renderDepositHistory() {
   const container = document.getElementById('depositHistoryList');
@@ -1996,10 +2081,26 @@ function copyToClipboard(text, label) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// SUB-ADMIN SYSTEM (Admin + Sub-Admin can create)
+// SUB-ADMIN SYSTEM
 // ═══════════════════════════════════════════════════════════
 function openCreateSubAdminModal() {
   if (!currentSession || (currentSession.role !== 'admin' && currentSession.role !== 'subadmin')) return toast('❌ Only Admin/Sub-Admin');
+  // Check nested enabled for sub-admin
+  if (currentSession.role === 'subadmin' && !isSubAdminNestedEnabled()) {
+    return toast('❌ Sub-Admin থেকে Sub-Admin তৈরি বন্ধ করা আছে');
+  }
+  // 🔴 Check balance
+  const cost = getSubAdminCreationCost();
+  const balance = currentAdminData ? Number(currentAdminData.balance || 0) : 0;
+  if (balance < cost) {
+    return toast(`❌ আপনার Balance: ${balance.toFixed(2)} TK — প্রয়োজন ${cost.toFixed(2)} TK`);
+  }
+  // Show cost info
+  const costBox = document.getElementById('csaCostInfo');
+  const costTxt = document.getElementById('csaCostText');
+  if (costBox) costBox.style.display = 'flex';
+  if (costTxt) costTxt.innerHTML = `💸 Cost: <b>${cost.toFixed(2)} TK</b> কাটা হবে | Balance: <b>${balance.toFixed(2)} TK</b> | Default Share: <b>${getSubAdminDefaultShare()}%</b>`;
+
   document.getElementById('csaUsername').value = '';
   document.getElementById('csaPassword').value = '';
   document.getElementById('csaConfirmPassword').value = '';
@@ -2009,6 +2110,8 @@ function closeCreateSubAdminModal() { document.getElementById('createSubAdminMod
 
 async function submitSubAdminRequest() {
   if (!currentSession || (currentSession.role !== 'admin' && currentSession.role !== 'subadmin')) return toast('❌ Denied');
+  if (currentSession.role === 'subadmin' && !isSubAdminNestedEnabled()) return toast('❌ Sub-Admin থেকে Sub-Admin তৈরি বন্ধ');
+
   const username = document.getElementById('csaUsername').value.trim();
   const password = document.getElementById('csaPassword').value;
   const confirm = document.getElementById('csaConfirmPassword').value;
@@ -2017,7 +2120,14 @@ async function submitSubAdminRequest() {
   if (!password || password.length < 4) return toast('❌ Password min 4');
   if (password !== confirm) return toast('❌ Passwords mismatch');
 
-  // Duplicate check (recursive)
+  // 🔴 CRITICAL: Check balance BEFORE sending request
+  const cost = getSubAdminCreationCost();
+  const balance = currentAdminData ? Number(currentAdminData.balance || 0) : 0;
+  if (balance < cost) {
+    return toast(`❌ আপনার Balance: ${balance.toFixed(2)} TK — Sub-Admin বানাতে ${cost.toFixed(2)} TK লাগবে!`);
+  }
+
+  // Duplicate check
   const superAdmin = await getSuperAdminData();
   if (superAdmin && superAdmin.username.toLowerCase() === username.toLowerCase()) return toast('❌ Taken');
   const adminsSnap = await db.ref('admins').once('value');
@@ -2042,8 +2152,10 @@ async function submitSubAdminRequest() {
     parentSubAdminId: currentSession.parentSubAdminId || null,
     subAdminUsername: username,
     passwordHash,
-    initialBalance: 0,
-    revenueShareOverride: 0,
+    requiredCost: cost,
+    defaultShare: getSubAdminDefaultShare(),
+    initialBalance: cost,
+    revenueShareOverride: getSubAdminDefaultShare(),
     subAdminReferralCode: subAdminRefCode,
     status: 'pending',
     createdAt: Date.now()
@@ -2075,7 +2187,7 @@ async function openSuperCreateSubAdminModal() {
   document.getElementById('scsaPassword').value = '';
   document.getElementById('scsaConfirmPassword').value = '';
   document.getElementById('scsaInitialBalance').value = '0';
-  document.getElementById('scsaRevenueShare').value = '30';
+  document.getElementById('scsaRevenueShare').value = String(getSubAdminDefaultShare());
   document.getElementById('scsaPreviewBox').style.display = 'none';
   document.getElementById('superCreateSubAdminModal').classList.add('active');
 }
@@ -2159,7 +2271,6 @@ async function superCreateSubAdmin() {
 async function loadMySubAdminData() {
   if (!currentSession || (currentSession.role !== 'admin' && currentSession.role !== 'subadmin')) return;
   
-  // Get sub-admins list
   let subsPath;
   if (currentSession.role === 'admin') {
     subsPath = 'admins/' + currentSession.adminId + '/subAdmins';
@@ -2208,7 +2319,6 @@ async function loadMySubAdminData() {
     container.innerHTML = h;
   }
 
-  // Pending requests
   const reqSnap = await db.ref('subAdminRequests').orderByChild('parentAdminId').equalTo(currentSession.adminId).once('value');
   const rContainer = document.getElementById('myPendingSubAdminRequests');
   let reqs = [];
@@ -2228,8 +2338,8 @@ async function loadMySubAdminData() {
           <span class="status-badge ${cls}">${r.status.toUpperCase()}</span>
         </div>
         <div class="dreq-info">
-          <b>Balance:</b> ${Number(r.initialBalance||0).toFixed(2)} TK<br>
-          <b>Share:</b> ${Number(r.revenueShareOverride||0)}%<br>
+          <b>Cost:</b> ${Number(r.requiredCost||r.initialBalance||0).toFixed(2)} TK<br>
+          <b>Share:</b> ${Number(r.revenueShareOverride||r.defaultShare||30)}%<br>
           <b>Submitted:</b> ${dt}
           ${r.rejectReason ? '<br><b style="color:#dc2626;">Reason:</b> ' + esc(r.rejectReason) : ''}
         </div>
@@ -2312,13 +2422,37 @@ async function deleteMySubAdmin(subId) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// SUPER: SUB-ADMIN REQUESTS
+// SUPER: SUB-ADMIN REQUESTS (with balance validation)
 // ═══════════════════════════════════════════════════════════
 async function loadSubAdminRequests() {
   const snap = await db.ref('subAdminRequests').once('value');
-  allSubAdminRequests = [];
-  snap.forEach(c => allSubAdminRequests.push({ id: c.key, ...c.val() }));
-  allSubAdminRequests.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+  const raw = [];
+  snap.forEach(c => raw.push({ id: c.key, ...c.val() }));
+  raw.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+
+  // Fetch admin snapshot for parent balance display
+  const adminsSnap = await db.ref('admins').once('value');
+  const allAdminsRaw = adminsSnap.val() || {};
+
+  const findParent = (r) => {
+    try {
+      if (r.parentRole === 'subadmin') {
+        const grand = allAdminsRaw[r.grandParentAdminId];
+        if (!grand || !grand.subAdmins) return null;
+        const parentSubId = r.parentSubAdminId || r.parentAdminId;
+        const ps = grand.subAdmins[parentSubId];
+        if (ps && ps.subAdmins && ps.subAdmins[r.parentAdminId]) return ps.subAdmins[r.parentAdminId];
+        return ps || null;
+      } else {
+        return allAdminsRaw[r.parentAdminId] || null;
+      }
+    } catch(e) { return null; }
+  };
+
+  allSubAdminRequests = raw.map(r => {
+    const p = findParent(r);
+    return { ...r, _parentBalance: p ? Number(p.balance || 0) : 0 };
+  });
 
   const pendings = allSubAdminRequests.filter(r => r.status === 'pending');
   const badge = document.getElementById('subReqBadge');
@@ -2335,6 +2469,9 @@ async function loadSubAdminRequests() {
       let h = '';
       pendings.forEach(r => {
         const dt = new Date(r.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+        const parentBal = Number(r._parentBalance || 0);
+        const reqCost = Number(r.requiredCost || r.initialBalance || 0);
+        const hasEnough = parentBal >= reqCost;
         h += `<div class="subadmin-req-item">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap;">
             <div style="font-weight:900;font-size:.95rem;">👤 ${esc(r.subAdminUsername)}</div>
@@ -2342,19 +2479,27 @@ async function loadSubAdminRequests() {
           </div>
           <div style="font-size:.78rem;line-height:1.7;font-weight:600;">
             <b>👨‍💼 Parent:</b> ${esc(r.parentAdminName)} (${esc(r.parentRole || 'admin')})<br>
-            <b>🆔 Parent ID:</b> ${esc(r.parentAdminId)}<br>
             <b>🕐 Submitted:</b> ${dt}
           </div>
-          <div class="alert-box info" style="margin-top:10px;font-size:.75rem;">
-            <i class="fas fa-info-circle"></i>
-            <div>Approve করার আগে <b>Initial Balance</b> এবং <b>Revenue Share %</b> সেট করুন।</div>
+          <div class="req-info-grid">
+            <div class="req-info-cell green">💰 Parent Balance<b>${parentBal.toFixed(2)} TK</b></div>
+            <div class="req-info-cell warn">💸 Required Cost<b>${reqCost.toFixed(2)} TK</b></div>
+            <div class="req-info-cell">📊 Share<b>${Number(r.revenueShareOverride || r.defaultShare || 30)}%</b></div>
+            <div class="req-info-cell gold">🔑 Ref Code<b style="font-size:.7rem;">${esc(r.subAdminReferralCode || '—')}</b></div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;">
-            <div class="form-group" style="margin-bottom:0;"><label>💰 Initial Balance (TK)</label><input type="number" id="approveBal_${r.id}" step="0.01" min="0" value="0"></div>
-            <div class="form-group" style="margin-bottom:0;"><label>📊 Revenue Share (%)</label><input type="number" id="approveShare_${r.id}" step="1" min="0" max="100" value="${Number(r.revenueShareOverride||30)}"></div>
+          <div class="balance-check-box ${hasEnough ? 'ok' : 'fail'}">
+            <i class="fas ${hasEnough ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+            <span>${hasEnough ? '✅ Parent-এর Balance যথেষ্ট — Approve করা যাবে' : `❌ Parent-এর কাছে আরও ${(reqCost - parentBal).toFixed(2)} TK প্রয়োজন — Approve হবে না`}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+            <div class="form-group" style="margin-bottom:0;"><label>💰 Cost (TK)</label><input type="number" id="approveBal_${r.id}" step="0.01" min="0" value="${reqCost}" oninput="checkApproveBalLive('${r.id}', ${parentBal})"></div>
+            <div class="form-group" style="margin-bottom:0;"><label>📊 Share (%)</label><input type="number" id="approveShare_${r.id}" step="1" min="0" max="100" value="${Number(r.revenueShareOverride || r.defaultShare || 30)}"></div>
+          </div>
+          <div id="liveWarn_${r.id}" style="display:${hasEnough ? 'none' : 'block'};margin-top:8px;padding:8px 10px;border-radius:8px;background:#fef2f2;border-left:3px solid #ef4444;font-size:.72rem;font-weight:800;color:#991b1b;">
+            ⚠️ Parent Balance (${parentBal.toFixed(2)} TK) — Required (${reqCost.toFixed(2)} TK)
           </div>
           <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
-            <button class="btn btn-green btn-small" onclick="approveSubAdminRequest('${r.id}')" style="flex:1;"><i class="fas fa-check"></i> Approve</button>
+            <button class="btn btn-green btn-small" id="approveBtn_${r.id}" onclick="approveSubAdminRequest('${r.id}')" style="flex:1;" ${hasEnough ? '' : 'disabled'}><i class="fas fa-check"></i> Approve</button>
             <button class="btn btn-red btn-small" onclick="rejectSubAdminRequest('${r.id}')" style="flex:1;"><i class="fas fa-times"></i> Reject</button>
           </div>
         </div>`;
@@ -2388,8 +2533,22 @@ async function loadSubAdminRequests() {
   }
 }
 
+function checkApproveBalLive(reqId, parentBalance) {
+  const el = document.getElementById('approveBal_' + reqId);
+  const warnEl = document.getElementById('liveWarn_' + reqId);
+  const btnEl = document.getElementById('approveBtn_' + reqId);
+  if (!el) return;
+  const v = parseFloat(el.value) || 0;
+  if (v > parentBalance) {
+    if (warnEl) { warnEl.style.display = 'block'; warnEl.innerHTML = `⚠️ Parent Balance (${parentBalance.toFixed(2)} TK) — Required (${v.toFixed(2)} TK) — যথেষ্ট নয়!`; }
+    if (btnEl) { btnEl.disabled = true; btnEl.style.opacity = '0.5'; }
+  } else {
+    if (warnEl) warnEl.style.display = 'none';
+    if (btnEl) { btnEl.disabled = false; btnEl.style.opacity = '1'; }
+  }
+}
+
 async function approveSubAdminRequest(reqId) {
-  if (!confirm('Approve Sub-Admin?')) return;
   const snap = await db.ref('subAdminRequests/' + reqId).once('value');
   if (!snap.exists()) return toast('❌ Not found');
   const r = snap.val();
@@ -2400,7 +2559,9 @@ async function approveSubAdminRequest(reqId) {
   const initBal = initBalEl ? (parseFloat(initBalEl.value) || 0) : 0;
   const revShare = shareEl ? (parseFloat(shareEl.value) || 0) : 0;
 
-  // Determine parent path (admin or sub-admin)
+  if (initBal < 0) return toast('❌ Balance ঋণাত্মক হতে পারে না');
+  if (revShare < 0 || revShare > 100) return toast('❌ Share 0-100 এর মধ্যে হতে হবে');
+
   let parentPath;
   if (r.parentRole === 'subadmin' && r.parentSubAdminId) {
     parentPath = 'admins/' + r.grandParentAdminId + '/subAdmins/' + r.parentSubAdminId + '/subAdmins/' + r.parentAdminId;
@@ -2413,7 +2574,14 @@ async function approveSubAdminRequest(reqId) {
   const parentSnap = await db.ref(parentPath).once('value');
   if (!parentSnap.exists()) return toast('❌ Parent not found');
   const parent = parentSnap.val();
-  if (initBal > Number(parent.balance || 0)) return toast(`❌ Parent balance: ${Number(parent.balance || 0).toFixed(2)}`);
+  const parentBalance = Number(parent.balance || 0);
+
+  // 🔴 CRITICAL CHECK
+  if (initBal > parentBalance) {
+    return toast(`❌ Parent-এর কাছে মাত্র ${parentBalance.toFixed(2)} TK আছে! ${initBal.toFixed(2)} TK দেওয়া যাবে না।`);
+  }
+
+  if (!confirm(`Approve করবেন?\n\nSub-Admin: ${r.subAdminUsername}\nInitial Balance: ${initBal.toFixed(2)} TK\nShare: ${revShare}%\nParent Balance: ${parentBalance.toFixed(2)} TK`)) return;
 
   const subId = 'sub_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
   const subData = {
@@ -2437,7 +2605,7 @@ async function approveSubAdminRequest(reqId) {
   await db.ref(parentPath + '/subAdmins/' + subId).set(subData);
   if (initBal > 0) {
     await db.ref(parentPath).update({
-      balance: Number(parent.balance || 0) - initBal,
+      balance: parentBalance - initBal,
       totalSpent: Number(parent.totalSpent || 0) + initBal
     });
   }
@@ -2616,7 +2784,6 @@ async function renderMyRevenue() {
   document.getElementById('myRevenueWithdrawn').textContent = Number(a.totalRevenueWithdrawn || 0).toFixed(2);
   document.getElementById('minRevWithdraw').textContent = REVENUE_SETTINGS.minWithdrawAmount;
   
-  // Get admin's share % (admin's own or sub-admin override)
   let myShare;
   if (currentSession.role === 'subadmin') {
     myShare = Number(a.revenueShareOverride) || REVENUE_SETTINGS.adminSharePercent;
@@ -2626,14 +2793,12 @@ async function renderMyRevenue() {
   document.getElementById('myShareView').textContent = myShare;
   document.getElementById('platformShareView').textContent = 100 - myShare;
 
-  // User count
   let userCount = 0;
   const field = currentSession.role === 'subadmin' ? 'referredBySubAdmin' : 'referredByAdmin';
   const usrSnap = await db.ref('users').orderByChild(field).equalTo(currentAdminData.id).once('value');
   usrSnap.forEach(() => userCount++);
   document.getElementById('myReferredUsersCount').textContent = userCount;
 
-  // Revenue requests
   const reqSnap = await db.ref('revenueWithdrawRequests').orderByChild('adminId').equalTo(currentAdminData.id).once('value');
   const myReqs = [];
   reqSnap.forEach(c => myReqs.push({ id: c.key, ...c.val() }));
@@ -2652,7 +2817,6 @@ async function renderMyRevenue() {
     reqEl.innerHTML = h;
   }
 
-  // Referred users
   const refListEl = document.getElementById('myReferredUsersList');
   if (refListEl) {
     const snap = await db.ref('users').orderByChild(field).equalTo(currentAdminData.id).once('value');
@@ -4151,7 +4315,7 @@ function switchTab(id, el) {
   if (id === 'admins') loadAdminsList();
   if (id === 'depositmgmt') { renderDepositMethodsList(); loadAllDepositRequests(); }
   if (id === 'wallet') { loadCurrentAdminData(); renderMyContact(); }
-  if (id === 'mysubadmins') loadMySubAdminData();
+  if (id === 'mysubadmins') { loadMySubAdminData(); renderMySubAdminCostBox(); }
   if (id === 'myrevenue') { loadRevenueSettings(); loadCurrentAdminData(); renderMyRevenue(); }
   if (id === 'mylink') renderLinkGenerationForAdmin();
   if (id === 'deposit') { renderDepositMethodsAdminView(); renderMyDepositRequests(); }
@@ -4186,6 +4350,9 @@ db.ref('config').on('value', snap => {
   if (!Array.isArray(configData.adSlots)) configData.adSlots = [];
   if (!configData.baseUrl) configData.baseUrl = '';
   if (!configData.baseUrlParam) configData.baseUrlParam = 'ref';
+  if (configData.subAdminCreationCost === undefined) configData.subAdminCreationCost = 50;
+  if (configData.subAdminDefaultShare === undefined) configData.subAdminDefaultShare = 30;
+  if (configData.subAdminNestedEnabled === undefined) configData.subAdminNestedEnabled = true;
   channelLinks = configData.channelLinks || [];
   withdrawLevels = configData.withdrawLevels || [];
   MIN_REFERRAL_BALANCE = configData.minReferralBalance || 20;
@@ -4226,6 +4393,10 @@ db.ref('config').on('value', snap => {
     document.getElementById('becomeAdminTitle').value = configData.becomeAdminTitle || '';
     document.getElementById('becomeAdminSub').value = configData.becomeAdminSub || '';
     document.getElementById('becomeAdminBtnText').value = configData.becomeAdminBtnText || '';
+    // 🔴 NEW: Sub-Admin settings inputs
+    const sac = document.getElementById('subAdminCreationCost'); if (sac) sac.value = configData.subAdminCreationCost || 50;
+    const sas = document.getElementById('subAdminDefaultShare'); if (sas) sas.value = configData.subAdminDefaultShare || 30;
+    const san = document.getElementById('subAdminNestedEnabled'); if (san) san.value = String(configData.subAdminNestedEnabled !== false);
     const er = document.getElementById('revenueShareEnabled'); if (er) er.value = String(REVENUE_SETTINGS.enabled);
     const ar = document.getElementById('revenueAdminShare'); if (ar) ar.value = REVENUE_SETTINGS.adminSharePercent;
     const mw = document.getElementById('revenueMinWithdraw'); if (mw) mw.value = REVENUE_SETTINGS.minWithdrawAmount;
@@ -4260,6 +4431,7 @@ db.ref('config').on('value', snap => {
   if (currentSession && (currentSession.role === 'admin' || currentSession.role === 'subadmin')) {
     renderDepositMethodsAdminView(); renderContactInfo();
     renderLinkGenerationForAdmin();
+    renderMySubAdminCostBox();
   }
   if (currentSession) {
     updateMaxDaysHint('newTaskReward','newTaskTime','taskMaxDaysHint');
