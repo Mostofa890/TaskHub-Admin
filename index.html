@@ -899,12 +899,17 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   <div id="tab-settings" class="tab-content active super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-robot"></i></div>App Configuration</div></div>
-      <div class="form-group"><label>Bot Username</label><input type="text" id="botUsername"></div>
+      <!-- ✅ FIXED: Bot Username with live sanitize hint -->
+      <div class="form-group">
+        <label>Bot Username (without @)</label>
+        <input type="text" id="botUsername" oninput="onBotUsernameInput(this)" placeholder="e.g. TaskHubBD24Bot">
+        <small id="botUserHint" style="display:block; margin-top:6px; font-size:.7rem; font-weight:700; color:#64748b;"></small>
+      </div>
       <div class="form-group"><label>Currency Symbol</label><input type="text" id="currencySymbol"></div>
       <div class="form-group"><label>Ad Reset Hour (0-23)</label><input type="number" id="adResetHour" min="0" max="23"></div>
     </div>
 
-    <!-- ✅ NEW: ADMIN REVENUE SYSTEM -->
+    <!-- ✅ ADMIN REVENUE SYSTEM -->
     <div class="card rainbow">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-coins"></i></div>Admin Revenue System</div></div>
 
@@ -1124,7 +1129,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ✅ NEW: ADMIN PAYOUTS -->
+  <!-- ✅ ADMIN PAYOUTS -->
   <div id="tab-adminpayouts" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>Pending Admin Withdraw Requests</div></div>
@@ -1361,7 +1366,7 @@ s.onload = () => {
       </div>
     </div>
 
-    <!-- ✅ NEW: My Referral Link Card -->
+    <!-- ✅ My Referral Link Card -->
     <div class="card rainbow">
       <div class="card-header">
         <div class="card-title">
@@ -1422,7 +1427,7 @@ s.onload = () => {
     </div>
   </div>
 
-  <!-- ✅ NEW: EARNINGS (Admin) -->
+  <!-- EARNINGS (Admin) -->
   <div id="tab-earnings" class="tab-content admin-only hidden">
     <div class="wallet-hero" style="background:linear-gradient(135deg,#7c3aed 0%,#8b5cf6 40%,#ec4899 100%);box-shadow:0 20px 40px -10px rgba(139,92,246,.55);">
       <i class="fas fa-coins wallet-icon"></i>
@@ -1641,6 +1646,44 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
+/* ═══════════════════════════════════════════════════════════
+   ✅✅✅ NEW: Bot Username Sanitizer + Referral Link Builder
+   ─────────────────────────────────────────────────────────
+   এই ফাংশন দুটো @ চিহ্ন এবং space স্বয়ংক্রিয়ভাবে সরিয়ে দেয়
+   যাতে Admin Referral Link সবসময় সঠিকভাবে কাজ করে।
+   ═══════════════════════════════════════════════════════════ */
+function sanitizeBotUsername(raw) {
+  if (!raw) return '';
+  return String(raw).trim().replace(/^@+/, '').replace(/\s+/g, '');
+}
+
+function buildBotReferralLink(botUsername, startParam) {
+  const cleanBot = sanitizeBotUsername(botUsername);
+  if (!cleanBot) return '';
+  const cleanParam = startParam ? encodeURIComponent(String(startParam).trim()) : '';
+  return 'https://t.me/' + cleanBot + (cleanParam ? '?start=' + cleanParam : '');
+}
+
+function onBotUsernameInput(el) {
+  const raw = el.value;
+  const clean = sanitizeBotUsername(raw);
+  const hint = document.getElementById('botUserHint');
+  if (!hint) return;
+  if (!raw || raw.length === 0) {
+    hint.innerHTML = '💡 উদাহরণ: <b>TaskHubBD24Bot</b>';
+    hint.style.color = '#64748b';
+  } else if (raw !== clean) {
+    hint.innerHTML = `⚠️ <b>@</b> বা space সরিয়ে ফেলা হবে → <b>${esc(clean)}</b>`;
+    hint.style.color = '#f59e0b';
+  } else if (clean.length < 5) {
+    hint.innerHTML = '⚠️ সঠিক bot username দিন (e.g. TaskHubBD24Bot)';
+    hint.style.color = '#f59e0b';
+  } else {
+    hint.innerHTML = `✅ Link হবে: <b>https://t.me/${esc(clean)}?start=...</b>`;
+    hint.style.color = '#10b981';
+  }
+}
+
 const TASK_DELETE_FEE = 10;
 let SERVICE_CHARGE_RATE = 10;
 const LB_MAX_ENTRIES = 10;
@@ -1657,7 +1700,6 @@ let lbEditingIndex = null;
 let currentTaskListTab = 'live';
 let currentUserCache = {};
 
-// ✅ NEW: Admin Revenue Defaults
 let adminRevenueConfig = {
   mode: 'referral_commission',
   refCommissionRate: 5,
@@ -1846,7 +1888,6 @@ async function loadCurrentAdminData() {
     if (!snap.exists()) return;
     currentAdminData = { id: currentSession.adminId, ...snap.val() };
     updateWalletUI(); renderDepositHistory(); renderMyDepositRequests(); renderMyContact();
-    // ✅ NEW: Load referral info & earnings
     await generateAdminRefCode();
     await loadMyAdminReferralStats();
     await loadMyEarnings();
@@ -1946,7 +1987,7 @@ function copyToClipboard(text, label) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// ✅ NEW: ADMIN REVENUE SYSTEM
+// ADMIN REVENUE SYSTEM
 // ═══════════════════════════════════════════════════════════
 
 async function saveAdminRevenueSettings() {
@@ -1978,7 +2019,7 @@ function loadAdminRevenueSettings() {
   if (el('adminWithdrawFee')) el('adminWithdrawFee').value = ar.withdrawFee !== undefined ? ar.withdrawFee : 2;
 }
 
-// ✅ Generate admin's unique referral code
+/* ✅ FIXED: Generate admin's unique referral code — now with sanitized bot username */
 async function generateAdminRefCode() {
   if (!currentSession || currentSession.role !== 'admin') return;
   const adminId = currentSession.adminId;
@@ -1993,9 +2034,15 @@ async function generateAdminRefCode() {
   }
   const codeEl = document.getElementById('myAdminRefCode');
   if (codeEl) codeEl.textContent = refCode;
-  const botUser = configData.botUsername || 'YourBotUsername';
+  
+  // ✅ FIX: Sanitize bot username before building link
+  const rawBot = configData.botUsername || 'YourBotUsername';
+  const cleanBot = sanitizeBotUsername(rawBot);
+  const validLink = buildBotReferralLink(cleanBot, refCode);
+  
   const linkEl = document.getElementById('myAdminRefLink');
-  if (linkEl) linkEl.textContent = `https://t.me/${botUser}?start=${refCode}`;
+  if (linkEl) linkEl.textContent = validLink || '⚠️ Bot username সেট করা নেই';
+  
   const rateEl = document.getElementById('commRateDisplay');
   if (rateEl) rateEl.textContent = (adminRevenueConfig.refCommissionRate || 5) + '%';
 }
@@ -2004,10 +2051,22 @@ function copyAdminRefCode() {
   const code = document.getElementById('myAdminRefCode').textContent;
   copyToClipboard(code, 'Referral Code');
 }
+
+/* ✅ FIXED: Copy referral link with sanitized bot username */
 function copyAdminRefLink() {
-  const botUser = configData.botUsername || 'YourBotUsername';
+  const rawBot = configData.botUsername || '';
+  const cleanBot = sanitizeBotUsername(rawBot);
+  if (!cleanBot) {
+    toast('❌ Bot username সেট করা নেই! Settings এ যান।');
+    return;
+  }
   const code = document.getElementById('myAdminRefCode').textContent;
-  copyToClipboard(`https://t.me/${botUser}?start=${code}`, 'Referral Link');
+  if (!code || code === '---') {
+    toast('❌ Referral code তৈরি হয়নি');
+    return;
+  }
+  const link = buildBotReferralLink(cleanBot, code);
+  copyToClipboard(link, 'Referral Link');
 }
 
 async function loadMyAdminReferralStats() {
@@ -2024,7 +2083,6 @@ async function loadMyAdminReferralStats() {
   const commEl = document.getElementById('myRefCommission');
   if (commEl) commEl.textContent = Number(a.totalRefCommission || 0).toFixed(2);
   
-  // Today's earning
   const today = new Date().toDateString();
   const logs = a.commissionLogs || {};
   let todayEarn = 0;
@@ -2036,7 +2094,6 @@ async function loadMyAdminReferralStats() {
   const todayEl = document.getElementById('myRefTodayEarn');
   if (todayEl) todayEl.textContent = todayEarn.toFixed(2);
   
-  // Referred users list
   const container = document.getElementById('myReferredUsersList');
   if (!container) return;
   
@@ -2120,7 +2177,6 @@ async function loadRevenueHistory() {
   c.innerHTML = h;
 }
 
-// ✅ Give commission to task owner admin
 async function giveTaskOwnerBonus(taskId, submissionId, userName) {
   const taskSnap = await db.ref('config/newTasks/' + taskId).once('value');
   if (!taskSnap.exists()) return;
@@ -2139,7 +2195,6 @@ async function giveTaskOwnerBonus(taskId, submissionId, userName) {
   if (!adminSnap.exists()) return;
   const a = adminSnap.val();
   
-  // Check daily limit
   const today = new Date().toDateString();
   const logs = a.commissionLogs || {};
   let todayTotal = 0;
@@ -2167,7 +2222,6 @@ async function giveTaskOwnerBonus(taskId, submissionId, userName) {
     commissionLogs: logs
   });
   
-  // Log for super admin
   await db.ref('superAdminRevenue').push({
     source: 'task_bonus',
     adminId: creatorId,
@@ -2177,7 +2231,6 @@ async function giveTaskOwnerBonus(taskId, submissionId, userName) {
   });
 }
 
-// ✅ NEW: Admin Withdraw Modal
 function openAdminWithdrawModal() {
   if (!currentAdminData) return;
   const bal = Number(currentAdminData.balance || 0);
@@ -2274,7 +2327,6 @@ async function loadMyAdminWithdrawRequests() {
   c.innerHTML = h;
 }
 
-// ✅ Super Admin: Admin Withdraw Requests
 async function loadAdminWithdrawRequests() {
   const pendingEl = document.getElementById('adminWdPendingList');
   const allEl = document.getElementById('adminWdAllList');
@@ -2378,9 +2430,7 @@ async function rejectAdminWd(reqId) {
   loadAdminWithdrawRequests();
 }
 
-// ═══════════════════════════════════════════════════════════
 // EXTRA REWARDS
-// ═══════════════════════════════════════════════════════════
 function loadExtraRewardPreview() {
   const enabled = document.getElementById('extraRewardEnabled').value === 'true';
   const amount = parseFloat(document.getElementById('extraRewardAmount').value) || 0.5;
@@ -2423,9 +2473,7 @@ async function saveExtraRewardSettings() {
   } catch(e) { toast('❌ Error: ' + e.message); }
 }
 
-// ═══════════════════════════════════════════════════════════
 // ADS CONFIG
-// ═══════════════════════════════════════════════════════════
 const AD_SLOT_COUNT = 6;
 
 function loadAdsConfig() {
@@ -2446,7 +2494,6 @@ function loadAdsConfig() {
         <div class="ad-slot-name"><i class="fas fa-rectangle-ad"></i> Ad Slot ${i+1} <span class="num-badge">#${i+1}</span></div>
         <div class="ad-slot-status ${statusClass}">${statusText}</div>
       </div>
-
       <label>Network Type</label>
       <select id="adNet_${i}" onchange="toggleCustomCodeField(${i})" style="margin-bottom:10px;">
         <option value="none" ${s.network==='none'&&!hasCode?'selected':''}>🚫 Disabled</option>
@@ -2455,26 +2502,15 @@ function loadAdsConfig() {
         <option value="gigapub" ${s.network==='gigapub'?'selected':''}>🌐 GigaPub</option>
         <option value="custom" ${isCustom?'selected':''}>⚙️ Custom Code Only</option>
       </select>
-
-      <label>Block / Zone ID <span style="color:var(--text-muted); font-weight:500;">(network-specific)</span></label>
+      <label>Block / Zone ID</label>
       <input type="text" id="adId_${i}" value="${esc(s.id||'')}" placeholder="e.g. 11878844" style="margin-bottom:10px;">
-
       <div id="adCustomWrap_${i}" style="display:${isCustom ? 'block' : 'none'};">
         <label>⚙️ Custom Ad Code (JavaScript)</label>
-        <textarea id="adCode_${i}" rows="8" placeholder="// ✅ External ad-এর জন্য:&#10;// openExternal('https://ad-page.com/xyz');&#10;//&#10;// ✅ In-app ad-এর জন্য:&#10;// await window.show_11878844('pop');&#10;// resolve();" style="font-family:'Courier New',monospace; font-size:.78rem; line-height:1.55;"></textarea>
-        <div class="ad-custom-hint">
-          <b>💡 Helper Functions:</b><br>
-          • <code>openExternal(url)</code> → External ad পেজ খুলুন (auto-tracked) ⭐<br>
-          • <code>resolve()</code> / <code>adResolve()</code> → Ad সফল ঘোষণা<br>
-          • <code>reject('reason')</code> / <code>adReject('reason')</code> → Ad ফেইল<br>
-          • <code>async/await</code> + <code>return</code> Promise ও কাজ করবে<br>
-          • 90 সেকেন্ড timeout-এর ভেতরে resolve/reject করতে হবে
-        </div>
+        <textarea id="adCode_${i}" rows="8" placeholder="// ✅ External ad:&#10;// openExternal('https://ad-page.com/xyz');" style="font-family:'Courier New',monospace; font-size:.78rem; line-height:1.55;"></textarea>
       </div>
     </div>`;
   }
   container.innerHTML = h;
-
   for (let i = 0; i < AD_SLOT_COUNT; i++) {
     const s = slots[i] || {};
     const ta = document.getElementById('adCode_' + i);
@@ -2501,32 +2537,18 @@ function saveAds() {
   }
   const dailyAdLimit = Number(document.getElementById('dailyAdLimit').value) || 10;
   const adReward = Number(document.getElementById('adReward').value) || 0.5;
-  
   const minAdWatchSecondsEl = document.getElementById('minAdWatchSeconds');
   let minAdWatchSeconds = 10;
   if (minAdWatchSecondsEl) {
     const v = Number(minAdWatchSecondsEl.value);
     if (!isNaN(v) && v >= 3 && v <= 120) minAdWatchSeconds = v;
   }
-  
-  db.ref('config').update({ 
-    dailyAdLimit, 
-    adReward, 
-    adSlots: slots,
-    minAdWatchSeconds: minAdWatchSeconds
-  })
-  .then(() => { 
-    toast('✅ Ad settings saved! (Min: ' + minAdWatchSeconds + 's)'); 
-    configData.adSlots = slots; 
-    configData.minAdWatchSeconds = minAdWatchSeconds;
-    loadAdsConfig(); 
-  })
+  db.ref('config').update({ dailyAdLimit, adReward, adSlots: slots, minAdWatchSeconds: minAdWatchSeconds })
+  .then(() => { toast('✅ Ad settings saved! (Min: ' + minAdWatchSeconds + 's)'); configData.adSlots = slots; configData.minAdWatchSeconds = minAdWatchSeconds; loadAdsConfig(); })
   .catch(e => toast('❌ ' + e.message));
 }
 
-// ═══════════════════════════════════════════════════════════
 // LEADERBOARD CUSTOM
-// ═══════════════════════════════════════════════════════════
 function renderLeaderboardCustomList() {
   const container = document.getElementById('lbListContainer');
   const countEl = document.getElementById('lbCount');
@@ -2809,9 +2831,7 @@ async function viewAdminFull(adminId) {
   } else {
     contactHtml = '<div style="text-align:center; color:#94a3b8; padding:10px; font-size:.78rem;">No contact info</div>';
   }
-  
   const refCode = a.referralCode || 'N/A';
-  
   document.getElementById('adminViewBody').innerHTML = `
     <div style="text-align:center; margin-bottom:16px;">
       <div style="width:64px; height:64px; margin:0 auto 10px; border-radius:18px; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.5rem; box-shadow:0 8px 20px rgba(99,102,241,.35);">${(a.username||'A').charAt(0).toUpperCase()}</div>
@@ -2827,7 +2847,6 @@ async function viewAdminFull(adminId) {
     <div class="info-display-box" style="background:linear-gradient(135deg,#fef3c7,#fde68a); border-color:rgba(245,158,11,.4);">
       <span class="label" style="color:#92400e;">Password Hash</span>
       <span class="value" style="font-size:.65rem; color:#92400e;">${esc(a.passwordHash || 'N/A')}</span>
-      <button class="copy-btn inline" style="background:#fff; border-color:#f59e0b; color:#92400e;" onclick="copyToClipboard('${esc(a.passwordHash || '').replace(/'/g,"\\'")}', 'Password Hash')"><i class="fas fa-copy"></i></button>
     </div>
     <div class="info-display-box" style="background:linear-gradient(135deg,#cffafe,#a5f3fc); border-color:rgba(6,182,212,.4);">
       <span class="label" style="color:#0e7490;">Referral Code</span>
@@ -2909,9 +2928,7 @@ async function saveAdminFullEdit() {
     updatedAt: Date.now()
   };
   const newPw = document.getElementById('aePassword').value;
-  if (newPw && newPw.length >= 4) {
-    updateData.passwordHash = await sha256(newPw);
-  }
+  if (newPw && newPw.length >= 4) updateData.passwordHash = await sha256(newPw);
   if (!updateData.username || updateData.username.length < 3) return toast('❌ Username min 3');
   try {
     await db.ref('admins/' + adminId).update(updateData);
@@ -2998,7 +3015,6 @@ async function addNewAdmin() {
   const hash = await sha256(password);
   const newAdminRef = db.ref('admins').push();
   const newId = newAdminRef.key;
-  // Auto-generate referral code
   const refCode = 'ADM' + newId.substring(0, 6).toUpperCase() + Math.random().toString(36).substring(2, 6).toUpperCase();
   await newAdminRef.set({
     username, passwordHash: hash, role: 'admin', isActive: true,
@@ -3573,10 +3589,7 @@ async function reviewSubmission(subId, action) {
     }
     const ts = await db.ref('config/newTasks/' + sub.taskId).once('value');
     if (ts.exists()) await db.ref('config/newTasks/' + sub.taskId).update({ submittedCount: Number(ts.val().submittedCount || 0) + 1 });
-    
-    // ✅ NEW: Give task bonus to admin
     await giveTaskOwnerBonus(sub.taskId, subId, sub.userName || 'User');
-    
     toast('✅ Approved!');
   } else toast('❌ Rejected');
   loadTaskSubmissions();
@@ -3771,7 +3784,6 @@ function filterUsers() {
 function renderUsers() {
   const c = document.getElementById('usersContainer');
   if (!filteredUsers.length) { c.innerHTML = '<div class="empty-state"><div class="icon"><i class="fas fa-user-slash"></i></div><p>No users</p></div>'; return; }
-  const sym = configData.currencySymbol || 'TK';
   let h = '';
   filteredUsers.forEach(u => {
     const init = (u.name || 'U').charAt(0).toUpperCase();
@@ -3809,7 +3821,6 @@ function renderUsers() {
 function viewUserFull(userId) {
   const u = currentUserCache[userId];
   if (!u) return toast('❌ Not found');
-  const sym = configData.currencySymbol || 'TK';
   const da = u.dailyAds || {};
   const adSlots = (configData.adSlots || []).slice(0, 6);
   let adViewsHtml = '';
@@ -4208,11 +4219,18 @@ async function saveServiceCharge() {
   toast(`✅ Set to ${rate}%`);
   updateTaskCostPreview();
 }
+
+/* ✅ FIXED: Save settings with sanitized bot username */
 function saveSettings() {
   const methods = document.getElementById('paymentMethods').value.split(',').map(m => m.trim());
   const levels = getWithdrawLevelsFromUI();
+  
+  // ✅ Sanitize bot username before saving
+  const rawBot = document.getElementById('botUsername').value;
+  const cleanBot = sanitizeBotUsername(rawBot);
+  
   db.ref('config').update({
-    botUsername: document.getElementById('botUsername').value,
+    botUsername: cleanBot,
     currencySymbol: document.getElementById('currencySymbol').value,
     contactLink: document.getElementById('contactLink').value.trim(),
     contactBtnText: document.getElementById('contactBtnText').value.trim(),
@@ -4228,7 +4246,15 @@ function saveSettings() {
     withdrawNotice: document.getElementById('withdrawNotice').value,
     paymentMethods: methods, withdrawLevels: levels,
     adResetHour: Number(document.getElementById('adResetHour').value) || 0
-  }).then(() => { toast('✅ Saved'); withdrawLevels = levels; });
+  }).then(() => { 
+    toast('✅ Saved'); 
+    withdrawLevels = levels;
+    // Refresh referral link display for admin
+    if (currentSession && currentSession.role === 'admin') generateAdminRefCode();
+    // Show hint update
+    const botEl = document.getElementById('botUsername');
+    if (botEl) onBotUsernameInput(botEl);
+  });
 }
 function saveMaintenance() {
   db.ref('config/maintenance').set({ active: document.getElementById('maintenanceMode').value === 'true', message: document.getElementById('maintenanceMsg').value, estimatedMinutes: Number(document.getElementById('maintenanceTime').value) || 30 }).then(() => toast('✅ Updated'));
@@ -4292,7 +4318,12 @@ db.ref('config').on('value', snap => {
   }
   
   if (currentSession && currentSession.role === 'super') {
-    document.getElementById('botUsername').value = configData.botUsername || '';
+    // ✅ FIX: Load sanitized bot username
+    const botEl = document.getElementById('botUsername');
+    if (botEl) {
+      botEl.value = sanitizeBotUsername(configData.botUsername || '');
+      onBotUsernameInput(botEl);
+    }
     document.getElementById('currencySymbol').value = configData.currencySymbol || 'TK';
     document.getElementById('contactLink').value = configData.contactLink || '';
     document.getElementById('contactBtnText').value = configData.contactBtnText || '';
@@ -4318,7 +4349,6 @@ db.ref('config').on('value', snap => {
     document.getElementById('becomeAdminSub').value = configData.becomeAdminSub || '';
     document.getElementById('becomeAdminBtnText').value = configData.becomeAdminBtnText || '';
     
-    // ✅ Load Admin Revenue Settings
     loadAdminRevenueSettings();
     
     const minAdWatchSec = configData.minAdWatchSeconds !== undefined ? configData.minAdWatchSeconds : 10;
@@ -4345,7 +4375,6 @@ db.ref('config').on('value', snap => {
 
     renderChannelLinks(); renderWithdrawLevels();
     if (document.getElementById('tab-ads') && document.getElementById('tab-ads').classList.contains('active')) {
-      // skip re-render
     } else {
       loadAdsConfig();
     }
@@ -4354,6 +4383,8 @@ db.ref('config').on('value', snap => {
   }
   if (currentSession && currentSession.role === 'admin') {
     renderDepositMethodsAdminView(); renderContactInfo();
+    // ✅ Refresh admin's referral link with new bot username
+    if (configData.botUsername) generateAdminRefCode();
   }
   if (currentSession) {
     updateMaxDaysHint('newTaskReward','newTaskTime','taskMaxDaysHint');
