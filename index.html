@@ -506,7 +506,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <div class="modal-body">
       <div class="alert-box warning">
         <i class="fas fa-hourglass-half"></i>
-        <div>Sub-Admin তৈরি করলে <b>Super Admin এর কাছে pending যাবে</b>। Approve হলে Sub-Admin login করতে পারবে।</div>
+        <div>Sub-Admin তৈরি করলে <b>সাথে সাথেই আপনার Balance থেকে টাকা কাটা হবে</b> এবং Super Admin এর কাছে pending যাবে। Approve হলে Sub-Admin login করতে পারবে। Reject হলে টাকা ফেরত পাবেন।</div>
       </div>
       <div id="csaCostInfo" class="info-display-box gold" style="display:none;">
         <span class="label">Cost</span>
@@ -1106,7 +1106,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       </div>
       <div class="alert-box warning">
         <i class="fas fa-info-circle"></i>
-        <div>Admin/Sub-Admin-রা Sub-Admin তৈরি করলে এখানে আসবে। <b>Parent-এর Balance চেক করুন</b> — না থাকলে Approve হবে না।</div>
+        <div>Admin/Sub-Admin-রা Sub-Admin তৈরি করলে এখানে আসবে। Parent-এর Balance থেকে <b>ইতিমধ্যে টাকা কাটা হয়েছে</b>। Reject করলে টাকা ফেরত যাবে।</div>
       </div>
       <div id="pendingSubAdminReqList"></div>
     </div>
@@ -1423,7 +1423,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-user-plus"></i></div>Create Sub-Admin</div></div>
       <div class="alert-box info">
         <i class="fas fa-info-circle"></i>
-        <div>Sub-Admin তৈরি করলে <b>Super Admin approve করবে</b>। টাকা না থাকলে Approve হবে না।</div>
+        <div>Sub-Admin তৈরি করলে <b>সাথে সাথেই Balance থেকে টাকা কাটবে</b> এবং Super Admin-এর কাছে approval request যাবে। Reject হলে টাকা ফেরত পাবেন।</div>
       </div>
       <div id="mySubAdminCostBox" class="balance-check-box ok" style="display:none;">
         <i class="fas fa-info-circle"></i>
@@ -1663,6 +1663,7 @@ let lbEditingIndex = null;
 let currentTaskListTab = 'live';
 let currentUserCache = {};
 let allSubAdminRequests = [];
+let mySubAdminReqListener = null;
 
 let REVENUE_SETTINGS = { enabled: true, adminSharePercent: 30, minWithdrawAmount: 100, perUserCap: 0 };
 let allRevenueRequests = [];
@@ -1724,7 +1725,7 @@ function generateSubAdminRefCode(username) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// 🔴 NEW: SUB-ADMIN SETTINGS
+// SUB-ADMIN SETTINGS
 // ═══════════════════════════════════════════════════════════
 function getSubAdminCreationCost() {
   return Number(configData.subAdminCreationCost || 50);
@@ -1949,9 +1950,24 @@ function onLoginSuccess(session, isNewSetup) {
     document.getElementById('tabBtnWallet').classList.add('active');
     document.getElementById('tab-wallet').classList.add('active');
     loadCurrentAdminData();
+    startMySubAdminReqListener();
   }
   toast(isNewSetup ? '👑 Super Admin তৈরি হয়েছে!' : '✅ স্বাগতম, ' + session.username);
   runPanelInit();
+}
+
+// 🔴 Real-time listener for MY sub-admin requests
+function startMySubAdminReqListener() {
+  if (!currentSession || currentSession.role === 'super') return;
+  if (mySubAdminReqListener) {
+    db.ref('subAdminRequests').off('value', mySubAdminReqListener);
+  }
+  mySubAdminReqListener = db.ref('subAdminRequests').orderByChild('parentAdminId').equalTo(currentSession.adminId).on('value', () => {
+    if (!currentSession || currentSession.role === 'super') return;
+    if (document.getElementById('tab-mysubadmins').classList.contains('active')) {
+      renderMySubAdminRequestsOnly();
+    }
+  });
 }
 
 async function loadCurrentAdminData() {
@@ -1975,7 +1991,6 @@ async function loadCurrentAdminData() {
   } catch(e) { console.error(e); }
 }
 
-// 🔴 NEW: Render sub-admin cost box in mysubadmins tab
 function renderMySubAdminCostBox() {
   const box = document.getElementById('mySubAdminCostBox');
   const txt = document.getElementById('mySubAdminCostText');
@@ -2029,7 +2044,13 @@ function renderDepositHistory() {
   });
   container.innerHTML = html;
 }
-function handleLogout() { if (!confirm('Logout?')) return; clearSession(); location.reload(); }
+function handleLogout() {
+  if (!confirm('Logout?')) return;
+  if (mySubAdminReqListener) {
+    try { db.ref('subAdminRequests').off('value', mySubAdminReqListener); } catch(e) {}
+  }
+  clearSession(); location.reload();
+}
 
 function renderMyContact() {
   const boxes = ['myContactBox', 'myContactBoxContact'];
@@ -2085,17 +2106,14 @@ function copyToClipboard(text, label) {
 // ═══════════════════════════════════════════════════════════
 function openCreateSubAdminModal() {
   if (!currentSession || (currentSession.role !== 'admin' && currentSession.role !== 'subadmin')) return toast('❌ Only Admin/Sub-Admin');
-  // Check nested enabled for sub-admin
   if (currentSession.role === 'subadmin' && !isSubAdminNestedEnabled()) {
     return toast('❌ Sub-Admin থেকে Sub-Admin তৈরি বন্ধ করা আছে');
   }
-  // 🔴 Check balance
   const cost = getSubAdminCreationCost();
   const balance = currentAdminData ? Number(currentAdminData.balance || 0) : 0;
   if (balance < cost) {
     return toast(`❌ আপনার Balance: ${balance.toFixed(2)} TK — প্রয়োজন ${cost.toFixed(2)} TK`);
   }
-  // Show cost info
   const costBox = document.getElementById('csaCostInfo');
   const costTxt = document.getElementById('csaCostText');
   if (costBox) costBox.style.display = 'flex';
@@ -2108,6 +2126,7 @@ function openCreateSubAdminModal() {
 }
 function closeCreateSubAdminModal() { document.getElementById('createSubAdminModal').classList.remove('active'); }
 
+// 🔴🔴🔴 FIXED: Now deducts balance immediately and saves request properly
 async function submitSubAdminRequest() {
   if (!currentSession || (currentSession.role !== 'admin' && currentSession.role !== 'subadmin')) return toast('❌ Denied');
   if (currentSession.role === 'subadmin' && !isSubAdminNestedEnabled()) return toast('❌ Sub-Admin থেকে Sub-Admin তৈরি বন্ধ');
@@ -2120,7 +2139,6 @@ async function submitSubAdminRequest() {
   if (!password || password.length < 4) return toast('❌ Password min 4');
   if (password !== confirm) return toast('❌ Passwords mismatch');
 
-  // 🔴 CRITICAL: Check balance BEFORE sending request
   const cost = getSubAdminCreationCost();
   const balance = currentAdminData ? Number(currentAdminData.balance || 0) : 0;
   if (balance < cost) {
@@ -2140,30 +2158,65 @@ async function submitSubAdminRequest() {
   adminsSnap.forEach(child => checkDup(child.val()));
   if (dup) return toast('❌ Username exists');
 
+  // Double-check parent balance from DB
+  const myRef = getCurrentAdminRef();
+  const mySnap = await myRef.once('value');
+  if (!mySnap.exists()) return toast('❌ Parent not found');
+  const myData = mySnap.val();
+  const currentBalance = Number(myData.balance || 0);
+  if (currentBalance < cost) {
+    return toast(`❌ Balance পরিবর্তন হয়েছে! এখন: ${currentBalance.toFixed(2)} TK — প্রয়োজন ${cost.toFixed(2)} TK`);
+  }
+
   const passwordHash = await sha256(password);
   const subAdminRefCode = generateSubAdminRefCode(username);
   const reqId = 'subreq_' + Date.now() + '_' + currentSession.adminId;
 
-  await db.ref('subAdminRequests/' + reqId).set({
-    parentAdminId: currentSession.adminId,
-    parentAdminName: currentSession.username,
-    parentRole: currentSession.role,
-    grandParentAdminId: currentSession.parentAdminId || null,
-    parentSubAdminId: currentSession.parentSubAdminId || null,
-    subAdminUsername: username,
-    passwordHash,
-    requiredCost: cost,
-    defaultShare: getSubAdminDefaultShare(),
-    initialBalance: cost,
-    revenueShareOverride: getSubAdminDefaultShare(),
-    subAdminReferralCode: subAdminRefCode,
-    status: 'pending',
-    createdAt: Date.now()
-  });
+  try {
+    // 🔴 STEP 1: Deduct balance IMMEDIATELY
+    await myRef.update({
+      balance: currentBalance - cost,
+      totalSpent: Number(myData.totalSpent || 0) + cost
+    });
 
-  toast('✅ Super Admin-এর কাছে পাঠানো হয়েছে!');
-  closeCreateSubAdminModal();
-  loadMySubAdminData();
+    // 🔴 STEP 2: Save the request
+    await db.ref('subAdminRequests/' + reqId).set({
+      parentAdminId: currentSession.adminId,
+      parentAdminName: currentSession.username,
+      parentRole: currentSession.role,
+      grandParentAdminId: currentSession.parentAdminId || null,
+      parentSubAdminId: currentSession.parentSubAdminId || null,
+      subAdminUsername: username,
+      passwordHash,
+      requiredCost: cost,
+      defaultShare: getSubAdminDefaultShare(),
+      initialBalance: cost,
+      revenueShareOverride: getSubAdminDefaultShare(),
+      subAdminReferralCode: subAdminRefCode,
+      balanceDeducted: true,
+      status: 'pending',
+      createdAt: Date.now()
+    });
+
+    // 🔴 STEP 3: Update local cache immediately
+    if (currentAdminData) {
+      currentAdminData.balance = currentBalance - cost;
+      currentAdminData.totalSpent = Number(myData.totalSpent || 0) + cost;
+    }
+
+    toast(`✅ Request পাঠানো! ${cost.toFixed(2)} TK কাটা হয়েছে।`);
+    closeCreateSubAdminModal();
+
+    // 🔴 STEP 4: Refresh everything
+    await loadCurrentAdminData();
+    await loadMySubAdminData();
+    updateWalletUI();
+    renderMySubAdminCostBox();
+
+  } catch(err) {
+    toast('❌ Error: ' + err.message);
+    console.error('Sub-admin request error:', err);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2319,34 +2372,41 @@ async function loadMySubAdminData() {
     container.innerHTML = h;
   }
 
+  await renderMySubAdminRequestsOnly();
+}
+
+// 🔴 Render only pending requests (without full reload)
+async function renderMySubAdminRequestsOnly() {
+  if (!currentSession || (currentSession.role !== 'admin' && currentSession.role !== 'subadmin')) return;
   const reqSnap = await db.ref('subAdminRequests').orderByChild('parentAdminId').equalTo(currentSession.adminId).once('value');
   const rContainer = document.getElementById('myPendingSubAdminRequests');
+  if (!rContainer) return;
   let reqs = [];
   reqSnap.forEach(c => reqs.push({ id: c.key, ...c.val() }));
   reqs.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
 
   if (!reqs.length) {
     rContainer.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>No requests</div></div>';
-  } else {
-    let h = '';
-    reqs.forEach(r => {
-      const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
-      const dt = new Date(r.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-      h += `<div class="dreq-item ${cls}">
-        <div class="dreq-head">
-          <div style="font-weight:800;">👤 ${esc(r.subAdminUsername)}</div>
-          <span class="status-badge ${cls}">${r.status.toUpperCase()}</span>
-        </div>
-        <div class="dreq-info">
-          <b>Cost:</b> ${Number(r.requiredCost||r.initialBalance||0).toFixed(2)} TK<br>
-          <b>Share:</b> ${Number(r.revenueShareOverride||r.defaultShare||30)}%<br>
-          <b>Submitted:</b> ${dt}
-          ${r.rejectReason ? '<br><b style="color:#dc2626;">Reason:</b> ' + esc(r.rejectReason) : ''}
-        </div>
-      </div>`;
-    });
-    rContainer.innerHTML = h;
+    return;
   }
+  let h = '';
+  reqs.forEach(r => {
+    const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
+    const dt = new Date(r.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+    h += `<div class="dreq-item ${cls}">
+      <div class="dreq-head">
+        <div style="font-weight:800;">👤 ${esc(r.subAdminUsername)}</div>
+        <span class="status-badge ${cls}">${r.status.toUpperCase()}</span>
+      </div>
+      <div class="dreq-info">
+        <b>Cost:</b> ${Number(r.requiredCost||r.initialBalance||0).toFixed(2)} TK<br>
+        <b>Share:</b> ${Number(r.revenueShareOverride||r.defaultShare||30)}%<br>
+        <b>Submitted:</b> ${dt}
+        ${r.rejectReason ? '<br><b style="color:#dc2626;">Reason:</b> ' + esc(r.rejectReason) : ''}
+      </div>
+    </div>`;
+  });
+  rContainer.innerHTML = h;
 }
 
 async function addSubAdminBalance(subId) {
@@ -2430,7 +2490,6 @@ async function loadSubAdminRequests() {
   snap.forEach(c => raw.push({ id: c.key, ...c.val() }));
   raw.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
 
-  // Fetch admin snapshot for parent balance display
   const adminsSnap = await db.ref('admins').once('value');
   const allAdminsRaw = adminsSnap.val() || {};
 
@@ -2576,12 +2635,15 @@ async function approveSubAdminRequest(reqId) {
   const parent = parentSnap.val();
   const parentBalance = Number(parent.balance || 0);
 
-  // 🔴 CRITICAL CHECK
-  if (initBal > parentBalance) {
+  // 🔴 NOTE: Balance already deducted at request time. So we DON'T deduct again.
+  // But if balanceDeducted flag is missing (old requests), we deduct here.
+  const alreadyDeducted = r.balanceDeducted === true;
+
+  if (!alreadyDeducted && initBal > parentBalance) {
     return toast(`❌ Parent-এর কাছে মাত্র ${parentBalance.toFixed(2)} TK আছে! ${initBal.toFixed(2)} TK দেওয়া যাবে না।`);
   }
 
-  if (!confirm(`Approve করবেন?\n\nSub-Admin: ${r.subAdminUsername}\nInitial Balance: ${initBal.toFixed(2)} TK\nShare: ${revShare}%\nParent Balance: ${parentBalance.toFixed(2)} TK`)) return;
+  if (!confirm(`Approve করবেন?\n\nSub-Admin: ${r.subAdminUsername}\nInitial Balance: ${initBal.toFixed(2)} TK\nShare: ${revShare}%\n${alreadyDeducted ? '(Balance already deducted)' : 'Parent Balance: ' + parentBalance.toFixed(2) + ' TK'}`)) return;
 
   const subId = 'sub_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
   const subData = {
@@ -2603,12 +2665,15 @@ async function approveSubAdminRequest(reqId) {
   };
 
   await db.ref(parentPath + '/subAdmins/' + subId).set(subData);
-  if (initBal > 0) {
+  
+  // Only deduct if not already deducted
+  if (!alreadyDeducted && initBal > 0) {
     await db.ref(parentPath).update({
       balance: parentBalance - initBal,
       totalSpent: Number(parent.totalSpent || 0) + initBal
     });
   }
+  
   await db.ref('subAdminRequests/' + reqId).update({
     status: 'approved', subAdminId: subId,
     initialBalance: initBal,
@@ -2621,15 +2686,44 @@ async function approveSubAdminRequest(reqId) {
   loadAdminsList();
 }
 
+// 🔴🔴🔴 FIXED: Now refunds balance on reject
 async function rejectSubAdminRequest(reqId) {
   const reason = prompt('Reject reason:');
   if (!reason) return;
+
+  const snap = await db.ref('subAdminRequests/' + reqId).once('value');
+  if (!snap.exists()) return toast('❌ Not found');
+  const r = snap.val();
+  if (r.status !== 'pending') return toast('Already processed');
+
+  // 🔴 Refund the cost back to parent if deducted
+  if (r.balanceDeducted) {
+    let parentPath;
+    if (r.parentRole === 'subadmin' && r.parentSubAdminId) {
+      parentPath = 'admins/' + r.grandParentAdminId + '/subAdmins/' + r.parentSubAdminId + '/subAdmins/' + r.parentAdminId;
+    } else if (r.parentRole === 'subadmin') {
+      parentPath = 'admins/' + r.grandParentAdminId + '/subAdmins/' + r.parentAdminId;
+    } else {
+      parentPath = 'admins/' + r.parentAdminId;
+    }
+    const parentSnap = await db.ref(parentPath).once('value');
+    if (parentSnap.exists()) {
+      const parent = parentSnap.val();
+      const refundAmt = Number(r.requiredCost || r.initialBalance || 0);
+      await db.ref(parentPath).update({
+        balance: Number(parent.balance || 0) + refundAmt,
+        totalSpent: Math.max(0, Number(parent.totalSpent || 0) - refundAmt)
+      });
+    }
+  }
+
   await db.ref('subAdminRequests/' + reqId).update({
-    status: 'rejected', rejectReason: reason,
+    status: 'rejected', rejectReason: reason, balanceDeducted: false,
     reviewedAt: Date.now(), reviewedBy: currentSession.username
   });
-  toast('❌ Rejected');
+  toast('❌ Rejected & Balance ফেরত দেওয়া হয়েছে');
   loadSubAdminRequests();
+  loadAdminsList();
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -4335,7 +4429,10 @@ function runPanelInit() {
     loadSubAdminRequests(); updateBaseUrlTabPreview(); 
   } else { 
     loadCurrentAdminData(); loadTasksList(); loadTaskSubmissions(); 
-    if (currentSession.role === 'admin' || currentSession.role === 'subadmin') loadMySubAdminData(); 
+    if (currentSession.role === 'admin' || currentSession.role === 'subadmin') {
+      loadMySubAdminData();
+      startMySubAdminReqListener();
+    }
   }
   setInterval(() => { if (currentSession && (currentSession.role === 'admin' || currentSession.role === 'subadmin')) loadCurrentAdminData(); }, 30000);
   updateMaxDaysHint('newTaskReward','newTaskTime','taskMaxDaysHint');
@@ -4393,7 +4490,6 @@ db.ref('config').on('value', snap => {
     document.getElementById('becomeAdminTitle').value = configData.becomeAdminTitle || '';
     document.getElementById('becomeAdminSub').value = configData.becomeAdminSub || '';
     document.getElementById('becomeAdminBtnText').value = configData.becomeAdminBtnText || '';
-    // 🔴 NEW: Sub-Admin settings inputs
     const sac = document.getElementById('subAdminCreationCost'); if (sac) sac.value = configData.subAdminCreationCost || 50;
     const sas = document.getElementById('subAdminDefaultShare'); if (sas) sas.value = configData.subAdminDefaultShare || 30;
     const san = document.getElementById('subAdminNestedEnabled'); if (san) san.value = String(configData.subAdminNestedEnabled !== false);
