@@ -9,10 +9,10 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
 <style>
-:root{--primary:#6366f1;--primary-dark:#4f46e5;--primary-light:#818cf8;--secondary:#8b5cf6;--accent:#06b6d4;--pink:#ec4899;--orange:#f97316;--yellow:#fbbf24;--bg:#f8fafc;--bg-alt:#f1f5f9;--surface:#fff;--text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;--border:#e2e8f0;--success:#10b981;--success-bg:#d1fae5;--danger:#ef4444;--danger-bg:#fee2e2;--warning:#f59e0b;--warning-bg:#fef3c7;--info:#3b82f6;--info-bg:#dbeafe;--shadow-sm:0 1px 2px 0 rgb(0 0 0/.05);--shadow:0 4px 6px -1px rgb(0 0 0/.1);--shadow-md:0 10px 15px -3px rgb(0 0 0/.08);--shadow-lg:0 20px 25px -5px rgb(0 0 0/.1);--shadow-xl:0 25px 50px -12px rgb(0 0 0/.15);--radius:16px;--radius-sm:12px;--radius-lg:24px}
+:root{--primary:#6366f1;--primary-dark:#4f46e5;--primary-light:#818cf8;--secondary:#8b5cf6;--accent:#06b6d4;--pink:#ec4899;--orange:#f97316;--yellow:#fbbf24;--bg:#f8fafc;--bg-alt:#f1f5f9;--surface:#fff;--text:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;--border:#e2e8f0;--success:#10b981;--success-bg:#d1fae5;--danger:#ef4444;--danger-bg:#fee2e2;--warning:#f59e0b;--warning-bg:#fef3c7;--info:#3b82f6;--info-bg:#dbeafe;--shadow:0 4px 6px -1px rgb(0 0 0/.1);--shadow-md:0 10px 15px -3px rgb(0 0 0/.08);--shadow-lg:0 20px 25px -5px rgb(0 0 0/.1);--shadow-xl:0 25px 50px -12px rgb(0 0 0/.15);--radius:16px;--radius-sm:12px;--radius-lg:24px}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:30px;-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
-body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 20% 30%,rgba(99,102,241,.1) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(236,72,153,.08) 0%,transparent 40%),radial-gradient(circle at 50% 50%,rgba(6,182,212,.06) 0%,transparent 60%);z-index:-1;animation:bgMove 20s ease-in-out infinite}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 20% 30%,rgba(99,102,241,.1) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(236,72,153,.08) 0%,transparent 40%);z-index:-1;animation:bgMove 20s ease-in-out infinite}
 @keyframes bgMove{0%,100%{transform:translate(0,0)}50%{transform:translate(-5%,-5%)}}
 .container{max-width:680px;margin:0 auto;padding:0 16px}
 .header{background:linear-gradient(135deg,#4c1d95 0%,#6d28d9 25%,#4f46e5 50%,#0891b2 100%);color:#fff;padding:28px 24px 60px;text-align:left;position:relative;overflow:hidden;border-radius:0 0 32px 32px;margin-bottom:-32px;z-index:1;box-shadow:0 20px 40px -10px rgba(109,40,217,.5)}
@@ -34,12 +34,13 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .tabs-wrapper{position:relative;z-index:2;margin-top:16px;padding:0 4px}
 .tabs{display:flex;overflow-x:auto;background:var(--surface);border-radius:20px;padding:6px;gap:4px;box-shadow:var(--shadow-lg);scrollbar-width:none;border:1px solid var(--border)}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex:0 0 auto;min-width:84px;text-align:center;padding:10px 12px;font-weight:700;font-size:.72rem;color:var(--text-muted);cursor:pointer;border-radius:14px;transition:all .25s;display:flex;flex-direction:column;align-items:center;gap:4px;user-select:none}
+.tab{flex:0 0 auto;min-width:84px;text-align:center;padding:10px 12px;font-weight:700;font-size:.72rem;color:var(--text-muted);cursor:pointer;border-radius:14px;transition:all .25s;display:flex;flex-direction:column;align-items:center;gap:4px;user-select:none;position:relative}
 .tab i{font-size:1.05rem;transition:transform .25s}
 .tab:hover{background:var(--bg-alt);color:var(--text-secondary)}
 .tab.active{background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;box-shadow:0 8px 20px rgba(99,102,241,.4)}
 .tab.active i{transform:scale(1.15)}
 .tab.hidden{display:none !important}
+.tab-badge{position:absolute;top:4px;right:6px;background:#ef4444;color:#fff;font-size:.6rem;font-weight:900;padding:2px 6px;border-radius:999px;min-width:18px;text-align:center;line-height:1.4}
 .tab-content{display:none;padding-top:24px;animation:fadeSlide .35s}
 .tab-content.active{display:block}
 .tab-content.hidden{display:none !important}
@@ -48,6 +49,7 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
 .card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
 .card.rainbow{border:2px solid transparent;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(135deg,#6366f1,#8b5cf6,#ec4899,#f97316,#fbbf24) border-box}
 .card.revenue-card{border:2px solid transparent;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(135deg,#a855f7,#ec4899,#f59e0b) border-box}
+.card.pending-card{border:2px solid transparent;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(135deg,#f59e0b,#fbbf24,#f97316) border-box}
 .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)}
 .card-title{font-size:1rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:10px}
 .card-title-icon{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:.95rem;color:#fff;box-shadow:0 6px 15px rgba(0,0,0,.15)}
@@ -99,6 +101,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .status-badge.suspended{background:rgba(148,163,184,.3);color:#475569}
 .status-badge.superadmin{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff}
 .status-badge.admin{background:rgba(99,102,241,.15);color:var(--primary)}
+.status-badge.subadmin{background:linear-gradient(135deg,#3b82f6,#60a5fa);color:#fff}
 .status-badge.enabled{background:var(--success-bg);color:#047857}
 .status-badge.disabled{background:rgba(148,163,184,.25);color:#475569}
 .status-badge.revenue{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff}
@@ -122,7 +125,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .modal-close{width:36px;height:36px;border-radius:10px;border:none;background:var(--bg-alt);color:var(--text-secondary);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .modal-close:hover{background:var(--danger-bg);color:var(--danger)}
 .modal-body{padding:20px 22px}
-.login-overlay{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(1200px 700px at 20% 20%,rgba(99,102,241,.4),transparent 55%),radial-gradient(900px 600px at 80% 70%,rgba(236,72,153,.35),transparent 55%),radial-gradient(700px 500px at 50% 50%,rgba(6,182,212,.25),transparent 60%),linear-gradient(135deg,#05060a,#0b0d18 40%,#090a12);overflow-y:auto}
+.login-overlay{position:fixed;inset:0;z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(1200px 700px at 20% 20%,rgba(99,102,241,.4),transparent 55%),radial-gradient(900px 600px at 80% 70%,rgba(236,72,153,.35),transparent 55%),linear-gradient(135deg,#05060a,#0b0d18 40%,#090a12);overflow-y:auto}
 .login-card{position:relative;z-index:2;width:100%;max-width:400px;border-radius:26px;padding:32px 26px 26px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 80px rgba(0,0,0,.6);backdrop-filter:blur(16px);margin:auto}
 .login-brand{text-align:center;margin-bottom:24px}
 .login-logo{width:68px;height:68px;margin:0 auto 14px;border-radius:20px;background:linear-gradient(135deg,#fbbf24,#ec4899,#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.75rem;box-shadow:0 18px 40px rgba(236,72,153,.55)}
@@ -199,9 +202,10 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .admin-balance-cell .lbl{font-size:.6rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin-top:3px}
 .admin-item-actions{display:flex;gap:6px;flex-wrap:wrap}
 .admin-item-actions .btn{flex:1;min-width:80px}
+.subadmin-list{margin-top:8px;padding:8px 10px;background:#eff6ff;border-radius:10px;border:1px solid rgba(59,130,246,.25)}
+.subadmin-list-item{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:.72rem}
 .wallet-hero{background:linear-gradient(135deg,#059669 0%,#10b981 40%,#06b6d4 100%);color:#fff;padding:24px 22px;border-radius:24px;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 20px 40px -10px rgba(5,150,105,.55)}
 .wallet-hero::before{content:'';position:absolute;width:220px;height:220px;background:radial-gradient(circle,rgba(255,255,255,.3),transparent 70%);top:-90px;right:-70px;border-radius:50%}
-.wallet-hero::after{content:'';position:absolute;width:140px;height:140px;background:radial-gradient(circle,rgba(251,191,36,.35),transparent 70%);bottom:-60px;left:-30px;border-radius:50%}
 .wallet-hero>*{position:relative;z-index:2}
 .wallet-hero .wallet-label{font-size:.72rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;opacity:.9}
 .wallet-hero .wallet-amount{font-size:2.4rem;font-weight:900;margin:6px 0 4px;text-shadow:0 4px 12px rgba(0,0,0,.2)}
@@ -373,13 +377,10 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .ad-slot-status.ok{background:var(--success-bg);color:#065f46}
 .ad-slot-status.off{background:rgba(148,163,184,.25);color:#475569}
 .ad-slot-status.custom{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff}
-.ad-custom-hint{background:rgba(255,255,255,.7);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:.72rem;line-height:1.6;font-weight:600;color:#5b21b6;border-left:3px solid var(--secondary)}
-.ad-custom-hint code{background:rgba(139,92,246,.15);padding:1px 6px;border-radius:4px;font-weight:800;color:#6d28d9;font-family:'Courier New',monospace}
 .min-watch-box{background:linear-gradient(135deg,#fef3c7,#fde68a);padding:16px;border-radius:12px;margin-bottom:16px;border-left:4px solid #f59e0b}
 .min-watch-box label{color:#92400e;font-size:.85rem;display:flex;align-items:center;gap:8px}
 .min-watch-box input{background:#fff;border-color:#f59e0b}
 .min-watch-box small{display:block;margin-top:8px;font-size:.72rem;font-weight:700;color:#92400e;line-height:1.5}
-/* ✅ Revenue share slider */
 .share-visual{display:flex;height:32px;border-radius:10px;overflow:hidden;margin:14px 0;box-shadow:0 4px 12px rgba(0,0,0,.15)}
 .share-visual .admin-part{background:linear-gradient(135deg,#f59e0b,#fbbf24);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.7rem;transition:all .3s}
 .share-visual .platform-part{background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.7rem;transition:all .3s}
@@ -389,13 +390,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .revenue-history-item{background:linear-gradient(135deg,#fff,#f8fafc);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px;border-left:4px solid #f59e0b}
 .revenue-history-item .amt{font-weight:900;color:#f59e0b;font-size:1rem}
 .revenue-history-item .meta{font-size:.7rem;color:#94a3b8;font-weight:600;margin-top:3px}
-.tier-card{background:linear-gradient(135deg,#fff,#f8fafc);border:2px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;position:relative;overflow:hidden}
-.tier-card.tier-active{border-color:#f59e0b;background:linear-gradient(135deg,#fffbeb,#fef3c7)}
-.tier-card .tier-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.tier-card .tier-name{font-weight:900;font-size:.95rem;display:flex;align-items:center;gap:8px;color:#0f172a}
-.tier-card .tier-badge{font-size:.65rem;font-weight:900;padding:3px 10px;border-radius:999px;text-transform:uppercase;background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff}
-.tier-card .tier-detail{font-size:.75rem;font-weight:700;color:var(--text-secondary);line-height:1.8}
-.tier-card .tier-detail b{color:var(--text)}
+.subadmin-req-item{background:linear-gradient(135deg,#fff,#fffbeb);border:1.5px solid rgba(245,158,11,.4);border-radius:14px;padding:14px;margin-bottom:12px;border-left:4px solid #f59e0b;position:relative}
 @media (max-width:400px){.container{padding:0 12px}.card{padding:16px;border-radius:20px}.header{padding:22px 18px 55px;border-radius:0 0 26px 26px}.header-title{font-size:1rem}.header-status{max-width:90px}.user-stats-grid{grid-template-columns:1fr 1fr}.legal-body{padding:20px 18px 26px}.admin-balance-box{grid-template-columns:1fr 1fr}.revenue-stats{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -490,6 +485,46 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 </div>
 
 <div class="toast" id="toast">Saved!</div>
+
+<!-- ===== CREATE SUB-ADMIN MODAL (Admin only) ===== -->
+<div class="modal-overlay" id="createSubAdminModal">
+  <div class="modal-box" style="max-width:520px;">
+    <div class="modal-header">
+      <div class="modal-title"><div class="card-title-icon icon-info"><i class="fas fa-user-plus"></i></div>Create Sub-Admin</div>
+      <button class="modal-close" onclick="closeCreateSubAdminModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="alert-box warning">
+        <i class="fas fa-hourglass-half"></i>
+        <div>Sub-Admin তৈরি করলে <b>Super Admin এর কাছে pending যাবে</b>। Approve করলে Sub-Admin login করতে পারবে।</div>
+      </div>
+      <div class="form-group"><label>Sub-Admin Username *</label><input type="text" id="csaUsername" placeholder="Min 3 characters"></div>
+      <div class="form-group"><label>Password *</label><input type="password" id="csaPassword" placeholder="Min 4 characters"></div>
+      <div class="form-group"><label>Confirm Password *</label><input type="password" id="csaConfirmPassword"></div>
+      <div class="form-group"><label>Initial Balance (TK)</label><input type="number" id="csaInitialBalance" step="0.01" value="0" min="0"></div>
+      <div class="form-group">
+        <label>Revenue Share Override (%)</label>
+        <input type="number" id="csaRevenueShare" step="1" min="0" max="100" value="0" placeholder="0 = Default">
+        <small style="display:block;margin-top:6px;font-size:.7rem;color:var(--text-muted);font-weight:600;">0 দিলে Super Admin-এর default share use হবে।</small>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-warning" onclick="submitSubAdminRequest()" style="flex:2;"><i class="fas fa-paper-plane"></i> Submit for Approval</button>
+        <button class="btn btn-red" onclick="closeCreateSubAdminModal()" style="flex:1;"><i class="fas fa-times"></i> Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SUB-ADMIN DETAILS MODAL ===== -->
+<div class="modal-overlay" id="subAdminDetailsModal">
+  <div class="modal-box" style="max-width:560px;">
+    <div class="modal-header">
+      <div class="modal-title"><div class="card-title-icon icon-info"><i class="fas fa-user-gear"></i></div>Sub-Admin Details</div>
+      <button class="modal-close" onclick="closeSubAdminDetailsModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" id="subAdminDetailsBody"></div>
+  </div>
+</div>
 
 <!-- User View Modal -->
 <div class="modal-overlay" id="userViewModal">
@@ -857,7 +892,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
-<!-- ✅ REVENUE WITHDRAW MODAL -->
 <div class="modal-overlay" id="revenueWithdrawModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -879,13 +913,11 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       </div>
       <div class="form-group"><label>Account Number *</label><input type="text" id="rwAccount" placeholder="Your bKash/Nagad number"></div>
       <div class="form-group"><label>Note (optional)</label><input type="text" id="rwNote"></div>
-      <div class="alert-box info"><i class="fas fa-info-circle"></i><div>Super Admin manually approve করে payment করবে। Approve হলে amount আপনার Revenue Balance থেকে কেটে নেওয়া হবে।</div></div>
       <button class="btn btn-gold" onclick="submitRevenueWithdraw()"><i class="fas fa-paper-plane"></i> Submit Request</button>
     </div>
   </div>
 </div>
 
-<!-- ✅ REVENUE WITHDRAW REJECT MODAL -->
 <div class="modal-overlay" id="revenueRejectModal">
   <div class="modal-box">
     <div class="modal-header">
@@ -895,7 +927,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <div class="modal-body">
       <input type="hidden" id="rrReqId">
       <div class="form-group"><label>Reason *</label><textarea id="rrReason" rows="3" placeholder="কেন reject করছেন?"></textarea></div>
-      <button class="btn btn-red" onclick="confirmRejectRevenue()"><i class="fas fa-times"></i> Reject & Refund</button>
+      <button class="btn btn-red" onclick="confirmRejectRevenue()"><i class="fas fa-times"></i> Reject</button>
     </div>
   </div>
 </div>
@@ -904,6 +936,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   <div class="tabs-wrapper">
     <div class="tabs">
       <div class="tab active super-only" data-tab="settings" onclick="switchTab('settings', this)"><i class="fas fa-sliders"></i><span>Settings</span></div>
+      <div class="tab super-only" data-tab="subadminreq" onclick="switchTab('subadminreq', this)"><i class="fas fa-user-clock"></i><span>Sub Req</span><span class="tab-badge" id="subReqBadge" style="display:none;">0</span></div>
       <div class="tab super-only" data-tab="revenue" onclick="switchTab('revenue', this)"><i class="fas fa-coins"></i><span>Revenue</span></div>
       <div class="tab super-only" data-tab="channels" onclick="switchTab('channels', this)"><i class="fas fa-satellite-dish"></i><span>Channels</span></div>
       <div class="tab super-only" data-tab="analytics" onclick="switchTab('analytics', this)"><i class="fas fa-chart-pie"></i><span>Analytics</span></div>
@@ -917,13 +950,14 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="tab super-only" data-tab="depositmgmt" onclick="switchTab('depositmgmt', this)"><i class="fas fa-vault"></i><span>Deposit Mgmt</span></div>
       <div class="tab" data-tab="tasks" onclick="switchTab('tasks', this)"><i class="fas fa-briefcase"></i><span>Tasks</span></div>
       <div class="tab admin-only hidden" id="tabBtnWallet" data-tab="wallet" onclick="switchTab('wallet', this)"><i class="fas fa-wallet"></i><span>My Wallet</span></div>
+      <div class="tab admin-only hidden" id="tabBtnMySubs" data-tab="mysubadmins" onclick="switchTab('mysubadmins', this)"><i class="fas fa-users-gear"></i><span>Sub-Admins</span></div>
       <div class="tab admin-only hidden" id="tabBtnRevenue" data-tab="myrevenue" onclick="switchTab('myrevenue', this)"><i class="fas fa-coins"></i><span>My Revenue</span></div>
       <div class="tab admin-only hidden" id="tabBtnDeposit" data-tab="deposit" onclick="switchTab('deposit', this)"><i class="fas fa-circle-dollar-to-slot"></i><span>Deposit</span></div>
       <div class="tab admin-only hidden" id="tabBtnContact" data-tab="contact" onclick="switchTab('contact', this)"><i class="fas fa-headset"></i><span>Contact</span></div>
     </div>
   </div>
 
-  <!-- ========== SETTINGS (Super) ========== -->
+  <!-- ===== SETTINGS (Super) ===== -->
   <div id="tab-settings" class="tab-content active super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-robot"></i></div>App Configuration</div></div>
@@ -932,78 +966,49 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="form-group"><label>Ad Reset Hour (0-23)</label><input type="number" id="adResetHour" min="0" max="23"></div>
     </div>
 
-    <!-- ✅ REVENUE SHARE SETTINGS -->
     <div class="card rainbow">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-gold"><i class="fas fa-handshake-angle"></i></div>Revenue Share System</div></div>
       <div class="alert-box info" style="margin-bottom:16px;">
         <i class="fas fa-info-circle"></i>
-        <div>Admin-দের আনা <b>User</b>-রা Ad দেখলে, সেই Ad থেকে যা আয় হয় তার একটা % <b>Admin পাবে</b>। এতে Admin-দের <b>passive income</b> হবে এবং তারা আরো User আনতে উৎসাহিত হবে।</div>
+        <div>Admin-দের আনা <b>User</b>-রা Ad দেখলে, সেই Ad থেকে যা আয় হয় তার একটা % <b>Admin পাবে</b>।</div>
       </div>
-
       <div class="form-group"><label>Enable Revenue Share?</label>
-        <select id="revenueShareEnabled">
-          <option value="true">✅ Enabled</option>
-          <option value="false">🚫 Disabled</option>
-        </select>
+        <select id="revenueShareEnabled"><option value="true">✅ Enabled</option><option value="false">🚫 Disabled</option></select>
       </div>
-
-      <div class="form-group">
-        <label>Admin Share (%) — Admin কত % পাবে?</label>
+      <div class="form-group"><label>Admin Share (%)</label>
         <input type="number" id="revenueAdminShare" min="0" max="100" step="1" oninput="updateRevenueVisual()">
       </div>
-
       <div class="share-visual">
         <div class="admin-part" id="shareAdminPart" style="width:30%;">Admin 30%</div>
         <div class="platform-part" id="sharePlatformPart" style="width:70%;">Platform 70%</div>
       </div>
-
-      <div class="form-group">
-        <label>Minimum Withdraw (TK)</label>
-        <input type="number" id="revenueMinWithdraw" step="1" min="10" value="100">
-      </div>
-
-      <div class="form-group">
-        <label>Per-User Cap (TK/day) — optional</label>
-        <input type="number" id="revenueUserCap" step="0.01" min="0" placeholder="0 = unlimited">
-        <small style="display:block; margin-top:6px; font-size:.7rem; color:var(--text-muted); font-weight:600;">একজন User থেকে দিনে সর্বোচ্চ কত TK Revenue Admin পাবে। 0 দিলে unlimited।</small>
-      </div>
-
-      <div class="alert-box success">
-        <i class="fas fa-lightbulb"></i>
-        <div><b>Recommended:</b> Admin Share <b>25-40%</b> রাখলে Admin-রা motivate হয় এবং আপনি ভালো profit রাখতে পারেন।</div>
-      </div>
-
+      <div class="form-group"><label>Minimum Withdraw (TK)</label><input type="number" id="revenueMinWithdraw" step="1" min="10" value="100"></div>
+      <div class="form-group"><label>Per-User Cap (TK/day)</label><input type="number" id="revenueUserCap" step="0.01" min="0" placeholder="0 = unlimited"></div>
       <button class="btn btn-gold" onclick="saveRevenueSettings()"><i class="fas fa-save"></i> Save Revenue Settings</button>
     </div>
 
     <div class="card rainbow">
-      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-trophy"></i></div>Leaderboard Top Users (Custom)</div></div>
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-trophy"></i></div>Leaderboard Top Users</div></div>
       <div class="lb-limit-bar">
         <span><i class="fas fa-users"></i> Total Custom Entries</span>
         <span class="count"><span id="lbCount">0</span> / 10</span>
       </div>
       <div id="lbListContainer"></div>
-      <button class="btn btn-warning" id="lbAddBtn" onclick="openLbModal()" style="margin-top:10px;">
-        <i class="fas fa-plus"></i> Add User
-      </button>
+      <button class="btn btn-warning" id="lbAddBtn" onclick="openLbModal()" style="margin-top:10px;"><i class="fas fa-plus"></i> Add User</button>
     </div>
 
     <div class="card">
-      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-purple"><i class="fas fa-percent"></i></div>Service Charge System</div></div>
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-purple"><i class="fas fa-percent"></i></div>Service Charge</div></div>
       <div class="form-group"><label>Service Charge Rate (%)</label><input type="number" id="serviceChargeRate" step="0.1" min="0" max="100"></div>
       <button class="btn btn-purple" onclick="saveServiceCharge()"><i class="fas fa-save"></i> Save</button>
     </div>
 
     <div class="card rainbow">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-crown"></i></div>Become Admin Slider</div></div>
-      <div class="form-group">
-        <label>Slider Status</label>
-        <select id="becomeAdminEnabled">
-          <option value="true">✅ Enabled</option>
-          <option value="false">🚫 Disabled</option>
-        </select>
+      <div class="form-group"><label>Slider Status</label>
+        <select id="becomeAdminEnabled"><option value="true">✅ Enabled</option><option value="false">🚫 Disabled</option></select>
       </div>
-      <div class="form-group"><label>🔗 Admin Application Link *</label><input type="url" id="becomeAdminLink" placeholder="https://t.me/YourUsername"></div>
+      <div class="form-group"><label>🔗 Admin Application Link *</label><input type="url" id="becomeAdminLink"></div>
       <div class="form-group"><label>Slider Title</label><input type="text" id="becomeAdminTitle"></div>
       <div class="form-group"><label>Slider Subtitle</label><input type="text" id="becomeAdminSub"></div>
       <div class="form-group"><label>Apply Button Text</label><input type="text" id="becomeAdminBtnText"></div>
@@ -1052,7 +1057,25 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <button class="btn btn-purple" onclick="saveSettings()"><i class="fas fa-save"></i> Save All Settings</button>
   </div>
 
-  <!-- ========== REVENUE MANAGEMENT (Super) ========== -->
+  <!-- ===== SUB-ADMIN REQUESTS (Super) ===== -->
+  <div id="tab-subadminreq" class="tab-content super-only">
+    <div class="card pending-card">
+      <div class="card-header">
+        <div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-user-clock"></i></div>Pending Sub-Admin Requests</div>
+      </div>
+      <div class="alert-box warning">
+        <i class="fas fa-info-circle"></i>
+        <div>Admin-রা Sub-Admin তৈরি করলে এখানে আসবে। Approve করলে Sub-Admin login করতে পারবে।</div>
+      </div>
+      <div id="pendingSubAdminReqList"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-check-circle"></i></div>All History</div></div>
+      <div id="allSubAdminHistoryList"></div>
+    </div>
+  </div>
+
+  <!-- ===== REVENUE (Super) ===== -->
   <div id="tab-revenue" class="tab-content super-only">
     <div class="revenue-hero">
       <i class="fas fa-coins revenue-icon"></i>
@@ -1069,24 +1092,17 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <span class="platform">👤 Admin: <span id="rShareAdminView">30</span>%</span>
       </div>
     </div>
-
     <div class="card">
-      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>Pending Revenue Withdraw Requests</div></div>
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>Pending Revenue Requests</div></div>
       <div id="pendingRevenueReqList"></div>
     </div>
-
     <div class="card">
-      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-check-circle"></i></div>All Revenue Requests</div></div>
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-check-circle"></i></div>All Requests</div></div>
       <div id="allRevenueReqList"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-purple"><i class="fas fa-trophy"></i></div>Top Revenue Earners</div></div>
-      <div id="topRevenueEarners"></div>
     </div>
   </div>
 
-  <!-- ========== CHANNELS ========== -->
+  <!-- ===== CHANNELS ===== -->
   <div id="tab-channels" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-link"></i></div>Verification Channels</div></div>
@@ -1107,7 +1123,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ========== ANALYTICS ========== -->
+  <!-- ===== ANALYTICS ===== -->
   <div id="tab-analytics" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-chart-line"></i></div>Activity Analytics</div></div>
@@ -1136,7 +1152,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ========== USERS ========== -->
+  <!-- ===== USERS ===== -->
   <div id="tab-users" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-users"></i></div>All Users</div></div>
@@ -1152,7 +1168,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ========== WITHDRAWALS ========== -->
+  <!-- ===== WITHDRAWALS ===== -->
   <div id="tab-withdrawals" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>Pending</div></div>
@@ -1164,7 +1180,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ========== ADS ========== -->
+  <!-- ===== ADS ===== -->
   <div id="tab-ads" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-bullhorn"></i></div>Ad Networks & Custom Code</div></div>
@@ -1173,38 +1189,30 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="min-watch-box">
         <label><i class="fas fa-hourglass-half"></i> ⏱️ Minimum Ad Watch Time (Seconds) *</label>
         <input type="number" id="minAdWatchSeconds" min="3" max="120" placeholder="10">
-        <small>ইউজারকে কমপক্ষে এই সময় অ্যাড দেখতে হবে। কম দেখলে <b>reward পাবে না</b>।</small>
-      </div>
-      <div class="alert-box info">
-        <i class="fas fa-info-circle"></i>
-        <div><b>⚙️ Custom Ad Code System:</b> যেকোনো network-এর জন্য নিজের JavaScript কোড লিখুন। <code>resolve()</code> → success, <code>reject('msg')</code> → fail।</div>
+        <small>ইউজারকে কমপক্ষে এই সময় অ্যাড দেখতে হবে।</small>
       </div>
       <div id="adsContainer"></div>
       <button class="btn btn-purple" onclick="saveAds()"><i class="fas fa-save"></i> Save Ad Settings</button>
     </div>
-
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-code"></i></div>Custom Code Examples</div></div>
       <div style="font-size:.78rem; line-height:1.8; color:var(--text-secondary); font-weight:600;">
         <div class="section-divider" style="font-size:.8rem;"><i class="fas fa-play"></i> Example 1 — External Ad Page</div>
-        <pre style="background:#1e293b; color:#e2e8f0; padding:12px; border-radius:10px; font-size:.72rem; overflow-x:auto; font-family:'Courier New',monospace; line-height:1.6;">openExternal('https://your-ad-page.com/xyz');</pre>
+        <pre style="background:#1e293b; color:#e2e8f0; padding:12px; border-radius:10px; font-size:.72rem; overflow-x:auto;">openExternal('https://your-ad-page.com/xyz');</pre>
         <div class="section-divider" style="font-size:.8rem; margin-top:16px;"><i class="fas fa-play"></i> Example 2 — Monetag Pop-up</div>
-        <pre style="background:#1e293b; color:#e2e8f0; padding:12px; border-radius:10px; font-size:.72rem; overflow-x:auto; font-family:'Courier New',monospace; line-height:1.6;">window.show_11878844('pop')
+        <pre style="background:#1e293b; color:#e2e8f0; padding:12px; border-radius:10px; font-size:.72rem; overflow-x:auto;">window.show_11878844('pop')
   .then(() => resolve())
   .catch(() => reject('Ad closed'));</pre>
       </div>
     </div>
   </div>
 
-  <!-- ========== EXTRA REWARDS ========== -->
+  <!-- ===== EXTRA REWARDS ===== -->
   <div id="tab-extrareward" class="tab-content super-only">
     <div class="card rainbow">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-orange"><i class="fas fa-bolt"></i></div>Extra Rewards (Monetag Pop-up)</div></div>
       <div class="form-group"><label>Feature Status</label>
-        <select id="extraRewardEnabled">
-          <option value="true">✅ Enabled</option>
-          <option value="false">🚫 Disabled</option>
-        </select>
+        <select id="extraRewardEnabled"><option value="true">✅ Enabled</option><option value="false">🚫 Disabled</option></select>
       </div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         <div class="form-group"><label>Reward Per Ad (TK) *</label><input type="number" id="extraRewardAmount" step="0.01" min="0.01" placeholder="0.50"></div>
@@ -1227,7 +1235,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ========== MAINTENANCE ========== -->
+  <!-- ===== MAINTENANCE ===== -->
   <div id="tab-maintenance" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-wrench"></i></div>System Maintenance</div></div>
@@ -1238,7 +1246,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ========== REFERRALS ========== -->
+  <!-- ===== REFERRALS ===== -->
   <div id="tab-referrals" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-trophy"></i></div>Top Referrers</div></div>
@@ -1254,7 +1262,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ========== ADMINS ========== -->
+  <!-- ===== ADMINS ===== -->
   <div id="tab-admins" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-key"></i></div>Change Super Password</div></div>
@@ -1276,7 +1284,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ========== DEPOSIT MGMT ========== -->
+  <!-- ===== DEPOSIT MGMT ===== -->
   <div id="tab-depositmgmt" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-credit-card"></i></div>Deposit Methods</div></div>
@@ -1293,7 +1301,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ========== WALLET (Admin) ========== -->
+  <!-- ===== WALLET (Admin) ===== -->
   <div id="tab-wallet" class="tab-content admin-only hidden">
     <div class="wallet-hero">
       <i class="fas fa-wallet wallet-icon"></i>
@@ -1316,7 +1324,27 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ========== MY REVENUE (Admin) ========== -->
+  <!-- ===== MY SUB-ADMINS (Admin) ===== -->
+  <div id="tab-mysubadmins" class="tab-content admin-only hidden">
+    <div class="card rainbow">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-user-plus"></i></div>Create Sub-Admin</div></div>
+      <div class="alert-box info">
+        <i class="fas fa-info-circle"></i>
+        <div>Sub-Admin তৈরি করলে <b>Super Admin approve করবে</b>। Approve হলে Sub-Admin তার নিজের Referral Link দিয়ে User আনতে পারবে।</div>
+      </div>
+      <button class="btn btn-info" onclick="openCreateSubAdminModal()"><i class="fas fa-user-plus"></i> Create Sub-Admin</button>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-users-gear"></i></div>My Sub-Admins</div></div>
+      <div id="mySubAdminsList"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>My Pending Requests</div></div>
+      <div id="myPendingSubAdminRequests"></div>
+    </div>
+  </div>
+
+  <!-- ===== MY REVENUE (Admin) ===== -->
   <div id="tab-myrevenue" class="tab-content admin-only hidden">
     <div class="revenue-hero">
       <i class="fas fa-coins revenue-icon"></i>
@@ -1333,7 +1361,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <span class="platform">💼 Platform: <span id="platformShareView">70</span>%</span>
       </div>
     </div>
-
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-gold"><i class="fas fa-link"></i></div>My Referral Code</div></div>
       <div class="alert-box info"><i class="fas fa-info-circle"></i><div>এই code User App-এ শেয়ার করুন। যে User এই code দিয়ে register করবে, তার Ad view থেকে আপনি Revenue পাবেন।</div></div>
@@ -1343,30 +1370,26 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <button class="btn btn-gold" onclick="copyMyRefCode()"><i class="fas fa-copy"></i> Copy Code</button>
       </div>
     </div>
-
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-hand-holding-dollar"></i></div>Withdraw Revenue</div></div>
-      <div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i><div>Minimum Withdraw: <b><span id="minRevWithdraw">100</span> TK</b>। Super Admin manually approve করে payment করবে।</div></div>
+      <div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i><div>Minimum Withdraw: <b><span id="minRevWithdraw">100</span> TK</b></div></div>
       <button class="btn btn-gold" onclick="openRevenueWithdrawModal()"><i class="fas fa-money-bill-transfer"></i> Request Withdrawal</button>
     </div>
-
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-clock-rotate-left"></i></div>My Revenue Withdraw Requests</div></div>
       <div id="myRevenueReqList"></div>
     </div>
-
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-purple"><i class="fas fa-users"></i></div>My Referred Users</div></div>
       <div id="myReferredUsersList"></div>
     </div>
-
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-pink"><i class="fas fa-history"></i></div>Revenue History</div></div>
       <div id="myRevenueHistoryList"></div>
     </div>
   </div>
 
-  <!-- ========== DEPOSIT (Admin) ========== -->
+  <!-- ===== DEPOSIT (Admin) ===== -->
   <div id="tab-deposit" class="tab-content admin-only hidden">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-list"></i></div>Select Method</div></div>
@@ -1378,7 +1401,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ========== CONTACT (Admin) ========== -->
+  <!-- ===== CONTACT (Admin) ===== -->
   <div id="tab-contact" class="tab-content admin-only hidden">
     <div class="contact-hero">
       <i class="fas fa-headset contact-icon"></i>
@@ -1396,7 +1419,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ========== TASKS ========== -->
+  <!-- ===== TASKS ===== -->
   <div id="tab-tasks" class="tab-content">
     <div class="card rainbow">
       <div class="card-header">
@@ -1491,13 +1514,11 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       </div>
       <div class="task-list-tabs">
         <button type="button" class="task-list-tab active" data-tlt="live" onclick="switchTaskListTab('live', this)">
-          <i class="fas fa-circle-check"></i>
-          <span>Live Tasks</span>
+          <i class="fas fa-circle-check"></i><span>Live Tasks</span>
           <span class="tlt-count" id="liveTasksCount">0</span>
         </button>
         <button type="button" class="task-list-tab" data-tlt="pending" onclick="switchTaskListTab('pending', this)">
-          <i class="fas fa-hourglass-half"></i>
-          <span>Pending</span>
+          <i class="fas fa-hourglass-half"></i><span>Pending</span>
           <span class="tlt-count" id="pendingTasksCount">0</span>
         </button>
       </div>
@@ -1529,9 +1550,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     const k = (e.key || '').toLowerCase();
     const isBlocked = e.key === 'F12' ||
       (e.ctrlKey && e.shiftKey && ['i','j','c','k'].includes(k)) ||
-      (e.metaKey && e.altKey && ['i','j','c','k'].includes(k)) ||
-      (e.ctrlKey && ['u','s'].includes(k)) ||
-      (e.metaKey && ['u','s'].includes(k));
+      (e.ctrlKey && ['u','s'].includes(k));
     if (isBlocked) { e.preventDefault(); e.stopPropagation(); return false; }
   }, true);
 })();
@@ -1563,12 +1582,12 @@ let analyticsRange = 'today';
 let lbEditingIndex = null;
 let currentTaskListTab = 'live';
 let currentUserCache = {};
+let allSubAdminRequests = [];
 
-// ✅ Revenue globals
 let REVENUE_SETTINGS = { enabled: true, adminSharePercent: 30, minWithdrawAmount: 100, perUserCap: 0 };
 let allRevenueRequests = [];
 
-const SESSION_KEY = 'nexearn_admin_session';
+const SESSION_KEY = 'nexearn_admin_v3';
 const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
 let currentSession = null;
 
@@ -1618,6 +1637,10 @@ async function sha256(message) {
 function generateAdminRefCode(username) {
   const rand = Math.random().toString(36).substring(2, 7).toUpperCase();
   return 'ADM_' + (username || 'USER').toUpperCase().slice(0, 6) + '_' + rand;
+}
+function generateSubAdminRefCode(username) {
+  const rand = Math.random().toString(36).substring(2, 7).toUpperCase();
+  return 'SUB_' + (username || 'USER').toUpperCase().slice(0, 6) + '_' + rand;
 }
 function saveSession(data) { const sess = { ...data, expiry: Date.now() + SESSION_DURATION_MS }; localStorage.setItem(SESSION_KEY, JSON.stringify(sess)); currentSession = sess; return sess; }
 function getStoredSession() { try { const raw = localStorage.getItem(SESSION_KEY); if (!raw) return null; const s = JSON.parse(raw); if (!s || !s.expiry || s.expiry <= Date.now()) { localStorage.removeItem(SESSION_KEY); return null; } return s; } catch(e) { return null; } }
@@ -1691,21 +1714,42 @@ async function handleLogin(e) {
       await db.ref('config/superAdmin').set({ username, passwordHash: hash, createdAt: Date.now(), updatedAt: Date.now() });
       onLoginSuccess(saveSession({ username, role: 'super', adminId: 'super' }), true);
     } else {
+      // 1. Super Admin
       const superAdmin = await getSuperAdminData();
       if (superAdmin && superAdmin.username === username && superAdmin.passwordHash === hash) {
         onLoginSuccess(saveSession({ username, role: 'super', adminId: 'super' }), false); return;
       }
+      // 2. Admin + Sub-Admin
       const adminsSnap = await db.ref('admins').once('value');
-      let matched = null;
+      let matchedAdmin = null;
+      let matchedSubAdmin = null;
       adminsSnap.forEach(child => {
         const a = child.val();
-        if (a.username === username && a.passwordHash === hash) matched = { id: child.key, ...a };
+        if (a.username === username && a.passwordHash === hash) matchedAdmin = { id: child.key, ...a };
+        if (a.subAdmins) {
+          Object.keys(a.subAdmins).forEach(subId => {
+            const sub = a.subAdmins[subId];
+            if (sub.username === username && sub.passwordHash === hash) {
+              matchedSubAdmin = { id: subId, ...sub, parentAdminId: child.key };
+            }
+          });
+        }
       });
-      if (matched) {
-        if (matched.isActive === false) { setLoginError('❌ Account disabled'); return; }
-        if (matched.isBanned) { setLoginError('❌ Account banned: ' + (matched.banReason || '')); return; }
-        if (matched.isSuspended) { setLoginError('❌ Account suspended: ' + (matched.suspendReason || '')); return; }
-        onLoginSuccess(saveSession({ username, role: 'admin', adminId: matched.id }), false); return;
+      if (matchedAdmin) {
+        if (matchedAdmin.isActive === false) { setLoginError('❌ Account disabled'); return; }
+        if (matchedAdmin.isBanned) { setLoginError('❌ Account banned: ' + (matchedAdmin.banReason || '')); return; }
+        if (matchedAdmin.isSuspended) { setLoginError('❌ Account suspended: ' + (matchedAdmin.suspendReason || '')); return; }
+        onLoginSuccess(saveSession({ username, role: 'admin', adminId: matchedAdmin.id }), false); return;
+      }
+      if (matchedSubAdmin) {
+        if (matchedSubAdmin.status === 'pending') { setLoginError('⏳ Approval pending'); return; }
+        if (matchedSubAdmin.isActive === false) { setLoginError('❌ Disabled'); return; }
+        if (matchedSubAdmin.isBanned) { setLoginError('❌ Banned'); return; }
+        onLoginSuccess(saveSession({
+          username, role: 'subadmin',
+          adminId: matchedSubAdmin.id,
+          parentAdminId: matchedSubAdmin.parentAdminId
+        }), false); return;
       }
       setLoginError('❌ Invalid username or password');
     }
@@ -1715,9 +1759,9 @@ async function handleLogin(e) {
 
 function applyRoleUI(role) {
   document.querySelectorAll('.tabs .tab.super-only').forEach(t => role === 'super' ? t.classList.remove('hidden') : t.classList.add('hidden'));
-  document.querySelectorAll('.tabs .tab.admin-only').forEach(t => role === 'admin' ? t.classList.remove('hidden') : t.classList.add('hidden'));
+  document.querySelectorAll('.tabs .tab.admin-only').forEach(t => (role === 'admin' || role === 'subadmin') ? t.classList.remove('hidden') : t.classList.add('hidden'));
   document.querySelectorAll('.tab-content.super-only').forEach(c => role === 'super' ? c.classList.remove('hidden') : c.classList.add('hidden'));
-  document.querySelectorAll('.tab-content.admin-only').forEach(c => role === 'admin' ? c.classList.remove('hidden') : c.classList.add('hidden'));
+  document.querySelectorAll('.tab-content.admin-only').forEach(c => (role === 'admin' || role === 'subadmin') ? c.classList.remove('hidden') : c.classList.add('hidden'));
 }
 
 function onLoginSuccess(session, isNewSetup) {
@@ -1731,8 +1775,9 @@ function onLoginSuccess(session, isNewSetup) {
     document.getElementById('headerSubtitle').textContent = 'Earn Wallet Control Center';
     document.querySelector('.tab[data-tab="settings"]').classList.add('active');
     document.getElementById('tab-settings').classList.add('active');
+    loadSubAdminRequests();
   } else {
-    document.getElementById('headerSubtitle').textContent = 'Admin Dashboard';
+    document.getElementById('headerSubtitle').textContent = session.role === 'subadmin' ? 'Sub-Admin Dashboard' : 'Admin Dashboard';
     document.getElementById('tabBtnWallet').classList.add('active');
     document.getElementById('tab-wallet').classList.add('active');
     loadCurrentAdminData();
@@ -1742,10 +1787,15 @@ function onLoginSuccess(session, isNewSetup) {
 }
 
 async function loadCurrentAdminData() {
-  if (!currentSession || currentSession.role !== 'admin') return;
+  if (!currentSession || currentSession.role === 'super') return;
   try {
-    const snap = await db.ref('admins/' + currentSession.adminId).once('value');
-    if (!snap.exists()) return;
+    let snap;
+    if (currentSession.role === 'admin') {
+      snap = await db.ref('admins/' + currentSession.adminId).once('value');
+    } else {
+      snap = await db.ref('admins/' + currentSession.parentAdminId + '/subAdmins/' + currentSession.adminId).once('value');
+    }
+    if (!snap || !snap.exists()) return;
     currentAdminData = { id: currentSession.adminId, ...snap.val() };
     updateWalletUI(); renderDepositHistory(); renderMyDepositRequests(); renderMyContact(); renderMyRevenue();
   } catch(e) {}
@@ -1803,26 +1853,19 @@ function openContactEditModal() {
 }
 function closeContactEditModal() { document.getElementById('contactEditModal').classList.remove('active'); }
 async function saveContactInfo() {
-  if (!currentSession || currentSession.role !== 'admin') return;
+  if (!currentSession || currentSession.role === 'super') return;
   const type = document.getElementById('ceType').value;
   const value = document.getElementById('ceValue').value.trim();
   const note = document.getElementById('ceNote').value.trim();
   if (!value || value.length < 3) return toast('❌ Valid contact required');
-  await db.ref('admins/' + currentSession.adminId + '/adminContact').set({ type, value, note, updatedAt: Date.now() });
+  let path;
+  if (currentSession.role === 'subadmin') {
+    path = 'admins/' + currentSession.parentAdminId + '/subAdmins/' + currentSession.adminId + '/adminContact';
+  } else {
+    path = 'admins/' + currentSession.adminId + '/adminContact';
+  }
+  await db.ref(path).set({ type, value, note, updatedAt: Date.now() });
   toast('✅ Contact saved'); closeContactEditModal(); loadCurrentAdminData();
-}
-function openAdminContact(adminId) {
-  db.ref('admins/' + adminId + '/adminContact').once('value').then(snap => {
-    if (!snap.exists()) return toast('❌ Admin contact not set');
-    const c = snap.val();
-    if (!c.value) return toast('❌ Admin contact not set');
-    let url = c.value;
-    if (c.type === 'telegram') { url = c.value.startsWith('@') ? 'https://t.me/' + c.value.slice(1) : (c.value.startsWith('http') ? c.value : 'https://t.me/' + c.value); }
-    else if (c.type === 'whatsapp') { url = 'https://wa.me/' + c.value.replace(/[^\d]/g, ''); }
-    else if (c.type === 'phone') { url = 'tel:' + c.value; }
-    else if (c.type === 'email') { url = 'mailto:' + c.value; }
-    window.open(url, '_blank');
-  });
 }
 
 function copyToClipboard(text, label) {
@@ -1836,7 +1879,356 @@ function copyToClipboard(text, label) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// ✅ REVENUE SETTINGS (Super)
+// SUB-ADMIN SYSTEM
+// ═══════════════════════════════════════════════════════════
+function openCreateSubAdminModal() {
+  if (!currentSession || currentSession.role !== 'admin') return toast('❌ Only Admin');
+  document.getElementById('csaUsername').value = '';
+  document.getElementById('csaPassword').value = '';
+  document.getElementById('csaConfirmPassword').value = '';
+  document.getElementById('csaInitialBalance').value = '0';
+  document.getElementById('csaRevenueShare').value = '0';
+  document.getElementById('createSubAdminModal').classList.add('active');
+}
+function closeCreateSubAdminModal() { document.getElementById('createSubAdminModal').classList.remove('active'); }
+
+async function submitSubAdminRequest() {
+  if (!currentSession || currentSession.role !== 'admin') return toast('❌ Denied');
+  const username = document.getElementById('csaUsername').value.trim();
+  const password = document.getElementById('csaPassword').value;
+  const confirm = document.getElementById('csaConfirmPassword').value;
+  const initialBalance = parseFloat(document.getElementById('csaInitialBalance').value) || 0;
+  const revenueShare = parseFloat(document.getElementById('csaRevenueShare').value) || 0;
+
+  if (!username || username.length < 3) return toast('❌ Username min 3');
+  if (!password || password.length < 4) return toast('❌ Password min 4');
+  if (password !== confirm) return toast('❌ Passwords mismatch');
+
+  // Check duplicates
+  const superAdmin = await getSuperAdminData();
+  if (superAdmin && superAdmin.username.toLowerCase() === username.toLowerCase()) return toast('❌ Taken');
+  const adminsSnap = await db.ref('admins').once('value');
+  let dup = false;
+  adminsSnap.forEach(child => {
+    const a = child.val();
+    if (a.username && a.username.toLowerCase() === username.toLowerCase()) dup = true;
+    if (a.subAdmins) {
+      Object.values(a.subAdmins).forEach(sub => {
+        if (sub.username && sub.username.toLowerCase() === username.toLowerCase()) dup = true;
+      });
+    }
+  });
+  if (dup) return toast('❌ Username exists');
+
+  const parentBalance = Number(currentAdminData.balance || 0);
+  if (initialBalance > parentBalance) return toast(`❌ আপনার balance: ${parentBalance.toFixed(2)}`);
+
+  const passwordHash = await sha256(password);
+  const subAdminRefCode = generateSubAdminRefCode(username);
+  const reqId = 'subreq_' + Date.now() + '_' + currentSession.adminId;
+
+  await db.ref('subAdminRequests/' + reqId).set({
+    parentAdminId: currentSession.adminId,
+    parentAdminName: currentSession.username,
+    subAdminUsername: username,
+    passwordHash,
+    initialBalance,
+    revenueShareOverride: revenueShare,
+    subAdminReferralCode: subAdminRefCode,
+    status: 'pending',
+    createdAt: Date.now()
+  });
+
+  toast('✅ Super Admin-এর কাছে পাঠানো হয়েছে!');
+  closeCreateSubAdminModal();
+  loadMySubAdminData();
+}
+
+async function loadMySubAdminData() {
+  if (!currentSession || currentSession.role !== 'admin') return;
+  // Sub-admins list
+  const snap = await db.ref('admins/' + currentSession.adminId + '/subAdmins').once('value');
+  const container = document.getElementById('mySubAdminsList');
+  let subs = [];
+  snap.forEach(c => subs.push({ id: c.key, ...c.val() }));
+
+  if (!subs.length) {
+    container.innerHTML = '<div class="empty-state"><p>No sub-admins yet</p></div>';
+  } else {
+    let h = '';
+    subs.forEach(s => {
+      const banned = s.isBanned === true;
+      const badge = banned ? '<span class="status-badge banned">BANNED</span>' : '<span class="status-badge active">ACTIVE</span>';
+      h += `<div class="admin-item">
+        <div class="admin-item-top">
+          <div class="admin-item-left">
+            <div class="admin-item-avatar" style="background:linear-gradient(135deg,#3b82f6,#60a5fa);">${(s.username || 'S').charAt(0).toUpperCase()}</div>
+            <div class="admin-item-info">
+              <div class="name">${esc(s.username)} <span class="status-badge subadmin">SUB-ADMIN</span> ${badge}</div>
+              <div class="meta">Code: ${esc(s.subAdminReferralCode || 'N/A')}</div>
+            </div>
+          </div>
+        </div>
+        <div class="admin-balance-box">
+          <div class="admin-balance-cell green"><div class="val">${Number(s.balance||0).toFixed(2)}</div><div class="lbl">Balance</div></div>
+          <div class="admin-balance-cell gold"><div class="val">${Number(s.revenueBalance||0).toFixed(2)}</div><div class="lbl">Revenue</div></div>
+          <div class="admin-balance-cell"><div class="val">${Number(s.totalSpent||0).toFixed(2)}</div><div class="lbl">Spent</div></div>
+          <div class="admin-balance-cell warn"><div class="val">${Number(s.revenueShareOverride||0)}%</div><div class="lbl">Share</div></div>
+        </div>
+        <div class="admin-item-actions">
+          <button class="btn btn-info btn-small" onclick="viewMySubAdmin('${s.id}')"><i class="fas fa-eye"></i> View</button>
+          <button class="btn btn-warning btn-small" onclick="addSubAdminBalance('${s.id}')"><i class="fas fa-plus"></i> Add</button>
+          ${banned ? `<button class="btn btn-green btn-small" onclick="unbanMySubAdmin('${s.id}')"><i class="fas fa-unlock"></i></button>` : `<button class="btn btn-red btn-small" onclick="banMySubAdmin('${s.id}')"><i class="fas fa-ban"></i></button>`}
+          <button class="btn btn-red btn-small" onclick="deleteMySubAdmin('${s.id}')"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>`;
+    });
+    container.innerHTML = h;
+  }
+
+  // Pending requests
+  const reqSnap = await db.ref('subAdminRequests').orderByChild('parentAdminId').equalTo(currentSession.adminId).once('value');
+  const rContainer = document.getElementById('myPendingSubAdminRequests');
+  let reqs = [];
+  reqSnap.forEach(c => reqs.push({ id: c.key, ...c.val() }));
+  reqs.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+
+  if (!reqs.length) {
+    rContainer.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>No requests</div></div>';
+  } else {
+    let h = '';
+    reqs.forEach(r => {
+      const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
+      const dt = new Date(r.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+      h += `<div class="dreq-item ${cls}">
+        <div class="dreq-head">
+          <div style="font-weight:800;">👤 ${esc(r.subAdminUsername)}</div>
+          <span class="status-badge ${cls}">${r.status.toUpperCase()}</span>
+        </div>
+        <div class="dreq-info">
+          <b>Balance:</b> ${Number(r.initialBalance||0).toFixed(2)} TK<br>
+          <b>Share:</b> ${Number(r.revenueShareOverride||0)}%<br>
+          <b>Submitted:</b> ${dt}
+          ${r.rejectReason ? '<br><b style="color:#dc2626;">Reason:</b> ' + esc(r.rejectReason) : ''}
+        </div>
+      </div>`;
+    });
+    rContainer.innerHTML = h;
+  }
+}
+
+async function viewMySubAdmin(subId) {
+  const snap = await db.ref('admins/' + currentSession.adminId + '/subAdmins/' + subId).once('value');
+  if (!snap.exists()) return toast('❌ Not found');
+  const s = snap.val();
+  document.getElementById('subAdminDetailsBody').innerHTML = `
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="width:64px;height:64px;margin:0 auto 10px;border-radius:18px;background:linear-gradient(135deg,#3b82f6,#60a5fa);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.5rem;">${(s.username||'S').charAt(0).toUpperCase()}</div>
+      <div style="font-weight:900;font-size:1.1rem;">${esc(s.username)}</div>
+      <div style="font-size:.72rem;color:#94a3b8;margin-top:4px;">ID: ${subId}</div>
+    </div>
+    <div class="info-display-box gold">
+      <span class="label">Ref Code</span>
+      <span class="value">${esc(s.subAdminReferralCode || 'N/A')}</span>
+      <button class="copy-btn inline" onclick="copyToClipboard('${esc(s.subAdminReferralCode || '')}', 'Code')"><i class="fas fa-copy"></i></button>
+    </div>
+    <div class="section-divider"><i class="fas fa-wallet"></i> Financial</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="stat-card green"><div class="num">${Number(s.balance||0).toFixed(2)}</div><div class="label">Balance</div></div>
+      <div class="stat-card gold"><div class="num">${Number(s.revenueBalance||0).toFixed(2)}</div><div class="label">Revenue</div></div>
+      <div class="stat-card info"><div class="num">${Number(s.totalSpent||0).toFixed(2)}</div><div class="label">Spent</div></div>
+      <div class="stat-card purple"><div class="num">${Number(s.revenueShareOverride||0)}%</div><div class="label">Share</div></div>
+    </div>
+  `;
+  document.getElementById('subAdminDetailsModal').classList.add('active');
+}
+function closeSubAdminDetailsModal() { document.getElementById('subAdminDetailsModal').classList.remove('active'); }
+
+async function addSubAdminBalance(subId) {
+  const amt = parseFloat(prompt('Amount (TK):') || '0');
+  if (!amt || amt <= 0) return toast('❌ Invalid');
+  const myBal = Number(currentAdminData.balance || 0);
+  if (amt > myBal) return toast(`❌ Balance: ${myBal.toFixed(2)}`);
+  const subRef = db.ref('admins/' + currentSession.adminId + '/subAdmins/' + subId);
+  const sSnap = await subRef.once('value');
+  const s = sSnap.val();
+  await subRef.update({
+    balance: Number(s.balance || 0) + amt,
+    totalDeposited: Number(s.totalDeposited || 0) + amt
+  });
+  await db.ref('admins/' + currentSession.adminId).update({
+    balance: myBal - amt,
+    totalSpent: Number(currentAdminData.totalSpent || 0) + amt
+  });
+  toast(`✅ ${amt.toFixed(2)} TK যোগ`);
+  loadMySubAdminData(); loadCurrentAdminData();
+}
+async function banMySubAdmin(subId) {
+  const reason = prompt('Reason:');
+  if (!reason) return;
+  await db.ref('admins/' + currentSession.adminId + '/subAdmins/' + subId).update({ isBanned: true, banReason: reason });
+  toast('✅ Banned'); loadMySubAdminData();
+}
+async function unbanMySubAdmin(subId) {
+  if (!confirm('Unban?')) return;
+  await db.ref('admins/' + currentSession.adminId + '/subAdmins/' + subId).update({ isBanned: false, banReason: null });
+  toast('✅'); loadMySubAdminData();
+}
+async function deleteMySubAdmin(subId) {
+  if (!confirm('Delete? Balance parent-এ ফেরত যাবে।')) return;
+  const snap = await db.ref('admins/' + currentSession.adminId + '/subAdmins/' + subId).once('value');
+  if (!snap.exists()) return;
+  const s = snap.val();
+  const bal = Number(s.balance || 0);
+  if (bal > 0) {
+    await db.ref('admins/' + currentSession.adminId).update({
+      balance: Number(currentAdminData.balance || 0) + bal
+    });
+  }
+  await db.ref('admins/' + currentSession.adminId + '/subAdmins/' + subId).remove();
+  toast('✅ Deleted'); loadMySubAdminData(); loadCurrentAdminData();
+}
+
+// ═══════════════════════════════════════════════════════════
+// SUPER ADMIN: SUB-ADMIN REQUESTS
+// ═══════════════════════════════════════════════════════════
+async function loadSubAdminRequests() {
+  const snap = await db.ref('subAdminRequests').once('value');
+  allSubAdminRequests = [];
+  snap.forEach(c => allSubAdminRequests.push({ id: c.key, ...c.val() }));
+  allSubAdminRequests.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+
+  const pendings = allSubAdminRequests.filter(r => r.status === 'pending');
+  const badge = document.getElementById('subReqBadge');
+  if (badge) {
+    if (pendings.length > 0) { badge.style.display = 'inline-block'; badge.textContent = pendings.length; }
+    else badge.style.display = 'none';
+  }
+
+  const pList = document.getElementById('pendingSubAdminReqList');
+  if (pList) {
+    if (!pendings.length) {
+      pList.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>No pending requests</div></div>';
+    } else {
+      let h = '';
+      pendings.forEach(r => {
+        const dt = new Date(r.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+        h += `<div class="subadmin-req-item">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap;">
+            <div style="font-weight:900;font-size:.95rem;">👤 ${esc(r.subAdminUsername)}</div>
+            <span class="status-badge pending">PENDING</span>
+          </div>
+          <div style="font-size:.78rem;line-height:1.7;font-weight:600;">
+            <b>👨‍💼 Parent Admin:</b> ${esc(r.parentAdminName)}<br>
+            <b>🆔 Parent ID:</b> ${esc(r.parentAdminId)}<br>
+            <b>💰 Initial Balance:</b> ${Number(r.initialBalance||0).toFixed(2)} TK<br>
+            <b>📊 Revenue Share:</b> ${Number(r.revenueShareOverride||0)}%<br>
+            <b>🕐 Submitted:</b> ${dt}
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
+            <button class="btn btn-green btn-small" onclick="approveSubAdminRequest('${r.id}')" style="flex:1;"><i class="fas fa-check"></i> Approve</button>
+            <button class="btn btn-red btn-small" onclick="rejectSubAdminRequest('${r.id}')" style="flex:1;"><i class="fas fa-times"></i> Reject</button>
+          </div>
+        </div>`;
+      });
+      pList.innerHTML = h;
+    }
+  }
+
+  const histList = document.getElementById('allSubAdminHistoryList');
+  if (histList) {
+    if (!allSubAdminRequests.length) {
+      histList.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:16px;">No history</p>';
+    } else {
+      let h = '';
+      allSubAdminRequests.slice(0, 50).forEach(r => {
+        const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
+        const dt = new Date(r.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short' });
+        h += `<div class="dreq-item ${cls}">
+          <div class="dreq-head">
+            <div style="font-weight:800;">👤 ${esc(r.subAdminUsername)}</div>
+            <span class="status-badge ${cls}">${r.status.toUpperCase()}</span>
+          </div>
+          <div class="dreq-info">
+            Parent: ${esc(r.parentAdminName)} • ${Number(r.initialBalance||0).toFixed(2)} TK • ${Number(r.revenueShareOverride||0)}%<br>
+            <span style="font-size:.68rem;color:#94a3b8;">${dt}</span>
+          </div>
+        </div>`;
+      });
+      histList.innerHTML = h;
+    }
+  }
+}
+
+async function approveSubAdminRequest(reqId) {
+  if (!confirm('Approve Sub-Admin?')) return;
+  const snap = await db.ref('subAdminRequests/' + reqId).once('value');
+  if (!snap.exists()) return toast('❌ Not found');
+  const r = snap.val();
+  if (r.status !== 'pending') return toast('Already processed');
+
+  // Verify parent balance
+  const parentSnap = await db.ref('admins/' + r.parentAdminId).once('value');
+  if (!parentSnap.exists()) return toast('❌ Parent not found');
+  const parent = parentSnap.val();
+  const initBal = Number(r.initialBalance || 0);
+  if (initBal > Number(parent.balance || 0)) {
+    await db.ref('subAdminRequests/' + reqId).update({
+      status: 'rejected', rejectReason: 'Insufficient parent balance at approval time',
+      reviewedAt: Date.now(), reviewedBy: currentSession.username
+    });
+    toast('❌ Parent balance insufficient - auto rejected');
+    loadSubAdminRequests(); return;
+  }
+
+  const subId = 'sub_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+  const subData = {
+    username: r.subAdminUsername,
+    passwordHash: r.passwordHash,
+    subAdminReferralCode: r.subAdminReferralCode,
+    parentAdminId: r.parentAdminId,
+    parentAdminName: r.parentAdminName,
+    revenueShareOverride: Number(r.revenueShareOverride || 0),
+    isActive: true, isBanned: false,
+    balance: initBal,
+    totalDeposited: 0, totalSpent: 0, totalRefunded: 0, totalFees: 0, totalServiceCharges: 0,
+    revenueBalance: 0, totalRevenueEarned: 0, totalRevenueWithdrawn: 0,
+    deposits: {}, adminContact: null,
+    createdAt: Date.now(),
+    approvedBy: currentSession.username,
+    approvedAt: Date.now()
+  };
+
+  await db.ref('admins/' + r.parentAdminId + '/subAdmins/' + subId).set(subData);
+  if (initBal > 0) {
+    await db.ref('admins/' + r.parentAdminId).update({
+      balance: Number(parent.balance || 0) - initBal,
+      totalSpent: Number(parent.totalSpent || 0) + initBal
+    });
+  }
+  await db.ref('subAdminRequests/' + reqId).update({
+    status: 'approved', subAdminId: subId,
+    reviewedAt: Date.now(), reviewedBy: currentSession.username
+  });
+
+  toast('✅ Sub-Admin Approved!');
+  loadSubAdminRequests();
+  loadAdminsList();
+}
+
+async function rejectSubAdminRequest(reqId) {
+  const reason = prompt('Reject reason:');
+  if (!reason) return;
+  await db.ref('subAdminRequests/' + reqId).update({
+    status: 'rejected', rejectReason: reason,
+    reviewedAt: Date.now(), reviewedBy: currentSession.username
+  });
+  toast('❌ Rejected');
+  loadSubAdminRequests();
+}
+
+// ═══════════════════════════════════════════════════════════
+// REVENUE
 // ═══════════════════════════════════════════════════════════
 function updateRevenueVisual() {
   const v = Math.max(0, Math.min(100, parseFloat(document.getElementById('revenueAdminShare').value) || 0));
@@ -1857,9 +2249,8 @@ async function saveRevenueSettings() {
     updatedAt: Date.now(), updatedBy: currentSession.username
   });
   REVENUE_SETTINGS = { enabled, adminSharePercent, minWithdrawAmount, perUserCap };
-  toast('✅ Revenue settings saved!');
+  toast('✅ Saved!');
 }
-
 async function loadRevenueSettings() {
   const snap = await db.ref('config/revenueSettings').once('value');
   if (!snap.exists()) return;
@@ -1870,7 +2261,6 @@ async function loadRevenueSettings() {
     minWithdrawAmount: Number(r.minWithdrawAmount || 100),
     perUserCap: Number(r.perUserCap || 0)
   };
-  // UI sync
   const els = {
     enabled: document.getElementById('revenueShareEnabled'),
     adminShare: document.getElementById('revenueAdminShare'),
@@ -1883,33 +2273,27 @@ async function loadRevenueSettings() {
   if (els.perUserCap) els.perUserCap.value = REVENUE_SETTINGS.perUserCap;
   updateRevenueVisual();
 }
-
-// ═══════════════════════════════════════════════════════════
-// ✅ SUPER ADMIN REVENUE MANAGEMENT
-// ═══════════════════════════════════════════════════════════
 async function loadSuperRevenueData() {
   const adminsSnap = await db.ref('admins').once('value');
   let totalRev = 0, paidRev = 0, walletRev = 0;
-  const adminList = [];
   adminsSnap.forEach(c => {
     const a = c.val();
-    const earned = Number(a.totalRevenueEarned || 0);
-    const withdrawn = Number(a.totalRevenueWithdrawn || 0);
-    const bal = Number(a.revenueBalance || 0);
-    totalRev += earned;
-    paidRev += withdrawn;
-    walletRev += bal;
-    if (earned > 0) adminList.push({ id: c.key, name: a.username, earned, withdrawn, bal });
+    totalRev += Number(a.totalRevenueEarned || 0);
+    paidRev += Number(a.totalRevenueWithdrawn || 0);
+    walletRev += Number(a.revenueBalance || 0);
+    const subs = a.subAdmins || {};
+    Object.values(subs).forEach(s => {
+      totalRev += Number(s.totalRevenueEarned || 0);
+      paidRev += Number(s.totalRevenueWithdrawn || 0);
+      walletRev += Number(s.revenueBalance || 0);
+    });
   });
-
   const qSnap = await db.ref('revenueWithdrawRequests').once('value');
   allRevenueRequests = [];
   qSnap.forEach(c => allRevenueRequests.push({ id: c.key, ...c.val() }));
   allRevenueRequests.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
-
   const pendings = allRevenueRequests.filter(r => r.status === 'pending');
   let pendingAmount = pendings.reduce((s, r) => s + Number(r.amount || 0), 0);
-
   document.getElementById('superTotalRevenue').textContent = totalRev.toFixed(2);
   document.getElementById('superPaidRevenue').textContent = paidRev.toFixed(2);
   document.getElementById('superPendingRevenue').textContent = pendingAmount.toFixed(2);
@@ -1917,15 +2301,14 @@ async function loadSuperRevenueData() {
   document.getElementById('rSharePlatformView').textContent = 100 - REVENUE_SETTINGS.adminSharePercent;
   document.getElementById('rShareAdminView').textContent = REVENUE_SETTINGS.adminSharePercent;
 
-  // Pending list
   const pEl = document.getElementById('pendingRevenueReqList');
-  if (!pendings.length) pEl.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>No pending revenue requests</div></div>';
+  if (!pendings.length) pEl.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>No pending</div></div>';
   else {
     let h = '';
     pendings.forEach(r => {
       h += `<div class="dreq-item pending">
         <div class="dreq-head"><div class="dreq-amount">${Number(r.amount).toFixed(2)} TK</div><span class="status-badge pending">PENDING</span></div>
-        <div class="dreq-info"><b>Admin:</b> ${esc(r.adminName)}<br><b>Method:</b> ${esc(r.method)}<br><b>Account:</b> ${esc(r.account)}${r.note ? '<br><b>Note:</b> ' + esc(r.note) : ''}</div>
+        <div class="dreq-info"><b>Name:</b> ${esc(r.adminName)}<br><b>Role:</b> ${esc(r.role || 'admin')}<br><b>Method:</b> ${esc(r.method)}<br><b>Account:</b> ${esc(r.account)}</div>
         <div style="display:flex; gap:8px; margin-top:12px;">
           <button class="btn btn-green btn-small" onclick="approveRevenueWithdraw('${r.id}')" style="flex:1;"><i class="fas fa-check"></i> Approve</button>
           <button class="btn btn-red btn-small" onclick="openRevenueRejectModal('${r.id}')" style="flex:1;"><i class="fas fa-times"></i> Reject</button>
@@ -1934,77 +2317,45 @@ async function loadSuperRevenueData() {
     });
     pEl.innerHTML = h;
   }
-
-  // All list
   const aEl = document.getElementById('allRevenueReqList');
-  if (!allRevenueRequests.length) aEl.innerHTML = '<p style="text-align:center;color:#94a3b8;">No requests yet</p>';
+  if (!allRevenueRequests.length) aEl.innerHTML = '<p style="text-align:center;color:#94a3b8;">No requests</p>';
   else {
     let h = '';
     allRevenueRequests.slice(0, 100).forEach(r => {
       const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
-      const dt = r.timestamp ? new Date(r.timestamp).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
       h += `<div class="dreq-item ${cls}">
-        <div class="dreq-head"><div style="font-weight:800;">👤 ${esc(r.adminName)} — ${esc(r.method)}</div><span class="status-badge ${cls}">${r.status.toUpperCase()}</span></div>
-        <div class="dreq-info"><b>${Number(r.amount).toFixed(2)} TK</b> • ${esc(r.account)}<br><span style="font-size:.68rem; color:#94a3b8;">${dt}</span></div>
+        <div class="dreq-head"><div style="font-weight:800;">👤 ${esc(r.adminName)}</div><span class="status-badge ${cls}">${r.status.toUpperCase()}</span></div>
+        <div class="dreq-info"><b>${Number(r.amount).toFixed(2)} TK</b> • ${esc(r.method)}</div>
       </div>`;
     });
     aEl.innerHTML = h;
   }
-
-  // Top earners
-  adminList.sort((a,b) => b.earned - a.earned);
-  const topEl = document.getElementById('topRevenueEarners');
-  if (!adminList.length) topEl.innerHTML = '<p style="text-align:center;color:#94a3b8;">No revenue data yet</p>';
-  else {
-    let h = '';
-    const medals = ['🥇','🥈','🥉'];
-    adminList.slice(0, 10).forEach((a, i) => {
-      h += `<div style="display:flex; align-items:center; gap:12px; padding:12px; background:#fffbeb; border-radius:12px; margin-bottom:8px; border-left:4px solid #f59e0b;">
-        <div style="width:40px; text-align:center; font-weight:900; font-size:1.15rem;">${i<3?medals[i]:'#'+(i+1)}</div>
-        <div style="flex:1;"><div style="font-weight:800; font-size:.88rem;">${esc(a.name)}</div><div style="font-size:.7rem; color:#94a3b8;">Wallet: ${a.bal.toFixed(2)} TK</div></div>
-        <div style="text-align:right;"><div style="color:#f59e0b; font-weight:900;">${a.earned.toFixed(2)} TK</div><div style="font-size:.68rem; color:#94a3b8;">Paid: ${a.withdrawn.toFixed(2)}</div></div>
-      </div>`;
-    });
-    topEl.innerHTML = h;
-  }
 }
-
 async function approveRevenueWithdraw(reqId) {
-  if (!confirm('Approve এই revenue withdraw?')) return;
+  if (!confirm('Approve?')) return;
   const reqSnap = await db.ref('revenueWithdrawRequests/' + reqId).once('value');
-  if (!reqSnap.exists()) return toast('❌ Not found');
+  if (!reqSnap.exists()) return;
   const r = reqSnap.val();
-  if (r.status !== 'pending') return toast('Already processed');
-
-  const adminRef = db.ref('admins/' + r.adminId);
-  const aSnap = await adminRef.once('value');
-  if (!aSnap.exists()) return toast('❌ Admin not found');
+  if (r.status !== 'pending') return;
+  let adminPath;
+  if (r.role === 'subadmin' && r.parentAdminId) {
+    adminPath = 'admins/' + r.parentAdminId + '/subAdmins/' + r.adminId;
+  } else {
+    adminPath = 'admins/' + r.adminId;
+  }
+  const aSnap = await db.ref(adminPath).once('value');
+  if (!aSnap.exists()) return toast('❌ Not found');
   const a = aSnap.val();
-
-  const newRevBal = Math.max(0, Number(a.revenueBalance || 0) - Number(r.amount));
-  const newWithdrawn = Number(a.totalRevenueWithdrawn || 0) + Number(r.amount);
-
-  await adminRef.update({
-    revenueBalance: newRevBal,
-    totalRevenueWithdrawn: newWithdrawn,
-    lastRevenuePayoutAt: Date.now()
+  await db.ref(adminPath).update({
+    revenueBalance: Math.max(0, Number(a.revenueBalance || 0) - Number(r.amount)),
+    totalRevenueWithdrawn: Number(a.totalRevenueWithdrawn || 0) + Number(r.amount)
   });
-
   await db.ref('revenueWithdrawRequests/' + reqId).update({
     status: 'approved', reviewedAt: Date.now(), reviewedBy: currentSession.username
   });
-
-  // Log
-  await db.ref('revenuePayoutLogs/' + Date.now()).set({
-    adminId: r.adminId, adminName: r.adminName, amount: Number(r.amount),
-    method: r.method, account: r.account, action: 'approved',
-    by: currentSession.username, timestamp: Date.now()
-  });
-
   toast('✅ Approved!');
   loadSuperRevenueData();
 }
-
 function openRevenueRejectModal(reqId) {
   document.getElementById('rrReqId').value = reqId;
   document.getElementById('rrReason').value = '';
@@ -2015,26 +2366,13 @@ async function confirmRejectRevenue() {
   const reqId = document.getElementById('rrReqId').value;
   const reason = document.getElementById('rrReason').value.trim();
   if (!reason) return toast('❌ Reason required');
-  const reqSnap = await db.ref('revenueWithdrawRequests/' + reqId).once('value');
-  if (!reqSnap.exists()) return;
-  const r = reqSnap.val();
-  if (r.status !== 'pending') { closeRevenueRejectModal(); return; }
-  // refund nothing (revenueBalance never deducted on submit)
   await db.ref('revenueWithdrawRequests/' + reqId).update({
     status: 'rejected', reason, reviewedAt: Date.now(), reviewedBy: currentSession.username
-  });
-  await db.ref('revenuePayoutLogs/' + Date.now()).set({
-    adminId: r.adminId, adminName: r.adminName, amount: Number(r.amount),
-    action: 'rejected', reason, by: currentSession.username, timestamp: Date.now()
   });
   toast('❌ Rejected');
   closeRevenueRejectModal();
   loadSuperRevenueData();
 }
-
-// ═══════════════════════════════════════════════════════════
-// ✅ ADMIN REVENUE (My Revenue Tab)
-// ═══════════════════════════════════════════════════════════
 async function renderMyRevenue() {
   if (!currentAdminData) return;
   const a = currentAdminData;
@@ -2045,85 +2383,51 @@ async function renderMyRevenue() {
   document.getElementById('myShareView').textContent = REVENUE_SETTINGS.adminSharePercent;
   document.getElementById('platformShareView').textContent = 100 - REVENUE_SETTINGS.adminSharePercent;
 
-  // Referral code
   const codeEl = document.getElementById('myRefCodeView');
-  if (codeEl) codeEl.textContent = a.adminReferralCode || '(not set — contact Super Admin)';
-
-  // Count referred users
-  const usrSnap = await db.ref('users').orderByChild('referredByAdmin').equalTo(currentAdminData.id).once('value');
-  let userCount = 0;
-  const refUsers = [];
-  usrSnap.forEach(c => { userCount++; refUsers.push({ id: c.key, ...c.val() }); });
-  document.getElementById('myReferredUsersCount').textContent = userCount;
-
-  // Users list
-  const urList = document.getElementById('myReferredUsersList');
-  if (!refUsers.length) urList.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:16px;">No referred users yet. Share your code!</p>';
-  else {
-    let h = '';
-    refUsers.slice(0, 20).forEach(u => {
-      const initial = (u.name || 'U').charAt(0).toUpperCase();
-      h += `<div class="ref-mini-item">
-        <div class="ref-mini-avatar">${initial}</div>
-        <div class="ref-mini-info"><h5>${esc(u.name || 'User')}</h5><p>ID: ${u.id} • Balance: ${Number(u.balance || 0).toFixed(2)} TK</p></div>
-      </div>`;
-    });
-    urList.innerHTML = h;
+  if (codeEl) {
+    if (currentSession.role === 'subadmin') codeEl.textContent = a.subAdminReferralCode || '—';
+    else codeEl.textContent = a.adminReferralCode || '—';
   }
 
-  // Requests
+  let userCount = 0;
+  if (currentSession.role === 'subadmin') {
+    const usrSnap = await db.ref('users').orderByChild('referredBySubAdmin').equalTo(currentAdminData.id).once('value');
+    usrSnap.forEach(() => userCount++);
+  } else {
+    const usrSnap = await db.ref('users').orderByChild('referredByAdmin').equalTo(currentAdminData.id).once('value');
+    usrSnap.forEach(() => userCount++);
+  }
+  document.getElementById('myReferredUsersCount').textContent = userCount;
+
   const reqSnap = await db.ref('revenueWithdrawRequests').orderByChild('adminId').equalTo(currentAdminData.id).once('value');
   const myReqs = [];
   reqSnap.forEach(c => myReqs.push({ id: c.key, ...c.val() }));
   myReqs.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
   const reqEl = document.getElementById('myRevenueReqList');
-  if (!myReqs.length) reqEl.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:16px;">No requests yet</p>';
+  if (!myReqs.length) reqEl.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:16px;">No requests</p>';
   else {
     let h = '';
     myReqs.forEach(r => {
       const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
       h += `<div class="dreq-item ${cls}">
         <div class="dreq-head"><div class="dreq-amount">${Number(r.amount).toFixed(2)} TK</div><span class="status-badge ${cls}">${r.status.toUpperCase()}</span></div>
-        <div class="dreq-info"><b>Method:</b> ${esc(r.method)}<br><b>Account:</b> ${esc(r.account)}${r.reason ? '<br><b>Reason:</b> ' + esc(r.reason) : ''}</div>
+        <div class="dreq-info"><b>Method:</b> ${esc(r.method)}<br><b>Account:</b> ${esc(r.account)}</div>
       </div>`;
     });
     reqEl.innerHTML = h;
   }
-
-  // History (revenue earned events)
-  const revHistory = a.revenueHistory || {};
-  const hKeys = Object.keys(revHistory).sort((x,y) => (revHistory[y].timestamp || 0) - (revHistory[x].timestamp || 0));
-  const hEl = document.getElementById('myRevenueHistoryList');
-  if (!hKeys.length) hEl.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:16px;">No revenue history yet</p>';
-  else {
-    let h = '';
-    hKeys.slice(0, 30).forEach(k => {
-      const e = revHistory[k];
-      const dt = new Date(e.timestamp).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-      h += `<div class="revenue-history-item">
-        <div><div style="font-weight:800; font-size:.82rem;">👤 ${esc(e.userName || 'User')}</div><div class="meta">${dt} • Ad View</div></div>
-        <div class="amt">+${Number(e.amount).toFixed(2)} TK</div>
-      </div>`;
-    });
-    hEl.innerHTML = h;
-  }
 }
-
 function copyMyRefCode() {
   const code = document.getElementById('myRefCodeView').textContent;
   if (!code || code === '—') return toast('❌ No code');
   copyToClipboard(code, 'Referral Code');
 }
-
 function openRevenueWithdrawModal() {
   if (!currentAdminData) return;
   const bal = Number(currentAdminData.revenueBalance || 0);
   const min = REVENUE_SETTINGS.minWithdrawAmount;
-  if (bal < min) return toast(`❌ Minimum ${min} TK প্রয়োজন (আপনার: ${bal.toFixed(2)})`);
-  document.getElementById('rwBalanceInfo').innerHTML = `
-    💰 <b>Available Revenue Balance:</b> ${bal.toFixed(2)} TK<br>
-    📌 <b>Minimum:</b> ${min} TK
-  `;
+  if (bal < min) return toast(`❌ Min ${min} TK (আপনার: ${bal.toFixed(2)})`);
+  document.getElementById('rwBalanceInfo').innerHTML = `💰 Balance: ${bal.toFixed(2)} TK<br>📌 Min: ${min} TK`;
   document.getElementById('rwAmount').value = '';
   document.getElementById('rwMethod').value = 'bKash';
   document.getElementById('rwAccount').value = '';
@@ -2131,33 +2435,28 @@ function openRevenueWithdrawModal() {
   document.getElementById('revenueWithdrawModal').classList.add('active');
 }
 function closeRevenueWithdrawModal() { document.getElementById('revenueWithdrawModal').classList.remove('active'); }
-
 async function submitRevenueWithdraw() {
   if (!currentAdminData) return;
   const amount = parseFloat(document.getElementById('rwAmount').value);
   const method = document.getElementById('rwMethod').value;
   const account = document.getElementById('rwAccount').value.trim();
   const note = document.getElementById('rwNote').value.trim();
-
   const bal = Number(currentAdminData.revenueBalance || 0);
   const min = REVENUE_SETTINGS.minWithdrawAmount;
-
-  if (!amount || amount <= 0) return toast('❌ Valid amount required');
-  if (amount < min) return toast(`❌ Minimum ${min} TK`);
-  if (amount > bal) return toast(`❌ অপর্যাপ্ত! আপনার balance ${bal.toFixed(2)} TK`);
-  if (!account || account.length < 4) return toast('❌ Valid account number required');
-
+  if (!amount || amount <= 0) return toast('❌ Amount');
+  if (amount < min) return toast(`❌ Min ${min}`);
+  if (amount > bal) return toast(`❌ Insufficient`);
+  if (!account || account.length < 4) return toast('❌ Account');
   const reqId = 'revreq_' + Date.now() + '_' + currentAdminData.id;
   await db.ref('revenueWithdrawRequests/' + reqId).set({
     adminId: currentAdminData.id,
     adminName: currentSession.username,
-    amount: Number(amount),
-    method, account, note,
-    status: 'pending',
-    timestamp: Date.now()
+    role: currentSession.role,
+    parentAdminId: currentSession.parentAdminId || null,
+    amount, method, account, note,
+    status: 'pending', timestamp: Date.now()
   });
-
-  toast('✅ Revenue withdraw request submitted!');
+  toast('✅ Submitted!');
   closeRevenueWithdrawModal();
   loadCurrentAdminData();
 }
@@ -2184,21 +2483,18 @@ async function saveExtraRewardSettings() {
   const dailyLimit = parseInt(document.getElementById('extraRewardLimit').value);
   const title = document.getElementById('extraRewardTitle').value.trim() || 'Pop-up Ad দেখে আয় করুন';
   const infoText = document.getElementById('extraRewardInfo').value.trim() || 'Pop-up Ad সম্পূর্ণ দেখলেই রিওয়ার্ড পাবেন।';
-  if (isNaN(amount) || amount <= 0) return toast('❌ Reward amount > 0');
-  if (isNaN(dailyLimit) || dailyLimit <= 0) return toast('❌ Daily limit > 0');
-  if (dailyLimit > 100) return toast('❌ Daily limit 100-এর বেশি না');
-  try {
-    await db.ref('config/extraReward').set({
-      enabled, amount: Number(amount), dailyLimit: Number(dailyLimit),
-      title, infoText, updatedAt: Date.now(), updatedBy: currentSession.username
-    });
-    toast('✅ Extra Rewards saved!');
-    loadExtraRewardPreview();
-  } catch(e) { toast('❌ Error: ' + e.message); }
+  if (isNaN(amount) || amount <= 0) return toast('❌ Reward > 0');
+  if (isNaN(dailyLimit) || dailyLimit <= 0) return toast('❌ Limit > 0');
+  await db.ref('config/extraReward').set({
+    enabled, amount: Number(amount), dailyLimit: Number(dailyLimit),
+    title, infoText, updatedAt: Date.now(), updatedBy: currentSession.username
+  });
+  toast('✅ Saved!');
+  loadExtraRewardPreview();
 }
 
 // ═══════════════════════════════════════════════════════════
-// ADS CONFIG
+// ADS
 // ═══════════════════════════════════════════════════════════
 const AD_SLOT_COUNT = 6;
 function loadAdsConfig() {
@@ -2210,14 +2506,10 @@ function loadAdsConfig() {
     const s = slots[i] || { network: 'none', id: '', customCode: '' };
     const hasCode = s.customCode && String(s.customCode).trim().length > 0;
     const isCustom = s.network === 'custom' || hasCode;
-    const isConfigured = hasCode || (s.network && s.network !== 'none');
-    let statusClass = 'off', statusText = 'Disabled';
-    if (hasCode) { statusClass = 'custom'; statusText = '⚙️ Custom Code'; }
-    else if (isConfigured) { statusClass = 'ok'; statusText = '✅ ' + s.network; }
     h += `<div class="ad-slot-card ${hasCode ? 'custom-active' : ''}">
       <div class="ad-slot-head">
         <div class="ad-slot-name"><i class="fas fa-rectangle-ad"></i> Ad Slot ${i+1} <span class="num-badge">#${i+1}</span></div>
-        <div class="ad-slot-status ${statusClass}">${statusText}</div>
+        <div class="ad-slot-status ${hasCode ? 'custom' : (s.network !== 'none' ? 'ok' : 'off')}">${hasCode ? '⚙️ Custom' : (s.network !== 'none' ? '✅ ' + s.network : 'Disabled')}</div>
       </div>
       <label>Network Type</label>
       <select id="adNet_${i}" onchange="toggleCustomCodeField(${i})" style="margin-bottom:10px;">
@@ -2225,13 +2517,13 @@ function loadAdsConfig() {
         <option value="adsgram" ${s.network==='adsgram'?'selected':''}>📺 Adsgram</option>
         <option value="monetag" ${s.network==='monetag'?'selected':''}>💰 Monetag</option>
         <option value="gigapub" ${s.network==='gigapub'?'selected':''}>🌐 GigaPub</option>
-        <option value="custom" ${isCustom?'selected':''}>⚙️ Custom Code Only</option>
+        <option value="custom" ${isCustom?'selected':''}>⚙️ Custom Code</option>
       </select>
       <label>Block / Zone ID</label>
       <input type="text" id="adId_${i}" value="${esc(s.id||'')}" placeholder="e.g. 11878844" style="margin-bottom:10px;">
       <div id="adCustomWrap_${i}" style="display:${isCustom ? 'block' : 'none'};">
         <label>⚙️ Custom Ad Code (JavaScript)</label>
-        <textarea id="adCode_${i}" rows="8" style="font-family:'Courier New',monospace; font-size:.78rem; line-height:1.55;"></textarea>
+        <textarea id="adCode_${i}" rows="8" style="font-family:'Courier New',monospace; font-size:.78rem;"></textarea>
       </div>
     </div>`;
   }
@@ -2268,7 +2560,7 @@ function saveAds() {
     if (!isNaN(v) && v >= 3 && v <= 120) minAdWatchSeconds = v;
   }
   db.ref('config').update({ dailyAdLimit, adReward, adSlots: slots, minAdWatchSeconds })
-  .then(() => { toast('✅ Ad settings saved!'); configData.adSlots = slots; configData.minAdWatchSeconds = minAdWatchSeconds; loadAdsConfig(); })
+  .then(() => { toast('✅ Saved!'); configData.adSlots = slots; configData.minAdWatchSeconds = minAdWatchSeconds; loadAdsConfig(); })
   .catch(e => toast('❌ ' + e.message));
 }
 
@@ -2331,8 +2623,8 @@ async function saveLbEntry() {
   const balance = parseFloat(document.getElementById('lbBalance').value);
   const refs = parseInt(document.getElementById('lbRefs').value) || 0;
   const photo = document.getElementById('lbPhoto').value.trim();
-  if (!name || name.length < 2) return toast('❌ Valid name required');
-  if (isNaN(balance) || balance < 0) return toast('❌ Valid balance required');
+  if (!name || name.length < 2) return toast('❌ Name');
+  if (isNaN(balance) || balance < 0) return toast('❌ Balance');
   const list = Array.isArray(configData.leaderboardCustom) ? configData.leaderboardCustom.slice() : [];
   const entry = { name: name.substring(0, 30), balance: Number(balance), refs: Number(refs), photo: photo || '' };
   if (lbEditingIndex === null) { if (list.length >= LB_MAX_ENTRIES) return toast('❌ Limit'); list.push(entry); }
@@ -2353,7 +2645,7 @@ async function deleteLbEntry(index) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// DEPOSIT METHODS
+// DEPOSIT
 // ═══════════════════════════════════════════════════════════
 function renderDepositMethodsList() {
   const c = document.getElementById('dmMethodsList');
@@ -2453,20 +2745,38 @@ async function approveDepositReq(reqId) {
   const reqSnap = await db.ref('depositRequests/' + reqId).once('value');
   if (!reqSnap.exists()) return;
   const r = reqSnap.val();
-  if (r.status !== 'pending') return toast('Already processed');
-  const adminRef = db.ref('admins/' + r.adminId);
-  const adminSnap = await adminRef.once('value');
-  if (!adminSnap.exists()) return;
-  const a = adminSnap.val();
+  if (r.status !== 'pending') return;
+  let path;
+  if (r.role === 'subadmin' && r.parentAdminId) {
+    path = 'admins/' + r.parentAdminId + '/subAdmins/' + r.adminId;
+  } else {
+    path = 'admins/' + r.adminId;
+  }
+  const ref = db.ref(path);
+  const snap = await ref.once('value');
+  if (!snap.exists()) return toast('❌ Not found');
+  const a = snap.val();
   const deposits = a.deposits || {};
-  deposits['dep_' + Date.now()] = { method: r.methodName, account: r.methodAccount, amount: Number(r.amount), timestamp: Date.now() };
-  await adminRef.update({ balance: Number(a.balance || 0) + Number(r.amount), totalDeposited: Number(a.totalDeposited || 0) + Number(r.amount), deposits });
-  await db.ref('depositRequests/' + reqId).update({ status: 'approved', reviewedAt: Date.now(), reviewedBy: currentSession.username });
-  toast('✅ Approved!'); loadAllDepositRequests(); loadAdminsList();
+  deposits['dep_' + Date.now()] = {
+    method: r.methodName, account: r.methodAccount,
+    amount: Number(r.amount), timestamp: Date.now()
+  };
+  await ref.update({
+    balance: Number(a.balance || 0) + Number(r.amount),
+    totalDeposited: Number(a.totalDeposited || 0) + Number(r.amount),
+    deposits
+  });
+  await db.ref('depositRequests/' + reqId).update({
+    status: 'approved', reviewedAt: Date.now(), reviewedBy: currentSession.username
+  });
+  toast('✅ Approved!');
+  loadAllDepositRequests(); loadAdminsList();
 }
 async function rejectDepositReq(reqId) {
   const reason = prompt('Reason:') || '';
-  await db.ref('depositRequests/' + reqId).update({ status: 'rejected', reason, reviewedAt: Date.now(), reviewedBy: currentSession.username });
+  await db.ref('depositRequests/' + reqId).update({
+    status: 'rejected', reason, reviewedAt: Date.now(), reviewedBy: currentSession.username
+  });
   toast('❌ Rejected'); loadAllDepositRequests();
 }
 
@@ -2491,35 +2801,50 @@ async function loadAdminsList() {
   adminsSnap.forEach(child => {
     count++;
     const a = child.val();
-    const bal = Number(a.balance || 0), deposited = Number(a.totalDeposited || 0), spent = Number(a.totalSpent || 0);
-    const revBal = Number(a.revenueBalance || 0), totalRev = Number(a.totalRevenueEarned || 0);
+    const bal = Number(a.balance || 0);
+    const revBal = Number(a.revenueBalance || 0);
     const banned = a.isBanned === true, suspended = a.isSuspended === true;
     const itemCls = banned ? 'banned' : suspended ? 'suspended' : '';
-    const statusBadge = banned ? '<span class="status-badge banned">🚫 BANNED</span>' : suspended ? '<span class="status-badge suspended">⏸️ SUSPENDED</span>' : '<span class="status-badge active">✅ ACTIVE</span>';
-    const contact = a.adminContact || null;
-    const contactHtml = contact && contact.value ? `<div style="margin-top:6px; font-size:.72rem; color:#7c3aed; font-weight:700;"><i class="fas fa-address-card"></i> ${esc(contact.type)}: <span style="font-family:monospace; color:#4338ca;">${esc(contact.value)}</span></div>` : '';
-    const refCodeHtml = a.adminReferralCode ? `<div style="margin-top:4px; font-size:.7rem; color:#f59e0b; font-weight:800;"><i class="fas fa-key"></i> Code: <span style="font-family:monospace;">${esc(a.adminReferralCode)}</span></div>` : '';
+    const statusBadge = banned ? '<span class="status-badge banned">BANNED</span>' : suspended ? '<span class="status-badge suspended">SUSPENDED</span>' : '<span class="status-badge active">ACTIVE</span>';
+    const refCodeHtml = a.adminReferralCode ? `<div style="margin-top:4px; font-size:.7rem; color:#f59e0b; font-weight:800;"><i class="fas fa-key"></i> ${esc(a.adminReferralCode)}</div>` : '';
+
+    // Sub-admins list
+    const subs = a.subAdmins || {};
+    const subKeys = Object.keys(subs);
+    let subList = '';
+    if (subKeys.length > 0) {
+      subList = `<div class="subadmin-list">
+        <div style="font-size:.7rem;font-weight:800;color:#1e40af;margin-bottom:6px;">📊 ${subKeys.length} Sub-Admin(s)</div>`;
+      subKeys.forEach(sid => {
+        const s = subs[sid];
+        subList += `<div class="subadmin-list-item">
+          <span><b>👤 ${esc(s.username)}</b></span>
+          <span style="color:#3b82f6;font-weight:900;">${Number(s.balance||0).toFixed(2)} TK</span>
+        </div>`;
+      });
+      subList += '</div>';
+    }
+
     html += `<div class="admin-item ${itemCls}">
       <div class="admin-item-top"><div class="admin-item-left">
         <div class="admin-item-avatar">${(a.username || 'A').charAt(0).toUpperCase()}</div>
         <div class="admin-item-info">
           <div class="name">${esc(a.username)} <span class="status-badge admin">ADMIN</span> ${statusBadge}</div>
           <div class="meta">Created: ${a.createdAt ? new Date(a.createdAt).toLocaleDateString() : 'N/A'}</div>
-          ${contactHtml}
           ${refCodeHtml}
         </div>
       </div></div>
       <div class="admin-balance-box">
         <div class="admin-balance-cell green"><div class="val">${bal.toFixed(2)}</div><div class="lbl">Balance</div></div>
         <div class="admin-balance-cell gold"><div class="val">${revBal.toFixed(2)}</div><div class="lbl">Revenue</div></div>
-        <div class="admin-balance-cell"><div class="val">${deposited.toFixed(2)}</div><div class="lbl">Deposited</div></div>
-        <div class="admin-balance-cell warn"><div class="val">${spent.toFixed(2)}</div><div class="lbl">Spent</div></div>
+        <div class="admin-balance-cell"><div class="val">${Number(a.totalDeposited||0).toFixed(2)}</div><div class="lbl">Deposited</div></div>
+        <div class="admin-balance-cell warn"><div class="val">${Number(a.totalSpent||0).toFixed(2)}</div><div class="lbl">Spent</div></div>
       </div>
+      ${subList}
       <div class="admin-item-actions">
         <button class="btn btn-info btn-small" onclick="viewAdminFull('${child.key}')"><i class="fas fa-eye"></i> View</button>
         <button class="btn btn-warning btn-small" onclick="openAdminEditModal('${child.key}')"><i class="fas fa-pen"></i> Edit</button>
         <button class="btn btn-green btn-small" onclick="openDepositModal('${child.key}')"><i class="fas fa-plus"></i> Add</button>
-        <button class="btn btn-purple btn-small" onclick="openAdminContact('${child.key}')"><i class="fas fa-address-card"></i> Contact</button>
         ${banned ? `<button class="btn btn-green btn-small" onclick="unbanAdmin('${child.key}')"><i class="fas fa-unlock"></i> Unban</button>` : `<button class="btn btn-red btn-small" onclick="openBanModal('${child.key}', '${esc(a.username)}', 'ban')"><i class="fas fa-ban"></i> Ban</button>`}
         ${suspended ? `<button class="btn btn-green btn-small" onclick="unsuspendAdmin('${child.key}')"><i class="fas fa-play"></i> Resume</button>` : `<button class="btn btn-warning btn-small" onclick="openBanModal('${child.key}', '${esc(a.username)}', 'suspend')"><i class="fas fa-pause"></i> Suspend</button>`}
         <button class="btn btn-red btn-small" onclick="deleteAdminFull('${child.key}')"><i class="fas fa-trash"></i> Delete</button>
@@ -2534,61 +2859,42 @@ async function viewAdminFull(adminId) {
   const snap = await db.ref('admins/' + adminId).once('value');
   if (!snap.exists()) return toast('❌ Not found');
   const a = snap.val();
-  const deposits = a.deposits || {};
-  const depKeys = Object.keys(deposits).sort((x,y) => (deposits[y].timestamp||0) - (deposits[x].timestamp||0));
-  let depositsHtml = '';
-  if (depKeys.length === 0) depositsHtml = '<div style="text-align:center; color:#94a3b8; padding:10px; font-size:.78rem;">No deposits</div>';
-  else {
-    depositsHtml = '<div style="max-height:200px; overflow-y:auto;">';
-    depKeys.slice(0, 30).forEach(k => {
-      const d = deposits[k];
-      depositsHtml += `<div style="display:flex; justify-content:space-between; padding:8px 10px; background:#f8fafc; border-radius:8px; margin-bottom:6px; font-size:.78rem;">
-        <div><b>${esc(d.method)}</b><br><span style="color:#94a3b8; font-size:.7rem;">${esc(d.account)}</span></div>
-        <div style="font-weight:900; color:#10b981;">+${Number(d.amount).toFixed(2)}</div>
+  const subs = a.subAdmins || {};
+  const subKeys = Object.keys(subs);
+  let subHtml = '';
+  if (subKeys.length > 0) {
+    subHtml = `<div class="section-divider"><i class="fas fa-users-gear"></i> Sub-Admins (${subKeys.length})</div>`;
+    subKeys.forEach(sid => {
+      const s = subs[sid];
+      subHtml += `<div style="background:#eff6ff;padding:10px 12px;border-radius:10px;margin-bottom:6px;border-left:3px solid #3b82f6;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div><b style="font-size:.85rem;">👤 ${esc(s.username)}</b></div>
+          <div style="text-align:right;"><div style="color:#3b82f6;font-weight:900;">${Number(s.balance||0).toFixed(2)} TK</div></div>
+        </div>
       </div>`;
     });
-    depositsHtml += '</div>';
   }
-  const contact = a.adminContact || {};
-  let contactHtml = '';
-  if (contact.value) {
-    const icons = { telegram:'fa-telegram', whatsapp:'fa-whatsapp', phone:'fa-phone', email:'fa-envelope', other:'fa-link' };
-    contactHtml = `<div class="info-display-box">
-      <span class="label"><i class="fab ${icons[contact.type] || 'fa-link'}"></i> ${contact.type}</span>
-      <span class="value">${esc(contact.value)}</span>
-      <button class="copy-btn inline" onclick="copyToClipboard('${esc(contact.value).replace(/'/g,"\\'")}', 'Contact')"><i class="fas fa-copy"></i></button>
-    </div>`;
-  } else contactHtml = '<div style="text-align:center; color:#94a3b8; padding:10px; font-size:.78rem;">No contact info</div>';
   document.getElementById('adminViewBody').innerHTML = `
     <div style="text-align:center; margin-bottom:16px;">
-      <div style="width:64px; height:64px; margin:0 auto 10px; border-radius:18px; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.5rem; box-shadow:0 8px 20px rgba(99,102,241,.35);">${(a.username||'A').charAt(0).toUpperCase()}</div>
+      <div style="width:64px; height:64px; margin:0 auto 10px; border-radius:18px; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.5rem;">${(a.username||'A').charAt(0).toUpperCase()}</div>
       <div style="font-weight:900; font-size:1.1rem;">${esc(a.username)}</div>
-      <div style="font-size:.72rem; color:#94a3b8; margin-top:4px;">ID: <span style="font-family:monospace;">${adminId}</span></div>
+      <div style="font-size:.72rem; color:#94a3b8; margin-top:4px;">ID: ${adminId}</div>
     </div>
-    ${a.adminReferralCode ? `<div class="info-display-box gold">
-      <span class="label">Ref Code</span>
-      <span class="value">${esc(a.adminReferralCode)}</span>
-      <button class="copy-btn inline" style="background:#fff;border-color:#f59e0b;color:#92400e;" onclick="copyToClipboard('${esc(a.adminReferralCode)}', 'Ref Code')"><i class="fas fa-copy"></i></button>
-    </div>` : ''}
-    <div class="section-divider"><i class="fas fa-coins"></i> Revenue Info</div>
+    ${a.adminReferralCode ? `<div class="info-display-box gold"><span class="label">Ref Code</span><span class="value">${esc(a.adminReferralCode)}</span><button class="copy-btn inline" onclick="copyToClipboard('${esc(a.adminReferralCode)}', 'Ref Code')"><i class="fas fa-copy"></i></button></div>` : ''}
+    <div class="section-divider"><i class="fas fa-coins"></i> Revenue</div>
     <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px;">
-      <div class="stat-card gold"><div class="num">${Number(a.revenueBalance || 0).toFixed(2)}</div><div class="label">Rev Balance</div></div>
-      <div class="stat-card warning"><div class="num">${Number(a.totalRevenueEarned || 0).toFixed(2)}</div><div class="label">Total Earned</div></div>
+      <div class="stat-card gold"><div class="num">${Number(a.revenueBalance || 0).toFixed(2)}</div><div class="label">Rev Bal</div></div>
+      <div class="stat-card warning"><div class="num">${Number(a.totalRevenueEarned || 0).toFixed(2)}</div><div class="label">Total</div></div>
       <div class="stat-card info"><div class="num">${Number(a.totalRevenueWithdrawn || 0).toFixed(2)}</div><div class="label">Withdrawn</div></div>
     </div>
-    <div class="section-divider"><i class="fas fa-wallet"></i> Financial Info</div>
+    <div class="section-divider"><i class="fas fa-wallet"></i> Financial</div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
       <div class="stat-card green"><div class="num">${Number(a.balance||0).toFixed(2)}</div><div class="label">Balance</div></div>
       <div class="stat-card info"><div class="num">${Number(a.totalDeposited||0).toFixed(2)}</div><div class="label">Deposited</div></div>
       <div class="stat-card warning"><div class="num">${Number(a.totalSpent||0).toFixed(2)}</div><div class="label">Spent</div></div>
       <div class="stat-card purple"><div class="num">${Number(a.totalRefunded||0).toFixed(2)}</div><div class="label">Refunded</div></div>
-      <div class="stat-card pink"><div class="num">${Number(a.totalFees||0).toFixed(2)}</div><div class="label">Fees Paid</div></div>
-      <div class="stat-card danger"><div class="num">${Number(a.totalServiceCharges||0).toFixed(2)}</div><div class="label">Service Charges</div></div>
     </div>
-    <div class="section-divider"><i class="fas fa-address-card"></i> Contact Info</div>
-    ${contactHtml}
-    <div class="section-divider"><i class="fas fa-money-bill-wave"></i> Deposit History</div>
-    ${depositsHtml}
+    ${subHtml}
     <div style="display:flex; gap:10px; margin-top:16px;">
       <button class="btn btn-warning" onclick="closeAdminViewModal(); openAdminEditModal('${adminId}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button>
       <button class="btn btn-red" onclick="closeAdminViewModal(); deleteAdminFull('${adminId}')" style="flex:1;"><i class="fas fa-trash"></i> Delete</button>
@@ -2640,26 +2946,14 @@ async function saveAdminFullEdit() {
   const newPw = document.getElementById('aePassword').value;
   if (newPw && newPw.length >= 4) updateData.passwordHash = await sha256(newPw);
   if (!updateData.username || updateData.username.length < 3) return toast('❌ Username min 3');
-  try {
-    await db.ref('admins/' + adminId).update(updateData);
-    toast('✅ Admin updated!');
-    closeAdminEditModal(); loadAdminsList();
-  } catch(e) { toast('❌ Error: ' + e.message); }
+  await db.ref('admins/' + adminId).update(updateData);
+  toast('✅ Updated!');
+  closeAdminEditModal(); loadAdminsList();
 }
 async function deleteAdminFull(adminId) {
-  if (!confirm('⚠️ এই Admin এবং তার সব Task/Submission delete হবে। Continue?')) return;
-  try {
-    const tSnap = await db.ref('config/newTasks').once('value');
-    const delPromises = [];
-    tSnap.forEach(c => {
-      const t = c.val();
-      if (t.createdByAdminId === adminId) delPromises.push(db.ref('config/newTasks/' + c.key).remove());
-    });
-    await Promise.all(delPromises);
-    await db.ref('admins/' + adminId).remove();
-    toast('✅ Admin deleted');
-    loadAdminsList();
-  } catch(e) { toast('❌ Error: ' + e.message); }
+  if (!confirm('⚠️ Admin + Sub-Admins সব delete?')) return;
+  await db.ref('admins/' + adminId).remove();
+  toast('✅ Deleted'); loadAdminsList();
 }
 function openBanModal(adminId, name, action) {
   document.getElementById('banAdminId').value = adminId;
@@ -2675,12 +2969,20 @@ async function confirmBan() {
   const action = document.getElementById('banAction').value;
   const reason = document.getElementById('banReason').value.trim();
   if (!reason) return toast('❌ Reason required');
-  if (action === 'ban') await db.ref('admins/' + adminId).update({ isBanned: true, banReason: reason, bannedAt: Date.now(), bannedBy: currentSession.username });
-  else await db.ref('admins/' + adminId).update({ isSuspended: true, suspendReason: reason, suspendedAt: Date.now(), suspendedBy: currentSession.username });
+  if (action === 'ban') await db.ref('admins/' + adminId).update({ isBanned: true, banReason: reason, bannedAt: Date.now() });
+  else await db.ref('admins/' + adminId).update({ isSuspended: true, suspendReason: reason, suspendedAt: Date.now() });
   toast('✅ Done'); closeBanModal(); loadAdminsList();
 }
-async function unbanAdmin(id) { if (!confirm('Unban?')) return; await db.ref('admins/' + id).update({ isBanned: false, banReason: null }); toast('✅ Done'); loadAdminsList(); }
-async function unsuspendAdmin(id) { if (!confirm('Resume?')) return; await db.ref('admins/' + id).update({ isSuspended: false, suspendReason: null }); toast('✅ Done'); loadAdminsList(); }
+async function unbanAdmin(id) {
+  if (!confirm('Unban?')) return;
+  await db.ref('admins/' + id).update({ isBanned: false, banReason: null });
+  toast('✅ Done'); loadAdminsList();
+}
+async function unsuspendAdmin(id) {
+  if (!confirm('Resume?')) return;
+  await db.ref('admins/' + id).update({ isSuspended: false, suspendReason: null });
+  toast('✅ Done'); loadAdminsList();
+}
 function openDepositModal(adminId) {
   db.ref('admins/' + adminId).once('value').then(snap => {
     if (!snap.exists()) return;
@@ -2698,14 +3000,18 @@ async function confirmDeposit() {
   const account = document.getElementById('depAccount').value.trim();
   const amount = parseFloat(document.getElementById('depAmount').value);
   const note = document.getElementById('depNote').value.trim();
-  if (!account || account.length < 4) return toast('❌ Valid account');
-  if (!amount || amount <= 0) return toast('❌ Valid amount');
+  if (!account || account.length < 4) return toast('❌ Account');
+  if (!amount || amount <= 0) return toast('❌ Amount');
   const adminRef = db.ref('admins/' + adminId);
   const snap = await adminRef.once('value');
   const a = snap.val();
   const deposits = a.deposits || {};
   deposits['dep_' + Date.now()] = { method, account, amount, note, addedBy: currentSession.username, timestamp: Date.now() };
-  await adminRef.update({ balance: Number(a.balance || 0) + amount, totalDeposited: Number(a.totalDeposited || 0) + amount, deposits });
+  await adminRef.update({
+    balance: Number(a.balance || 0) + amount,
+    totalDeposited: Number(a.totalDeposited || 0) + amount,
+    deposits
+  });
   toast(`✅ ${amount.toFixed(2)} TK added`);
   closeDepositModal(); loadAdminsList();
 }
@@ -2715,11 +3021,12 @@ async function addNewAdmin() {
   const confirm = document.getElementById('newAdminConfirmPassword').value;
   if (!username || username.length < 3) return toast('❌ Username min 3');
   if (!password || password.length < 4) return toast('❌ Password min 4');
-  if (password !== confirm) return toast('❌ Do not match');
+  if (password !== confirm) return toast('❌ Mismatch');
   const superAdmin = await getSuperAdminData();
   if (superAdmin && superAdmin.username.toLowerCase() === username.toLowerCase()) return toast('❌ Taken');
   const adminsSnap = await db.ref('admins').once('value');
-  let dup = false; adminsSnap.forEach(c => { if (c.val().username.toLowerCase() === username.toLowerCase()) dup = true; });
+  let dup = false;
+  adminsSnap.forEach(c => { if (c.val().username.toLowerCase() === username.toLowerCase()) dup = true; });
   if (dup) return toast('❌ Exists');
   const hash = await sha256(password);
   const adminRefCode = generateAdminRefCode(username);
@@ -2729,10 +3036,13 @@ async function addNewAdmin() {
     revenueBalance: 0, totalRevenueEarned: 0, totalRevenueWithdrawn: 0,
     adminReferralCode: adminRefCode, revenueHistory: {},
     deposits: {}, adminContact: null, isBanned: false, isSuspended: false,
+    subAdmins: {},
     createdAt: Date.now(), createdBy: currentSession.username
   });
-  toast('✅ Admin added: ' + username + ' | Code: ' + adminRefCode);
-  document.getElementById('newAdminUsername').value = ''; document.getElementById('newAdminPassword').value = ''; document.getElementById('newAdminConfirmPassword').value = '';
+  toast('✅ Admin: ' + username + ' | Code: ' + adminRefCode);
+  document.getElementById('newAdminUsername').value = '';
+  document.getElementById('newAdminPassword').value = '';
+  document.getElementById('newAdminConfirmPassword').value = '';
   loadAdminsList();
 }
 async function changeSuperPassword() {
@@ -2743,10 +3053,11 @@ async function changeSuperPassword() {
   const curHash = await sha256(cur);
   const sa = await getSuperAdminData();
   if (!sa || sa.passwordHash !== curHash) return toast('❌ Wrong current');
-  const newHash = await sha256(np);
-  await db.ref('config/superAdmin').update({ passwordHash: newHash, updatedAt: Date.now() });
+  await db.ref('config/superAdmin').update({ passwordHash: await sha256(np), updatedAt: Date.now() });
   toast('✅ Changed');
-  document.getElementById('curSuperPw').value = ''; document.getElementById('newSuperPw').value = ''; document.getElementById('confSuperPw').value = '';
+  document.getElementById('curSuperPw').value = '';
+  document.getElementById('newSuperPw').value = '';
+  document.getElementById('confSuperPw').value = '';
 }
 
 function renderDepositMethodsAdminView() {
@@ -2780,16 +3091,19 @@ function closeDepositSubmitModal() { document.getElementById('depositSubmitModal
 async function submitDepositRequest() {
   const methodIndex = parseInt(document.getElementById('dsMethodIndex').value);
   const m = (configData.depositMethods || [])[methodIndex];
-  if (!m) return toast('❌ Method not found');
+  if (!m) return toast('❌ Not found');
   const amount = parseFloat(document.getElementById('dsAmount').value);
   const txnId = document.getElementById('dsTxnId').value.trim();
   const note = document.getElementById('dsNote').value.trim();
-  if (!amount || amount <= 0) return toast('❌ Valid amount');
+  if (!amount || amount <= 0) return toast('❌ Amount');
   if (amount < Number(m.minAmount)) return toast(`❌ Min ${m.minAmount} TK`);
-  if (!txnId || txnId.length < 4) return toast('❌ Valid Txn ID');
+  if (!txnId || txnId.length < 4) return toast('❌ Txn ID');
   const reqId = 'depreq_' + Date.now() + '_' + currentSession.adminId;
   await db.ref('depositRequests/' + reqId).set({
-    adminId: currentSession.adminId, adminName: currentSession.username,
+    adminId: currentSession.adminId,
+    adminName: currentSession.username,
+    role: currentSession.role,
+    parentAdminId: currentSession.parentAdminId || null,
     methodIndex, methodName: m.name, methodAccount: m.account,
     amount, txnId, note, status: 'pending', timestamp: Date.now()
   });
@@ -2798,7 +3112,7 @@ async function submitDepositRequest() {
 }
 async function renderMyDepositRequests() {
   const c = document.getElementById('myDepositRequestsList');
-  if (!c || !currentSession || currentSession.role !== 'admin') return;
+  if (!c || !currentSession || currentSession.role === 'super') return;
   c.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:16px;">Loading...</p>';
   const snap = await db.ref('depositRequests').orderByChild('adminId').equalTo(currentSession.adminId).once('value');
   let list = []; snap.forEach(x => list.push({ id: x.key, ...x.val() }));
@@ -2814,7 +3128,6 @@ async function renderMyDepositRequests() {
   });
   c.innerHTML = h;
 }
-
 function renderContactInfo() {
   const link = configData.contactLink || '';
   const btnText = configData.contactBtnText || 'Message Super Admin';
@@ -2831,7 +3144,9 @@ function openContactLink() {
   window.open(link, '_blank');
 }
 
-// TASK MANAGEMENT (unchanged logic, kept intact)
+// ═══════════════════════════════════════════════════════════
+// TASK MANAGEMENT
+// ═══════════════════════════════════════════════════════════
 function updateTaskCostPreview() {
   if (!currentSession) return;
   const preview = document.getElementById('taskCostPreview');
@@ -2854,7 +3169,7 @@ function updateTaskCostPreview() {
   document.getElementById('taskTotalDebit').textContent = totalDebit.toFixed(2) + ' TK';
   document.getElementById('taskCostBalance').textContent = balance.toFixed(2) + ' TK';
   const warn = document.getElementById('taskCostWarn');
-  if (balance >= totalDebit) { warn.innerHTML = '✅ আপনি এই টাস্কটি তৈরি করতে পারবেন।'; warn.style.color = '#065f46'; }
+  if (balance >= totalDebit) { warn.innerHTML = '✅ যথেষ্ট'; warn.style.color = '#065f46'; }
   else { warn.innerHTML = `❌ আরও <b>${(totalDebit - balance).toFixed(2)} TK</b> প্রয়োজন।`; warn.style.color = '#991b1b'; }
 }
 const TYPE_LINK_OPTIONAL = ['general', 'other'];
@@ -2864,11 +3179,9 @@ function applyLinkRulesForType(type, prefix) {
   const linkGroup = document.getElementById(prefix === 'newTask' ? 'surveyLinkGroup' : 'etLinkGroup');
   const linkInput = document.getElementById(prefix === 'newTask' ? 'newTaskLink' : 'etLink');
   const linkLabel = document.getElementById(prefix === 'newTask' ? 'newTaskLinkLabel' : 'etLinkLabel');
-  const linkHint  = document.getElementById(prefix === 'newTask' ? 'newTaskLinkHint' : 'etLinkHint');
   if (TYPE_NO_LINK.includes(type)) {
     if (linkGroup) linkGroup.style.display = 'none';
     if (linkInput) { linkInput.value = ''; linkInput.required = false; }
-    if (linkHint) linkHint.textContent = '';
     return;
   }
   if (linkGroup) linkGroup.style.display = 'block';
@@ -2897,7 +3210,7 @@ async function saveNewTask() {
   const timer = parseInt(document.getElementById('newTaskTimer').value) || 60;
   const url = document.getElementById('newTaskLink').value.trim();
   if (!title) return toast('❌ Title required');
-  if (reward < MIN_TASK_REWARD) return toast(`❌ Reward min ${MIN_TASK_REWARD.toFixed(2)} TK`);
+  if (reward < MIN_TASK_REWARD) return toast(`❌ Reward min ${MIN_TASK_REWARD.toFixed(2)}`);
   const isSuper = currentSession.role === 'super';
   if (!isSuper) {
     const maxDays = getMaxDaysForReward(reward);
@@ -2912,7 +3225,7 @@ async function saveNewTask() {
   const totalDebit = cost + svcAmount;
   if (currentSession.role === 'admin') {
     const balance = currentAdminData ? Number(currentAdminData.balance || 0) : 0;
-    if (balance < totalDebit) return toast(`❌ অপর্যাপ্ত! প্রয়োজন ${totalDebit.toFixed(2)}`);
+    if (balance < totalDebit) return toast(`❌ অপর্যাপ্ত!`);
   }
   const taskStatus = isSuper ? 'active' : 'pending';
   const taskData = {
@@ -3004,8 +3317,8 @@ async function saveEditTask() {
   const timeLimitDays = parseInt(document.getElementById('etTime').value) || 7;
   const timer = parseInt(document.getElementById('etTimer').value) || 60;
   const url = document.getElementById('etLink').value.trim();
-  if (!title) return toast('❌ Title required');
-  if (reward < MIN_TASK_REWARD) return toast(`❌ Min ${MIN_TASK_REWARD.toFixed(2)}`);
+  if (!title) return toast('❌ Title');
+  if (reward < MIN_TASK_REWARD) return toast(`❌ Min ${MIN_TASK_REWARD}`);
   const isSuper = currentSession.role === 'super';
   if (!isSuper) {
     const maxDays = getMaxDaysForReward(reward);
@@ -3013,7 +3326,7 @@ async function saveEditTask() {
   }
   const noLink = TYPE_NO_LINK.includes(type);
   const optionalLink = TYPE_LINK_OPTIONAL.includes(type);
-  if (!noLink && !optionalLink && !url) return toast('❌ Link required');
+  if (!noLink && !optionalLink && !url) return toast('❌ Link');
   const needsTimer = TYPE_TIMER_NEEDED.includes(type);
   const updateData = {
     title, description, type, category, reward, totalSlots,
@@ -3034,7 +3347,7 @@ function switchTaskListTab(tab, el) {
 }
 async function approveTask(taskId) {
   if (!currentSession || currentSession.role !== 'super') return;
-  if (!confirm('Approve & go LIVE?')) return;
+  if (!confirm('Approve & LIVE?')) return;
   await db.ref('config/newTasks/' + taskId).update({ status: 'active', approvedBy: currentSession.username, approvedAt: Date.now(), updatedAt: Date.now() });
   toast('✅ Live!'); loadTasksList();
 }
@@ -3043,7 +3356,7 @@ function openInstantDeleteModal(taskId) {
   const t = currentTaskCache[taskId];
   if (!t) return;
   const isSuperOwned = (t.createdByAdminId === 'super' || !t.createdByAdminId);
-  if (!isSuperOwned) return toast('❌ Admin task. Use Delete & Refund.');
+  if (!isSuperOwned) return toast('❌ Admin task');
   document.getElementById('idtTaskId').value = taskId;
   document.getElementById('idtTaskInfo').innerHTML = `
     <div>📋 ${esc(t.title || 'Untitled')}</div>
@@ -3128,7 +3441,7 @@ async function loadTasksList() {
             <div class="name">${icon} ${esc(t.title || 'Untitled')} <span class="reward">+${t.reward} TK</span> ${creatorTag}</div>
             <div class="meta">
               <span><i class="fas fa-users"></i> ${submitted}/${total}</span>
-              ${t.taskCost ? `<span style="color:#7c3aed;"><i class="fas fa-coins"></i> Cost: ${Number(t.taskCost).toFixed(2)} TK</span>` : ''}
+              ${t.taskCost ? `<span style="color:#7c3aed;"><i class="fas fa-coins"></i> ${Number(t.taskCost).toFixed(2)} TK</span>` : ''}
             </div>
           </div>
         </div>
@@ -3177,11 +3490,11 @@ function openDeleteTaskModal(id) {
   const unusedAmount = taskCost - usedAmount;
   const refund = Math.max(0, unusedAmount - TASK_DELETE_FEE);
   document.getElementById('dtRefundInfo').innerHTML = `
-    <div style="font-weight:900; margin-bottom:8px;">💰 Refund Calculation</div>
-    <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>Task Cost:</span><span>${taskCost.toFixed(2)} TK</span></div>
-    <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>Used:</span><span style="color:#dc2626;">−${usedAmount.toFixed(2)} TK</span></div>
-    <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>Delete Fee:</span><span style="color:#dc2626;">−${TASK_DELETE_FEE.toFixed(2)} TK</span></div>
-    <div style="display:flex; justify-content:space-between; padding:8px 0; font-size:1rem; font-weight:900; color:#059669; border-top:1px dashed rgba(16,185,129,.3); margin-top:6px;"><span>Refund:</span><span>${refund.toFixed(2)} TK</span></div>
+    <div style="font-weight:900; margin-bottom:8px;">💰 Refund</div>
+    <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Task Cost:</span><span>${taskCost.toFixed(2)} TK</span></div>
+    <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Used:</span><span style="color:#dc2626;">−${usedAmount.toFixed(2)} TK</span></div>
+    <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Fee:</span><span style="color:#dc2626;">−${TASK_DELETE_FEE.toFixed(2)} TK</span></div>
+    <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:1rem;font-weight:900;color:#059669;border-top:1px dashed rgba(16,185,129,.3);margin-top:6px;"><span>Refund:</span><span>${refund.toFixed(2)} TK</span></div>
   `;
   document.getElementById('deleteTaskModal').classList.add('active');
 }
@@ -3503,21 +3816,22 @@ function viewUserFull(userId) {
   for (let i = 0; i < Math.min(6, adSlots.length); i++) {
     const s = adSlots[i];
     if (!s || ((!s.network || s.network === 'none') && !s.customCode)) continue;
-    adViewsHtml += `<div style="display:flex; justify-content:space-between; padding:6px 10px; background:#f8fafc; border-radius:6px; margin-bottom:4px; font-size:.78rem;"><span>Slot ${i+1} (${s.network === 'custom' ? 'Custom' : s.network})</span><b>${Number(da[i] || 0)} views</b></div>`;
+    adViewsHtml += `<div style="display:flex; justify-content:space-between; padding:6px 10px; background:#f8fafc; border-radius:6px; margin-bottom:4px; font-size:.78rem;"><span>Slot ${i+1}</span><b>${Number(da[i] || 0)} views</b></div>`;
   }
   if (!adViewsHtml) adViewsHtml = '<div style="text-align:center; color:#94a3b8; padding:8px; font-size:.75rem;">No ad slots configured</div>';
   const init = (u.name || 'U').charAt(0).toUpperCase();
   document.getElementById('userViewBody').innerHTML = `
     <div style="text-align:center; margin-bottom:16px;">
-      <div style="width:72px; height:72px; margin:0 auto 10px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.8rem; overflow:hidden; box-shadow:0 8px 20px rgba(99,102,241,.35);">${u.photo ? `<img src="${esc(u.photo)}" style="width:100%; height:100%; object-fit:cover;" onerror="this.parentNode.textContent='${init}'">` : init}</div>
+      <div style="width:72px; height:72px; margin:0 auto 10px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.8rem; overflow:hidden;">${u.photo ? `<img src="${esc(u.photo)}" style="width:100%; height:100%; object-fit:cover;" onerror="this.parentNode.textContent='${init}'">` : init}</div>
       <div style="font-weight:900; font-size:1.1rem;">${esc(u.name || 'Unknown')}</div>
-      <div style="font-size:.72rem; color:#94a3b8; margin-top:4px;">ID: <span style="font-family:monospace;">${u.id}</span>${u.username ? ` • @${esc(u.username)}` : ''}</div>
+      <div style="font-size:.72rem; color:#94a3b8; margin-top:4px;">ID: <span style="font-family:monospace;">${u.id}</span></div>
       <div style="margin-top:8px;">
         ${u.isBanned ? '<span class="status-badge banned">🚫 BANNED</span>' : '<span class="status-badge active">✅ ACTIVE</span>'}
         ${u.channelVerified ? '<span class="status-badge active" style="margin-left:4px;">✅ VERIFIED</span>' : ''}
       </div>
     </div>
-    ${u.referredByAdmin ? `<div class="info-display-box gold"><span class="label">Brought By Admin</span><span class="value">${esc(u.referredByAdmin)}</span></div>` : ''}
+    ${u.referredByAdmin ? `<div class="info-display-box gold"><span class="label">By Admin</span><span class="value">${esc(u.referredByAdmin)}</span></div>` : ''}
+    ${u.referredBySubAdmin ? `<div class="info-display-box"><span class="label">By Sub-Admin</span><span class="value">${esc(u.referredBySubAdmin)}</span></div>` : ''}
     <div class="section-divider"><i class="fas fa-wallet"></i> Financial</div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
       <div class="stat-card green"><div class="num">${(u.balance||0).toFixed(2)}</div><div class="label">Balance</div></div>
@@ -3629,8 +3943,9 @@ async function saveUserFullEdit() {
     channelVerified: document.getElementById('ueChannelVerified').value === 'true'
   };
   if (!updateData.name) return toast('❌ Name required');
-  try { await db.ref('users/' + userId).update(updateData); toast('✅ User updated!'); closeUserEditModal(); loadUsers(); }
-  catch(e) { toast('❌ ' + e.message); }
+  await db.ref('users/' + userId).update(updateData);
+  toast('✅ User updated!');
+  closeUserEditModal(); loadUsers();
 }
 async function toggleBanUser(id, ban) {
   if (!confirm(ban ? 'Ban this user?' : 'Unban?')) return;
@@ -3836,6 +4151,7 @@ function switchTab(id, el) {
   if (id === 'extrareward') loadExtraRewardPreview();
   if (id === 'ads') loadAdsConfig();
   if (id === 'revenue') { loadRevenueSettings(); loadSuperRevenueData(); }
+  if (id === 'subadminreq') loadSubAdminRequests();
   if (id === 'tasks') {
     currentTaskListTab = 'live';
     document.querySelectorAll('.task-list-tab').forEach(t => { t.classList.remove('active'); t.classList.remove('pending-active'); });
@@ -3846,6 +4162,7 @@ function switchTab(id, el) {
   if (id === 'admins') loadAdminsList();
   if (id === 'depositmgmt') { renderDepositMethodsList(); loadAllDepositRequests(); }
   if (id === 'wallet') { loadCurrentAdminData(); renderMyContact(); }
+  if (id === 'mysubadmins') loadMySubAdminData();
   if (id === 'myrevenue') { loadRevenueSettings(); loadCurrentAdminData(); renderMyRevenue(); }
   if (id === 'deposit') { renderDepositMethodsAdminView(); renderMyDepositRequests(); }
   if (id === 'contact') { renderContactInfo(); renderMyContact(); }
@@ -3858,8 +4175,8 @@ function runPanelInit() {
   if (runPanelInit._done) return;
   runPanelInit._done = true;
   loadRevenueSettings();
-  if (currentSession.role === 'super') { loadAnalytics(); loadVerificationStats(); toggleSurveyFields(); renderLeaderboardCustomList(); loadExtraRewardPreview(); loadAdsConfig(); }
-  else { loadCurrentAdminData(); loadTasksList(); loadTaskSubmissions(); }
+  if (currentSession.role === 'super') { loadAnalytics(); loadVerificationStats(); toggleSurveyFields(); renderLeaderboardCustomList(); loadExtraRewardPreview(); loadAdsConfig(); loadSubAdminRequests(); }
+  else { loadCurrentAdminData(); loadTasksList(); loadTaskSubmissions(); if (currentSession.role === 'admin') loadMySubAdminData(); }
   setInterval(() => { if (currentSession && currentSession.role === 'admin') loadCurrentAdminData(); }, 30000);
   updateMaxDaysHint('newTaskReward','newTaskTime','taskMaxDaysHint');
   updateMaxDaysHint('etReward','etTime','etMaxDaysHint');
@@ -3911,13 +4228,11 @@ db.ref('config').on('value', snap => {
     document.getElementById('becomeAdminTitle').value = configData.becomeAdminTitle || '';
     document.getElementById('becomeAdminSub').value = configData.becomeAdminSub || '';
     document.getElementById('becomeAdminBtnText').value = configData.becomeAdminBtnText || '';
-    // Revenue settings sync
     const er = document.getElementById('revenueShareEnabled'); if (er) er.value = String(REVENUE_SETTINGS.enabled);
     const ar = document.getElementById('revenueAdminShare'); if (ar) ar.value = REVENUE_SETTINGS.adminSharePercent;
     const mw = document.getElementById('revenueMinWithdraw'); if (mw) mw.value = REVENUE_SETTINGS.minWithdrawAmount;
     const pc = document.getElementById('revenueUserCap'); if (pc) pc.value = REVENUE_SETTINGS.perUserCap;
     updateRevenueVisual();
-    // min watch
     const minAdWatchSec = configData.minAdWatchSeconds !== undefined ? configData.minAdWatchSeconds : 10;
     const minAdWatchEl = document.getElementById('minAdWatchSeconds');
     if (minAdWatchEl) minAdWatchEl.value = minAdWatchSec;
@@ -3954,6 +4269,11 @@ db.ref('config').on('value', snap => {
   }
 });
 
+// Real-time: sub-admin requests for super
+db.ref('subAdminRequests').on('value', () => {
+  if (currentSession && currentSession.role === 'super') loadSubAdminRequests();
+});
+
 window.addEventListener('DOMContentLoaded', async () => {
   const stored = getStoredSession();
   if (stored) {
@@ -3963,6 +4283,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         const a = await getAdminData(stored.adminId);
         if (!a || a.isActive === false || a.isBanned || a.isSuspended) { clearSession(); await initializeAuthUI(); showLoginOverlay(); return; }
         currentAdminData = a;
+      } else if (stored.role === 'subadmin' && stored.parentAdminId) {
+        const snap = await db.ref('admins/' + stored.parentAdminId + '/subAdmins/' + stored.adminId).once('value');
+        if (!snap.exists() || snap.val().isBanned) { clearSession(); await initializeAuthUI(); showLoginOverlay(); return; }
+        currentAdminData = { id: stored.adminId, ...snap.val() };
       } else if (stored.role === 'super') { const sa = await getSuperAdminData(); if (!sa) clearSession(); }
       if (currentSession) { onLoginSuccess(currentSession, false); return; }
     } catch(e) { if (currentSession) { onLoginSuccess(currentSession, false); return; } }
@@ -3971,7 +4295,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   showLoginOverlay();
 });
 
-['editTaskModal','depositModal','dmModal','depositSubmitModal','banModal','cancelTaskModal','deleteTaskModal','contactEditModal','lbModal','instantDeleteModal','userViewModal','userEditModal','userDetailsModal','adminViewModal','adminEditModal','revenueWithdrawModal','revenueRejectModal'].forEach(id => {
+['editTaskModal','depositModal','dmModal','depositSubmitModal','banModal','cancelTaskModal','deleteTaskModal','contactEditModal','lbModal','instantDeleteModal','userViewModal','userEditModal','userDetailsModal','adminViewModal','adminEditModal','revenueWithdrawModal','revenueRejectModal','createSubAdminModal','subAdminDetailsModal'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('click', e => { if (e.target.id === id) el.classList.remove('active'); });
 });
