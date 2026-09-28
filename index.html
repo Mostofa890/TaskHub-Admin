@@ -188,9 +188,11 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .admin-balance-cell{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:8px;text-align:center}
 .admin-balance-cell.green{border-color:rgba(16,185,129,.35);background:linear-gradient(135deg,#fff,#ecfdf5)}
 .admin-balance-cell.warn{border-color:rgba(245,158,11,.35);background:linear-gradient(135deg,#fff,#fffbeb)}
+.admin-balance-cell.revenue{border-color:rgba(236,72,153,.35);background:linear-gradient(135deg,#fff,#fdf2f8)}
 .admin-balance-cell .val{font-size:1rem;font-weight:900;color:var(--primary)}
 .admin-balance-cell.green .val{color:var(--success)}
 .admin-balance-cell.warn .val{color:var(--warning)}
+.admin-balance-cell.revenue .val{color:var(--pink)}
 .admin-balance-cell .lbl{font-size:.6rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin-top:3px}
 .admin-item-actions{display:flex;gap:6px;flex-wrap:wrap}
 .admin-item-actions .btn{flex:1;min-width:80px}
@@ -203,6 +205,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .wallet-hero .wallet-sub{font-size:.78rem;font-weight:600;opacity:.92}
 .wallet-hero .wallet-icon{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:5rem;opacity:.18;z-index:1}
 .wallet-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;position:relative;z-index:2}
+.wallet-stats.three{grid-template-columns:1fr 1fr 1fr}
 .wallet-stat-cell{background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.3);border-radius:12px;padding:10px 12px;backdrop-filter:blur(10px)}
 .wallet-stat-cell .val{font-size:1.05rem;font-weight:900}
 .wallet-stat-cell .lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;opacity:.9;margin-top:2px}
@@ -365,6 +368,24 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .min-watch-box label{color:#92400e;font-size:.85rem;display:flex;align-items:center;gap:8px}
 .min-watch-box input{background:#fff;border-color:#f59e0b}
 .min-watch-box small{display:block;margin-top:8px;font-size:.72rem;font-weight:700;color:#92400e;line-height:1.5}
+
+/* ✅ NEW: Revenue System Styles */
+.revenue-box{background:linear-gradient(135deg,#ecfdf5,#d1fae5);padding:14px;border-radius:12px;margin-bottom:12px;border-left:4px solid #10b981}
+.revenue-box.warning{background:linear-gradient(135deg,#fef3c7,#fde68a);border-left-color:#f59e0b}
+.revenue-box.info{background:linear-gradient(135deg,#dbeafe,#bfdbfe);border-left-color:#3b82f6}
+.revenue-box.danger{background:linear-gradient(135deg,#fee2e2,#fecaca);border-left-color:#ef4444}
+.revenue-box-title{font-weight:900;font-size:.88rem;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.revenue-box-title.green{color:#065f46}
+.revenue-box-title.warning{color:#92400e}
+.revenue-box-title.info{color:#1e40af}
+.revenue-box-title.danger{color:#991b1b}
+.ref-link-box{background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border:2px dashed #0ea5e9;border-radius:14px;padding:16px;margin-bottom:14px;text-align:center}
+.ref-link-box .code{font-family:'Courier New',monospace;font-weight:900;font-size:1.2rem;color:#0369a1;letter-spacing:2px;background:#fff;padding:10px 16px;border-radius:10px;display:inline-block;margin:8px 0;border:1px solid #0ea5e9}
+.ref-link-box .link-preview{font-size:.75rem;color:#0369a1;font-weight:700;word-break:break-all;background:rgba(255,255,255,.6);padding:8px 12px;border-radius:8px;margin-top:8px}
+.revenue-log-item{display:flex;justify-content:space-between;padding:10px 12px;background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:10px;margin-bottom:6px;border-left:3px solid #10b981}
+.revenue-log-item.ad{border-left-color:#06b6d4}
+.revenue-log-item.task{border-left-color:#8b5cf6}
+.revenue-log-item.referral{border-left-color:#ec4899}
 @media (max-width:400px){.container{padding:0 12px}.card{padding:16px;border-radius:20px}.header{padding:22px 18px 55px;border-radius:0 0 26px 26px}.header-title{font-size:1rem}.header-status{max-width:90px}.user-stats-grid{grid-template-columns:1fr 1fr}.legal-body{padding:20px 18px 26px}}
 </style>
 </head>
@@ -550,7 +571,12 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <div class="form-group"><label>Total Refunded</label><input type="number" step="0.01" id="aeTotalRefunded"></div>
         <div class="form-group"><label>Total Fees</label><input type="number" step="0.01" id="aeTotalFees"></div>
         <div class="form-group"><label>Total Service Charges</label><input type="number" step="0.01" id="aeTotalServiceCharges"></div>
+        <div class="form-group"><label>Total Revenue (TK)</label><input type="number" step="0.01" id="aeTotalRevenue"></div>
+        <div class="form-group"><label>Total Ref Commission</label><input type="number" step="0.01" id="aeTotalRefCommission"></div>
+        <div class="form-group"><label>Total Withdrawn</label><input type="number" step="0.01" id="aeTotalWithdrawn"></div>
+        <div class="form-group"><label>Total Withdraw Fees</label><input type="number" step="0.01" id="aeTotalWithdrawFees"></div>
       </div>
+      <div class="form-group"><label>Referral Code</label><input type="text" id="aeReferralCode"></div>
       <div class="form-group"><label>Active Status</label>
         <select id="aeIsActive">
           <option value="true">✅ Active</option>
@@ -823,6 +849,29 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 </div>
 
+<!-- ✅ NEW: Admin Withdraw Request Modal -->
+<div class="modal-overlay" id="adminWithdrawModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title"><div class="card-title-icon icon-success"><i class="fas fa-money-bill-transfer"></i></div>Request Withdraw</div>
+      <button class="modal-close" onclick="closeAdminWithdrawModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label>Available Balance</label><input type="text" id="awBalance" disabled></div>
+      <div class="form-group"><label>Amount (TK) *</label><input type="number" id="awAmount" step="0.01"></div>
+      <div class="form-group"><label>Method *</label>
+        <select id="awMethod">
+          <option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option>
+          <option value="Bank">Bank</option><option value="Binance">Binance</option><option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Your Account Number *</label><input type="text" id="awAccount"></div>
+      <div id="awFeeInfo" style="background:linear-gradient(135deg,#fef3c7,#fde68a); padding:12px; border-radius:10px; margin-bottom:12px; border-left:4px solid #f59e0b; font-size:.82rem; font-weight:700; color:#92400e;"></div>
+      <button class="btn btn-green" onclick="submitAdminWithdrawRequest()"><i class="fas fa-paper-plane"></i> Submit Request</button>
+    </div>
+  </div>
+</div>
+
 <div class="container">
   <div class="tabs-wrapper">
     <div class="tabs">
@@ -836,9 +885,11 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="tab super-only" data-tab="maintenance" onclick="switchTab('maintenance', this)"><i class="fas fa-wrench"></i><span>System</span></div>
       <div class="tab super-only" data-tab="referrals" onclick="switchTab('referrals', this)"><i class="fas fa-user-group"></i><span>Referrals</span></div>
       <div class="tab super-only" data-tab="admins" onclick="switchTab('admins', this)"><i class="fas fa-user-shield"></i><span>Admins</span></div>
+      <div class="tab super-only" data-tab="adminpayouts" onclick="switchTab('adminpayouts', this)"><i class="fas fa-hand-holding-dollar"></i><span>Admin Payouts</span></div>
       <div class="tab super-only" data-tab="depositmgmt" onclick="switchTab('depositmgmt', this)"><i class="fas fa-vault"></i><span>Deposit Mgmt</span></div>
       <div class="tab" data-tab="tasks" onclick="switchTab('tasks', this)"><i class="fas fa-briefcase"></i><span>Tasks</span></div>
       <div class="tab admin-only hidden" id="tabBtnWallet" data-tab="wallet" onclick="switchTab('wallet', this)"><i class="fas fa-wallet"></i><span>My Wallet</span></div>
+      <div class="tab admin-only hidden" id="tabBtnEarnings" data-tab="earnings" onclick="switchTab('earnings', this)"><i class="fas fa-coins"></i><span>Earnings</span></div>
       <div class="tab admin-only hidden" id="tabBtnDeposit" data-tab="deposit" onclick="switchTab('deposit', this)"><i class="fas fa-circle-dollar-to-slot"></i><span>Deposit</span></div>
       <div class="tab admin-only hidden" id="tabBtnContact" data-tab="contact" onclick="switchTab('contact', this)"><i class="fas fa-headset"></i><span>Contact</span></div>
     </div>
@@ -851,6 +902,72 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="form-group"><label>Bot Username</label><input type="text" id="botUsername"></div>
       <div class="form-group"><label>Currency Symbol</label><input type="text" id="currencySymbol"></div>
       <div class="form-group"><label>Ad Reset Hour (0-23)</label><input type="number" id="adResetHour" min="0" max="23"></div>
+    </div>
+
+    <!-- ✅ NEW: ADMIN REVENUE SYSTEM -->
+    <div class="card rainbow">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-coins"></i></div>Admin Revenue System</div></div>
+
+      <div class="alert-box success">
+        <i class="fas fa-lightbulb"></i>
+        <div><b>💡 দুই পক্ষের লাভ:</b> এই সিস্টেমে অ্যাডমিনরা ইউজারদের ইনকাম থেকে কমিশন পাবে এবং সুপার অ্যাডমিনও লাভ করবে।</div>
+      </div>
+
+      <div class="form-group">
+        <label>Revenue Mode</label>
+        <select id="adminRevenueMode">
+          <option value="none">🚫 Disabled</option>
+          <option value="referral_commission">👥 Referral Commission (Recommended)</option>
+          <option value="task_bonus">📋 Task Completion Bonus</option>
+          <option value="hybrid">🏆 Hybrid (Both)</option>
+        </select>
+      </div>
+
+      <div class="revenue-box">
+        <div class="revenue-box-title green"><i class="fas fa-users"></i> Referral Commission</div>
+        <div class="form-group">
+          <label>Commission Rate (%)</label>
+          <input type="number" id="adminRefCommissionRate" step="0.1" value="5" min="0" max="50">
+          <small style="color:#065f46; font-weight:700; font-size:.7rem; display:block; margin-top:6px;">
+            অ্যাডমিনের রেফার করা ইউজারের প্রতিটি ইনকাম থেকে কত% অ্যাডমিন পাবে
+          </small>
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Max Daily Commission (TK)</label>
+          <input type="number" id="adminRefMaxDaily" step="0.01" value="50">
+          <small style="color:#065f46; font-weight:700; font-size:.7rem; display:block; margin-top:6px;">
+            দৈনিক সর্বোচ্চ কত TK অ্যাডমিন কমিশন পাবে
+          </small>
+        </div>
+      </div>
+
+      <div class="revenue-box warning">
+        <div class="revenue-box-title warning"><i class="fas fa-tasks"></i> Task Completion Bonus</div>
+        <div class="form-group">
+          <label>Per Completion Bonus (TK)</label>
+          <input type="number" id="adminPerTaskBonus" step="0.01" value="0.10">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Max Daily Bonus (TK)</label>
+          <input type="number" id="adminTaskMaxDaily" step="0.01" value="20">
+        </div>
+      </div>
+
+      <div class="revenue-box info">
+        <div class="revenue-box-title info"><i class="fas fa-money-bill-transfer"></i> Admin Withdraw Settings</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Minimum Withdraw (TK)</label>
+            <input type="number" id="adminMinWithdraw" value="100">
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Withdraw Fee (%)</label>
+            <input type="number" id="adminWithdrawFee" step="0.1" value="2">
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-warning" onclick="saveAdminRevenueSettings()"><i class="fas fa-save"></i> Save Admin Revenue Settings</button>
     </div>
 
     <div class="card rainbow">
@@ -998,7 +1115,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   <!-- WITHDRAWALS -->
   <div id="tab-withdrawals" class="tab-content super-only">
     <div class="card">
-      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>Pending</div></div>
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>Pending User Withdrawals</div></div>
       <div id="wd-container"></div>
     </div>
     <div class="card">
@@ -1007,7 +1124,19 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ✅ ADS (UPDATED with Minimum Watch Time) -->
+  <!-- ✅ NEW: ADMIN PAYOUTS -->
+  <div id="tab-adminpayouts" class="tab-content super-only">
+    <div class="card">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>Pending Admin Withdraw Requests</div></div>
+      <div id="adminWdPendingList"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-clock-rotate-left"></i></div>All Admin Payouts</div></div>
+      <div id="adminWdAllList"></div>
+    </div>
+  </div>
+
+  <!-- ADS -->
   <div id="tab-ads" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-bullhorn"></i></div>Ad Networks & Custom Code</div></div>
@@ -1225,19 +1354,104 @@ s.onload = () => {
       <div class="wallet-label">Available Balance</div>
       <div class="wallet-amount"><span id="walletBalance">0.00</span> <span style="font-size:1.4rem;">TK</span></div>
       <div class="wallet-sub">এই balance দিয়ে Task বানাতে পারবেন</div>
-      <div class="wallet-stats">
+      <div class="wallet-stats three">
         <div class="wallet-stat-cell"><div class="val" id="walletTotalDeposited">0.00</div><div class="lbl">Deposited</div></div>
         <div class="wallet-stat-cell"><div class="val" id="walletTotalSpent">0.00</div><div class="lbl">Spent</div></div>
+        <div class="wallet-stat-cell" style="background:rgba(251,191,36,.35);"><div class="val" id="walletTotalRevenue">0.00</div><div class="lbl">💰 Revenue</div></div>
       </div>
     </div>
+
+    <!-- ✅ NEW: My Referral Link Card -->
+    <div class="card rainbow">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-title-icon icon-purple"><i class="fas fa-link"></i></div>
+          My Referral Link
+        </div>
+      </div>
+
+      <div class="ref-link-box">
+        <div style="font-size:.72rem; color:#0369a1; font-weight:800; letter-spacing:1px;">YOUR CODE</div>
+        <div class="code" id="myAdminRefCode">---</div>
+        <div class="link-preview" id="myAdminRefLink">Loading...</div>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-bottom:14px;">
+        <button class="btn btn-info btn-small" onclick="copyAdminRefCode()" style="flex:1;"><i class="fas fa-copy"></i> Copy Code</button>
+        <button class="btn btn-green btn-small" onclick="copyAdminRefLink()" style="flex:1;"><i class="fas fa-link"></i> Copy Link</button>
+      </div>
+
+      <div class="alert-box info" style="margin-bottom:14px;">
+        <i class="fas fa-info-circle"></i>
+        <div>
+          এই link শেয়ার করুন। কেউ এই link দিয়ে join করলে, তার যত ইনকাম হবে তার 
+          <b id="commRateDisplay">5%</b> আপনার কাছে আসবে।
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+        <div class="stat-card green">
+          <div class="num" id="myRefUsersCount">0</div>
+          <div class="label">Referred</div>
+        </div>
+        <div class="stat-card info">
+          <div class="num" id="myRefCommission">0</div>
+          <div class="label">Total Commission</div>
+        </div>
+        <div class="stat-card warning">
+          <div class="num" id="myRefTodayEarn">0</div>
+          <div class="label">Today</div>
+        </div>
+      </div>
+
+      <div class="section-divider" style="margin-top:16px;">
+        <i class="fas fa-list"></i> Referred Users
+      </div>
+      <div id="myReferredUsersList"></div>
+    </div>
+
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-pink"><i class="fas fa-address-card"></i></div>My Contact Info</div></div>
       <div id="myContactBox"></div>
       <button class="btn btn-pink" onclick="openContactEditModal()" style="margin-top:10px;"><i class="fas fa-pen"></i> Edit Contact</button>
     </div>
+
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-money-bill-wave"></i></div>Deposit History</div></div>
       <div id="depositHistoryList"></div>
+    </div>
+  </div>
+
+  <!-- ✅ NEW: EARNINGS (Admin) -->
+  <div id="tab-earnings" class="tab-content admin-only hidden">
+    <div class="wallet-hero" style="background:linear-gradient(135deg,#7c3aed 0%,#8b5cf6 40%,#ec4899 100%);box-shadow:0 20px 40px -10px rgba(139,92,246,.55);">
+      <i class="fas fa-coins wallet-icon"></i>
+      <div class="wallet-label">Total Revenue Earned</div>
+      <div class="wallet-amount"><span id="earningsTotal">0.00</span> <span style="font-size:1.4rem;">TK</span></div>
+      <div class="wallet-sub">Referral commission + Task bonus থেকে আয়</div>
+      <div class="wallet-stats">
+        <div class="wallet-stat-cell"><div class="val" id="earningsRefComm">0.00</div><div class="lbl">Ref Commission</div></div>
+        <div class="wallet-stat-cell"><div class="val" id="earningsTaskBonus">0.00</div><div class="lbl">Task Bonus</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-money-bill-transfer"></i></div>Withdraw Earnings</div></div>
+      <div class="alert-box success">
+        <i class="fas fa-lightbulb"></i>
+        <div><b>💰 Withdraw Rules:</b> Minimum <b id="withdrawMinDisplay">100</b> TK। Withdraw Fee: <b id="withdrawFeeDisplay">2%</b>।</div>
+      </div>
+      <button class="btn btn-green" onclick="openAdminWithdrawModal()"><i class="fas fa-paper-plane"></i> Request Withdraw</button>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>My Withdraw Requests</div></div>
+      <div id="myAdminWdList"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-history"></i></div>Revenue History</div></div>
+      <div id="revenueHistoryList"></div>
     </div>
   </div>
 
@@ -1443,6 +1657,17 @@ let lbEditingIndex = null;
 let currentTaskListTab = 'live';
 let currentUserCache = {};
 
+// ✅ NEW: Admin Revenue Defaults
+let adminRevenueConfig = {
+  mode: 'referral_commission',
+  refCommissionRate: 5,
+  refMaxDaily: 50,
+  perTaskBonus: 0.10,
+  taskMaxDaily: 20,
+  minWithdraw: 100,
+  withdrawFee: 2
+};
+
 const SESSION_KEY = 'nexearn_admin_session';
 const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
 let currentSession = null;
@@ -1621,17 +1846,27 @@ async function loadCurrentAdminData() {
     if (!snap.exists()) return;
     currentAdminData = { id: currentSession.adminId, ...snap.val() };
     updateWalletUI(); renderDepositHistory(); renderMyDepositRequests(); renderMyContact();
+    // ✅ NEW: Load referral info & earnings
+    await generateAdminRefCode();
+    await loadMyAdminReferralStats();
+    await loadMyEarnings();
+    await loadMyAdminWithdrawRequests();
+    await loadRevenueHistory();
   } catch(e) {}
 }
+
 function updateWalletUI() {
   if (!currentAdminData) return;
   document.getElementById('walletBalance').textContent = (currentAdminData.balance || 0).toFixed(2);
   document.getElementById('walletTotalDeposited').textContent = (currentAdminData.totalDeposited || 0).toFixed(2);
   document.getElementById('walletTotalSpent').textContent = (currentAdminData.totalSpent || 0).toFixed(2);
+  const revEl = document.getElementById('walletTotalRevenue');
+  if (revEl) revEl.textContent = (currentAdminData.totalRevenue || 0).toFixed(2);
   const tw = document.getElementById('taskWalletInfo');
   if (tw) { tw.style.display = 'block'; document.getElementById('taskWalletBal').textContent = (currentAdminData.balance || 0).toFixed(2); }
   updateTaskCostPreview();
 }
+
 function renderDepositHistory() {
   const container = document.getElementById('depositHistoryList');
   if (!container) return;
@@ -1711,6 +1946,439 @@ function copyToClipboard(text, label) {
 }
 
 // ═══════════════════════════════════════════════════════════
+// ✅ NEW: ADMIN REVENUE SYSTEM
+// ═══════════════════════════════════════════════════════════
+
+async function saveAdminRevenueSettings() {
+  const settings = {
+    mode: document.getElementById('adminRevenueMode').value,
+    refCommissionRate: parseFloat(document.getElementById('adminRefCommissionRate').value) || 5,
+    refMaxDaily: parseFloat(document.getElementById('adminRefMaxDaily').value) || 50,
+    perTaskBonus: parseFloat(document.getElementById('adminPerTaskBonus').value) || 0.10,
+    taskMaxDaily: parseFloat(document.getElementById('adminTaskMaxDaily').value) || 20,
+    minWithdraw: parseFloat(document.getElementById('adminMinWithdraw').value) || 100,
+    withdrawFee: parseFloat(document.getElementById('adminWithdrawFee').value) || 2,
+    updatedAt: Date.now()
+  };
+  await db.ref('config/adminRevenue').set(settings);
+  adminRevenueConfig = settings;
+  toast('✅ Admin Revenue settings saved!');
+}
+
+function loadAdminRevenueSettings() {
+  const ar = configData.adminRevenue || {};
+  adminRevenueConfig = { ...adminRevenueConfig, ...ar };
+  const el = id => document.getElementById(id);
+  if (el('adminRevenueMode')) el('adminRevenueMode').value = ar.mode || 'referral_commission';
+  if (el('adminRefCommissionRate')) el('adminRefCommissionRate').value = ar.refCommissionRate !== undefined ? ar.refCommissionRate : 5;
+  if (el('adminRefMaxDaily')) el('adminRefMaxDaily').value = ar.refMaxDaily !== undefined ? ar.refMaxDaily : 50;
+  if (el('adminPerTaskBonus')) el('adminPerTaskBonus').value = ar.perTaskBonus !== undefined ? ar.perTaskBonus : 0.10;
+  if (el('adminTaskMaxDaily')) el('adminTaskMaxDaily').value = ar.taskMaxDaily !== undefined ? ar.taskMaxDaily : 20;
+  if (el('adminMinWithdraw')) el('adminMinWithdraw').value = ar.minWithdraw !== undefined ? ar.minWithdraw : 100;
+  if (el('adminWithdrawFee')) el('adminWithdrawFee').value = ar.withdrawFee !== undefined ? ar.withdrawFee : 2;
+}
+
+// ✅ Generate admin's unique referral code
+async function generateAdminRefCode() {
+  if (!currentSession || currentSession.role !== 'admin') return;
+  const adminId = currentSession.adminId;
+  const snap = await db.ref('admins/' + adminId).once('value');
+  const a = snap.val();
+  if (!a) return;
+  let refCode = a.referralCode;
+  if (!refCode) {
+    refCode = 'ADM' + adminId.substring(0, 6).toUpperCase() + 
+              Math.random().toString(36).substring(2, 6).toUpperCase();
+    await db.ref('admins/' + adminId + '/referralCode').set(refCode);
+  }
+  const codeEl = document.getElementById('myAdminRefCode');
+  if (codeEl) codeEl.textContent = refCode;
+  const botUser = configData.botUsername || 'YourBotUsername';
+  const linkEl = document.getElementById('myAdminRefLink');
+  if (linkEl) linkEl.textContent = `https://t.me/${botUser}?start=${refCode}`;
+  const rateEl = document.getElementById('commRateDisplay');
+  if (rateEl) rateEl.textContent = (adminRevenueConfig.refCommissionRate || 5) + '%';
+}
+
+function copyAdminRefCode() {
+  const code = document.getElementById('myAdminRefCode').textContent;
+  copyToClipboard(code, 'Referral Code');
+}
+function copyAdminRefLink() {
+  const botUser = configData.botUsername || 'YourBotUsername';
+  const code = document.getElementById('myAdminRefCode').textContent;
+  copyToClipboard(`https://t.me/${botUser}?start=${code}`, 'Referral Link');
+}
+
+async function loadMyAdminReferralStats() {
+  if (!currentSession || currentSession.role !== 'admin') return;
+  const adminId = currentSession.adminId;
+  const snap = await db.ref('admins/' + adminId).once('value');
+  const a = snap.val();
+  if (!a) return;
+  
+  const refUsers = a.referredUsers || {};
+  const refCountEl = document.getElementById('myRefUsersCount');
+  if (refCountEl) refCountEl.textContent = Object.keys(refUsers).length;
+  
+  const commEl = document.getElementById('myRefCommission');
+  if (commEl) commEl.textContent = Number(a.totalRefCommission || 0).toFixed(2);
+  
+  // Today's earning
+  const today = new Date().toDateString();
+  const logs = a.commissionLogs || {};
+  let todayEarn = 0;
+  Object.values(logs).forEach(log => {
+    if (new Date(log.timestamp).toDateString() === today) {
+      todayEarn += Number(log.amount || 0);
+    }
+  });
+  const todayEl = document.getElementById('myRefTodayEarn');
+  if (todayEl) todayEl.textContent = todayEarn.toFixed(2);
+  
+  // Referred users list
+  const container = document.getElementById('myReferredUsersList');
+  if (!container) return;
+  
+  if (Object.keys(refUsers).length === 0) {
+    container.innerHTML = '<div class="lb-empty">No users yet. Share your link!</div>';
+    return;
+  }
+  
+  const rate = adminRevenueConfig.refCommissionRate || 5;
+  let h = '';
+  for (const userId of Object.keys(refUsers)) {
+    const uSnap = await db.ref('users/' + userId).once('value');
+    if (!uSnap.exists()) continue;
+    const u = uSnap.val();
+    const userEarned = Number(u.totalEarned || 0);
+    const myComm = userEarned * rate / 100;
+    h += `<div class="ref-mini-item">
+      <div class="ref-mini-avatar">${(u.name || 'U').charAt(0).toUpperCase()}</div>
+      <div class="ref-mini-info">
+        <h5>${esc(u.name || 'User')}</h5>
+        <p>ID: ${userId} • Earned: ${userEarned.toFixed(2)} TK</p>
+      </div>
+      <div class="ref-mini-bal qualified">+${myComm.toFixed(2)}</div>
+    </div>`;
+  }
+  container.innerHTML = h;
+}
+
+async function loadMyEarnings() {
+  if (!currentSession || currentSession.role !== 'admin') return;
+  const adminId = currentSession.adminId;
+  const snap = await db.ref('admins/' + adminId).once('value');
+  const a = snap.val();
+  if (!a) return;
+  
+  const totalEarned = Number(a.totalRevenue || 0);
+  const totalRefComm = Number(a.totalRefCommission || 0);
+  const totalTaskBonus = Number(a.totalTaskBonus || 0);
+  
+  const te = document.getElementById('earningsTotal');
+  if (te) te.textContent = totalEarned.toFixed(2);
+  const trc = document.getElementById('earningsRefComm');
+  if (trc) trc.textContent = totalRefComm.toFixed(2);
+  const ttb = document.getElementById('earningsTaskBonus');
+  if (ttb) ttb.textContent = totalTaskBonus.toFixed(2);
+  
+  const md = document.getElementById('withdrawMinDisplay');
+  if (md) md.textContent = adminRevenueConfig.minWithdraw || 100;
+  const fd = document.getElementById('withdrawFeeDisplay');
+  if (fd) fd.textContent = (adminRevenueConfig.withdrawFee || 2) + '%';
+}
+
+async function loadRevenueHistory() {
+  if (!currentSession || currentSession.role !== 'admin') return;
+  const c = document.getElementById('revenueHistoryList');
+  if (!c) return;
+  const snap = await db.ref('admins/' + currentSession.adminId + '/commissionLogs').once('value');
+  if (!snap.exists()) {
+    c.innerHTML = '<div class="empty-state"><p>No revenue history yet</p></div>';
+    return;
+  }
+  const logs = [];
+  snap.forEach(x => logs.push(x.val()));
+  logs.sort((a,b) => b.timestamp - a.timestamp);
+  
+  let h = '';
+  logs.slice(0, 30).forEach(log => {
+    const date = new Date(log.timestamp).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+    const typeIcon = log.type === 'task_bonus' ? '📋' : log.type === 'ad_view' ? '👁️' : '👥';
+    const typeLabel = log.type === 'task_bonus' ? 'Task Bonus' : log.type === 'ad_view' ? 'Ad View' : 'Referral';
+    const logClass = log.type === 'task_bonus' ? 'task' : log.type === 'ad_view' ? 'ad' : 'referral';
+    h += `<div class="revenue-log-item ${logClass}">
+      <div>
+        <div style="font-weight:800; font-size:.82rem;">${typeIcon} ${typeLabel}</div>
+        <div style="font-size:.7rem; color:#94a3b8; margin-top:3px;">${date}${log.fromUserName ? ' • ' + esc(log.fromUserName) : ''}</div>
+        ${log.userEarned ? `<div style="font-size:.7rem; color:#64748b; margin-top:2px;">User Earned: ${Number(log.userEarned).toFixed(2)} TK × ${log.rate || 0}%</div>` : ''}
+      </div>
+      <div style="font-weight:900; color:#10b981; font-size:.95rem;">+${Number(log.amount).toFixed(2)}</div>
+    </div>`;
+  });
+  c.innerHTML = h;
+}
+
+// ✅ Give commission to task owner admin
+async function giveTaskOwnerBonus(taskId, submissionId, userName) {
+  const taskSnap = await db.ref('config/newTasks/' + taskId).once('value');
+  if (!taskSnap.exists()) return;
+  const task = taskSnap.val();
+  const creatorId = task.createdByAdminId;
+  if (!creatorId || creatorId === 'super') return;
+  
+  const mode = adminRevenueConfig.mode;
+  if (mode !== 'task_bonus' && mode !== 'hybrid') return;
+  
+  const bonusAmount = Number(adminRevenueConfig.perTaskBonus || 0.10);
+  if (bonusAmount <= 0) return;
+  
+  const adminRef = db.ref('admins/' + creatorId);
+  const adminSnap = await adminRef.once('value');
+  if (!adminSnap.exists()) return;
+  const a = adminSnap.val();
+  
+  // Check daily limit
+  const today = new Date().toDateString();
+  const logs = a.commissionLogs || {};
+  let todayTotal = 0;
+  Object.values(logs).forEach(log => {
+    if (log.type === 'task_bonus' && new Date(log.timestamp).toDateString() === today) {
+      todayTotal += Number(log.amount || 0);
+    }
+  });
+  const maxDaily = adminRevenueConfig.taskMaxDaily || 20;
+  const finalBonus = Math.min(bonusAmount, Math.max(0, maxDaily - todayTotal));
+  if (finalBonus <= 0) return;
+  
+  const logId = 'log_' + Date.now() + '_' + Math.random().toString(36).substring(7);
+  logs[logId] = {
+    type: 'task_bonus',
+    taskId, submissionId, fromUserName,
+    amount: finalBonus,
+    timestamp: Date.now()
+  };
+  
+  await adminRef.update({
+    balance: Number(a.balance || 0) + finalBonus,
+    totalRevenue: Number(a.totalRevenue || 0) + finalBonus,
+    totalTaskBonus: Number(a.totalTaskBonus || 0) + finalBonus,
+    commissionLogs: logs
+  });
+  
+  // Log for super admin
+  await db.ref('superAdminRevenue').push({
+    source: 'task_bonus',
+    adminId: creatorId,
+    taskId, submissionId,
+    amount: finalBonus,
+    timestamp: Date.now()
+  });
+}
+
+// ✅ NEW: Admin Withdraw Modal
+function openAdminWithdrawModal() {
+  if (!currentAdminData) return;
+  const bal = Number(currentAdminData.balance || 0);
+  const minW = adminRevenueConfig.minWithdraw || 100;
+  if (bal < minW) return toast(`❌ Minimum ${minW} TK প্রয়োজন। আপনার আছে: ${bal.toFixed(2)} TK`);
+  document.getElementById('awBalance').value = bal.toFixed(2) + ' TK';
+  document.getElementById('awAmount').value = '';
+  document.getElementById('awAccount').value = '';
+  updateAdminWithdrawFeeInfo();
+  document.getElementById('adminWithdrawModal').classList.add('active');
+}
+function closeAdminWithdrawModal() { document.getElementById('adminWithdrawModal').classList.remove('active'); }
+
+function updateAdminWithdrawFeeInfo() {
+  const amount = parseFloat(document.getElementById('awAmount').value) || 0;
+  const fee = adminRevenueConfig.withdrawFee || 2;
+  const feeAmt = amount * fee / 100;
+  const finalAmt = amount - feeAmt;
+  const el = document.getElementById('awFeeInfo');
+  if (!el) return;
+  if (amount <= 0) { el.innerHTML = '💡 Amount লিখুন।'; return; }
+  el.innerHTML = `💰 Amount: <b>${amount.toFixed(2)} TK</b><br>⚙️ Fee (${fee}%): <b>−${feeAmt.toFixed(2)} TK</b><br>✅ You Get: <b style="color:#059669;">${finalAmt.toFixed(2)} TK</b>`;
+}
+
+document.addEventListener('input', e => {
+  if (e.target && e.target.id === 'awAmount') updateAdminWithdrawFeeInfo();
+});
+
+async function submitAdminWithdrawRequest() {
+  if (!currentSession || currentSession.role !== 'admin') return;
+  const amount = parseFloat(document.getElementById('awAmount').value);
+  const method = document.getElementById('awMethod').value;
+  const account = document.getElementById('awAccount').value.trim();
+  const bal = Number(currentAdminData.balance || 0);
+  const minW = adminRevenueConfig.minWithdraw || 100;
+  const feeRate = adminRevenueConfig.withdrawFee || 2;
+  
+  if (!amount || amount <= 0) return toast('❌ Valid amount');
+  if (amount < minW) return toast(`❌ Minimum ${minW} TK`);
+  if (amount > bal) return toast(`❌ আপনার balance ${bal.toFixed(2)} TK`);
+  if (!account || account.length < 4) return toast('❌ Valid account');
+  
+  const feeAmt = amount * feeRate / 100;
+  const finalAmt = amount - feeAmt;
+  
+  const reqId = 'awd_' + Date.now() + '_' + currentSession.adminId;
+  await db.ref('adminWithdrawRequests/' + reqId).set({
+    adminId: currentSession.adminId,
+    adminName: currentSession.username,
+    amount: amount,
+    fee: feeAmt,
+    finalAmount: finalAmt,
+    method: method,
+    account: account,
+    status: 'pending',
+    timestamp: Date.now()
+  });
+  
+  toast(`✅ Request submitted! পাবেন: ${finalAmt.toFixed(2)} TK`);
+  closeAdminWithdrawModal();
+  loadMyAdminWithdrawRequests();
+}
+
+async function loadMyAdminWithdrawRequests() {
+  if (!currentSession || currentSession.role !== 'admin') return;
+  const c = document.getElementById('myAdminWdList');
+  if (!c) return;
+  const snap = await db.ref('adminWithdrawRequests').orderByChild('adminId').equalTo(currentSession.adminId).once('value');
+  if (!snap.exists()) {
+    c.innerHTML = '<div class="empty-state" style="padding:20px;"><p>No withdraw requests yet</p></div>';
+    return;
+  }
+  const list = [];
+  snap.forEach(x => list.push({ id: x.key, ...x.val() }));
+  list.sort((a,b) => b.timestamp - a.timestamp);
+  
+  let h = '';
+  list.forEach(r => {
+    const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
+    const date = new Date(r.timestamp).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+    h += `<div class="dreq-item ${cls}">
+      <div class="dreq-head">
+        <div class="dreq-amount">${Number(r.amount).toFixed(2)} TK</div>
+        <span class="status-badge ${cls}">${r.status.toUpperCase()}</span>
+      </div>
+      <div class="dreq-info">
+        <b>Method:</b> ${esc(r.method)} • ${esc(r.account)}<br>
+        <b>Fee:</b> ${Number(r.fee).toFixed(2)} TK • <b>Final:</b> ${Number(r.finalAmount).toFixed(2)} TK<br>
+        <b>Date:</b> ${date}
+      </div>
+      ${r.status === 'rejected' && r.reason ? `<div style="font-size:.72rem; color:#dc2626; margin-top:6px;">❌ ${esc(r.reason)}</div>` : ''}
+    </div>`;
+  });
+  c.innerHTML = h;
+}
+
+// ✅ Super Admin: Admin Withdraw Requests
+async function loadAdminWithdrawRequests() {
+  const pendingEl = document.getElementById('adminWdPendingList');
+  const allEl = document.getElementById('adminWdAllList');
+  if (!pendingEl && !allEl) return;
+  const snap = await db.ref('adminWithdrawRequests').once('value');
+  const list = [];
+  snap.forEach(x => list.push({ id: x.key, ...x.val() }));
+  list.sort((a,b) => b.timestamp - a.timestamp);
+  
+  const pending = list.filter(r => r.status === 'pending');
+  if (pendingEl) {
+    if (!pending.length) {
+      pendingEl.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>No pending requests</div></div>';
+    } else {
+      let h = '';
+      pending.forEach(r => {
+        const date = new Date(r.timestamp).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+        h += `<div class="dreq-item pending">
+          <div class="dreq-head">
+            <div class="dreq-amount">${Number(r.amount).toFixed(2)} TK</div>
+            <span class="status-badge pending">PENDING</span>
+          </div>
+          <div class="dreq-info">
+            <b>Admin:</b> ${esc(r.adminName)}<br>
+            <b>Method:</b> ${esc(r.method)} • <b>Account:</b> <span style="color:#dc2626; font-family:monospace;">${esc(r.account)}</span><br>
+            <b>Fee:</b> ${Number(r.fee).toFixed(2)} TK • <b>Final:</b> <b style="color:#10b981;">${Number(r.finalAmount).toFixed(2)} TK</b><br>
+            <b>Date:</b> ${date}
+          </div>
+          <div style="display:flex; gap:8px; margin-top:12px;">
+            <button class="btn btn-green btn-small" onclick="approveAdminWd('${r.id}')" style="flex:1;"><i class="fas fa-check"></i> Approve</button>
+            <button class="btn btn-red btn-small" onclick="rejectAdminWd('${r.id}')" style="flex:1;"><i class="fas fa-times"></i> Reject</button>
+          </div>
+        </div>`;
+      });
+      pendingEl.innerHTML = h;
+    }
+  }
+  
+  if (allEl) {
+    if (!list.length) {
+      allEl.innerHTML = '<div class="empty-state" style="padding:20px;"><p>No requests</p></div>';
+    } else {
+      let h = '';
+      list.slice(0, 50).forEach(r => {
+        const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
+        h += `<div class="dreq-item ${cls}">
+          <div class="dreq-head">
+            <div style="font-weight:800; font-size:.85rem;">👤 ${esc(r.adminName)}</div>
+            <span class="status-badge ${cls}">${r.status.toUpperCase()}</span>
+          </div>
+          <div class="dreq-info">
+            <b>${Number(r.amount).toFixed(2)} TK</b> • ${esc(r.method)} • ${esc(r.account)}<br>
+            <span style="font-size:.7rem; color:#94a3b8;">${new Date(r.timestamp).toLocaleString()}</span>
+          </div>
+        </div>`;
+      });
+      allEl.innerHTML = h;
+    }
+  }
+}
+
+async function approveAdminWd(reqId) {
+  if (!confirm('Approve this withdraw?')) return;
+  const snap = await db.ref('adminWithdrawRequests/' + reqId).once('value');
+  if (!snap.exists()) return;
+  const r = snap.val();
+  if (r.status !== 'pending') return toast('Already processed');
+  
+  const adminRef = db.ref('admins/' + r.adminId);
+  const adminSnap = await adminRef.once('value');
+  if (!adminSnap.exists()) return;
+  const a = adminSnap.val();
+  if (Number(a.balance || 0) < Number(r.amount)) return toast('❌ Admin balance কমে গেছে');
+  
+  await adminRef.update({
+    balance: Number(a.balance || 0) - Number(r.amount),
+    totalWithdrawn: Number(a.totalWithdrawn || 0) + Number(r.amount),
+    totalWithdrawFees: Number(a.totalWithdrawFees || 0) + Number(r.fee)
+  });
+  
+  await db.ref('adminWithdrawRequests/' + reqId).update({
+    status: 'approved',
+    reviewedAt: Date.now(),
+    reviewedBy: currentSession.username
+  });
+  
+  toast('✅ Approved!');
+  loadAdminWithdrawRequests();
+  loadAdminsList();
+}
+
+async function rejectAdminWd(reqId) {
+  const reason = prompt('Reason:') || '';
+  await db.ref('adminWithdrawRequests/' + reqId).update({
+    status: 'rejected',
+    reason: reason,
+    reviewedAt: Date.now(),
+    reviewedBy: currentSession.username
+  });
+  toast('❌ Rejected');
+  loadAdminWithdrawRequests();
+}
+
+// ═══════════════════════════════════════════════════════════
 // EXTRA REWARDS
 // ═══════════════════════════════════════════════════════════
 function loadExtraRewardPreview() {
@@ -1756,7 +2424,7 @@ async function saveExtraRewardSettings() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// ADS CONFIG — with Minimum Watch Time
+// ADS CONFIG
 // ═══════════════════════════════════════════════════════════
 const AD_SLOT_COUNT = 6;
 
@@ -1834,7 +2502,6 @@ function saveAds() {
   const dailyAdLimit = Number(document.getElementById('dailyAdLimit').value) || 10;
   const adReward = Number(document.getElementById('adReward').value) || 0.5;
   
-  // ✅ Minimum watch time
   const minAdWatchSecondsEl = document.getElementById('minAdWatchSeconds');
   let minAdWatchSeconds = 10;
   if (minAdWatchSecondsEl) {
@@ -2073,11 +2740,13 @@ async function loadAdminsList() {
     count++;
     const a = child.val();
     const bal = Number(a.balance || 0), deposited = Number(a.totalDeposited || 0), spent = Number(a.totalSpent || 0);
+    const revenue = Number(a.totalRevenue || 0);
     const banned = a.isBanned === true, suspended = a.isSuspended === true;
     const itemCls = banned ? 'banned' : suspended ? 'suspended' : '';
     const statusBadge = banned ? '<span class="status-badge banned">🚫 BANNED</span>' : suspended ? '<span class="status-badge suspended">⏸️ SUSPENDED</span>' : '<span class="status-badge active">✅ ACTIVE</span>';
     const contact = a.adminContact || null;
     const contactHtml = contact && contact.value ? `<div style="margin-top:6px; font-size:.72rem; color:#7c3aed; font-weight:700;"><i class="fas fa-address-card"></i> ${esc(contact.type)}: <span style="font-family:monospace; color:#4338ca;">${esc(contact.value)}</span></div>` : '';
+    const refCodeHtml = a.referralCode ? `<div style="margin-top:6px; font-size:.72rem; color:#0891b2; font-weight:700;"><i class="fas fa-link"></i> Code: <span style="font-family:monospace; color:#0e7490;">${esc(a.referralCode)}</span></div>` : '';
     html += `<div class="admin-item ${itemCls}">
       <div class="admin-item-top"><div class="admin-item-left">
         <div class="admin-item-avatar">${(a.username || 'A').charAt(0).toUpperCase()}</div>
@@ -2085,18 +2754,20 @@ async function loadAdminsList() {
           <div class="name">${esc(a.username)} <span class="status-badge admin">ADMIN</span> ${statusBadge}</div>
           <div class="meta">Created: ${a.createdAt ? new Date(a.createdAt).toLocaleDateString() : 'N/A'}</div>
           ${contactHtml}
+          ${refCodeHtml}
         </div>
       </div></div>
-      <div class="admin-balance-box">
+      <div class="admin-balance-box" style="grid-template-columns:1fr 1fr 1fr 1fr;">
         <div class="admin-balance-cell green"><div class="val">${bal.toFixed(2)}</div><div class="lbl">Balance</div></div>
         <div class="admin-balance-cell"><div class="val">${deposited.toFixed(2)}</div><div class="lbl">Deposited</div></div>
         <div class="admin-balance-cell warn"><div class="val">${spent.toFixed(2)}</div><div class="lbl">Spent</div></div>
+        <div class="admin-balance-cell revenue"><div class="val">${revenue.toFixed(2)}</div><div class="lbl">💰 Revenue</div></div>
       </div>
       <div class="admin-item-actions">
         <button class="btn btn-info btn-small" onclick="viewAdminFull('${child.key}')"><i class="fas fa-eye"></i> View</button>
         <button class="btn btn-warning btn-small" onclick="openAdminEditModal('${child.key}')"><i class="fas fa-pen"></i> Edit</button>
         <button class="btn btn-green btn-small" onclick="openDepositModal('${child.key}')"><i class="fas fa-plus"></i> Add</button>
-        <button class="btn btn-purple btn-small" onclick="openAdminContact('${child.key}')"><i class="fas fa-address-card"></i> Contact</button>
+        <button class="btn btn-purple btn-small" onclick="openAdminContact('${child.key}')"><i class="fas fa-address-card"></i></button>
         ${banned ? `<button class="btn btn-green btn-small" onclick="unbanAdmin('${child.key}')"><i class="fas fa-unlock"></i> Unban</button>` : `<button class="btn btn-red btn-small" onclick="openBanModal('${child.key}', '${esc(a.username)}', 'ban')"><i class="fas fa-ban"></i> Ban</button>`}
         ${suspended ? `<button class="btn btn-green btn-small" onclick="unsuspendAdmin('${child.key}')"><i class="fas fa-play"></i> Resume</button>` : `<button class="btn btn-warning btn-small" onclick="openBanModal('${child.key}', '${esc(a.username)}', 'suspend')"><i class="fas fa-pause"></i> Suspend</button>`}
         <button class="btn btn-red btn-small" onclick="deleteAdminFull('${child.key}')"><i class="fas fa-trash"></i> Delete</button>
@@ -2138,6 +2809,9 @@ async function viewAdminFull(adminId) {
   } else {
     contactHtml = '<div style="text-align:center; color:#94a3b8; padding:10px; font-size:.78rem;">No contact info</div>';
   }
+  
+  const refCode = a.referralCode || 'N/A';
+  
   document.getElementById('adminViewBody').innerHTML = `
     <div style="text-align:center; margin-bottom:16px;">
       <div style="width:64px; height:64px; margin:0 auto 10px; border-radius:18px; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.5rem; box-shadow:0 8px 20px rgba(99,102,241,.35);">${(a.username||'A').charAt(0).toUpperCase()}</div>
@@ -2155,6 +2829,11 @@ async function viewAdminFull(adminId) {
       <span class="value" style="font-size:.65rem; color:#92400e;">${esc(a.passwordHash || 'N/A')}</span>
       <button class="copy-btn inline" style="background:#fff; border-color:#f59e0b; color:#92400e;" onclick="copyToClipboard('${esc(a.passwordHash || '').replace(/'/g,"\\'")}', 'Password Hash')"><i class="fas fa-copy"></i></button>
     </div>
+    <div class="info-display-box" style="background:linear-gradient(135deg,#cffafe,#a5f3fc); border-color:rgba(6,182,212,.4);">
+      <span class="label" style="color:#0e7490;">Referral Code</span>
+      <span class="value" style="color:#0891b2; font-weight:900; letter-spacing:2px;">${esc(refCode)}</span>
+      <button class="copy-btn inline" style="background:#fff; border-color:#06b6d4; color:#0e7490;" onclick="copyToClipboard('${esc(refCode)}', 'Referral Code')"><i class="fas fa-copy"></i></button>
+    </div>
     <div class="section-divider"><i class="fas fa-wallet"></i> Financial Info</div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
       <div class="stat-card green"><div class="num">${Number(a.balance||0).toFixed(2)}</div><div class="label">Balance</div></div>
@@ -2163,6 +2842,13 @@ async function viewAdminFull(adminId) {
       <div class="stat-card purple"><div class="num">${Number(a.totalRefunded||0).toFixed(2)}</div><div class="label">Refunded</div></div>
       <div class="stat-card pink"><div class="num">${Number(a.totalFees||0).toFixed(2)}</div><div class="label">Fees Paid</div></div>
       <div class="stat-card danger"><div class="num">${Number(a.totalServiceCharges||0).toFixed(2)}</div><div class="label">Service Charges</div></div>
+    </div>
+    <div class="section-divider"><i class="fas fa-coins"></i> Revenue Info</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+      <div class="stat-card green"><div class="num">${Number(a.totalRevenue||0).toFixed(2)}</div><div class="label">Total Revenue</div></div>
+      <div class="stat-card info"><div class="num">${Number(a.totalRefCommission||0).toFixed(2)}</div><div class="label">Ref Commission</div></div>
+      <div class="stat-card purple"><div class="num">${Number(a.totalTaskBonus||0).toFixed(2)}</div><div class="label">Task Bonus</div></div>
+      <div class="stat-card warning"><div class="num">${Number(a.totalWithdrawn||0).toFixed(2)}</div><div class="label">Total Withdrawn</div></div>
     </div>
     <div class="section-divider"><i class="fas fa-address-card"></i> Contact Info</div>
     ${contactHtml}
@@ -2190,6 +2876,11 @@ async function openAdminEditModal(adminId) {
   document.getElementById('aeTotalRefunded').value = Number(a.totalRefunded || 0).toFixed(2);
   document.getElementById('aeTotalFees').value = Number(a.totalFees || 0).toFixed(2);
   document.getElementById('aeTotalServiceCharges').value = Number(a.totalServiceCharges || 0).toFixed(2);
+  document.getElementById('aeTotalRevenue').value = Number(a.totalRevenue || 0).toFixed(2);
+  document.getElementById('aeTotalRefCommission').value = Number(a.totalRefCommission || 0).toFixed(2);
+  document.getElementById('aeTotalWithdrawn').value = Number(a.totalWithdrawn || 0).toFixed(2);
+  document.getElementById('aeTotalWithdrawFees').value = Number(a.totalWithdrawFees || 0).toFixed(2);
+  document.getElementById('aeReferralCode').value = a.referralCode || '';
   document.getElementById('aeIsActive').value = String(a.isActive !== false);
   document.getElementById('aeIsBanned').value = String(a.isBanned === true);
   document.getElementById('aeIsSuspended').value = String(a.isSuspended === true);
@@ -2207,6 +2898,11 @@ async function saveAdminFullEdit() {
     totalRefunded: parseFloat(document.getElementById('aeTotalRefunded').value) || 0,
     totalFees: parseFloat(document.getElementById('aeTotalFees').value) || 0,
     totalServiceCharges: parseFloat(document.getElementById('aeTotalServiceCharges').value) || 0,
+    totalRevenue: parseFloat(document.getElementById('aeTotalRevenue').value) || 0,
+    totalRefCommission: parseFloat(document.getElementById('aeTotalRefCommission').value) || 0,
+    totalWithdrawn: parseFloat(document.getElementById('aeTotalWithdrawn').value) || 0,
+    totalWithdrawFees: parseFloat(document.getElementById('aeTotalWithdrawFees').value) || 0,
+    referralCode: document.getElementById('aeReferralCode').value.trim(),
     isActive: document.getElementById('aeIsActive').value === 'true',
     isBanned: document.getElementById('aeIsBanned').value === 'true',
     isSuspended: document.getElementById('aeIsSuspended').value === 'true',
@@ -2300,9 +2996,16 @@ async function addNewAdmin() {
   let dup = false; adminsSnap.forEach(c => { if (c.val().username.toLowerCase() === username.toLowerCase()) dup = true; });
   if (dup) return toast('❌ Exists');
   const hash = await sha256(password);
-  await db.ref('admins').push({
+  const newAdminRef = db.ref('admins').push();
+  const newId = newAdminRef.key;
+  // Auto-generate referral code
+  const refCode = 'ADM' + newId.substring(0, 6).toUpperCase() + Math.random().toString(36).substring(2, 6).toUpperCase();
+  await newAdminRef.set({
     username, passwordHash: hash, role: 'admin', isActive: true,
     balance: 0, totalDeposited: 0, totalSpent: 0, totalRefunded: 0, totalFees: 0, totalServiceCharges: 0,
+    totalRevenue: 0, totalRefCommission: 0, totalTaskBonus: 0,
+    totalWithdrawn: 0, totalWithdrawFees: 0,
+    referralCode: refCode, referredUsers: {}, commissionLogs: {},
     deposits: {}, adminContact: null, isBanned: false, isSuspended: false,
     createdAt: Date.now(), createdBy: currentSession.username
   });
@@ -2870,6 +3573,10 @@ async function reviewSubmission(subId, action) {
     }
     const ts = await db.ref('config/newTasks/' + sub.taskId).once('value');
     if (ts.exists()) await db.ref('config/newTasks/' + sub.taskId).update({ submittedCount: Number(ts.val().submittedCount || 0) + 1 });
+    
+    // ✅ NEW: Give task bonus to admin
+    await giveTaskOwnerBonus(sub.taskId, subId, sub.userName || 'User');
+    
     toast('✅ Approved!');
   } else toast('❌ Rejected');
   loadTaskSubmissions();
@@ -3140,6 +3847,10 @@ function viewUserFull(userId) {
       <span class="value">${u.referredBy || 'N/A'}</span>
       ${u.referredBy ? `<button class="copy-btn inline" onclick="copyToClipboard('${u.referredBy}', 'Referrer ID')"><i class="fas fa-copy"></i></button>` : ''}
     </div>
+    ${u.referredByAdminCode ? `<div class="info-display-box" style="background:linear-gradient(135deg,#cffafe,#a5f3fc); border-color:rgba(6,182,212,.4);">
+      <span class="label" style="color:#0e7490;">Admin Ref Code</span>
+      <span class="value" style="color:#0891b2; font-weight:900; letter-spacing:2px;">${esc(u.referredByAdminCode)}</span>
+    </div>` : ''}
     <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px;">
       <div class="stat-card purple"><div class="num">${u._qualifiedRefs || 0}</div><div class="label">Qualified</div></div>
       <div class="stat-card info"><div class="num">${u._totalRefs || 0}</div><div class="label">Total Refs</div></div>
@@ -3248,6 +3959,10 @@ async function viewUserDetails(userId) {
         <span class="label" style="color:#92400e;">Referrer</span>
         <span class="value" style="color:#92400e;">${referredByHtml}</span>
       </div>
+      ${u.referredByAdminCode ? `<div class="info-display-box" style="background:linear-gradient(135deg,#cffafe,#a5f3fc); border-color:rgba(6,182,212,.4);">
+        <span class="label" style="color:#0e7490;">Admin Code</span>
+        <span class="value" style="color:#0891b2; font-weight:900; letter-spacing:2px;">${esc(u.referredByAdminCode)}</span>
+      </div>` : ''}
       <div class="section-divider"><i class="fas fa-arrow-down"></i> Referred Users (${refKeys.length})</div>
       ${refsHtml}
       <div class="section-divider"><i class="fas fa-tasks"></i> Task Stats</div>
@@ -3526,6 +4241,7 @@ function switchTab(id, el) {
   el.classList.add('active'); content.classList.add('active');
   if (id === 'users') loadUsers();
   if (id === 'withdrawals') loadAllWithdrawals();
+  if (id === 'adminpayouts') loadAdminWithdrawRequests();
   if (id === 'referrals') loadReferralStats();
   if (id === 'analytics') loadAnalytics();
   if (id === 'channels') loadVerificationStats();
@@ -3541,6 +4257,7 @@ function switchTab(id, el) {
   if (id === 'admins') loadAdminsList();
   if (id === 'depositmgmt') { renderDepositMethodsList(); loadAllDepositRequests(); }
   if (id === 'wallet') { loadCurrentAdminData(); renderMyContact(); }
+  if (id === 'earnings') { loadCurrentAdminData(); }
   if (id === 'deposit') { renderDepositMethodsAdminView(); renderMyDepositRequests(); }
   if (id === 'contact') { renderContactInfo(); renderMyContact(); }
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -3569,6 +4286,11 @@ db.ref('config').on('value', snap => {
   MIN_REFERRAL_BALANCE = configData.minReferralBalance || 20;
   SERVICE_CHARGE_RATE = Number(configData.serviceChargeRate !== undefined ? configData.serviceChargeRate : 10);
   loginContactLinkCache = configData.contactLink || '';
+  
+  if (configData.adminRevenue) {
+    adminRevenueConfig = { ...adminRevenueConfig, ...configData.adminRevenue };
+  }
+  
   if (currentSession && currentSession.role === 'super') {
     document.getElementById('botUsername').value = configData.botUsername || '';
     document.getElementById('currencySymbol').value = configData.currencySymbol || 'TK';
@@ -3595,7 +4317,10 @@ db.ref('config').on('value', snap => {
     document.getElementById('becomeAdminTitle').value = configData.becomeAdminTitle || '';
     document.getElementById('becomeAdminSub').value = configData.becomeAdminSub || '';
     document.getElementById('becomeAdminBtnText').value = configData.becomeAdminBtnText || '';
-    // ✅ Minimum watch time
+    
+    // ✅ Load Admin Revenue Settings
+    loadAdminRevenueSettings();
+    
     const minAdWatchSec = configData.minAdWatchSeconds !== undefined ? configData.minAdWatchSeconds : 10;
     const minAdWatchEl = document.getElementById('minAdWatchSeconds');
     if (minAdWatchEl) minAdWatchEl.value = minAdWatchSec;
@@ -3655,7 +4380,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   showLoginOverlay();
 });
 
-['editTaskModal','depositModal','dmModal','depositSubmitModal','banModal','cancelTaskModal','deleteTaskModal','contactEditModal','lbModal','instantDeleteModal','userViewModal','userEditModal','userDetailsModal','adminViewModal','adminEditModal'].forEach(id => {
+['editTaskModal','depositModal','dmModal','depositSubmitModal','banModal','cancelTaskModal','deleteTaskModal','contactEditModal','lbModal','instantDeleteModal','userViewModal','userEditModal','userDetailsModal','adminViewModal','adminEditModal','adminWithdrawModal'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('click', e => { if (e.target.id === id) el.classList.remove('active'); });
 });
