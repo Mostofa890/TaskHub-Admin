@@ -990,7 +990,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="form-group"><label>Ad Reset Hour (0-23)</label><input type="number" id="adResetHour" min="0" max="23"></div>
     </div>
 
-    <!-- 🔴 NEW: SUB-ADMIN CREATION COST SETTINGS -->
     <div class="card rainbow">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-gold"><i class="fas fa-users-gear"></i></div>Sub-Admin Creation Settings</div></div>
       <div class="alert-box info" style="margin-bottom:16px;">
@@ -1009,7 +1008,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       </div>
       <button class="btn btn-gold" onclick="saveSubAdminSettings()"><i class="fas fa-save"></i> Save Sub-Admin Settings</button>
     </div>
-    <!-- END NEW -->
 
     <div class="card rainbow">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-gold"><i class="fas fa-handshake-angle"></i></div>Revenue Share System</div></div>
@@ -1617,9 +1615,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div id="taskSubmissionsList"></div>
     </div>
   </div>
-</div>
-
-<script>
+</div><script>
 // ═══════════════════════════════════════════════════════════
 // ANTI-HACK
 // ═══════════════════════════════════════════════════════════
@@ -1724,38 +1720,23 @@ function generateSubAdminRefCode(username) {
   return 'SUB_' + (username || 'USER').toUpperCase().slice(0, 6) + '_' + rand;
 }
 
-// ═══════════════════════════════════════════════════════════
 // SUB-ADMIN SETTINGS
-// ═══════════════════════════════════════════════════════════
-function getSubAdminCreationCost() {
-  return Number(configData.subAdminCreationCost || 50);
-}
-function getSubAdminDefaultShare() {
-  return Number(configData.subAdminDefaultShare || 30);
-}
-function isSubAdminNestedEnabled() {
-  return configData.subAdminNestedEnabled !== false;
-}
+function getSubAdminCreationCost() { return Number(configData.subAdminCreationCost || 50); }
+function getSubAdminDefaultShare() { return Number(configData.subAdminDefaultShare || 30); }
+function isSubAdminNestedEnabled() { return configData.subAdminNestedEnabled !== false; }
 async function saveSubAdminSettings() {
   if (!currentSession || currentSession.role !== 'super') return;
   const cost = Math.max(0, parseFloat(document.getElementById('subAdminCreationCost').value) || 0);
   const share = Math.max(0, Math.min(100, parseFloat(document.getElementById('subAdminDefaultShare').value) || 30));
   const nested = document.getElementById('subAdminNestedEnabled').value === 'true';
-  await db.ref('config').update({
-    subAdminCreationCost: cost,
-    subAdminDefaultShare: share,
-    subAdminNestedEnabled: nested,
-    subAdminSettingsUpdatedAt: Date.now()
-  });
+  await db.ref('config').update({ subAdminCreationCost: cost, subAdminDefaultShare: share, subAdminNestedEnabled: nested, subAdminSettingsUpdatedAt: Date.now() });
   configData.subAdminCreationCost = cost;
   configData.subAdminDefaultShare = share;
   configData.subAdminNestedEnabled = nested;
   toast('✅ Sub-Admin সেটিংস সেভ হয়েছে!');
 }
 
-// ═══════════════════════════════════════════════════════════
 // LINK GENERATION
-// ═══════════════════════════════════════════════════════════
 function getReferralLink(refCode) {
   const baseUrl = (configData.baseUrl || '').trim();
   const param = (configData.baseUrlParam || 'ref').trim() || 'ref';
@@ -1773,21 +1754,13 @@ function renderLinkGenerationForAdmin() {
   const refCode = getMyRefCode();
   const urlEl = document.getElementById('myLinkUrl');
   const countEl = document.getElementById('myLinkUserCount');
-  if (!refCode) {
-    if (urlEl) urlEl.textContent = 'Referral code not found';
-    return;
-  }
+  if (!refCode) { if (urlEl) urlEl.textContent = 'Referral code not found'; return; }
   const link = getReferralLink(refCode);
-  if (!link) {
-    if (urlEl) urlEl.textContent = '⚠️ Super Admin Link Base URL সেট করেনি।';
-  } else {
-    if (urlEl) urlEl.textContent = link;
-  }
+  if (!link) { if (urlEl) urlEl.textContent = '⚠️ Super Admin Link Base URL সেট করেনি।'; }
+  else { if (urlEl) urlEl.textContent = link; }
   if (countEl) {
     const field = currentSession.role === 'subadmin' ? 'referredBySubAdmin' : 'referredByAdmin';
-    db.ref('users').orderByChild(field).equalTo(currentSession.adminId).once('value').then(s => {
-      countEl.textContent = s.numChildren();
-    });
+    db.ref('users').orderByChild(field).equalTo(currentSession.adminId).once('value').then(s => { countEl.textContent = s.numChildren(); });
   }
 }
 function copyMyGeneratedLink() {
@@ -1801,15 +1774,27 @@ async function shareMyGeneratedLink() {
   if (navigator.share) {
     try { await navigator.share({ title: 'Join Earn Wallet', text: 'Register with my link:', url }); }
     catch(e) { copyMyGeneratedLink(); }
-  } else {
-    copyMyGeneratedLink();
-  }
+  } else { copyMyGeneratedLink(); }
 }
 
+// SESSION MANAGEMENT
 function saveSession(data) { const sess = { ...data, expiry: Date.now() + SESSION_DURATION_MS }; localStorage.setItem(SESSION_KEY, JSON.stringify(sess)); currentSession = sess; return sess; }
 function getStoredSession() { try { const raw = localStorage.getItem(SESSION_KEY); if (!raw) return null; const s = JSON.parse(raw); if (!s || !s.expiry || s.expiry <= Date.now()) { localStorage.removeItem(SESSION_KEY); return null; } return s; } catch(e) { return null; } }
 function clearSession() { localStorage.removeItem(SESSION_KEY); currentSession = null; }
-async function getSuperAdminData() { const snap = await db.ref('config/superAdmin').once('value'); return snap.exists() ? snap.val() : null; }
+async function getSuperAdminData() {
+  const snap = await db.ref('config/superAdmin').once('value');
+  if (!snap.exists()) return null;
+  const data = snap.val();
+  if (data.balance === undefined) {
+    await db.ref('config/superAdmin').update({
+      balance: 0, totalDeposited: 0, totalSpent: 0, totalRefunded: 0, totalFees: 0, totalServiceCharges: 0,
+      revenueBalance: 0, totalRevenueEarned: 0, revenueSharePercent: 100,
+      isActive: true, isBanned: false, isSuspended: false
+    });
+    data.balance = 0; data.totalDeposited = 0; data.totalSpent = 0; data.revenueSharePercent = 100;
+  }
+  return data;
+}
 async function getAdminData(adminId) { const snap = await db.ref('admins/' + adminId).once('value'); return snap.exists() ? { id: adminId, ...snap.val() } : null; }
 function showLoginOverlay() { document.getElementById('loginOverlay').style.display = 'flex'; }
 function hideLoginOverlay() { document.getElementById('loginOverlay').style.display = 'none'; }
@@ -1823,9 +1808,8 @@ async function loadLoginContactInfo() {
     const cfg = snap.val() || {};
     loginContactLinkCache = cfg.contactLink || '';
     const section = document.getElementById('loginContactSection');
-    if (loginContactLinkCache && /^https?:\/\//i.test(loginContactLinkCache)) {
-      section.style.display = 'block';
-    } else { section.style.display = 'none'; }
+    if (loginContactLinkCache && /^https?:\/\//i.test(loginContactLinkCache)) section.style.display = 'block';
+    else section.style.display = 'none';
   } catch(e) {}
 }
 function openLoginContactAdmin() {
@@ -1873,7 +1857,7 @@ async function handleLogin(e) {
       if (password !== confirmPassword) { setLoginError('❌ Passwords do not match'); return; }
       const existing = await getSuperAdminData();
       if (existing) { setLoginError('❌ Super admin exists'); await initializeAuthUI(); return; }
-      await db.ref('config/superAdmin').set({ username, passwordHash: hash, createdAt: Date.now(), updatedAt: Date.now() });
+      await db.ref('config/superAdmin').set({ username, passwordHash: hash, createdAt: Date.now(), updatedAt: Date.now(), balance: 0, totalDeposited: 0, totalSpent: 0, revenueBalance: 0, totalRevenueEarned: 0, revenueSharePercent: 100 });
       onLoginSuccess(saveSession({ username, role: 'super', adminId: 'super' }), true);
     } else {
       const superAdmin = await getSuperAdminData();
@@ -1889,15 +1873,11 @@ async function handleLogin(e) {
         if (a.subAdmins) {
           Object.keys(a.subAdmins).forEach(subId => {
             const sub = a.subAdmins[subId];
-            if (sub.username === username && sub.passwordHash === hash) {
-              matchedSubAdmin = { id: subId, ...sub, parentAdminId: child.key };
-            }
+            if (sub.username === username && sub.passwordHash === hash) matchedSubAdmin = { id: subId, ...sub, parentAdminId: child.key };
             if (sub.subAdmins) {
               Object.keys(sub.subAdmins).forEach(nestedId => {
                 const nested = sub.subAdmins[nestedId];
-                if (nested.username === username && nested.passwordHash === hash) {
-                  matchedSubAdmin = { id: nestedId, ...nested, parentAdminId: child.key, parentSubAdminId: subId };
-                }
+                if (nested.username === username && nested.passwordHash === hash) matchedSubAdmin = { id: nestedId, ...nested, parentAdminId: child.key, parentSubAdminId: subId };
               });
             }
           });
@@ -1913,12 +1893,7 @@ async function handleLogin(e) {
         if (matchedSubAdmin.status === 'pending') { setLoginError('⏳ Approval pending'); return; }
         if (matchedSubAdmin.isActive === false) { setLoginError('❌ Disabled'); return; }
         if (matchedSubAdmin.isBanned) { setLoginError('❌ Banned'); return; }
-        onLoginSuccess(saveSession({
-          username, role: 'subadmin',
-          adminId: matchedSubAdmin.id,
-          parentAdminId: matchedSubAdmin.parentAdminId,
-          parentSubAdminId: matchedSubAdmin.parentSubAdminId || null
-        }), false); return;
+        onLoginSuccess(saveSession({ username, role: 'subadmin', adminId: matchedSubAdmin.id, parentAdminId: matchedSubAdmin.parentAdminId, parentSubAdminId: matchedSubAdmin.parentSubAdminId || null }), false); return;
       }
       setLoginError('❌ Invalid username or password');
     }
@@ -1956,17 +1931,12 @@ function onLoginSuccess(session, isNewSetup) {
   runPanelInit();
 }
 
-// 🔴 Real-time listener for MY sub-admin requests
 function startMySubAdminReqListener() {
   if (!currentSession || currentSession.role === 'super') return;
-  if (mySubAdminReqListener) {
-    db.ref('subAdminRequests').off('value', mySubAdminReqListener);
-  }
+  if (mySubAdminReqListener) db.ref('subAdminRequests').off('value', mySubAdminReqListener);
   mySubAdminReqListener = db.ref('subAdminRequests').orderByChild('parentAdminId').equalTo(currentSession.adminId).on('value', () => {
     if (!currentSession || currentSession.role === 'super') return;
-    if (document.getElementById('tab-mysubadmins').classList.contains('active')) {
-      renderMySubAdminRequestsOnly();
-    }
+    if (document.getElementById('tab-mysubadmins').classList.contains('active')) renderMySubAdminRequestsOnly();
   });
 }
 
@@ -1974,15 +1944,9 @@ async function loadCurrentAdminData() {
   if (!currentSession || currentSession.role === 'super') return;
   try {
     let snap;
-    if (currentSession.role === 'admin') {
-      snap = await db.ref('admins/' + currentSession.adminId).once('value');
-    } else {
-      if (currentSession.parentSubAdminId) {
-        snap = await db.ref('admins/' + currentSession.parentAdminId + '/subAdmins/' + currentSession.parentSubAdminId + '/subAdmins/' + currentSession.adminId).once('value');
-      } else {
-        snap = await db.ref('admins/' + currentSession.parentAdminId + '/subAdmins/' + currentSession.adminId).once('value');
-      }
-    }
+    if (currentSession.role === 'admin') snap = await db.ref('admins/' + currentSession.adminId).once('value');
+    else if (currentSession.parentSubAdminId) snap = await db.ref('admins/' + currentSession.parentAdminId + '/subAdmins/' + currentSession.parentSubAdminId + '/subAdmins/' + currentSession.adminId).once('value');
+    else snap = await db.ref('admins/' + currentSession.parentAdminId + '/subAdmins/' + currentSession.adminId).once('value');
     if (!snap || !snap.exists()) return;
     currentAdminData = { id: currentSession.adminId, ...snap.val() };
     updateWalletUI(); renderDepositHistory(); renderMyDepositRequests(); renderMyContact(); renderMyRevenue();
@@ -2037,18 +2001,13 @@ function renderDepositHistory() {
   keys.forEach(k => {
     const d = deposits[k];
     const date = new Date(d.timestamp).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-    html += `<div style="display:flex; justify-content:space-between; padding:12px 14px; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-radius:12px; margin-bottom:8px;">
-      <div><div style="font-weight:800; font-size:.82rem;">${esc(d.method)}</div><div style="font-size:.72rem; color:#64748b; margin-top:3px;">${esc(d.account)} • ${date}</div></div>
-      <div style="font-weight:900; color:var(--success);">+${Number(d.amount).toFixed(2)}</div>
-    </div>`;
+    html += `<div style="display:flex; justify-content:space-between; padding:12px 14px; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-radius:12px; margin-bottom:8px;"><div><div style="font-weight:800; font-size:.82rem;">${esc(d.method)}</div><div style="font-size:.72rem; color:#64748b; margin-top:3px;">${esc(d.account)} • ${date}</div></div><div style="font-weight:900; color:var(--success);">+${Number(d.amount).toFixed(2)}</div></div>`;
   });
   container.innerHTML = html;
 }
 function handleLogout() {
   if (!confirm('Logout?')) return;
-  if (mySubAdminReqListener) {
-    try { db.ref('subAdminRequests').off('value', mySubAdminReqListener); } catch(e) {}
-  }
+  if (mySubAdminReqListener) { try { db.ref('subAdminRequests').off('value', mySubAdminReqListener); } catch(e) {} }
   clearSession(); location.reload();
 }
 
@@ -2058,13 +2017,8 @@ function renderMyContact() {
   boxes.forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
-    if (!c || !c.value) {
-      el.innerHTML = '<div class="alert-box warning" style="margin:0;"><i class="fas fa-exclamation-triangle"></i><div>Contact not set.</div></div>';
-    } else {
-      el.innerHTML = `<div class="contact-info-box"><i class="fas fa-address-card"></i>
-        <div style="flex:1; min-width:0;"><div style="font-size:.7rem; color:#7c3aed;">${c.type}</div><div class="val">${esc(c.value)}</div></div>
-      </div>`;
-    }
+    if (!c || !c.value) el.innerHTML = '<div class="alert-box warning" style="margin:0;"><i class="fas fa-exclamation-triangle"></i><div>Contact not set.</div></div>';
+    else el.innerHTML = `<div class="contact-info-box"><i class="fas fa-address-card"></i><div style="flex:1; min-width:0;"><div style="font-size:.7rem; color:#7c3aed;">${c.type}</div><div class="val">${esc(c.value)}</div></div></div>`;
   });
 }
 function openContactEditModal() {
@@ -2090,7 +2044,6 @@ async function saveContactInfo() {
   await getCurrentAdminRef().child('adminContact').set({ type, value, note, updatedAt: Date.now() });
   toast('✅ Contact saved'); closeContactEditModal(); loadCurrentAdminData();
 }
-
 function copyToClipboard(text, label) {
   try { navigator.clipboard.writeText(text).then(() => toast('📋 ' + (label || 'Copied') + '!')); }
   catch(e) {
@@ -2101,24 +2054,17 @@ function copyToClipboard(text, label) {
   }
 }
 
-// ═══════════════════════════════════════════════════════════
 // SUB-ADMIN SYSTEM
-// ═══════════════════════════════════════════════════════════
 function openCreateSubAdminModal() {
   if (!currentSession || (currentSession.role !== 'admin' && currentSession.role !== 'subadmin')) return toast('❌ Only Admin/Sub-Admin');
-  if (currentSession.role === 'subadmin' && !isSubAdminNestedEnabled()) {
-    return toast('❌ Sub-Admin থেকে Sub-Admin তৈরি বন্ধ করা আছে');
-  }
+  if (currentSession.role === 'subadmin' && !isSubAdminNestedEnabled()) return toast('❌ Sub-Admin থেকে Sub-Admin তৈরি বন্ধ করা আছে');
   const cost = getSubAdminCreationCost();
   const balance = currentAdminData ? Number(currentAdminData.balance || 0) : 0;
-  if (balance < cost) {
-    return toast(`❌ আপনার Balance: ${balance.toFixed(2)} TK — প্রয়োজন ${cost.toFixed(2)} TK`);
-  }
+  if (balance < cost) return toast(`❌ আপনার Balance: ${balance.toFixed(2)} TK — প্রয়োজন ${cost.toFixed(2)} TK`);
   const costBox = document.getElementById('csaCostInfo');
   const costTxt = document.getElementById('csaCostText');
   if (costBox) costBox.style.display = 'flex';
   if (costTxt) costTxt.innerHTML = `💸 Cost: <b>${cost.toFixed(2)} TK</b> কাটা হবে | Balance: <b>${balance.toFixed(2)} TK</b> | Default Share: <b>${getSubAdminDefaultShare()}%</b>`;
-
   document.getElementById('csaUsername').value = '';
   document.getElementById('csaPassword').value = '';
   document.getElementById('csaConfirmPassword').value = '';
@@ -2126,26 +2072,16 @@ function openCreateSubAdminModal() {
 }
 function closeCreateSubAdminModal() { document.getElementById('createSubAdminModal').classList.remove('active'); }
 
-// 🔴🔴🔴 FIXED: Now deducts balance immediately and saves request properly
 async function submitSubAdminRequest() {
   if (!currentSession || (currentSession.role !== 'admin' && currentSession.role !== 'subadmin')) return toast('❌ Denied');
   if (currentSession.role === 'subadmin' && !isSubAdminNestedEnabled()) return toast('❌ Sub-Admin থেকে Sub-Admin তৈরি বন্ধ');
-
   const username = document.getElementById('csaUsername').value.trim();
   const password = document.getElementById('csaPassword').value;
   const confirm = document.getElementById('csaConfirmPassword').value;
-
   if (!username || username.length < 3) return toast('❌ Username min 3');
   if (!password || password.length < 4) return toast('❌ Password min 4');
   if (password !== confirm) return toast('❌ Passwords mismatch');
-
   const cost = getSubAdminCreationCost();
-  const balance = currentAdminData ? Number(currentAdminData.balance || 0) : 0;
-  if (balance < cost) {
-    return toast(`❌ আপনার Balance: ${balance.toFixed(2)} TK — Sub-Admin বানাতে ${cost.toFixed(2)} TK লাগবে!`);
-  }
-
-  // Duplicate check
   const superAdmin = await getSuperAdminData();
   if (superAdmin && superAdmin.username.toLowerCase() === username.toLowerCase()) return toast('❌ Taken');
   const adminsSnap = await db.ref('admins').once('value');
@@ -2157,71 +2093,38 @@ async function submitSubAdminRequest() {
   };
   adminsSnap.forEach(child => checkDup(child.val()));
   if (dup) return toast('❌ Username exists');
-
-  // Double-check parent balance from DB
   const myRef = getCurrentAdminRef();
   const mySnap = await myRef.once('value');
   if (!mySnap.exists()) return toast('❌ Parent not found');
   const myData = mySnap.val();
   const currentBalance = Number(myData.balance || 0);
-  if (currentBalance < cost) {
-    return toast(`❌ Balance পরিবর্তন হয়েছে! এখন: ${currentBalance.toFixed(2)} TK — প্রয়োজন ${cost.toFixed(2)} TK`);
-  }
-
+  if (currentBalance < cost) return toast(`❌ Balance পরিবর্তন হয়েছে! এখন: ${currentBalance.toFixed(2)} TK — প্রয়োজন ${cost.toFixed(2)} TK`);
   const passwordHash = await sha256(password);
   const subAdminRefCode = generateSubAdminRefCode(username);
   const reqId = 'subreq_' + Date.now() + '_' + currentSession.adminId;
-
   try {
-    // 🔴 STEP 1: Deduct balance IMMEDIATELY
-    await myRef.update({
-      balance: currentBalance - cost,
-      totalSpent: Number(myData.totalSpent || 0) + cost
-    });
-
-    // 🔴 STEP 2: Save the request
+    await myRef.update({ balance: currentBalance - cost, totalSpent: Number(myData.totalSpent || 0) + cost });
     await db.ref('subAdminRequests/' + reqId).set({
-      parentAdminId: currentSession.adminId,
-      parentAdminName: currentSession.username,
-      parentRole: currentSession.role,
-      grandParentAdminId: currentSession.parentAdminId || null,
-      parentSubAdminId: currentSession.parentSubAdminId || null,
-      subAdminUsername: username,
-      passwordHash,
-      requiredCost: cost,
-      defaultShare: getSubAdminDefaultShare(),
-      initialBalance: cost,
-      revenueShareOverride: getSubAdminDefaultShare(),
-      subAdminReferralCode: subAdminRefCode,
-      balanceDeducted: true,
-      status: 'pending',
-      createdAt: Date.now()
+      parentAdminId: currentSession.adminId, parentAdminName: currentSession.username, parentRole: currentSession.role,
+      grandParentAdminId: currentSession.parentAdminId || null, parentSubAdminId: currentSession.parentSubAdminId || null,
+      subAdminUsername: username, passwordHash, requiredCost: cost, defaultShare: getSubAdminDefaultShare(),
+      initialBalance: cost, revenueShareOverride: getSubAdminDefaultShare(), subAdminReferralCode: subAdminRefCode,
+      balanceDeducted: true, status: 'pending', createdAt: Date.now()
     });
-
-    // 🔴 STEP 3: Update local cache immediately
     if (currentAdminData) {
       currentAdminData.balance = currentBalance - cost;
       currentAdminData.totalSpent = Number(myData.totalSpent || 0) + cost;
     }
-
     toast(`✅ Request পাঠানো! ${cost.toFixed(2)} TK কাটা হয়েছে।`);
     closeCreateSubAdminModal();
-
-    // 🔴 STEP 4: Refresh everything
     await loadCurrentAdminData();
     await loadMySubAdminData();
     updateWalletUI();
     renderMySubAdminCostBox();
-
-  } catch(err) {
-    toast('❌ Error: ' + err.message);
-    console.error('Sub-admin request error:', err);
-  }
+  } catch(err) { toast('❌ Error: ' + err.message); console.error('Sub-admin request error:', err); }
 }
 
-// ═══════════════════════════════════════════════════════════
 // SUPER ADMIN: DIRECT SUB-ADMIN CREATION
-// ═══════════════════════════════════════════════════════════
 async function openSuperCreateSubAdminModal() {
   if (!currentSession || currentSession.role !== 'super') return;
   const sel = document.getElementById('scsaParentAdmin');
@@ -2264,13 +2167,11 @@ async function superCreateSubAdmin() {
   const confirm = document.getElementById('scsaConfirmPassword').value;
   const initialBalance = parseFloat(document.getElementById('scsaInitialBalance').value) || 0;
   const revenueShare = parseFloat(document.getElementById('scsaRevenueShare').value) || 30;
-
   if (!parentAdminId) return toast('❌ Select Parent Admin');
   if (!username || username.length < 3) return toast('❌ Username min 3');
   if (!password || password.length < 4) return toast('❌ Password min 4');
   if (password !== confirm) return toast('❌ Passwords mismatch');
   if (revenueShare < 0 || revenueShare > 100) return toast('❌ Share 0-100');
-
   const superAdmin = await getSuperAdminData();
   if (superAdmin && superAdmin.username.toLowerCase() === username.toLowerCase()) return toast('❌ Taken');
   const adminsSnap = await db.ref('admins').once('value');
@@ -2282,38 +2183,23 @@ async function superCreateSubAdmin() {
   };
   adminsSnap.forEach(child => checkDup(child.val()));
   if (dup) return toast('❌ Username exists');
-
   const parentSnap = await db.ref('admins/' + parentAdminId).once('value');
   if (!parentSnap.exists()) return toast('❌ Parent not found');
   const parent = parentSnap.val();
   if (initialBalance > Number(parent.balance || 0)) return toast(`❌ Parent balance: ${Number(parent.balance || 0).toFixed(2)}`);
-
   const passwordHash = await sha256(password);
   const subId = 'sub_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
   const subRefCode = generateSubAdminRefCode(username);
-
   const subData = {
-    username,
-    passwordHash,
-    subAdminReferralCode: subRefCode,
-    parentAdminId,
-    parentAdminName: parent.username,
-    revenueShareOverride: Number(revenueShare),
-    isActive: true, isBanned: false,
-    balance: initialBalance,
+    username, passwordHash, subAdminReferralCode: subRefCode, parentAdminId, parentAdminName: parent.username,
+    revenueShareOverride: Number(revenueShare), isActive: true, isBanned: false, balance: initialBalance,
     totalDeposited: 0, totalSpent: 0, totalRefunded: 0, totalFees: 0, totalServiceCharges: 0,
     revenueBalance: 0, totalRevenueEarned: 0, totalRevenueWithdrawn: 0,
-    deposits: {}, adminContact: null, subAdmins: {},
-    createdAt: Date.now(),
-    createdBy: currentSession.username
+    deposits: {}, adminContact: null, subAdmins: {}, createdAt: Date.now(), createdBy: currentSession.username
   };
-
   await db.ref('admins/' + parentAdminId + '/subAdmins/' + subId).set(subData);
   if (initialBalance > 0) {
-    await db.ref('admins/' + parentAdminId).update({
-      balance: Number(parent.balance || 0) - initialBalance,
-      totalSpent: Number(parent.totalSpent || 0) + initialBalance
-    });
+    await db.ref('admins/' + parentAdminId).update({ balance: Number(parent.balance || 0) - initialBalance, totalSpent: Number(parent.totalSpent || 0) + initialBalance });
   }
   toast(`✅ Sub-Admin "${username}" তৈরি! Ref: ${subRefCode}`);
   closeSuperCreateSubAdminModal();
@@ -2323,59 +2209,29 @@ async function superCreateSubAdmin() {
 
 async function loadMySubAdminData() {
   if (!currentSession || (currentSession.role !== 'admin' && currentSession.role !== 'subadmin')) return;
-  
   let subsPath;
-  if (currentSession.role === 'admin') {
-    subsPath = 'admins/' + currentSession.adminId + '/subAdmins';
-  } else {
-    if (currentSession.parentSubAdminId) {
-      subsPath = 'admins/' + currentSession.parentAdminId + '/subAdmins/' + currentSession.parentSubAdminId + '/subAdmins/' + currentSession.adminId + '/subAdmins';
-    } else {
-      subsPath = 'admins/' + currentSession.parentAdminId + '/subAdmins/' + currentSession.adminId + '/subAdmins';
-    }
-  }
+  if (currentSession.role === 'admin') subsPath = 'admins/' + currentSession.adminId + '/subAdmins';
+  else if (currentSession.parentSubAdminId) subsPath = 'admins/' + currentSession.parentAdminId + '/subAdmins/' + currentSession.parentSubAdminId + '/subAdmins/' + currentSession.adminId + '/subAdmins';
+  else subsPath = 'admins/' + currentSession.parentAdminId + '/subAdmins/' + currentSession.adminId + '/subAdmins';
   const snap = await db.ref(subsPath).once('value');
   const container = document.getElementById('mySubAdminsList');
   let subs = [];
   snap.forEach(c => subs.push({ id: c.key, ...c.val() }));
-
-  if (!subs.length) {
-    container.innerHTML = '<div class="empty-state"><p>No sub-admins yet</p></div>';
-  } else {
+  if (!subs.length) container.innerHTML = '<div class="empty-state"><p>No sub-admins yet</p></div>';
+  else {
     let h = '';
     subs.forEach(s => {
       const banned = s.isBanned === true;
       const badge = banned ? '<span class="status-badge banned">BANNED</span>' : '<span class="status-badge active">ACTIVE</span>';
-      h += `<div class="admin-item">
-        <div class="admin-item-top">
-          <div class="admin-item-left">
-            <div class="admin-item-avatar" style="background:linear-gradient(135deg,#3b82f6,#60a5fa);">${(s.username || 'S').charAt(0).toUpperCase()}</div>
-            <div class="admin-item-info">
-              <div class="name">${esc(s.username)} <span class="status-badge subadmin">SUB-ADMIN</span> ${badge}</div>
-              <div class="meta">Code: ${esc(s.subAdminReferralCode || 'N/A')}</div>
-            </div>
-          </div>
-        </div>
-        <div class="admin-balance-box">
-          <div class="admin-balance-cell green"><div class="val">${Number(s.balance||0).toFixed(2)}</div><div class="lbl">Balance</div></div>
-          <div class="admin-balance-cell gold"><div class="val">${Number(s.revenueBalance||0).toFixed(2)}</div><div class="lbl">Revenue</div></div>
-          <div class="admin-balance-cell"><div class="val">${Number(s.totalSpent||0).toFixed(2)}</div><div class="lbl">Spent</div></div>
-          <div class="admin-balance-cell warn"><div class="val">${Number(s.revenueShareOverride||0)}%</div><div class="lbl">Share</div></div>
-        </div>
-        <div class="admin-item-actions">
-          <button class="btn btn-warning btn-small" onclick="addSubAdminBalance('${s.id}')"><i class="fas fa-plus"></i> Add</button>
-          ${banned ? `<button class="btn btn-green btn-small" onclick="unbanMySubAdmin('${s.id}')"><i class="fas fa-unlock"></i></button>` : `<button class="btn btn-red btn-small" onclick="banMySubAdmin('${s.id}')"><i class="fas fa-ban"></i></button>`}
-          <button class="btn btn-red btn-small" onclick="deleteMySubAdmin('${s.id}')"><i class="fas fa-trash"></i></button>
-        </div>
-      </div>`;
+      h += `<div class="admin-item"><div class="admin-item-top"><div class="admin-item-left"><div class="admin-item-avatar" style="background:linear-gradient(135deg,#3b82f6,#60a5fa);">${(s.username || 'S').charAt(0).toUpperCase()}</div><div class="admin-item-info"><div class="name">${esc(s.username)} <span class="status-badge subadmin">SUB-ADMIN</span> ${badge}</div><div class="meta">Code: ${esc(s.subAdminReferralCode || 'N/A')}</div></div></div></div>
+        <div class="admin-balance-box"><div class="admin-balance-cell green"><div class="val">${Number(s.balance||0).toFixed(2)}</div><div class="lbl">Balance</div></div><div class="admin-balance-cell gold"><div class="val">${Number(s.revenueBalance||0).toFixed(2)}</div><div class="lbl">Revenue</div></div><div class="admin-balance-cell"><div class="val">${Number(s.totalSpent||0).toFixed(2)}</div><div class="lbl">Spent</div></div><div class="admin-balance-cell warn"><div class="val">${Number(s.revenueShareOverride||0)}%</div><div class="lbl">Share</div></div></div>
+        <div class="admin-item-actions"><button class="btn btn-warning btn-small" onclick="addSubAdminBalance('${s.id}')"><i class="fas fa-plus"></i> Add</button>${banned ? `<button class="btn btn-green btn-small" onclick="unbanMySubAdmin('${s.id}')"><i class="fas fa-unlock"></i></button>` : `<button class="btn btn-red btn-small" onclick="banMySubAdmin('${s.id}')"><i class="fas fa-ban"></i></button>`}<button class="btn btn-red btn-small" onclick="deleteMySubAdmin('${s.id}')"><i class="fas fa-trash"></i></button></div></div>`;
     });
     container.innerHTML = h;
   }
-
   await renderMySubAdminRequestsOnly();
 }
 
-// 🔴 Render only pending requests (without full reload)
 async function renderMySubAdminRequestsOnly() {
   if (!currentSession || (currentSession.role !== 'admin' && currentSession.role !== 'subadmin')) return;
   const reqSnap = await db.ref('subAdminRequests').orderByChild('parentAdminId').equalTo(currentSession.adminId).once('value');
@@ -2384,27 +2240,12 @@ async function renderMySubAdminRequestsOnly() {
   let reqs = [];
   reqSnap.forEach(c => reqs.push({ id: c.key, ...c.val() }));
   reqs.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
-
-  if (!reqs.length) {
-    rContainer.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>No requests</div></div>';
-    return;
-  }
+  if (!reqs.length) { rContainer.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>No requests</div></div>'; return; }
   let h = '';
   reqs.forEach(r => {
     const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
     const dt = new Date(r.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
-    h += `<div class="dreq-item ${cls}">
-      <div class="dreq-head">
-        <div style="font-weight:800;">👤 ${esc(r.subAdminUsername)}</div>
-        <span class="status-badge ${cls}">${r.status.toUpperCase()}</span>
-      </div>
-      <div class="dreq-info">
-        <b>Cost:</b> ${Number(r.requiredCost||r.initialBalance||0).toFixed(2)} TK<br>
-        <b>Share:</b> ${Number(r.revenueShareOverride||r.defaultShare||30)}%<br>
-        <b>Submitted:</b> ${dt}
-        ${r.rejectReason ? '<br><b style="color:#dc2626;">Reason:</b> ' + esc(r.rejectReason) : ''}
-      </div>
-    </div>`;
+    h += `<div class="dreq-item ${cls}"><div class="dreq-head"><div style="font-weight:800;">👤 ${esc(r.subAdminUsername)}</div><span class="status-badge ${cls}">${r.status.toUpperCase()}</span></div><div class="dreq-info"><b>Cost:</b> ${Number(r.requiredCost||r.initialBalance||0).toFixed(2)} TK<br><b>Share:</b> ${Number(r.revenueShareOverride||r.defaultShare||30)}%<br><b>Submitted:</b> ${dt}${r.rejectReason ? '<br><b style="color:#dc2626;">Reason:</b> ' + esc(r.rejectReason) : ''}</div></div>`;
   });
   rContainer.innerHTML = h;
 }
@@ -2414,29 +2255,19 @@ async function addSubAdminBalance(subId) {
   if (!amt || amt <= 0) return toast('❌ Invalid');
   const myBal = Number(currentAdminData.balance || 0);
   if (amt > myBal) return toast(`❌ Balance: ${myBal.toFixed(2)}`);
-  
   let myRef, subRef;
   if (currentSession.role === 'admin') {
     myRef = db.ref('admins/' + currentSession.adminId);
     subRef = db.ref('admins/' + currentSession.adminId + '/subAdmins/' + subId);
   } else {
-    const myPath = currentSession.parentSubAdminId 
-      ? 'admins/' + currentSession.parentAdminId + '/subAdmins/' + currentSession.parentSubAdminId + '/subAdmins/' + currentSession.adminId
-      : 'admins/' + currentSession.parentAdminId + '/subAdmins/' + currentSession.adminId;
+    const myPath = currentSession.parentSubAdminId ? 'admins/' + currentSession.parentAdminId + '/subAdmins/' + currentSession.parentSubAdminId + '/subAdmins/' + currentSession.adminId : 'admins/' + currentSession.parentAdminId + '/subAdmins/' + currentSession.adminId;
     myRef = db.ref(myPath);
     subRef = db.ref(myPath + '/subAdmins/' + subId);
   }
-  
   const sSnap = await subRef.once('value');
   const s = sSnap.val();
-  await subRef.update({
-    balance: Number(s.balance || 0) + amt,
-    totalDeposited: Number(s.totalDeposited || 0) + amt
-  });
-  await myRef.update({
-    balance: myBal - amt,
-    totalSpent: Number(currentAdminData.totalSpent || 0) + amt
-  });
+  await subRef.update({ balance: Number(s.balance || 0) + amt, totalDeposited: Number(s.totalDeposited || 0) + amt });
+  await myRef.update({ balance: myBal - amt, totalSpent: Number(currentAdminData.totalSpent || 0) + amt });
   toast(`✅ ${amt.toFixed(2)} TK যোগ`);
   loadMySubAdminData(); loadCurrentAdminData();
 }
@@ -2481,18 +2312,14 @@ async function deleteMySubAdmin(subId) {
   toast('✅ Deleted'); loadMySubAdminData(); loadCurrentAdminData();
 }
 
-// ═══════════════════════════════════════════════════════════
-// SUPER: SUB-ADMIN REQUESTS (with balance validation)
-// ═══════════════════════════════════════════════════════════
+// SUPER: SUB-ADMIN REQUESTS
 async function loadSubAdminRequests() {
   const snap = await db.ref('subAdminRequests').once('value');
   const raw = [];
   snap.forEach(c => raw.push({ id: c.key, ...c.val() }));
   raw.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
-
   const adminsSnap = await db.ref('admins').once('value');
   const allAdminsRaw = adminsSnap.val() || {};
-
   const findParent = (r) => {
     try {
       if (r.parentRole === 'subadmin') {
@@ -2502,90 +2329,43 @@ async function loadSubAdminRequests() {
         const ps = grand.subAdmins[parentSubId];
         if (ps && ps.subAdmins && ps.subAdmins[r.parentAdminId]) return ps.subAdmins[r.parentAdminId];
         return ps || null;
-      } else {
-        return allAdminsRaw[r.parentAdminId] || null;
-      }
+      } else return allAdminsRaw[r.parentAdminId] || null;
     } catch(e) { return null; }
   };
-
   allSubAdminRequests = raw.map(r => {
     const p = findParent(r);
     return { ...r, _parentBalance: p ? Number(p.balance || 0) : 0 };
   });
-
   const pendings = allSubAdminRequests.filter(r => r.status === 'pending');
   const badge = document.getElementById('subReqBadge');
   if (badge) {
     if (pendings.length > 0) { badge.style.display = 'inline-block'; badge.textContent = pendings.length; }
     else badge.style.display = 'none';
   }
-
   const pList = document.getElementById('pendingSubAdminReqList');
   if (pList) {
-    if (!pendings.length) {
-      pList.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>No pending requests</div></div>';
-    } else {
+    if (!pendings.length) pList.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>No pending requests</div></div>';
+    else {
       let h = '';
       pendings.forEach(r => {
         const dt = new Date(r.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
         const parentBal = Number(r._parentBalance || 0);
         const reqCost = Number(r.requiredCost || r.initialBalance || 0);
         const hasEnough = parentBal >= reqCost;
-        h += `<div class="subadmin-req-item">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap;">
-            <div style="font-weight:900;font-size:.95rem;">👤 ${esc(r.subAdminUsername)}</div>
-            <span class="status-badge pending">PENDING</span>
-          </div>
-          <div style="font-size:.78rem;line-height:1.7;font-weight:600;">
-            <b>👨‍💼 Parent:</b> ${esc(r.parentAdminName)} (${esc(r.parentRole || 'admin')})<br>
-            <b>🕐 Submitted:</b> ${dt}
-          </div>
-          <div class="req-info-grid">
-            <div class="req-info-cell green">💰 Parent Balance<b>${parentBal.toFixed(2)} TK</b></div>
-            <div class="req-info-cell warn">💸 Required Cost<b>${reqCost.toFixed(2)} TK</b></div>
-            <div class="req-info-cell">📊 Share<b>${Number(r.revenueShareOverride || r.defaultShare || 30)}%</b></div>
-            <div class="req-info-cell gold">🔑 Ref Code<b style="font-size:.7rem;">${esc(r.subAdminReferralCode || '—')}</b></div>
-          </div>
-          <div class="balance-check-box ${hasEnough ? 'ok' : 'fail'}">
-            <i class="fas ${hasEnough ? 'fa-check-circle' : 'fa-times-circle'}"></i>
-            <span>${hasEnough ? '✅ Parent-এর Balance যথেষ্ট — Approve করা যাবে' : `❌ Parent-এর কাছে আরও ${(reqCost - parentBal).toFixed(2)} TK প্রয়োজন — Approve হবে না`}</span>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
-            <div class="form-group" style="margin-bottom:0;"><label>💰 Cost (TK)</label><input type="number" id="approveBal_${r.id}" step="0.01" min="0" value="${reqCost}" oninput="checkApproveBalLive('${r.id}', ${parentBal})"></div>
-            <div class="form-group" style="margin-bottom:0;"><label>📊 Share (%)</label><input type="number" id="approveShare_${r.id}" step="1" min="0" max="100" value="${Number(r.revenueShareOverride || r.defaultShare || 30)}"></div>
-          </div>
-          <div id="liveWarn_${r.id}" style="display:${hasEnough ? 'none' : 'block'};margin-top:8px;padding:8px 10px;border-radius:8px;background:#fef2f2;border-left:3px solid #ef4444;font-size:.72rem;font-weight:800;color:#991b1b;">
-            ⚠️ Parent Balance (${parentBal.toFixed(2)} TK) — Required (${reqCost.toFixed(2)} TK)
-          </div>
-          <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;">
-            <button class="btn btn-green btn-small" id="approveBtn_${r.id}" onclick="approveSubAdminRequest('${r.id}')" style="flex:1;" ${hasEnough ? '' : 'disabled'}><i class="fas fa-check"></i> Approve</button>
-            <button class="btn btn-red btn-small" onclick="rejectSubAdminRequest('${r.id}')" style="flex:1;"><i class="fas fa-times"></i> Reject</button>
-          </div>
-        </div>`;
+        h += `<div class="subadmin-req-item"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap;"><div style="font-weight:900;font-size:.95rem;">👤 ${esc(r.subAdminUsername)}</div><span class="status-badge pending">PENDING</span></div><div style="font-size:.78rem;line-height:1.7;font-weight:600;"><b>👨‍💼 Parent:</b> ${esc(r.parentAdminName)} (${esc(r.parentRole || 'admin')})<br><b>🕐 Submitted:</b> ${dt}</div><div class="req-info-grid"><div class="req-info-cell green">💰 Parent Balance<b>${parentBal.toFixed(2)} TK</b></div><div class="req-info-cell warn">💸 Required Cost<b>${reqCost.toFixed(2)} TK</b></div><div class="req-info-cell">📊 Share<b>${Number(r.revenueShareOverride || r.defaultShare || 30)}%</b></div><div class="req-info-cell gold">🔑 Ref Code<b style="font-size:.7rem;">${esc(r.subAdminReferralCode || '—')}</b></div></div><div class="balance-check-box ${hasEnough ? 'ok' : 'fail'}"><i class="fas ${hasEnough ? 'fa-check-circle' : 'fa-times-circle'}"></i><span>${hasEnough ? '✅ Parent-এর Balance যথেষ্ট — Approve করা যাবে' : `❌ Parent-এর কাছে আরও ${(reqCost - parentBal).toFixed(2)} TK প্রয়োজন — Approve হবে না`}</span></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;"><div class="form-group" style="margin-bottom:0;"><label>💰 Cost (TK)</label><input type="number" id="approveBal_${r.id}" step="0.01" min="0" value="${reqCost}" oninput="checkApproveBalLive('${r.id}', ${parentBal})"></div><div class="form-group" style="margin-bottom:0;"><label>📊 Share (%)</label><input type="number" id="approveShare_${r.id}" step="1" min="0" max="100" value="${Number(r.revenueShareOverride || r.defaultShare || 30)}"></div></div><div id="liveWarn_${r.id}" style="display:${hasEnough ? 'none' : 'block'};margin-top:8px;padding:8px 10px;border-radius:8px;background:#fef2f2;border-left:3px solid #ef4444;font-size:.72rem;font-weight:800;color:#991b1b;">⚠️ Parent Balance (${parentBal.toFixed(2)} TK) — Required (${reqCost.toFixed(2)} TK)</div><div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;"><button class="btn btn-green btn-small" id="approveBtn_${r.id}" onclick="approveSubAdminRequest('${r.id}')" style="flex:1;" ${hasEnough ? '' : 'disabled'}><i class="fas fa-check"></i> Approve</button><button class="btn btn-red btn-small" onclick="rejectSubAdminRequest('${r.id}')" style="flex:1;"><i class="fas fa-times"></i> Reject</button></div></div>`;
       });
       pList.innerHTML = h;
     }
   }
-
   const histList = document.getElementById('allSubAdminHistoryList');
   if (histList) {
-    if (!allSubAdminRequests.length) {
-      histList.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:16px;">No history</p>';
-    } else {
+    if (!allSubAdminRequests.length) histList.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:16px;">No history</p>';
+    else {
       let h = '';
       allSubAdminRequests.slice(0, 50).forEach(r => {
         const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
         const dt = new Date(r.createdAt).toLocaleString('en-GB', { day: '2-digit', month: 'short' });
-        h += `<div class="dreq-item ${cls}">
-          <div class="dreq-head">
-            <div style="font-weight:800;">👤 ${esc(r.subAdminUsername)}</div>
-            <span class="status-badge ${cls}">${r.status.toUpperCase()}</span>
-          </div>
-          <div class="dreq-info">
-            Parent: ${esc(r.parentAdminName)} • ${Number(r.initialBalance||0).toFixed(2)} TK • ${Number(r.revenueShareOverride||0)}%<br>
-            <span style="font-size:.68rem;color:#94a3b8;">${dt}</span>
-          </div>
-        </div>`;
+        h += `<div class="dreq-item ${cls}"><div class="dreq-head"><div style="font-weight:800;">👤 ${esc(r.subAdminUsername)}</div><span class="status-badge ${cls}">${r.status.toUpperCase()}</span></div><div class="dreq-info">Parent: ${esc(r.parentAdminName)} • ${Number(r.initialBalance||0).toFixed(2)} TK • ${Number(r.revenueShareOverride||0)}%<br><span style="font-size:.68rem;color:#94a3b8;">${dt}</span></div></div>`;
       });
       histList.innerHTML = h;
     }
@@ -2612,123 +2392,68 @@ async function approveSubAdminRequest(reqId) {
   if (!snap.exists()) return toast('❌ Not found');
   const r = snap.val();
   if (r.status !== 'pending') return toast('Already processed');
-
   const initBalEl = document.getElementById('approveBal_' + reqId);
   const shareEl = document.getElementById('approveShare_' + reqId);
   const initBal = initBalEl ? (parseFloat(initBalEl.value) || 0) : 0;
   const revShare = shareEl ? (parseFloat(shareEl.value) || 0) : 0;
-
   if (initBal < 0) return toast('❌ Balance ঋণাত্মক হতে পারে না');
   if (revShare < 0 || revShare > 100) return toast('❌ Share 0-100 এর মধ্যে হতে হবে');
-
   let parentPath;
-  if (r.parentRole === 'subadmin' && r.parentSubAdminId) {
-    parentPath = 'admins/' + r.grandParentAdminId + '/subAdmins/' + r.parentSubAdminId + '/subAdmins/' + r.parentAdminId;
-  } else if (r.parentRole === 'subadmin') {
-    parentPath = 'admins/' + r.grandParentAdminId + '/subAdmins/' + r.parentAdminId;
-  } else {
-    parentPath = 'admins/' + r.parentAdminId;
-  }
-
+  if (r.parentRole === 'subadmin' && r.parentSubAdminId) parentPath = 'admins/' + r.grandParentAdminId + '/subAdmins/' + r.parentSubAdminId + '/subAdmins/' + r.parentAdminId;
+  else if (r.parentRole === 'subadmin') parentPath = 'admins/' + r.grandParentAdminId + '/subAdmins/' + r.parentAdminId;
+  else parentPath = 'admins/' + r.parentAdminId;
   const parentSnap = await db.ref(parentPath).once('value');
   if (!parentSnap.exists()) return toast('❌ Parent not found');
   const parent = parentSnap.val();
   const parentBalance = Number(parent.balance || 0);
-
-  // 🔴 NOTE: Balance already deducted at request time. So we DON'T deduct again.
-  // But if balanceDeducted flag is missing (old requests), we deduct here.
   const alreadyDeducted = r.balanceDeducted === true;
-
-  if (!alreadyDeducted && initBal > parentBalance) {
-    return toast(`❌ Parent-এর কাছে মাত্র ${parentBalance.toFixed(2)} TK আছে! ${initBal.toFixed(2)} TK দেওয়া যাবে না।`);
-  }
-
-  if (!confirm(`Approve করবেন?\n\nSub-Admin: ${r.subAdminUsername}\nInitial Balance: ${initBal.toFixed(2)} TK\nShare: ${revShare}%\n${alreadyDeducted ? '(Balance already deducted)' : 'Parent Balance: ' + parentBalance.toFixed(2) + ' TK'}`)) return;
-
+  if (!alreadyDeducted && initBal > parentBalance) return toast(`❌ Parent-এর কাছে মাত্র ${parentBalance.toFixed(2)} TK আছে!`);
+  if (!confirm(`Approve করবেন?\n\nSub-Admin: ${r.subAdminUsername}\nBalance: ${initBal.toFixed(2)} TK\nShare: ${revShare}%`)) return;
   const subId = 'sub_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
   const subData = {
-    username: r.subAdminUsername,
-    passwordHash: r.passwordHash,
-    subAdminReferralCode: r.subAdminReferralCode,
+    username: r.subAdminUsername, passwordHash: r.passwordHash, subAdminReferralCode: r.subAdminReferralCode,
     parentAdminId: r.parentRole === 'subadmin' ? r.grandParentAdminId : r.parentAdminId,
-    parentAdminName: r.parentAdminName,
-    parentSubAdminId: r.parentRole === 'subadmin' ? r.parentAdminId : null,
-    revenueShareOverride: Number(revShare),
-    isActive: true, isBanned: false,
-    balance: initBal,
+    parentAdminName: r.parentAdminName, parentSubAdminId: r.parentRole === 'subadmin' ? r.parentAdminId : null,
+    revenueShareOverride: Number(revShare), isActive: true, isBanned: false, balance: initBal,
     totalDeposited: 0, totalSpent: 0, totalRefunded: 0, totalFees: 0, totalServiceCharges: 0,
     revenueBalance: 0, totalRevenueEarned: 0, totalRevenueWithdrawn: 0,
-    deposits: {}, adminContact: null, subAdmins: {},
-    createdAt: Date.now(),
-    approvedBy: currentSession.username,
-    approvedAt: Date.now()
+    deposits: {}, adminContact: null, subAdmins: {}, createdAt: Date.now(),
+    approvedBy: currentSession.username, approvedAt: Date.now()
   };
-
   await db.ref(parentPath + '/subAdmins/' + subId).set(subData);
-  
-  // Only deduct if not already deducted
-  if (!alreadyDeducted && initBal > 0) {
-    await db.ref(parentPath).update({
-      balance: parentBalance - initBal,
-      totalSpent: Number(parent.totalSpent || 0) + initBal
-    });
-  }
-  
-  await db.ref('subAdminRequests/' + reqId).update({
-    status: 'approved', subAdminId: subId,
-    initialBalance: initBal,
-    revenueShareOverride: revShare,
-    reviewedAt: Date.now(), reviewedBy: currentSession.username
-  });
-
-  toast(`✅ Approved! Balance: ${initBal.toFixed(2)}, Share: ${revShare}%`);
+  if (!alreadyDeducted && initBal > 0) await db.ref(parentPath).update({ balance: parentBalance - initBal, totalSpent: Number(parent.totalSpent || 0) + initBal });
+  await db.ref('subAdminRequests/' + reqId).update({ status: 'approved', subAdminId: subId, initialBalance: initBal, revenueShareOverride: revShare, reviewedAt: Date.now(), reviewedBy: currentSession.username });
+  toast(`✅ Approved!`);
   loadSubAdminRequests();
   loadAdminsList();
 }
 
-// 🔴🔴🔴 FIXED: Now refunds balance on reject
 async function rejectSubAdminRequest(reqId) {
   const reason = prompt('Reject reason:');
   if (!reason) return;
-
   const snap = await db.ref('subAdminRequests/' + reqId).once('value');
   if (!snap.exists()) return toast('❌ Not found');
   const r = snap.val();
   if (r.status !== 'pending') return toast('Already processed');
-
-  // 🔴 Refund the cost back to parent if deducted
   if (r.balanceDeducted) {
     let parentPath;
-    if (r.parentRole === 'subadmin' && r.parentSubAdminId) {
-      parentPath = 'admins/' + r.grandParentAdminId + '/subAdmins/' + r.parentSubAdminId + '/subAdmins/' + r.parentAdminId;
-    } else if (r.parentRole === 'subadmin') {
-      parentPath = 'admins/' + r.grandParentAdminId + '/subAdmins/' + r.parentAdminId;
-    } else {
-      parentPath = 'admins/' + r.parentAdminId;
-    }
+    if (r.parentRole === 'subadmin' && r.parentSubAdminId) parentPath = 'admins/' + r.grandParentAdminId + '/subAdmins/' + r.parentSubAdminId + '/subAdmins/' + r.parentAdminId;
+    else if (r.parentRole === 'subadmin') parentPath = 'admins/' + r.grandParentAdminId + '/subAdmins/' + r.parentAdminId;
+    else parentPath = 'admins/' + r.parentAdminId;
     const parentSnap = await db.ref(parentPath).once('value');
     if (parentSnap.exists()) {
       const parent = parentSnap.val();
       const refundAmt = Number(r.requiredCost || r.initialBalance || 0);
-      await db.ref(parentPath).update({
-        balance: Number(parent.balance || 0) + refundAmt,
-        totalSpent: Math.max(0, Number(parent.totalSpent || 0) - refundAmt)
-      });
+      await db.ref(parentPath).update({ balance: Number(parent.balance || 0) + refundAmt, totalSpent: Math.max(0, Number(parent.totalSpent || 0) - refundAmt) });
     }
   }
-
-  await db.ref('subAdminRequests/' + reqId).update({
-    status: 'rejected', rejectReason: reason, balanceDeducted: false,
-    reviewedAt: Date.now(), reviewedBy: currentSession.username
-  });
-  toast('❌ Rejected & Balance ফেরত দেওয়া হয়েছে');
+  await db.ref('subAdminRequests/' + reqId).update({ status: 'rejected', rejectReason: reason, balanceDeducted: false, reviewedAt: Date.now(), reviewedBy: currentSession.username });
+  toast('❌ Rejected & Balance ফেরত');
   loadSubAdminRequests();
   loadAdminsList();
 }
 
-// ═══════════════════════════════════════════════════════════
 // REVENUE
-// ═══════════════════════════════════════════════════════════
 function updateRevenueVisual() {
   const v = Math.max(0, Math.min(100, parseFloat(document.getElementById('revenueAdminShare').value) || 0));
   const p = 100 - v;
@@ -2742,11 +2467,7 @@ async function saveRevenueSettings() {
   const adminSharePercent = Math.max(0, Math.min(100, parseFloat(document.getElementById('revenueAdminShare').value) || 30));
   const minWithdrawAmount = Math.max(1, parseFloat(document.getElementById('revenueMinWithdraw').value) || 100);
   const perUserCap = Math.max(0, parseFloat(document.getElementById('revenueUserCap').value) || 0);
-  await db.ref('config/revenueSettings').set({
-    enabled, adminSharePercent, minWithdrawAmount, perUserCap,
-    platformSharePercent: 100 - adminSharePercent,
-    updatedAt: Date.now(), updatedBy: currentSession.username
-  });
+  await db.ref('config/revenueSettings').set({ enabled, adminSharePercent, minWithdrawAmount, perUserCap, platformSharePercent: 100 - adminSharePercent, updatedAt: Date.now(), updatedBy: currentSession.username });
   REVENUE_SETTINGS = { enabled, adminSharePercent, minWithdrawAmount, perUserCap };
   toast('✅ Saved!');
 }
@@ -2754,18 +2475,8 @@ async function loadRevenueSettings() {
   const snap = await db.ref('config/revenueSettings').once('value');
   if (!snap.exists()) return;
   const r = snap.val();
-  REVENUE_SETTINGS = {
-    enabled: r.enabled !== false,
-    adminSharePercent: Number(r.adminSharePercent || 30),
-    minWithdrawAmount: Number(r.minWithdrawAmount || 100),
-    perUserCap: Number(r.perUserCap || 0)
-  };
-  const els = {
-    enabled: document.getElementById('revenueShareEnabled'),
-    adminShare: document.getElementById('revenueAdminShare'),
-    minWithdraw: document.getElementById('revenueMinWithdraw'),
-    perUserCap: document.getElementById('revenueUserCap')
-  };
+  REVENUE_SETTINGS = { enabled: r.enabled !== false, adminSharePercent: Number(r.adminSharePercent || 30), minWithdrawAmount: Number(r.minWithdrawAmount || 100), perUserCap: Number(r.perUserCap || 0) };
+  const els = { enabled: document.getElementById('revenueShareEnabled'), adminShare: document.getElementById('revenueAdminShare'), minWithdraw: document.getElementById('revenueMinWithdraw'), perUserCap: document.getElementById('revenueUserCap') };
   if (els.enabled) els.enabled.value = String(REVENUE_SETTINGS.enabled);
   if (els.adminShare) els.adminShare.value = REVENUE_SETTINGS.adminSharePercent;
   if (els.minWithdraw) els.minWithdraw.value = REVENUE_SETTINGS.minWithdrawAmount;
@@ -2782,7 +2493,6 @@ async function loadSuperRevenueData() {
     if (a.subAdmins) Object.values(a.subAdmins).forEach(processAdmin);
   };
   adminsSnap.forEach(c => processAdmin(c.val()));
-  
   const qSnap = await db.ref('revenueWithdrawRequests').once('value');
   allRevenueRequests = [];
   qSnap.forEach(c => allRevenueRequests.push({ id: c.key, ...c.val() }));
@@ -2795,20 +2505,12 @@ async function loadSuperRevenueData() {
   document.getElementById('superAdminRevenueBal').textContent = walletRev.toFixed(2);
   document.getElementById('rSharePlatformView').textContent = 100 - REVENUE_SETTINGS.adminSharePercent;
   document.getElementById('rShareAdminView').textContent = REVENUE_SETTINGS.adminSharePercent;
-
   const pEl = document.getElementById('pendingRevenueReqList');
   if (!pendings.length) pEl.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>No pending</div></div>';
   else {
     let h = '';
     pendings.forEach(r => {
-      h += `<div class="dreq-item pending">
-        <div class="dreq-head"><div class="dreq-amount">${Number(r.amount).toFixed(2)} TK</div><span class="status-badge pending">PENDING</span></div>
-        <div class="dreq-info"><b>Name:</b> ${esc(r.adminName)}<br><b>Role:</b> ${esc(r.role || 'admin')}<br><b>Method:</b> ${esc(r.method)}<br><b>Account:</b> ${esc(r.account)}</div>
-        <div style="display:flex; gap:8px; margin-top:12px;">
-          <button class="btn btn-green btn-small" onclick="approveRevenueWithdraw('${r.id}')" style="flex:1;"><i class="fas fa-check"></i> Approve</button>
-          <button class="btn btn-red btn-small" onclick="openRevenueRejectModal('${r.id}')" style="flex:1;"><i class="fas fa-times"></i> Reject</button>
-        </div>
-      </div>`;
+      h += `<div class="dreq-item pending"><div class="dreq-head"><div class="dreq-amount">${Number(r.amount).toFixed(2)} TK</div><span class="status-badge pending">PENDING</span></div><div class="dreq-info"><b>Name:</b> ${esc(r.adminName)}<br><b>Role:</b> ${esc(r.role || 'admin')}<br><b>Method:</b> ${esc(r.method)}<br><b>Account:</b> ${esc(r.account)}</div><div style="display:flex; gap:8px; margin-top:12px;"><button class="btn btn-green btn-small" onclick="approveRevenueWithdraw('${r.id}')" style="flex:1;"><i class="fas fa-check"></i> Approve</button><button class="btn btn-red btn-small" onclick="openRevenueRejectModal('${r.id}')" style="flex:1;"><i class="fas fa-times"></i> Reject</button></div></div>`;
     });
     pEl.innerHTML = h;
   }
@@ -2818,10 +2520,7 @@ async function loadSuperRevenueData() {
     let h = '';
     allRevenueRequests.slice(0, 100).forEach(r => {
       const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
-      h += `<div class="dreq-item ${cls}">
-        <div class="dreq-head"><div style="font-weight:800;">👤 ${esc(r.adminName)}</div><span class="status-badge ${cls}">${r.status.toUpperCase()}</span></div>
-        <div class="dreq-info"><b>${Number(r.amount).toFixed(2)} TK</b> • ${esc(r.method)}</div>
-      </div>`;
+      h += `<div class="dreq-item ${cls}"><div class="dreq-head"><div style="font-weight:800;">👤 ${esc(r.adminName)}</div><span class="status-badge ${cls}">${r.status.toUpperCase()}</span></div><div class="dreq-info"><b>${Number(r.amount).toFixed(2)} TK</b> • ${esc(r.method)}</div></div>`;
     });
     aEl.innerHTML = h;
   }
@@ -2833,23 +2532,13 @@ async function approveRevenueWithdraw(reqId) {
   const r = reqSnap.val();
   if (r.status !== 'pending') return;
   let adminPath;
-  if (r.role === 'subadmin' && r.parentAdminId) {
-    adminPath = r.parentSubAdminId 
-      ? 'admins/' + r.parentAdminId + '/subAdmins/' + r.parentSubAdminId + '/subAdmins/' + r.adminId
-      : 'admins/' + r.parentAdminId + '/subAdmins/' + r.adminId;
-  } else {
-    adminPath = 'admins/' + r.adminId;
-  }
+  if (r.role === 'subadmin' && r.parentAdminId) adminPath = r.parentSubAdminId ? 'admins/' + r.parentAdminId + '/subAdmins/' + r.parentSubAdminId + '/subAdmins/' + r.adminId : 'admins/' + r.parentAdminId + '/subAdmins/' + r.adminId;
+  else adminPath = 'admins/' + r.adminId;
   const aSnap = await db.ref(adminPath).once('value');
   if (!aSnap.exists()) return toast('❌ Not found');
   const a = aSnap.val();
-  await db.ref(adminPath).update({
-    revenueBalance: Math.max(0, Number(a.revenueBalance || 0) - Number(r.amount)),
-    totalRevenueWithdrawn: Number(a.totalRevenueWithdrawn || 0) + Number(r.amount)
-  });
-  await db.ref('revenueWithdrawRequests/' + reqId).update({
-    status: 'approved', reviewedAt: Date.now(), reviewedBy: currentSession.username
-  });
+  await db.ref(adminPath).update({ revenueBalance: Math.max(0, Number(a.revenueBalance || 0) - Number(r.amount)), totalRevenueWithdrawn: Number(a.totalRevenueWithdrawn || 0) + Number(r.amount) });
+  await db.ref('revenueWithdrawRequests/' + reqId).update({ status: 'approved', reviewedAt: Date.now(), reviewedBy: currentSession.username });
   toast('✅ Approved!');
   loadSuperRevenueData();
 }
@@ -2863,9 +2552,7 @@ async function confirmRejectRevenue() {
   const reqId = document.getElementById('rrReqId').value;
   const reason = document.getElementById('rrReason').value.trim();
   if (!reason) return toast('❌ Reason required');
-  await db.ref('revenueWithdrawRequests/' + reqId).update({
-    status: 'rejected', reason, reviewedAt: Date.now(), reviewedBy: currentSession.username
-  });
+  await db.ref('revenueWithdrawRequests/' + reqId).update({ status: 'rejected', reason, reviewedAt: Date.now(), reviewedBy: currentSession.username });
   toast('❌ Rejected');
   closeRevenueRejectModal();
   loadSuperRevenueData();
@@ -2877,22 +2564,16 @@ async function renderMyRevenue() {
   document.getElementById('myTotalRevenueEarned').textContent = Number(a.totalRevenueEarned || 0).toFixed(2);
   document.getElementById('myRevenueWithdrawn').textContent = Number(a.totalRevenueWithdrawn || 0).toFixed(2);
   document.getElementById('minRevWithdraw').textContent = REVENUE_SETTINGS.minWithdrawAmount;
-  
   let myShare;
-  if (currentSession.role === 'subadmin') {
-    myShare = Number(a.revenueShareOverride) || REVENUE_SETTINGS.adminSharePercent;
-  } else {
-    myShare = Number(a.revenueSharePercent) || REVENUE_SETTINGS.adminSharePercent;
-  }
+  if (currentSession.role === 'subadmin') myShare = Number(a.revenueShareOverride) || REVENUE_SETTINGS.adminSharePercent;
+  else myShare = Number(a.revenueSharePercent) || REVENUE_SETTINGS.adminSharePercent;
   document.getElementById('myShareView').textContent = myShare;
   document.getElementById('platformShareView').textContent = 100 - myShare;
-
   let userCount = 0;
   const field = currentSession.role === 'subadmin' ? 'referredBySubAdmin' : 'referredByAdmin';
   const usrSnap = await db.ref('users').orderByChild(field).equalTo(currentAdminData.id).once('value');
   usrSnap.forEach(() => userCount++);
   document.getElementById('myReferredUsersCount').textContent = userCount;
-
   const reqSnap = await db.ref('revenueWithdrawRequests').orderByChild('adminId').equalTo(currentAdminData.id).once('value');
   const myReqs = [];
   reqSnap.forEach(c => myReqs.push({ id: c.key, ...c.val() }));
@@ -2903,14 +2584,10 @@ async function renderMyRevenue() {
     let h = '';
     myReqs.forEach(r => {
       const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
-      h += `<div class="dreq-item ${cls}">
-        <div class="dreq-head"><div class="dreq-amount">${Number(r.amount).toFixed(2)} TK</div><span class="status-badge ${cls}">${r.status.toUpperCase()}</span></div>
-        <div class="dreq-info"><b>Method:</b> ${esc(r.method)}<br><b>Account:</b> ${esc(r.account)}</div>
-      </div>`;
+      h += `<div class="dreq-item ${cls}"><div class="dreq-head"><div class="dreq-amount">${Number(r.amount).toFixed(2)} TK</div><span class="status-badge ${cls}">${r.status.toUpperCase()}</span></div><div class="dreq-info"><b>Method:</b> ${esc(r.method)}<br><b>Account:</b> ${esc(r.account)}</div></div>`;
     });
     reqEl.innerHTML = h;
   }
-
   const refListEl = document.getElementById('myReferredUsersList');
   if (refListEl) {
     const snap = await db.ref('users').orderByChild(field).equalTo(currentAdminData.id).once('value');
@@ -2921,10 +2598,7 @@ async function renderMyRevenue() {
       let h = '';
       users.forEach(u => {
         const init = (u.name || 'U').charAt(0).toUpperCase();
-        h += `<div class="ref-mini-item"><div class="ref-mini-avatar">${init}</div>
-          <div class="ref-mini-info"><h5>${esc(u.name || 'User')}</h5><p>ID: ${u.id} • Balance: ${Number(u.balance||0).toFixed(2)} TK</p></div>
-          <div class="ref-mini-bal ${Number(u.balance||0) >= MIN_REFERRAL_BALANCE ? 'qualified' : 'not-qualified'}">${Number(u.balance||0).toFixed(2)}</div>
-        </div>`;
+        h += `<div class="ref-mini-item"><div class="ref-mini-avatar">${init}</div><div class="ref-mini-info"><h5>${esc(u.name || 'User')}</h5><p>ID: ${u.id} • Balance: ${Number(u.balance||0).toFixed(2)} TK</p></div><div class="ref-mini-bal ${Number(u.balance||0) >= MIN_REFERRAL_BALANCE ? 'qualified' : 'not-qualified'}">${Number(u.balance||0).toFixed(2)}</div></div>`;
       });
       refListEl.innerHTML = h;
     }
@@ -2957,22 +2631,16 @@ async function submitRevenueWithdraw() {
   if (!account || account.length < 4) return toast('❌ Account');
   const reqId = 'revreq_' + Date.now() + '_' + currentAdminData.id;
   await db.ref('revenueWithdrawRequests/' + reqId).set({
-    adminId: currentAdminData.id,
-    adminName: currentSession.username,
-    role: currentSession.role,
-    parentAdminId: currentSession.parentAdminId || null,
-    parentSubAdminId: currentSession.parentSubAdminId || null,
-    amount, method, account, note,
-    status: 'pending', timestamp: Date.now()
+    adminId: currentAdminData.id, adminName: currentSession.username, role: currentSession.role,
+    parentAdminId: currentSession.parentAdminId || null, parentSubAdminId: currentSession.parentSubAdminId || null,
+    amount, method, account, note, status: 'pending', timestamp: Date.now()
   });
   toast('✅ Submitted!');
   closeRevenueWithdrawModal();
   loadCurrentAdminData();
 }
 
-// ═══════════════════════════════════════════════════════════
 // EXTRA REWARDS
-// ═══════════════════════════════════════════════════════════
 function loadExtraRewardPreview() {
   const enabled = document.getElementById('extraRewardEnabled').value === 'true';
   const amount = parseFloat(document.getElementById('extraRewardAmount').value) || 0.5;
@@ -2994,17 +2662,12 @@ async function saveExtraRewardSettings() {
   const infoText = document.getElementById('extraRewardInfo').value.trim() || 'Pop-up Ad সম্পূর্ণ দেখলেই রিওয়ার্ড পাবেন।';
   if (isNaN(amount) || amount <= 0) return toast('❌ Reward > 0');
   if (isNaN(dailyLimit) || dailyLimit <= 0) return toast('❌ Limit > 0');
-  await db.ref('config/extraReward').set({
-    enabled, amount: Number(amount), dailyLimit: Number(dailyLimit),
-    title, infoText, updatedAt: Date.now(), updatedBy: currentSession.username
-  });
+  await db.ref('config/extraReward').set({ enabled, amount: Number(amount), dailyLimit: Number(dailyLimit), title, infoText, updatedAt: Date.now(), updatedBy: currentSession.username });
   toast('✅ Saved!');
   loadExtraRewardPreview();
 }
 
-// ═══════════════════════════════════════════════════════════
 // ADS
-// ═══════════════════════════════════════════════════════════
 const AD_SLOT_COUNT = 6;
 function loadAdsConfig() {
   const container = document.getElementById('adsContainer');
@@ -3015,26 +2678,7 @@ function loadAdsConfig() {
     const s = slots[i] || { network: 'none', id: '', customCode: '' };
     const hasCode = s.customCode && String(s.customCode).trim().length > 0;
     const isCustom = s.network === 'custom' || hasCode;
-    h += `<div class="ad-slot-card ${hasCode ? 'custom-active' : ''}">
-      <div class="ad-slot-head">
-        <div class="ad-slot-name"><i class="fas fa-rectangle-ad"></i> Ad Slot ${i+1} <span class="num-badge">#${i+1}</span></div>
-        <div class="ad-slot-status ${hasCode ? 'custom' : (s.network !== 'none' ? 'ok' : 'off')}">${hasCode ? '⚙️ Custom' : (s.network !== 'none' ? '✅ ' + s.network : 'Disabled')}</div>
-      </div>
-      <label>Network Type</label>
-      <select id="adNet_${i}" onchange="toggleCustomCodeField(${i})" style="margin-bottom:10px;">
-        <option value="none" ${s.network==='none'&&!hasCode?'selected':''}>🚫 Disabled</option>
-        <option value="adsgram" ${s.network==='adsgram'?'selected':''}>📺 Adsgram</option>
-        <option value="monetag" ${s.network==='monetag'?'selected':''}>💰 Monetag</option>
-        <option value="gigapub" ${s.network==='gigapub'?'selected':''}>🌐 GigaPub</option>
-        <option value="custom" ${isCustom?'selected':''}>⚙️ Custom Code</option>
-      </select>
-      <label>Block / Zone ID</label>
-      <input type="text" id="adId_${i}" value="${esc(s.id||'')}" placeholder="e.g. 11878844" style="margin-bottom:10px;">
-      <div id="adCustomWrap_${i}" style="display:${isCustom ? 'block' : 'none'};">
-        <label>⚙️ Custom Ad Code (JavaScript)</label>
-        <textarea id="adCode_${i}" rows="8" style="font-family:'Courier New',monospace; font-size:.78rem;"></textarea>
-      </div>
-    </div>`;
+    h += `<div class="ad-slot-card ${hasCode ? 'custom-active' : ''}"><div class="ad-slot-head"><div class="ad-slot-name"><i class="fas fa-rectangle-ad"></i> Ad Slot ${i+1} <span class="num-badge">#${i+1}</span></div><div class="ad-slot-status ${hasCode ? 'custom' : (s.network !== 'none' ? 'ok' : 'off')}">${hasCode ? '⚙️ Custom' : (s.network !== 'none' ? '✅ ' + s.network : 'Disabled')}</div></div><label>Network Type</label><select id="adNet_${i}" onchange="toggleCustomCodeField(${i})" style="margin-bottom:10px;"><option value="none" ${s.network==='none'&&!hasCode?'selected':''}>🚫 Disabled</option><option value="adsgram" ${s.network==='adsgram'?'selected':''}>📺 Adsgram</option><option value="monetag" ${s.network==='monetag'?'selected':''}>💰 Monetag</option><option value="gigapub" ${s.network==='gigapub'?'selected':''}>🌐 GigaPub</option><option value="custom" ${isCustom?'selected':''}>⚙️ Custom Code</option></select><label>Block / Zone ID</label><input type="text" id="adId_${i}" value="${esc(s.id||'')}" placeholder="e.g. 11878844" style="margin-bottom:10px;"><div id="adCustomWrap_${i}" style="display:${isCustom ? 'block' : 'none'};"><label>⚙️ Custom Ad Code (JavaScript)</label><textarea id="adCode_${i}" rows="8" style="font-family:'Courier New',monospace; font-size:.78rem;"></textarea></div></div>`;
   }
   container.innerHTML = h;
   for (let i = 0; i < AD_SLOT_COUNT; i++) {
@@ -3054,28 +2698,19 @@ function saveAds() {
     const netEl = document.getElementById('adNet_' + i);
     const idEl = document.getElementById('adId_' + i);
     const codeEl = document.getElementById('adCode_' + i);
-    slots.push({
-      network: netEl ? netEl.value : 'none',
-      id: idEl ? idEl.value.trim() : '',
-      customCode: codeEl ? codeEl.value : ''
-    });
+    slots.push({ network: netEl ? netEl.value : 'none', id: idEl ? idEl.value.trim() : '', customCode: codeEl ? codeEl.value : '' });
   }
   const dailyAdLimit = Number(document.getElementById('dailyAdLimit').value) || 10;
   const adReward = Number(document.getElementById('adReward').value) || 0.5;
   const minAdWatchSecondsEl = document.getElementById('minAdWatchSeconds');
   let minAdWatchSeconds = 10;
-  if (minAdWatchSecondsEl) {
-    const v = Number(minAdWatchSecondsEl.value);
-    if (!isNaN(v) && v >= 3 && v <= 120) minAdWatchSeconds = v;
-  }
+  if (minAdWatchSecondsEl) { const v = Number(minAdWatchSecondsEl.value); if (!isNaN(v) && v >= 3 && v <= 120) minAdWatchSeconds = v; }
   db.ref('config').update({ dailyAdLimit, adReward, adSlots: slots, minAdWatchSeconds })
-  .then(() => { toast('✅ Saved!'); configData.adSlots = slots; configData.minAdWatchSeconds = minAdWatchSeconds; loadAdsConfig(); })
-  .catch(e => toast('❌ ' + e.message));
+    .then(() => { toast('✅ Saved!'); configData.adSlots = slots; configData.minAdWatchSeconds = minAdWatchSeconds; loadAdsConfig(); })
+    .catch(e => toast('❌ ' + e.message));
 }
 
-// ═══════════════════════════════════════════════════════════
 // LEADERBOARD
-// ═══════════════════════════════════════════════════════════
 function renderLeaderboardCustomList() {
   const container = document.getElementById('lbListContainer');
   const countEl = document.getElementById('lbCount');
@@ -3083,30 +2718,13 @@ function renderLeaderboardCustomList() {
   if (!container) return;
   const list = Array.isArray(configData.leaderboardCustom) ? configData.leaderboardCustom : [];
   if (countEl) countEl.textContent = list.length;
-  if (addBtn) {
-    if (list.length >= LB_MAX_ENTRIES) { addBtn.disabled = true; addBtn.style.opacity = '0.5'; }
-    else { addBtn.disabled = false; addBtn.style.opacity = '1'; }
-  }
+  if (addBtn) { if (list.length >= LB_MAX_ENTRIES) { addBtn.disabled = true; addBtn.style.opacity = '0.5'; } else { addBtn.disabled = false; addBtn.style.opacity = '1'; } }
   if (!list.length) { container.innerHTML = '<div class="lb-empty">No custom entries yet.</div>'; return; }
   let h = '';
   list.forEach((entry, i) => {
     const rankIcon = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i + 1);
     const initial = (entry.name || 'U').charAt(0).toUpperCase();
-    h += `<div class="lb-item">
-      <div class="lb-rank">${rankIcon}</div>
-      <div class="lb-avatar">${initial}</div>
-      <div class="lb-info">
-        <div class="name">${esc(entry.name || 'User')}</div>
-        <div class="stats">
-          <span class="bal"><i class="fas fa-coins"></i> ${Number(entry.balance || 0).toFixed(2)} TK</span>
-          <span class="ref"><i class="fas fa-users"></i> ${Number(entry.refs || 0)} Refs</span>
-        </div>
-      </div>
-      <div class="lb-actions">
-        <button class="act-edit" onclick="openLbModal(${i})"><i class="fas fa-pen"></i></button>
-        <button class="act-del" onclick="deleteLbEntry(${i})"><i class="fas fa-trash"></i></button>
-      </div>
-    </div>`;
+    h += `<div class="lb-item"><div class="lb-rank">${rankIcon}</div><div class="lb-avatar">${initial}</div><div class="lb-info"><div class="name">${esc(entry.name || 'User')}</div><div class="stats"><span class="bal"><i class="fas fa-coins"></i> ${Number(entry.balance || 0).toFixed(2)} TK</span><span class="ref"><i class="fas fa-users"></i> ${Number(entry.refs || 0)} Refs</span></div></div><div class="lb-actions"><button class="act-edit" onclick="openLbModal(${i})"><i class="fas fa-pen"></i></button><button class="act-del" onclick="deleteLbEntry(${i})"><i class="fas fa-trash"></i></button></div></div>`;
   });
   container.innerHTML = h;
 }
@@ -3153,9 +2771,7 @@ async function deleteLbEntry(index) {
   toast('✅ Deleted'); renderLeaderboardCustomList();
 }
 
-// ═══════════════════════════════════════════════════════════
 // DEPOSIT
-// ═══════════════════════════════════════════════════════════
 function renderDepositMethodsList() {
   const c = document.getElementById('dmMethodsList');
   if (!c) return;
@@ -3163,14 +2779,7 @@ function renderDepositMethodsList() {
   if (!methods.length) { c.innerHTML = '<p style="text-align:center;color:#94a3b8;">No methods</p>'; return; }
   let h = '';
   methods.forEach((m, i) => {
-    h += `<div style="background:linear-gradient(135deg,#f0f9ff,#e0f2fe); padding:14px; border-radius:12px; margin-bottom:10px;">
-      <div style="font-weight:900;">${esc(m.name)} <span class="status-badge ${m.isActive !== false ? 'active' : 'closed'}">${m.isActive !== false ? 'ACTIVE' : 'DISABLED'}</span></div>
-      <div style="font-size:.78rem; margin-top:8px;">📱 ${esc(m.account)} • Min ${Number(m.minAmount).toFixed(2)} TK</div>
-      <div style="display:flex; gap:6px; margin-top:10px;">
-        <button class="btn btn-info btn-small" onclick="openDmModal(${i})"><i class="fas fa-pen"></i></button>
-        <button class="btn btn-red btn-small" onclick="deleteDepositMethod(${i})"><i class="fas fa-trash"></i></button>
-      </div>
-    </div>`;
+    h += `<div style="background:linear-gradient(135deg,#f0f9ff,#e0f2fe); padding:14px; border-radius:12px; margin-bottom:10px;"><div style="font-weight:900;">${esc(m.name)} <span class="status-badge ${m.isActive !== false ? 'active' : 'closed'}">${m.isActive !== false ? 'ACTIVE' : 'DISABLED'}</span></div><div style="font-size:.78rem; margin-top:8px;">📱 ${esc(m.account)} • Min ${Number(m.minAmount).toFixed(2)} TK</div><div style="display:flex; gap:6px; margin-top:10px;"><button class="btn btn-info btn-small" onclick="openDmModal(${i})"><i class="fas fa-pen"></i></button><button class="btn btn-red btn-small" onclick="deleteDepositMethod(${i})"><i class="fas fa-trash"></i></button></div></div>`;
   });
   c.innerHTML = h;
 }
@@ -3228,14 +2837,7 @@ async function loadAllDepositRequests() {
   else {
     let h = '';
     pends.forEach(r => {
-      h += `<div class="dreq-item pending">
-        <div class="dreq-head"><div class="dreq-amount">${Number(r.amount).toFixed(2)} TK</div><span class="status-badge pending">PENDING</span></div>
-        <div class="dreq-info"><b>Admin:</b> ${esc(r.adminName)}<br><b>Method:</b> ${esc(r.methodName)}<br><b>Sent To:</b> ${esc(r.methodAccount)}<br><b>Txn ID:</b> ${esc(r.txnId)}</div>
-        <div style="display:flex; gap:8px; margin-top:12px;">
-          <button class="btn btn-green btn-small" onclick="approveDepositReq('${r.id}')" style="flex:1;"><i class="fas fa-check"></i> Approve</button>
-          <button class="btn btn-red btn-small" onclick="rejectDepositReq('${r.id}')" style="flex:1;"><i class="fas fa-times"></i> Reject</button>
-        </div>
-      </div>`;
+      h += `<div class="dreq-item pending"><div class="dreq-head"><div class="dreq-amount">${Number(r.amount).toFixed(2)} TK</div><span class="status-badge pending">PENDING</span></div><div class="dreq-info"><b>Admin:</b> ${esc(r.adminName)}<br><b>Method:</b> ${esc(r.methodName)}<br><b>Sent To:</b> ${esc(r.methodAccount)}<br><b>Txn ID:</b> ${esc(r.txnId)}</div><div style="display:flex; gap:8px; margin-top:12px;"><button class="btn btn-green btn-small" onclick="approveDepositReq('${r.id}')" style="flex:1;"><i class="fas fa-check"></i> Approve</button><button class="btn btn-red btn-small" onclick="rejectDepositReq('${r.id}')" style="flex:1;"><i class="fas fa-times"></i> Reject</button></div></div>`;
     });
     pending.innerHTML = h;
   }
@@ -3244,10 +2846,7 @@ async function loadAllDepositRequests() {
     let h = '';
     allDepositRequests.slice(0, 50).forEach(r => {
       const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
-      h += `<div class="dreq-item ${cls}">
-        <div class="dreq-head"><div style="font-weight:800;">👤 ${esc(r.adminName)} — ${esc(r.methodName)}</div><span class="status-badge ${cls}">${r.status.toUpperCase()}</span></div>
-        <div class="dreq-info"><b>${Number(r.amount).toFixed(2)} TK</b> • Txn: ${esc(r.txnId)}</div>
-      </div>`;
+      h += `<div class="dreq-item ${cls}"><div class="dreq-head"><div style="font-weight:800;">👤 ${esc(r.adminName)} — ${esc(r.methodName)}</div><span class="status-badge ${cls}">${r.status.toUpperCase()}</span></div><div class="dreq-info"><b>${Number(r.amount).toFixed(2)} TK</b> • Txn: ${esc(r.txnId)}</div></div>`;
     });
     all.innerHTML = h;
   }
@@ -3259,38 +2858,22 @@ async function approveDepositReq(reqId) {
   const r = reqSnap.val();
   if (r.status !== 'pending') return;
   let path;
-  if (r.role === 'subadmin' && r.parentAdminId) {
-    path = r.parentSubAdminId 
-      ? 'admins/' + r.parentAdminId + '/subAdmins/' + r.parentSubAdminId + '/subAdmins/' + r.adminId
-      : 'admins/' + r.parentAdminId + '/subAdmins/' + r.adminId;
-  } else {
-    path = 'admins/' + r.adminId;
-  }
+  if (r.role === 'subadmin' && r.parentAdminId) path = r.parentSubAdminId ? 'admins/' + r.parentAdminId + '/subAdmins/' + r.parentSubAdminId + '/subAdmins/' + r.adminId : 'admins/' + r.parentAdminId + '/subAdmins/' + r.adminId;
+  else path = 'admins/' + r.adminId;
   const ref = db.ref(path);
   const snap = await ref.once('value');
   if (!snap.exists()) return toast('❌ Not found');
   const a = snap.val();
   const deposits = a.deposits || {};
-  deposits['dep_' + Date.now()] = {
-    method: r.methodName, account: r.methodAccount,
-    amount: Number(r.amount), timestamp: Date.now()
-  };
-  await ref.update({
-    balance: Number(a.balance || 0) + Number(r.amount),
-    totalDeposited: Number(a.totalDeposited || 0) + Number(r.amount),
-    deposits
-  });
-  await db.ref('depositRequests/' + reqId).update({
-    status: 'approved', reviewedAt: Date.now(), reviewedBy: currentSession.username
-  });
+  deposits['dep_' + Date.now()] = { method: r.methodName, account: r.methodAccount, amount: Number(r.amount), timestamp: Date.now() };
+  await ref.update({ balance: Number(a.balance || 0) + Number(r.amount), totalDeposited: Number(a.totalDeposited || 0) + Number(r.amount), deposits });
+  await db.ref('depositRequests/' + reqId).update({ status: 'approved', reviewedAt: Date.now(), reviewedBy: currentSession.username });
   toast('✅ Approved!');
   loadAllDepositRequests(); loadAdminsList();
 }
 async function rejectDepositReq(reqId) {
   const reason = prompt('Reason:') || '';
-  await db.ref('depositRequests/' + reqId).update({
-    status: 'rejected', reason, reviewedAt: Date.now(), reviewedBy: currentSession.username
-  });
+  await db.ref('depositRequests/' + reqId).update({ status: 'rejected', reason, reviewedAt: Date.now(), reviewedBy: currentSession.username });
   toast('❌ Rejected'); loadAllDepositRequests();
 }
 function renderDepositMethodsAdminView() {
@@ -3298,16 +2881,11 @@ function renderDepositMethodsAdminView() {
   if (!c) return;
   const allMethods = configData.depositMethods || [];
   const methods = allMethods.filter(m => m.isActive !== false);
-  if (!methods.length) { c.innerHTML = '<div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i><div>No methods available — Super Admin এখনো Deposit Method যোগ করেনি বা সব disable করা আছে</div></div>'; return; }
+  if (!methods.length) { c.innerHTML = '<div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i><div>No methods available — Super Admin এখনো Deposit Method যোগ করেনি</div></div>'; return; }
   let h = '';
   methods.forEach(m => {
     const originalIndex = allMethods.indexOf(m);
-    h += `<div class="dm-card">
-      <div class="dm-head"><div class="dm-name">${esc(m.name)}</div><div class="dm-min">Min ${Number(m.minAmount).toFixed(2)} TK</div></div>
-      <div class="dm-row"><span class="lbl">📱 Number:</span><span class="val dm-account">${esc(m.account)}</span></div>
-      ${m.instructions ? `<div class="dm-row"><span class="lbl">📝 Instructions:</span><span class="val">${esc(m.instructions)}</span></div>` : ''}
-      <button class="btn btn-green btn-small" style="margin-top:12px; width:100%;" onclick="openDepositSubmitModal(${originalIndex})"><i class="fas fa-paper-plane"></i> I've Sent Money</button>
-    </div>`;
+    h += `<div class="dm-card"><div class="dm-head"><div class="dm-name">${esc(m.name)}</div><div class="dm-min">Min ${Number(m.minAmount).toFixed(2)} TK</div></div><div class="dm-row"><span class="lbl">📱 Number:</span><span class="val dm-account">${esc(m.account)}</span></div>${m.instructions ? `<div class="dm-row"><span class="lbl">📝 Instructions:</span><span class="val">${esc(m.instructions)}</span></div>` : ''}<button class="btn btn-green btn-small" style="margin-top:12px; width:100%;" onclick="openDepositSubmitModal(${originalIndex})"><i class="fas fa-paper-plane"></i> I've Sent Money</button></div>`;
   });
   c.innerHTML = h;
 }
@@ -3315,11 +2893,7 @@ function openDepositSubmitModal(methodIndex) {
   const m = (configData.depositMethods || [])[methodIndex];
   if (!m) return;
   document.getElementById('dsMethodIndex').value = methodIndex;
-  document.getElementById('dsMethodInfo').innerHTML = `
-    <div>Method: <b>${esc(m.name)}</b></div>
-    <div>Number: <b style="color:#dc2626;">${esc(m.account)}</b></div>
-    <div>Min: <b>${Number(m.minAmount).toFixed(2)} TK</b></div>
-  `;
+  document.getElementById('dsMethodInfo').innerHTML = `<div>Method: <b>${esc(m.name)}</b></div><div>Number: <b style="color:#dc2626;">${esc(m.account)}</b></div><div>Min: <b>${Number(m.minAmount).toFixed(2)} TK</b></div>`;
   document.getElementById('dsAmount').value = ''; document.getElementById('dsTxnId').value = ''; document.getElementById('dsNote').value = '';
   document.getElementById('depositSubmitModal').classList.add('active');
 }
@@ -3336,13 +2910,9 @@ async function submitDepositRequest() {
   if (!txnId || txnId.length < 4) return toast('❌ Txn ID');
   const reqId = 'depreq_' + Date.now() + '_' + currentSession.adminId;
   await db.ref('depositRequests/' + reqId).set({
-    adminId: currentSession.adminId,
-    adminName: currentSession.username,
-    role: currentSession.role,
-    parentAdminId: currentSession.parentAdminId || null,
-    parentSubAdminId: currentSession.parentSubAdminId || null,
-    methodIndex, methodName: m.name, methodAccount: m.account,
-    amount, txnId, note, status: 'pending', timestamp: Date.now()
+    adminId: currentSession.adminId, adminName: currentSession.username, role: currentSession.role,
+    parentAdminId: currentSession.parentAdminId || null, parentSubAdminId: currentSession.parentSubAdminId || null,
+    methodIndex, methodName: m.name, methodAccount: m.account, amount, txnId, note, status: 'pending', timestamp: Date.now()
   });
   toast('✅ Submitted!');
   closeDepositSubmitModal(); loadCurrentAdminData();
@@ -3358,10 +2928,7 @@ async function renderMyDepositRequests() {
   let h = '';
   list.forEach(r => {
     const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
-    h += `<div class="dreq-item ${cls}">
-      <div class="dreq-head"><div class="dreq-amount">${Number(r.amount).toFixed(2)} TK</div><span class="status-badge ${cls}">${r.status.toUpperCase()}</span></div>
-      <div class="dreq-info"><b>Method:</b> ${esc(r.methodName)}<br><b>Txn ID:</b> ${esc(r.txnId)}</div>
-    </div>`;
+    h += `<div class="dreq-item ${cls}"><div class="dreq-head"><div class="dreq-amount">${Number(r.amount).toFixed(2)} TK</div><span class="status-badge ${cls}">${r.status.toUpperCase()}</span></div><div class="dreq-info"><b>Method:</b> ${esc(r.methodName)}<br><b>Txn ID:</b> ${esc(r.txnId)}</div></div>`;
   });
   c.innerHTML = h;
 }
@@ -3379,11 +2946,7 @@ function openContactLink() {
   const link = configData.contactLink || '';
   if (!link) return toast('❌ Not configured');
   window.open(link, '_blank');
-}
-
-// ═══════════════════════════════════════════════════════════
-// TASK MANAGEMENT
-// ═══════════════════════════════════════════════════════════
+}// TASK MANAGEMENT
 function updateTaskCostPreview() {
   if (!currentSession) return;
   const preview = document.getElementById('taskCostPreview');
@@ -3595,11 +3158,7 @@ function openInstantDeleteModal(taskId) {
   const isSuperOwned = (t.createdByAdminId === 'super' || !t.createdByAdminId);
   if (!isSuperOwned) return toast('❌ Admin task');
   document.getElementById('idtTaskId').value = taskId;
-  document.getElementById('idtTaskInfo').innerHTML = `
-    <div>📋 ${esc(t.title || 'Untitled')}</div>
-    <div>💰 ${Number(t.reward || 0).toFixed(2)} TK</div>
-    <div>👥 ${t.submittedCount || 0}/${t.totalSlots || 0}</div>
-  `;
+  document.getElementById('idtTaskInfo').innerHTML = `<div>📋 ${esc(t.title || 'Untitled')}</div><div>💰 ${Number(t.reward || 0).toFixed(2)} TK</div><div>👥 ${t.submittedCount || 0}/${t.totalSlots || 0}</div>`;
   document.getElementById('instantDeleteModal').classList.add('active');
 }
 function closeInstantDeleteModal() { document.getElementById('instantDeleteModal').classList.remove('active'); }
@@ -3659,34 +3218,13 @@ async function loadTasksList() {
           const delBtn = isSuperOwnedTask
             ? `<button class="btn btn-red btn-small" onclick="openInstantDeleteModal('${t.id}')"><i class="fas fa-bolt"></i></button>`
             : `<button class="btn btn-red btn-small" onclick="openDeleteTaskModal('${t.id}')"><i class="fas fa-trash"></i></button>`;
-          actions += `
-            ${status !== 'pending' ? `<button class="btn btn-warning btn-small" onclick="setTaskPending('${t.id}')"><i class="fas fa-pause"></i></button>` : ''}
-            ${status !== 'cancelled' ? `<button class="btn btn-pink btn-small" onclick="openCancelTaskModal('${t.id}')"><i class="fas fa-times-circle"></i></button>` : ''}
-            ${delBtn}
-          `;
+          actions += `${status !== 'pending' ? `<button class="btn btn-warning btn-small" onclick="setTaskPending('${t.id}')"><i class="fas fa-pause"></i></button>` : ''}${status !== 'cancelled' ? `<button class="btn btn-pink btn-small" onclick="openCancelTaskModal('${t.id}')"><i class="fas fa-times-circle"></i></button>` : ''}${delBtn}`;
         } else {
           if (status === 'pending') actions += `<span class="waiting-approval-tag"><i class="fas fa-hourglass-half"></i> Waiting</span>`;
-          else actions += `
-            <button class="btn btn-warning btn-small" onclick="toggleTaskStatus('${t.id}')"><i class="fas fa-pause"></i></button>
-            <button class="btn btn-red btn-small" onclick="deleteNewTask('${t.id}')"><i class="fas fa-trash"></i></button>
-          `;
+          else actions += `<button class="btn btn-warning btn-small" onclick="toggleTaskStatus('${t.id}')"><i class="fas fa-pause"></i></button><button class="btn btn-red btn-small" onclick="deleteNewTask('${t.id}')"><i class="fas fa-trash"></i></button>`;
         }
       }
-      h += `<div class="task-admin-item ${status}">
-        <div class="task-admin-head">
-          <div class="task-admin-info">
-            <div class="name">${icon} ${esc(t.title || 'Untitled')} <span class="reward">+${t.reward} TK</span> ${creatorTag}</div>
-            <div class="meta">
-              <span><i class="fas fa-users"></i> ${submitted}/${total}</span>
-              ${t.taskCost ? `<span style="color:#7c3aed;"><i class="fas fa-coins"></i> ${Number(t.taskCost).toFixed(2)} TK</span>` : ''}
-            </div>
-          </div>
-        </div>
-        <div style="display:flex; gap:6px; justify-content:space-between; align-items:center; margin-top:10px; flex-wrap:wrap;">
-          ${statusBadge}
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">${actions}</div>
-        </div>
-      </div>`;
+      h += `<div class="task-admin-item ${status}"><div class="task-admin-head"><div class="task-admin-info"><div class="name">${icon} ${esc(t.title || 'Untitled')} <span class="reward">+${t.reward} TK</span> ${creatorTag}</div><div class="meta"><span><i class="fas fa-users"></i> ${submitted}/${total}</span>${t.taskCost ? `<span style="color:#7c3aed;"><i class="fas fa-coins"></i> ${Number(t.taskCost).toFixed(2)} TK</span>` : ''}</div></div></div><div style="display:flex; gap:6px; justify-content:space-between; align-items:center; margin-top:10px; flex-wrap:wrap;">${statusBadge}<div style="display:flex; gap:6px; flex-wrap:wrap;">${actions}</div></div></div>`;
     });
     c.innerHTML = h;
   } catch(e) { c.innerHTML = '<p style="text-align:center; color:#ef4444;">Error</p>'; }
@@ -3726,13 +3264,7 @@ function openDeleteTaskModal(id) {
   const usedAmount = reward * submitted;
   const unusedAmount = taskCost - usedAmount;
   const refund = Math.max(0, unusedAmount - TASK_DELETE_FEE);
-  document.getElementById('dtRefundInfo').innerHTML = `
-    <div style="font-weight:900; margin-bottom:8px;">💰 Refund</div>
-    <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Task Cost:</span><span>${taskCost.toFixed(2)} TK</span></div>
-    <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Used:</span><span style="color:#dc2626;">−${usedAmount.toFixed(2)} TK</span></div>
-    <div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Fee:</span><span style="color:#dc2626;">−${TASK_DELETE_FEE.toFixed(2)} TK</span></div>
-    <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:1rem;font-weight:900;color:#059669;border-top:1px dashed rgba(16,185,129,.3);margin-top:6px;"><span>Refund:</span><span>${refund.toFixed(2)} TK</span></div>
-  `;
+  document.getElementById('dtRefundInfo').innerHTML = `<div style="font-weight:900; margin-bottom:8px;">💰 Refund</div><div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Task Cost:</span><span>${taskCost.toFixed(2)} TK</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Used:</span><span style="color:#dc2626;">−${usedAmount.toFixed(2)} TK</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;"><span>Fee:</span><span style="color:#dc2626;">−${TASK_DELETE_FEE.toFixed(2)} TK</span></div><div style="display:flex;justify-content:space-between;padding:8px 0;font-size:1rem;font-weight:900;color:#059669;border-top:1px dashed rgba(16,185,129,.3);margin-top:6px;"><span>Refund:</span><span>${refund.toFixed(2)} TK</span></div>`;
   document.getElementById('deleteTaskModal').classList.add('active');
 }
 function closeDeleteTaskModal() { document.getElementById('deleteTaskModal').classList.remove('active'); }
@@ -3791,25 +3323,7 @@ function renderSubmissions() {
     else if (sub.status === 'rejected') sb = '<span class="status-badge rejected">❌ Rejected</span>';
     const date = sub.createdAt ? new Date(sub.createdAt).toLocaleString() : '';
     const preview = sub.content ? esc(sub.content).substring(0, 80) : (sub.fileUrl ? '📎 File' : 'No content');
-    h += `<div style="background:#fff; border:1.5px solid var(--border); border-radius:12px; padding:14px; margin-bottom:10px; border-left:4px solid ${sub.status === 'approved' ? '#10b981' : sub.status === 'rejected' ? '#ef4444' : '#f59e0b'};">
-      <div style="display:flex; justify-content:space-between; gap:10px;">
-        <div style="flex:1;">
-          <div style="font-weight:800; font-size:.9rem;">${esc(sub.taskTitle || 'Task')}</div>
-          <div style="font-size:.72rem; margin-top:3px;">👤 ${esc(sub.userName || 'User')} • ID: ${sub.telegramId || sub.userId || 'N/A'}</div>
-          <div style="font-size:.68rem; color:#94a3b8; margin-top:4px;">${preview}</div>
-          <div style="font-size:.68rem; color:#94a3b8; margin-top:4px;">🕒 ${date}</div>
-        </div>
-        <div style="font-weight:900; color:var(--success);">+${sub.reward || 0} TK</div>
-      </div>
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-        ${sb}
-        ${sub.fileUrl ? `<a href="${sub.fileUrl}" target="_blank" style="color:var(--primary); font-weight:700; font-size:.75rem;"><i class="fas fa-external-link-alt"></i> View</a>` : ''}
-      </div>
-      ${sub.status === 'pending' ? `<div style="display:flex; gap:8px; margin-top:10px;">
-        <button class="btn btn-green btn-small" onclick="reviewSubmission('${sub.id}','approved')" style="flex:1;"><i class="fas fa-check"></i> Approve</button>
-        <button class="btn btn-red btn-small" onclick="reviewSubmission('${sub.id}','rejected')" style="flex:1;"><i class="fas fa-times"></i> Reject</button>
-      </div>` : ''}
-    </div>`;
+    h += `<div style="background:#fff; border:1.5px solid var(--border); border-radius:12px; padding:14px; margin-bottom:10px; border-left:4px solid ${sub.status === 'approved' ? '#10b981' : sub.status === 'rejected' ? '#ef4444' : '#f59e0b'};"><div style="display:flex; justify-content:space-between; gap:10px;"><div style="flex:1;"><div style="font-weight:800; font-size:.9rem;">${esc(sub.taskTitle || 'Task')}</div><div style="font-size:.72rem; margin-top:3px;">👤 ${esc(sub.userName || 'User')} • ID: ${sub.telegramId || sub.userId || 'N/A'}</div><div style="font-size:.68rem; color:#94a3b8; margin-top:4px;">${preview}</div><div style="font-size:.68rem; color:#94a3b8; margin-top:4px;">🕒 ${date}</div></div><div style="font-weight:900; color:var(--success);">+${sub.reward || 0} TK</div></div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">${sb}${sub.fileUrl ? `<a href="${sub.fileUrl}" target="_blank" style="color:var(--primary); font-weight:700; font-size:.75rem;"><i class="fas fa-external-link-alt"></i> View</a>` : ''}</div>${sub.status === 'pending' ? `<div style="display:flex; gap:8px; margin-top:10px;"><button class="btn btn-green btn-small" onclick="reviewSubmission('${sub.id}','approved')" style="flex:1;"><i class="fas fa-check"></i> Approve</button><button class="btn btn-red btn-small" onclick="reviewSubmission('${sub.id}','rejected')" style="flex:1;"><i class="fas fa-times"></i> Reject</button></div>` : ''}</div>`;
   });
   c.innerHTML = h;
 }
@@ -3838,9 +3352,7 @@ async function reviewSubmission(subId, action) {
   loadTaskSubmissions();
 }
 
-// ═══════════════════════════════════════════════════════════
 // ANALYTICS
-// ═══════════════════════════════════════════════════════════
 function getAnalyticsRangeBounds(range) {
   const now = new Date();
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
@@ -3900,29 +3412,18 @@ async function loadAnalytics() {
   document.getElementById('anaEarnings').textContent = wdAmount.toFixed(2);
   let h = '';
   data.slice(0, 30).forEach(u => {
-    h += `<tr>
-      <td style="padding:10px; background:#f8fafc; border-radius:8px 0 0 8px;">${esc(u.name)}<br><small style="color:#94a3b8;">${u.id}</small></td>
-      <td style="padding:10px; background:#f8fafc; font-weight:800;">${u.views}</td>
-      <td style="padding:10px; background:#f8fafc; font-weight:800;">${u.clicks}</td>
-      <td style="padding:10px; background:#f8fafc; font-weight:800; color:var(--success); border-radius:0 8px 8px 0;">${u.earned.toFixed(2)} TK</td>
-    </tr>`;
+    h += `<tr><td style="padding:10px; background:#f8fafc; border-radius:8px 0 0 8px;">${esc(u.name)}<br><small style="color:#94a3b8;">${u.id}</small></td><td style="padding:10px; background:#f8fafc; font-weight:800;">${u.views}</td><td style="padding:10px; background:#f8fafc; font-weight:800;">${u.clicks}</td><td style="padding:10px; background:#f8fafc; font-weight:800; color:var(--success); border-radius:0 8px 8px 0;">${u.earned.toFixed(2)} TK</td></tr>`;
   });
   document.getElementById('analyticsTableBody').innerHTML = h || '<tr><td colspan="4" style="text-align:center; padding:20px; color:#94a3b8;">No data</td></tr>';
 }
 
-// ═══════════════════════════════════════════════════════════
 // CHANNELS
-// ═══════════════════════════════════════════════════════════
 function renderChannelLinks() {
   const c = document.getElementById('channelLinksContainer');
   if (!channelLinks.length) { c.innerHTML = '<p style="text-align:center;color:#94a3b8;">No channels</p>'; return; }
   let h = '';
   channelLinks.forEach((l, i) => {
-    h += `<div style="display:flex; gap:8px; margin-bottom:10px; background:var(--bg-alt); padding:10px; border-radius:12px;">
-      <input type="text" value="${esc(l.label)}" id="cl_label_${i}" style="flex:1;">
-      <input type="text" value="${esc(l.chatId)}" id="cl_id_${i}" style="flex:1;">
-      <button class="btn btn-red btn-small" onclick="removeChannelLink(${i})"><i class="fas fa-trash"></i></button>
-    </div>`;
+    h += `<div style="display:flex; gap:8px; margin-bottom:10px; background:var(--bg-alt); padding:10px; border-radius:12px;"><input type="text" value="${esc(l.label)}" id="cl_label_${i}" style="flex:1;"><input type="text" value="${esc(l.chatId)}" id="cl_id_${i}" style="flex:1;"><button class="btn btn-red btn-small" onclick="removeChannelLink(${i})"><i class="fas fa-trash"></i></button></div>`;
   });
   c.innerHTML = h;
 }
@@ -3963,19 +3464,7 @@ function renderWithdrawLevels() {
   if (!withdrawLevels.length) { c.innerHTML = '<p style="text-align:center;color:#94a3b8;">No levels</p>'; return; }
   let h = '';
   withdrawLevels.forEach((l, i) => {
-    h += `<div style="background:var(--bg-alt); padding:14px; border-radius:12px; margin-bottom:10px;">
-      <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-        <span style="font-weight:800; color:var(--primary);">Level ${i+1}</span>
-        <button class="btn btn-red btn-small" onclick="removeWithdrawLevel(${i})" style="padding:5px 9px;"><i class="fas fa-trash"></i></button>
-      </div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <input type="number" value="${l.requiredRefs}" id="wl_refs_${i}" placeholder="Refs" style="width:68px; padding:8px;">
-        <input type="number" value="${l.fee}" id="wl_fee_${i}" placeholder="Fee" style="width:68px; padding:8px;">
-        <input type="number" value="${l.minAmount}" id="wl_min_${i}" placeholder="Min" style="width:68px; padding:8px;">
-        <input type="number" value="${l.maxAmount}" id="wl_max_${i}" placeholder="Max" style="width:68px; padding:8px;">
-        <input type="text" value="${esc(l.time)}" id="wl_time_${i}" placeholder="Time" style="width:110px; padding:8px;">
-      </div>
-    </div>`;
+    h += `<div style="background:var(--bg-alt); padding:14px; border-radius:12px; margin-bottom:10px;"><div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span style="font-weight:800; color:var(--primary);">Level ${i+1}</span><button class="btn btn-red btn-small" onclick="removeWithdrawLevel(${i})" style="padding:5px 9px;"><i class="fas fa-trash"></i></button></div><div style="display:flex; gap:8px; flex-wrap:wrap;"><input type="number" value="${l.requiredRefs}" id="wl_refs_${i}" placeholder="Refs" style="width:68px; padding:8px;"><input type="number" value="${l.fee}" id="wl_fee_${i}" placeholder="Fee" style="width:68px; padding:8px;"><input type="number" value="${l.minAmount}" id="wl_min_${i}" placeholder="Min" style="width:68px; padding:8px;"><input type="number" value="${l.maxAmount}" id="wl_max_${i}" placeholder="Max" style="width:68px; padding:8px;"><input type="text" value="${esc(l.time)}" id="wl_time_${i}" placeholder="Time" style="width:110px; padding:8px;"></div></div>`;
   });
   c.innerHTML = h;
 }
@@ -3995,9 +3484,7 @@ function selectCommissionMode(mode) {
   else { d.style.borderColor = 'var(--warning)'; d.style.background = 'rgba(245,158,11,.08)'; b.style.borderColor = 'var(--border)'; b.style.background = ''; }
 }
 
-// ═══════════════════════════════════════════════════════════
 // USERS
-// ═══════════════════════════════════════════════════════════
 async function loadUsers() {
   const snap = await db.ref('users').once('value');
   allUsers = []; currentUserCache = {};
@@ -4028,28 +3515,7 @@ function renderUsers() {
     const init = (u.name || 'U').charAt(0).toUpperCase();
     const photoHtml = u.photo ? `<img src="${esc(u.photo)}" onerror="this.style.display='none';this.parentNode.textContent='${init}'">` : init;
     const banned = u.isBanned === true;
-    h += `<div class="user-card-v2 ${banned ? 'banned' : ''}">
-      <div class="user-card-top">
-        <div class="user-avatar-v2">${photoHtml}</div>
-        <div class="user-info-v2">
-          <div class="name">${esc(u.name || 'Unknown')} ${banned ? '<span class="status-badge banned">BANNED</span>' : '<span class="status-badge active">ACTIVE</span>'} ${u.channelVerified ? '<span class="status-badge active">✅ VERIFIED</span>' : ''}</div>
-          <div class="meta"><span><i class="fas fa-id-badge"></i> ${u.id}</span>${u.username ? `<span>@${esc(u.username)}</span>` : ''}</div>
-        </div>
-      </div>
-      <div class="user-stats-grid">
-        <div class="user-stat-cell"><div class="num green">${(u.balance||0).toFixed(2)}</div><div class="lbl">Balance</div></div>
-        <div class="user-stat-cell"><div class="num blue">${u._adViews}</div><div class="lbl">Ad Views</div></div>
-        <div class="user-stat-cell"><div class="num purple">${u._qualifiedRefs}/${u._totalRefs}</div><div class="lbl">Refs Q/All</div></div>
-        <div class="user-stat-cell"><div class="num warn">${u._adClicks}</div><div class="lbl">Clicks</div></div>
-      </div>
-      <div class="user-actions-row">
-        <button class="btn btn-info btn-small" onclick="viewUserFull('${u.id}')"><i class="fas fa-eye"></i> View</button>
-        <button class="btn btn-purple btn-small" onclick="viewUserDetails('${u.id}')"><i class="fas fa-sitemap"></i> Details</button>
-        <button class="btn btn-warning btn-small" onclick="openUserEditModal('${u.id}')"><i class="fas fa-pen"></i> Edit</button>
-        <button class="btn ${banned ? 'btn-green' : 'btn-red'} btn-small" onclick="toggleBanUser('${u.id}', ${!banned})"><i class="fas fa-ban"></i> ${banned ? 'Unban' : 'Ban'}</button>
-        <button class="btn btn-red btn-small" onclick="deleteUserFull('${u.id}')"><i class="fas fa-trash"></i> Delete</button>
-      </div>
-    </div>`;
+    h += `<div class="user-card-v2 ${banned ? 'banned' : ''}"><div class="user-card-top"><div class="user-avatar-v2">${photoHtml}</div><div class="user-info-v2"><div class="name">${esc(u.name || 'Unknown')} ${banned ? '<span class="status-badge banned">BANNED</span>' : '<span class="status-badge active">ACTIVE</span>'} ${u.channelVerified ? '<span class="status-badge active">✅ VERIFIED</span>' : ''}</div><div class="meta"><span><i class="fas fa-id-badge"></i> ${u.id}</span>${u.username ? `<span>@${esc(u.username)}</span>` : ''}</div></div></div><div class="user-stats-grid"><div class="user-stat-cell"><div class="num green">${(u.balance||0).toFixed(2)}</div><div class="lbl">Balance</div></div><div class="user-stat-cell"><div class="num blue">${u._adViews}</div><div class="lbl">Ad Views</div></div><div class="user-stat-cell"><div class="num purple">${u._qualifiedRefs}/${u._totalRefs}</div><div class="lbl">Refs Q/All</div></div><div class="user-stat-cell"><div class="num warn">${u._adClicks}</div><div class="lbl">Clicks</div></div></div><div class="user-actions-row"><button class="btn btn-info btn-small" onclick="viewUserFull('${u.id}')"><i class="fas fa-eye"></i> View</button><button class="btn btn-purple btn-small" onclick="viewUserDetails('${u.id}')"><i class="fas fa-sitemap"></i> Details</button><button class="btn btn-warning btn-small" onclick="openUserEditModal('${u.id}')"><i class="fas fa-pen"></i> Edit</button><button class="btn ${banned ? 'btn-green' : 'btn-red'} btn-small" onclick="toggleBanUser('${u.id}', ${!banned})"><i class="fas fa-ban"></i> ${banned ? 'Unban' : 'Ban'}</button><button class="btn btn-red btn-small" onclick="deleteUserFull('${u.id}')"><i class="fas fa-trash"></i> Delete</button></div></div>`;
   });
   c.innerHTML = h;
 }
@@ -4066,37 +3532,7 @@ function viewUserFull(userId) {
   }
   if (!adViewsHtml) adViewsHtml = '<div style="text-align:center; color:#94a3b8; padding:8px; font-size:.75rem;">No ad slots configured</div>';
   const init = (u.name || 'U').charAt(0).toUpperCase();
-  document.getElementById('userViewBody').innerHTML = `
-    <div style="text-align:center; margin-bottom:16px;">
-      <div style="width:72px; height:72px; margin:0 auto 10px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.8rem; overflow:hidden;">${u.photo ? `<img src="${esc(u.photo)}" style="width:100%; height:100%; object-fit:cover;" onerror="this.parentNode.textContent='${init}'">` : init}</div>
-      <div style="font-weight:900; font-size:1.1rem;">${esc(u.name || 'Unknown')}</div>
-      <div style="font-size:.72rem; color:#94a3b8; margin-top:4px;">ID: <span style="font-family:monospace;">${u.id}</span></div>
-      <div style="margin-top:8px;">
-        ${u.isBanned ? '<span class="status-badge banned">🚫 BANNED</span>' : '<span class="status-badge active">✅ ACTIVE</span>'}
-        ${u.channelVerified ? '<span class="status-badge active" style="margin-left:4px;">✅ VERIFIED</span>' : ''}
-      </div>
-    </div>
-    ${u.referredByAdmin ? `<div class="info-display-box gold"><span class="label">By Admin</span><span class="value">${esc(u.referredByAdmin)}</span></div>` : ''}
-    ${u.referredBySubAdmin ? `<div class="info-display-box"><span class="label">By Sub-Admin</span><span class="value">${esc(u.referredBySubAdmin)}</span></div>` : ''}
-    <div class="section-divider"><i class="fas fa-wallet"></i> Financial</div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
-      <div class="stat-card green"><div class="num">${(u.balance||0).toFixed(2)}</div><div class="label">Balance</div></div>
-      <div class="stat-card info"><div class="num">${(u.totalEarned||0).toFixed(2)}</div><div class="label">Total Earned</div></div>
-      <div class="stat-card purple"><div class="num">${(u.referralBalance||0).toFixed(2)}</div><div class="label">Referral Bal</div></div>
-      <div class="stat-card warning"><div class="num">${(u.adClaimedTotal||0).toFixed(2)}</div><div class="label">Ad Claimed</div></div>
-    </div>
-    <div class="section-divider"><i class="fas fa-play-circle"></i> Ad Stats</div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
-      <div class="stat-card info"><div class="num">${u._adViews || 0}</div><div class="label">Total Views</div></div>
-      <div class="stat-card warning"><div class="num">${u._adClicks || 0}</div><div class="label">Total Clicks</div></div>
-    </div>
-    ${adViewsHtml}
-    <div style="display:flex; gap:10px; margin-top:16px;">
-      <button class="btn btn-warning" onclick="closeUserViewModal(); openUserEditModal('${u.id}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button>
-      <button class="btn btn-purple" onclick="closeUserViewModal(); viewUserDetails('${u.id}')" style="flex:1;"><i class="fas fa-sitemap"></i> Details</button>
-      <button class="btn btn-red" onclick="closeUserViewModal(); deleteUserFull('${u.id}')" style="flex:1;"><i class="fas fa-trash"></i></button>
-    </div>
-  `;
+  document.getElementById('userViewBody').innerHTML = `<div style="text-align:center; margin-bottom:16px;"><div style="width:72px; height:72px; margin:0 auto 10px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.8rem; overflow:hidden;">${u.photo ? `<img src="${esc(u.photo)}" style="width:100%; height:100%; object-fit:cover;" onerror="this.parentNode.textContent='${init}'">` : init}</div><div style="font-weight:900; font-size:1.1rem;">${esc(u.name || 'Unknown')}</div><div style="font-size:.72rem; color:#94a3b8; margin-top:4px;">ID: <span style="font-family:monospace;">${u.id}</span></div><div style="margin-top:8px;">${u.isBanned ? '<span class="status-badge banned">🚫 BANNED</span>' : '<span class="status-badge active">✅ ACTIVE</span>'}${u.channelVerified ? '<span class="status-badge active" style="margin-left:4px;">✅ VERIFIED</span>' : ''}</div></div>${u.referredByAdmin ? `<div class="info-display-box gold"><span class="label">By Admin</span><span class="value">${esc(u.referredByAdmin)}</span></div>` : ''}${u.referredBySubAdmin ? `<div class="info-display-box"><span class="label">By Sub-Admin</span><span class="value">${esc(u.referredBySubAdmin)}</span></div>` : ''}<div class="section-divider"><i class="fas fa-wallet"></i> Financial</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card green"><div class="num">${(u.balance||0).toFixed(2)}</div><div class="label">Balance</div></div><div class="stat-card info"><div class="num">${(u.totalEarned||0).toFixed(2)}</div><div class="label">Total Earned</div></div><div class="stat-card purple"><div class="num">${(u.referralBalance||0).toFixed(2)}</div><div class="label">Referral Bal</div></div><div class="stat-card warning"><div class="num">${(u.adClaimedTotal||0).toFixed(2)}</div><div class="label">Ad Claimed</div></div></div><div class="section-divider"><i class="fas fa-play-circle"></i> Ad Stats</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card info"><div class="num">${u._adViews || 0}</div><div class="label">Total Views</div></div><div class="stat-card warning"><div class="num">${u._adClicks || 0}</div><div class="label">Total Clicks</div></div></div>${adViewsHtml}<div style="display:flex; gap:10px; margin-top:16px;"><button class="btn btn-warning" onclick="closeUserViewModal(); openUserEditModal('${u.id}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-purple" onclick="closeUserViewModal(); viewUserDetails('${u.id}')" style="flex:1;"><i class="fas fa-sitemap"></i> Details</button><button class="btn btn-red" onclick="closeUserViewModal(); deleteUserFull('${u.id}')" style="flex:1;"><i class="fas fa-trash"></i></button></div>`;
   document.getElementById('userViewModal').classList.add('active');
 }
 function closeUserViewModal() { document.getElementById('userViewModal').classList.remove('active'); }
@@ -4117,10 +3553,7 @@ async function viewUserDetails(userId) {
         const bal = Number(ru.balance || 0);
         const qualified = bal >= MIN_REFERRAL_BALANCE;
         const initial = (ru.name || 'U').charAt(0).toUpperCase();
-        refsHtml += `<div class="ref-mini-item"><div class="ref-mini-avatar">${initial}</div>
-          <div class="ref-mini-info"><h5>${esc(ru.name || 'User')}</h5><p>ID: ${rid} • ${qualified ? '✅ Qualified' : '⏳ Need ' + MIN_REFERRAL_BALANCE + 'TK'}</p></div>
-          <div class="ref-mini-bal ${qualified ? 'qualified' : 'not-qualified'}">${bal.toFixed(2)} TK</div>
-        </div>`;
+        refsHtml += `<div class="ref-mini-item"><div class="ref-mini-avatar">${initial}</div><div class="ref-mini-info"><h5>${esc(ru.name || 'User')}</h5><p>ID: ${rid} • ${qualified ? '✅ Qualified' : '⏳ Need ' + MIN_REFERRAL_BALANCE + 'TK'}</p></div><div class="ref-mini-bal ${qualified ? 'qualified' : 'not-qualified'}">${bal.toFixed(2)} TK</div></div>`;
       }
     }
     let referredByHtml = 'N/A';
@@ -4129,20 +3562,7 @@ async function viewUserDetails(userId) {
       if (rs.exists()) { const ru = rs.val(); referredByHtml = `${esc(ru.name || 'User')} (ID: ${u.referredBy})`; }
       else referredByHtml = `Unknown (ID: ${u.referredBy})`;
     }
-    document.getElementById('userDetailsBody').innerHTML = `
-      <div style="text-align:center; margin-bottom:16px;">
-        <div style="font-weight:900; font-size:1.05rem;">${esc(u.name || 'User')}</div>
-        <div style="font-size:.72rem; color:#94a3b8;">ID: ${u.id}</div>
-      </div>
-      <div class="section-divider"><i class="fas fa-arrow-up"></i> Referred By</div>
-      <div class="info-display-box gold"><span class="label" style="color:#92400e;">Referrer</span><span class="value" style="color:#92400e;">${referredByHtml}</span></div>
-      <div class="section-divider"><i class="fas fa-arrow-down"></i> Referred Users (${refKeys.length})</div>
-      ${refsHtml}
-      <div style="display:flex; gap:10px; margin-top:16px;">
-        <button class="btn btn-warning" onclick="closeUserDetailsModal(); openUserEditModal('${u.id}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button>
-        <button class="btn btn-info" onclick="closeUserDetailsModal()" style="flex:1;"><i class="fas fa-times"></i> Close</button>
-      </div>
-    `;
+    document.getElementById('userDetailsBody').innerHTML = `<div style="text-align:center; margin-bottom:16px;"><div style="font-weight:900; font-size:1.05rem;">${esc(u.name || 'User')}</div><div style="font-size:.72rem; color:#94a3b8;">ID: ${u.id}</div></div><div class="section-divider"><i class="fas fa-arrow-up"></i> Referred By</div><div class="info-display-box gold"><span class="label" style="color:#92400e;">Referrer</span><span class="value" style="color:#92400e;">${referredByHtml}</span></div><div class="section-divider"><i class="fas fa-arrow-down"></i> Referred Users (${refKeys.length})</div>${refsHtml}<div style="display:flex; gap:10px; margin-top:16px;"><button class="btn btn-warning" onclick="closeUserDetailsModal(); openUserEditModal('${u.id}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-info" onclick="closeUserDetailsModal()" style="flex:1;"><i class="fas fa-times"></i> Close</button></div>`;
   } catch(e) { toast('❌ ' + e.message); }
 }
 function closeUserDetailsModal() { document.getElementById('userDetailsModal').classList.remove('active'); }
@@ -4241,20 +3661,11 @@ async function loadReferralStats() {
     let h = '';
     const medals = ['🥇','🥈','🥉'];
     users.slice(0, 10).forEach((u, i) => {
-      h += `<div style="display:flex; align-items:center; gap:12px; padding:12px; background:#f8fafc; border-radius:12px; margin-bottom:8px;">
-        <div style="width:40px; text-align:center; font-weight:900; font-size:1.15rem;">${i<3?medals[i]:'#'+(i+1)}</div>
-        <div style="flex:1;"><div style="font-weight:800; font-size:.88rem;">${esc(u.name)}</div><div style="font-size:.7rem; color:#94a3b8;">ID: ${u.id}</div></div>
-        <div style="text-align:right;"><div style="color:var(--success); font-weight:900;">✅ ${u.qualifiedReferrals}</div><div style="font-size:.7rem; color:#94a3b8;">Total: ${u.totalReferrals}</div></div>
-      </div>`;
+      h += `<div style="display:flex; align-items:center; gap:12px; padding:12px; background:#f8fafc; border-radius:12px; margin-bottom:8px;"><div style="width:40px; text-align:center; font-weight:900; font-size:1.15rem;">${i<3?medals[i]:'#'+(i+1)}</div><div style="flex:1;"><div style="font-weight:800; font-size:.88rem;">${esc(u.name)}</div><div style="font-size:.7rem; color:#94a3b8;">ID: ${u.id}</div></div><div style="text-align:right;"><div style="color:var(--success); font-weight:900;">✅ ${u.qualifiedReferrals}</div><div style="font-size:.7rem; color:#94a3b8;">Total: ${u.totalReferrals}</div></div></div>`;
     });
     leader.innerHTML = h;
   }
-  document.getElementById('adminRefStats').innerHTML = `<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-    <div class="stat-card purple"><div class="num">${tRefs}</div><div class="label">Total Refs</div></div>
-    <div class="stat-card green"><div class="num">${tQ}</div><div class="label">Qualified</div></div>
-    <div class="stat-card info"><div class="num">${tComm.toFixed(2)}</div><div class="label">Commission</div></div>
-    <div class="stat-card danger"><div class="num">${snap.numChildren()}</div><div class="label">Users</div></div>
-  </div>`;
+  document.getElementById('adminRefStats').innerHTML = `<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="stat-card purple"><div class="num">${tRefs}</div><div class="label">Total Refs</div></div><div class="stat-card green"><div class="num">${tQ}</div><div class="label">Qualified</div></div><div class="stat-card info"><div class="num">${tComm.toFixed(2)}</div><div class="label">Commission</div></div><div class="stat-card danger"><div class="num">${snap.numChildren()}</div><div class="label">Users</div></div></div>`;
   renderAllUsersReferralChainsImpl();
 }
 async function renderAllUsersReferralChainsImpl() {
@@ -4272,24 +3683,13 @@ async function renderAllUsersReferralChainsImpl() {
     const refKeys = Object.keys(refs);
     if (!refKeys.length) return;
     chainsCount++;
-    h += `<div style="background:linear-gradient(135deg,#fff,#f8fafc); border:1.5px solid var(--border); border-radius:14px; padding:14px; margin-bottom:12px; border-left:4px solid #6366f1;">
-      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-        <div style="width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900;">${(u.name || 'U').charAt(0).toUpperCase()}</div>
-        <div style="flex:1;"><div style="font-weight:900; font-size:.9rem;">${esc(u.name || 'User')}</div><div style="font-size:.68rem; color:#94a3b8;">ID: ${uid} • ${refKeys.length} referrals</div></div>
-      </div>
-      <div style="border-top:1px dashed #e2e8f0; padding-top:10px;">`;
+    h += `<div style="background:linear-gradient(135deg,#fff,#f8fafc); border:1.5px solid var(--border); border-radius:14px; padding:14px; margin-bottom:12px; border-left:4px solid #6366f1;"><div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;"><div style="width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900;">${(u.name || 'U').charAt(0).toUpperCase()}</div><div style="flex:1;"><div style="font-weight:900; font-size:.9rem;">${esc(u.name || 'User')}</div><div style="font-size:.68rem; color:#94a3b8;">ID: ${uid} • ${refKeys.length} referrals</div></div></div><div style="border-top:1px dashed #e2e8f0; padding-top:10px;">`;
     refKeys.forEach(rid => {
       const ru = allU[rid] || {};
       const bal = Number(ru.balance || 0);
       const qualified = bal >= MIN_REFERRAL_BALANCE;
       const qLabel = qualified ? '<span class="qualified-yes">✅ Qualified</span>' : '<span class="qualified-no">⏳ Not Qualified</span>';
-      h += `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:#f8fafc; border-radius:8px; margin-bottom:6px; font-size:.78rem;">
-        <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:0;">
-          <span style="color:#6366f1;">↳</span>
-          <div style="min-width:0; flex:1;"><b>${esc(ru.name || 'User')}</b><div style="font-size:.65rem; color:#94a3b8;">ID: ${rid}</div></div>
-        </div>
-        <div style="text-align:right;">${qLabel}<div style="font-weight:900; color:#6366f1; font-size:.8rem; margin-top:2px;">${bal.toFixed(2)} TK</div></div>
-      </div>`;
+      h += `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 10px; background:#f8fafc; border-radius:8px; margin-bottom:6px; font-size:.78rem;"><div style="display:flex; align-items:center; gap:8px; flex:1; min-width:0;"><span style="color:#6366f1;">↳</span><div style="min-width:0; flex:1;"><b>${esc(ru.name || 'User')}</b><div style="font-size:.65rem; color:#94a3b8;">ID: ${rid}</div></div></div><div style="text-align:right;">${qLabel}<div style="font-weight:900; color:#6366f1; font-size:.8rem; margin-top:2px;">${bal.toFixed(2)} TK</div></div></div>`;
     });
     h += `</div></div>`;
   });
@@ -4302,17 +3702,7 @@ db.ref('withdrawals').orderByChild('status').equalTo('pending').on('value', snap
   let h = '';
   if (snap.exists()) snap.forEach(child => {
     const r = child.val(), k = child.key;
-    h += `<div style="background:#fffbeb; border:1px solid var(--border); padding:16px; border-radius:16px; margin-bottom:12px; border-left:4px solid #f59e0b;">
-      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-        <span style="background:#dbeafe; color:#1e40af; padding:5px 12px; border-radius:8px; font-weight:800; font-size:.75rem;">${esc(r.method)}</span>
-        <span style="font-weight:900; color:var(--primary); font-size:1.2rem;">${r.amount} TK</span>
-      </div>
-      <div style="font-size:.82rem; line-height:1.7;"><b>Account:</b> <span style="color:#dc2626;">${esc(r.account)}</span><br><b>User ID:</b> ${r.userId}<br><b>Name:</b> ${esc(r.userName)}</div>
-      <div style="display:flex; gap:8px; margin-top:14px;">
-        <button class="btn btn-green btn-small" onclick="approveWd('${k}')" style="flex:1;"><i class="fas fa-check"></i> Approve</button>
-        <button class="btn btn-red btn-small" onclick="rejectWd('${k}','${r.userId}',${r.amount})" style="flex:1;"><i class="fas fa-times"></i> Reject</button>
-      </div>
-    </div>`;
+    h += `<div style="background:#fffbeb; border:1px solid var(--border); padding:16px; border-radius:16px; margin-bottom:12px; border-left:4px solid #f59e0b;"><div style="display:flex; justify-content:space-between; margin-bottom:12px;"><span style="background:#dbeafe; color:#1e40af; padding:5px 12px; border-radius:8px; font-weight:800; font-size:.75rem;">${esc(r.method)}</span><span style="font-weight:900; color:var(--primary); font-size:1.2rem;">${r.amount} TK</span></div><div style="font-size:.82rem; line-height:1.7;"><b>Account:</b> <span style="color:#dc2626;">${esc(r.account)}</span><br><b>User ID:</b> ${r.userId}<br><b>Name:</b> ${esc(r.userName)}</div><div style="display:flex; gap:8px; margin-top:14px;"><button class="btn btn-green btn-small" onclick="approveWd('${k}')" style="flex:1;"><i class="fas fa-check"></i> Approve</button><button class="btn btn-red btn-small" onclick="rejectWd('${k}','${r.userId}',${r.amount})" style="flex:1;"><i class="fas fa-times"></i> Reject</button></div></div>`;
   });
   else h = '<div class="empty-state"><p>No pending</p></div>';
   c.innerHTML = h;
@@ -4342,12 +3732,7 @@ async function saveBecomeAdminSettings() {
   const enabled = document.getElementById('becomeAdminEnabled').value === 'true';
   const link = document.getElementById('becomeAdminLink').value.trim();
   if (enabled && (!link || !/^https?:\/\//i.test(link))) return toast('❌ Valid https link required');
-  await db.ref('config').update({
-    becomeAdminEnabled: enabled, becomeAdminLink: link,
-    becomeAdminTitle: document.getElementById('becomeAdminTitle').value.trim(),
-    becomeAdminSub: document.getElementById('becomeAdminSub').value.trim(),
-    becomeAdminBtnText: document.getElementById('becomeAdminBtnText').value.trim()
-  });
+  await db.ref('config').update({ becomeAdminEnabled: enabled, becomeAdminLink: link, becomeAdminTitle: document.getElementById('becomeAdminTitle').value.trim(), becomeAdminSub: document.getElementById('becomeAdminSub').value.trim(), becomeAdminBtnText: document.getElementById('becomeAdminBtnText').value.trim() });
   toast('✅ Saved');
 }
 async function saveServiceCharge() {
@@ -4419,16 +3804,345 @@ function switchTab(id, el) {
 function toast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
 function esc(s) { return String(s || '').replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c])); }
 
+// ═══════════════════════════════════════════════════════════
+// 🔴 NEW FUNCTIONS - যেগুলো আগে missing ছিল
+// ═══════════════════════════════════════════════════════════
+
+// 1️⃣ ADMINS LIST LOAD (with Super Admin at top)
+async function loadAdminsList() {
+  const container = document.getElementById('adminsListContainer');
+  if (!container) return;
+  container.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:16px;">Loading...</p>';
+  try {
+    let html = '';
+    // Super Admin সবার আগে
+    const superSnap = await db.ref('config/superAdmin').once('value');
+    if (superSnap.exists()) {
+      const s = superSnap.val();
+      html += `<div class="admin-item super">
+        <div class="admin-item-top"><div class="admin-item-left"><div class="admin-item-avatar" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">👑</div><div class="admin-item-info"><div class="name">${esc(s.username || 'Super Admin')} <span class="status-badge superadmin">SUPER ADMIN</span></div><div class="meta">ID: super</div></div></div></div>
+        <div class="admin-balance-box">
+          <div class="admin-balance-cell green"><div class="val">${Number(s.balance || 0).toFixed(2)}</div><div class="lbl">Balance</div></div>
+          <div class="admin-balance-cell gold"><div class="val">${Number(s.revenueBalance || 0).toFixed(2)}</div><div class="lbl">Revenue</div></div>
+          <div class="admin-balance-cell"><div class="val">${Number(s.totalSpent || 0).toFixed(2)}</div><div class="lbl">Spent</div></div>
+          <div class="admin-balance-cell warn"><div class="val">100%</div><div class="lbl">Share</div></div>
+        </div>
+        <div class="admin-item-actions">
+          <button class="btn btn-green btn-small" onclick="openSuperDepositModal()"><i class="fas fa-plus"></i> Add Balance</button>
+          <button class="btn btn-info btn-small" onclick="openSuperEditModal()"><i class="fas fa-pen"></i> Edit</button>
+        </div>
+      </div>`;
+    }
+    // বাকি Admins
+    const snap = await db.ref('admins').once('value');
+    if (!snap.exists()) {
+      container.innerHTML = html || '<div class="empty-state"><p>No admins yet</p></div>';
+      return;
+    }
+    snap.forEach(child => {
+      const a = child.val();
+      const id = child.key;
+      const banned = a.isBanned === true;
+      const suspended = a.isSuspended === true;
+      const active = a.isActive !== false;
+      let sc = 'active', st = 'ACTIVE';
+      if (banned) { sc = 'banned'; st = 'BANNED'; }
+      else if (suspended) { sc = 'suspended'; st = 'SUSPENDED'; }
+      else if (!active) { sc = 'closed'; st = 'DISABLED'; }
+      const subAdmins = a.subAdmins || {};
+      const subCount = Object.keys(subAdmins).length;
+      let subAdminListHtml = '';
+      if (subCount > 0) {
+        subAdminListHtml = `<div class="subadmin-list"><div style="font-size:.7rem; font-weight:900; color:#1e40af; margin-bottom:6px;">📋 Sub-Admins (${subCount})</div>`;
+        Object.keys(subAdmins).forEach(sid => {
+          const s = subAdmins[sid];
+          subAdminListHtml += `<div class="subadmin-list-item"><span>👤 ${esc(s.username)} ${s.isBanned ? '🚫' : '✅'}</span><span style="font-weight:900; color:#3b82f6;">${Number(s.balance||0).toFixed(2)} TK</span></div>`;
+        });
+        subAdminListHtml += `</div>`;
+      }
+      html += `<div class="admin-item ${banned ? 'banned' : suspended ? 'suspended' : ''}">
+        <div class="admin-item-top"><div class="admin-item-left"><div class="admin-item-avatar">${(a.username || 'A').charAt(0).toUpperCase()}</div><div class="admin-item-info"><div class="name">${esc(a.username || 'Admin')} <span class="status-badge ${sc}">${st}</span> ${subCount > 0 ? `<span class="status-badge subadmin">${subCount} SUB</span>` : ''}</div><div class="meta">ID: ${id}</div></div></div></div>
+        <div class="admin-balance-box">
+          <div class="admin-balance-cell green"><div class="val">${Number(a.balance||0).toFixed(2)}</div><div class="lbl">Balance</div></div>
+          <div class="admin-balance-cell gold"><div class="val">${Number(a.revenueBalance||0).toFixed(2)}</div><div class="lbl">Revenue</div></div>
+          <div class="admin-balance-cell"><div class="val">${Number(a.totalSpent||0).toFixed(2)}</div><div class="lbl">Spent</div></div>
+          <div class="admin-balance-cell warn"><div class="val">${Number(a.revenueSharePercent||30)}%</div><div class="lbl">Share</div></div>
+        </div>
+        ${subAdminListHtml}
+        <div class="admin-item-actions">
+          <button class="btn btn-info btn-small" onclick="viewAdminFull('${id}')"><i class="fas fa-eye"></i></button>
+          <button class="btn btn-warning btn-small" onclick="openAdminEditModal('${id}')"><i class="fas fa-pen"></i></button>
+          <button class="btn btn-green btn-small" onclick="openDepositModal('${id}', '${esc(a.username)}')"><i class="fas fa-plus"></i> Balance</button>
+          ${banned ? `<button class="btn btn-green btn-small" onclick="toggleAdminBan('${id}', false)"><i class="fas fa-unlock"></i></button>` : `<button class="btn btn-red btn-small" onclick="openBanModal('${id}', '${esc(a.username)}', 'ban')"><i class="fas fa-ban"></i></button>`}
+          <button class="btn btn-purple btn-small" onclick="deleteAdminFull('${id}')"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>`;
+    });
+    container.innerHTML = html || '<div class="empty-state"><p>No admins</p></div>';
+  } catch(e) {
+    container.innerHTML = '<div class="empty-state"><p>Error: ' + e.message + '</p></div>';
+  }
+}
+
+// 2️⃣ SUPER ADMIN SELF BALANCE/EDIT
+async function openSuperDepositModal() {
+  if (!currentSession || currentSession.role !== 'super') return;
+  const amt = parseFloat(prompt('💰 Super Admin-এ কত টাকা যোগ করবেন?', '100') || '0');
+  if (!amt || amt <= 0) return toast('❌ Invalid amount');
+  const snap = await db.ref('config/superAdmin').once('value');
+  const cur = snap.val() || {};
+  const newBal = Number(cur.balance || 0) + amt;
+  await db.ref('config/superAdmin').update({ balance: newBal, totalDeposited: Number(cur.totalDeposited || 0) + amt });
+  toast(`✅ ${amt.toFixed(2)} TK যোগ! New: ${newBal.toFixed(2)}`);
+  loadAdminsList();
+}
+async function openSuperEditModal() {
+  if (!currentSession || currentSession.role !== 'super') return;
+  const snap = await db.ref('config/superAdmin').once('value');
+  const s = snap.val() || {};
+  const newUser = prompt('👤 Super Admin Username:', s.username || '');
+  if (newUser === null) return;
+  if (!newUser || newUser.trim().length < 3) return toast('❌ Username min 3');
+  const newBal = prompt('💰 Balance (TK):', Number(s.balance || 0).toFixed(2));
+  if (newBal === null) return;
+  const balNum = parseFloat(newBal) || 0;
+  const newRevBal = prompt('💰 Revenue Balance (TK):', Number(s.revenueBalance || 0).toFixed(2));
+  if (newRevBal === null) return;
+  const revBalNum = parseFloat(newRevBal) || 0;
+  await db.ref('config/superAdmin').update({ username: newUser.trim(), balance: balNum, revenueBalance: revBalNum, updatedAt: Date.now() });
+  toast('✅ Super Admin updated!');
+  document.getElementById('headerAdminName').textContent = newUser.trim();
+  currentSession.username = newUser.trim();
+  saveSession(currentSession);
+  loadAdminsList();
+}
+
+// 3️⃣ ADMIN DEPOSIT MODAL
+function openDepositModal(adminId, adminName) {
+  document.getElementById('depAdminId').value = adminId;
+  document.getElementById('depAdminName').value = adminName;
+  document.getElementById('depMethod').value = 'Manual';
+  document.getElementById('depAccount').value = '';
+  document.getElementById('depAmount').value = '';
+  document.getElementById('depNote').value = '';
+  document.getElementById('depositModal').classList.add('active');
+}
+function closeDepositModal() { document.getElementById('depositModal').classList.remove('active'); }
+async function confirmDeposit() {
+  const adminId = document.getElementById('depAdminId').value;
+  const method = document.getElementById('depMethod').value;
+  const account = document.getElementById('depAccount').value.trim();
+  const amount = parseFloat(document.getElementById('depAmount').value);
+  const note = document.getElementById('depNote').value.trim();
+  if (!amount || amount <= 0) return toast('❌ Valid amount required');
+  if (!account) return toast('❌ Account required');
+  const snap = await db.ref('admins/' + adminId).once('value');
+  if (!snap.exists()) return toast('❌ Admin not found');
+  const a = snap.val();
+  const deposits = a.deposits || {};
+  deposits['dep_' + Date.now()] = { method, account, amount, note, timestamp: Date.now() };
+  await db.ref('admins/' + adminId).update({ balance: Number(a.balance || 0) + amount, totalDeposited: Number(a.totalDeposited || 0) + amount, deposits });
+  toast(`✅ ${amount.toFixed(2)} TK যোগ হয়েছে!`);
+  closeDepositModal();
+  loadAdminsList();
+}
+
+// 4️⃣ ADMIN BAN MODAL
+function openBanModal(adminId, adminName, action) {
+  document.getElementById('banAdminId').value = adminId;
+  document.getElementById('banAdminName').value = adminName;
+  document.getElementById('banAction').value = action;
+  document.getElementById('banModalTitle').textContent = action === 'ban' ? 'Ban Admin' : 'Suspend Admin';
+  document.getElementById('banReason').value = '';
+  document.getElementById('banModal').classList.add('active');
+}
+function closeBanModal() { document.getElementById('banModal').classList.remove('active'); }
+async function confirmBan() {
+  const adminId = document.getElementById('banAdminId').value;
+  const action = document.getElementById('banAction').value;
+  const reason = document.getElementById('banReason').value.trim();
+  if (!reason) return toast('❌ Reason required');
+  const update = action === 'ban' ? { isBanned: true, banReason: reason } : { isSuspended: true, suspendReason: reason };
+  await db.ref('admins/' + adminId).update(update);
+  toast('✅ Done');
+  closeBanModal();
+  loadAdminsList();
+}
+async function toggleAdminBan(adminId, ban) {
+  if (!confirm(ban ? 'Ban this admin?' : 'Unban?')) return;
+  await db.ref('admins/' + adminId).update({ isBanned: ban, banReason: ban ? 'By Super Admin' : null });
+  toast('✅ Done');
+  loadAdminsList();
+}
+
+// 5️⃣ ADMIN EDIT MODAL
+async function openAdminEditModal(adminId) {
+  const snap = await db.ref('admins/' + adminId).once('value');
+  if (!snap.exists()) return toast('❌ Not found');
+  const a = snap.val();
+  document.getElementById('aeAdminId').value = adminId;
+  document.getElementById('aeUsername').value = a.username || '';
+  document.getElementById('aePassword').value = '';
+  document.getElementById('aeRevenueSharePercent').value = a.revenueSharePercent || 30;
+  document.getElementById('aeBalance').value = Number(a.balance || 0).toFixed(2);
+  document.getElementById('aeTotalDeposited').value = Number(a.totalDeposited || 0).toFixed(2);
+  document.getElementById('aeTotalSpent').value = Number(a.totalSpent || 0).toFixed(2);
+  document.getElementById('aeTotalRefunded').value = Number(a.totalRefunded || 0).toFixed(2);
+  document.getElementById('aeTotalFees').value = Number(a.totalFees || 0).toFixed(2);
+  document.getElementById('aeTotalServiceCharges').value = Number(a.totalServiceCharges || 0).toFixed(2);
+  document.getElementById('aeRevenueBalance').value = Number(a.revenueBalance || 0).toFixed(2);
+  document.getElementById('aeTotalRevenueEarned').value = Number(a.totalRevenueEarned || 0).toFixed(2);
+  document.getElementById('aeIsActive').value = String(a.isActive !== false);
+  document.getElementById('aeIsBanned').value = String(a.isBanned === true);
+  document.getElementById('aeIsSuspended').value = String(a.isSuspended === true);
+  document.getElementById('adminEditModal').classList.add('active');
+}
+function closeAdminEditModal() { document.getElementById('adminEditModal').classList.remove('active'); }
+async function saveAdminFullEdit() {
+  const adminId = document.getElementById('aeAdminId').value;
+  if (!adminId) return;
+  const newPw = document.getElementById('aePassword').value;
+  const update = {
+    username: document.getElementById('aeUsername').value.trim(),
+    revenueSharePercent: parseFloat(document.getElementById('aeRevenueSharePercent').value) || 30,
+    balance: parseFloat(document.getElementById('aeBalance').value) || 0,
+    totalDeposited: parseFloat(document.getElementById('aeTotalDeposited').value) || 0,
+    totalSpent: parseFloat(document.getElementById('aeTotalSpent').value) || 0,
+    totalRefunded: parseFloat(document.getElementById('aeTotalRefunded').value) || 0,
+    totalFees: parseFloat(document.getElementById('aeTotalFees').value) || 0,
+    totalServiceCharges: parseFloat(document.getElementById('aeTotalServiceCharges').value) || 0,
+    revenueBalance: parseFloat(document.getElementById('aeRevenueBalance').value) || 0,
+    totalRevenueEarned: parseFloat(document.getElementById('aeTotalRevenueEarned').value) || 0,
+    isActive: document.getElementById('aeIsActive').value === 'true',
+    isBanned: document.getElementById('aeIsBanned').value === 'true',
+    isSuspended: document.getElementById('aeIsSuspended').value === 'true',
+    updatedAt: Date.now()
+  };
+  if (newPw && newPw.length >= 4) update.passwordHash = await sha256(newPw);
+  await db.ref('admins/' + adminId).update(update);
+  toast('✅ Admin updated!');
+  closeAdminEditModal();
+  loadAdminsList();
+}
+
+// 6️⃣ ADMIN VIEW MODAL
+async function viewAdminFull(adminId) {
+  const snap = await db.ref('admins/' + adminId).once('value');
+  if (!snap.exists()) return toast('❌ Not found');
+  const a = snap.val();
+  const subAdmins = a.subAdmins || {};
+  const subCount = Object.keys(subAdmins).length;
+  document.getElementById('adminViewBody').innerHTML = `
+    <div style="text-align:center;margin-bottom:16px;"><div style="width:72px;height:72px;margin:0 auto 10px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.8rem;">${(a.username||'A').charAt(0).toUpperCase()}</div><div style="font-weight:900;font-size:1.1rem;">${esc(a.username||'Admin')}</div><div style="font-size:.72rem;color:#94a3b8;">ID: ${adminId}</div><div style="margin-top:8px;">${a.isBanned ? '<span class="status-badge banned">🚫 BANNED</span>' : '<span class="status-badge active">✅ ACTIVE</span>'}</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;"><div class="stat-card green"><div class="num">${Number(a.balance||0).toFixed(2)}</div><div class="label">Balance</div></div><div class="stat-card gold"><div class="num">${Number(a.revenueBalance||0).toFixed(2)}</div><div class="label">Revenue</div></div><div class="stat-card info"><div class="num">${Number(a.totalDeposited||0).toFixed(2)}</div><div class="label">Deposited</div></div><div class="stat-card warning"><div class="num">${Number(a.totalSpent||0).toFixed(2)}</div><div class="label">Spent</div></div></div>
+    <div class="section-divider"><i class="fas fa-users-gear"></i> Sub-Admins (${subCount})</div>
+    ${subCount === 0 ? '<p style="text-align:center;color:#94a3b8;padding:12px;">No sub-admins</p>' : Object.values(subAdmins).map(s => `<div class="ref-mini-item"><div class="ref-mini-avatar">${(s.username||'S').charAt(0).toUpperCase()}</div><div class="ref-mini-info"><h5>${esc(s.username)}</h5><p>Balance: ${Number(s.balance||0).toFixed(2)} TK</p></div></div>`).join('')}
+    <div style="display:flex;gap:10px;margin-top:16px;"><button class="btn btn-warning" onclick="closeAdminViewModal();openAdminEditModal('${adminId}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-info" onclick="closeAdminViewModal()" style="flex:1;"><i class="fas fa-times"></i> Close</button></div>
+  `;
+  document.getElementById('adminViewModal').classList.add('active');
+}
+function closeAdminViewModal() { document.getElementById('adminViewModal').classList.remove('active'); }
+
+// 7️⃣ ADMIN DELETE
+async function deleteAdminFull(adminId) {
+  if (!confirm('⚠️ এই Admin এবং তার সব Sub-Admins ডিলিট হবে। Continue?')) return;
+  await db.ref('admins/' + adminId).remove();
+  toast('✅ Admin deleted');
+  loadAdminsList();
+}
+
+// 8️⃣ SUPER PASSWORD CHANGE
+async function changeSuperPassword() {
+  if (!currentSession || currentSession.role !== 'super') return;
+  const cur = document.getElementById('curSuperPw').value;
+  const nw = document.getElementById('newSuperPw').value;
+  const conf = document.getElementById('confSuperPw').value;
+  if (!cur || !nw || nw.length < 4) return toast('❌ Password min 4');
+  if (nw !== conf) return toast('❌ Passwords mismatch');
+  const hash = await sha256(cur);
+  const superData = await getSuperAdminData();
+  if (!superData || superData.passwordHash !== hash) return toast('❌ Current password wrong');
+  await db.ref('config/superAdmin').update({ passwordHash: await sha256(nw), updatedAt: Date.now() });
+  toast('✅ Password changed!');
+  document.getElementById('curSuperPw').value = '';
+  document.getElementById('newSuperPw').value = '';
+  document.getElementById('confSuperPw').value = '';
+}
+
+// 9️⃣ ADD NEW ADMIN
+async function addNewAdmin() {
+  if (!currentSession || currentSession.role !== 'super') return;
+  const username = document.getElementById('newAdminUsername').value.trim();
+  const password = document.getElementById('newAdminPassword').value;
+  const confirm = document.getElementById('newAdminConfirmPassword').value;
+  if (!username || username.length < 3) return toast('❌ Username min 3');
+  if (!password || password.length < 4) return toast('❌ Password min 4');
+  if (password !== confirm) return toast('❌ Passwords mismatch');
+  const adminsSnap = await db.ref('admins').once('value');
+  let dup = false;
+  adminsSnap.forEach(c => { if (c.val().username === username) dup = true; });
+  if (dup) return toast('❌ Username exists');
+  const superAdmin = await getSuperAdminData();
+  if (superAdmin && superAdmin.username === username) return toast('❌ Username taken');
+  const passwordHash = await sha256(password);
+  const adminRefCode = generateAdminRefCode(username);
+  const newAdminRef = db.ref('admins').push();
+  await newAdminRef.set({
+    username, passwordHash, adminReferralCode: adminRefCode,
+    isActive: true, isBanned: false, isSuspended: false,
+    balance: 0, totalDeposited: 0, totalSpent: 0, totalRefunded: 0, totalFees: 0, totalServiceCharges: 0,
+    revenueBalance: 0, totalRevenueEarned: 0, totalRevenueWithdrawn: 0, revenueSharePercent: 30,
+    deposits: {}, adminContact: null, subAdmins: {},
+    createdAt: Date.now(), createdBy: currentSession.username
+  });
+  toast(`✅ Admin "${username}" তৈরি হয়েছে!`);
+  document.getElementById('newAdminUsername').value = '';
+  document.getElementById('newAdminPassword').value = '';
+  document.getElementById('newAdminConfirmPassword').value = '';
+  loadAdminsList();
+}
+
+// 🔟 LINK BASE PREVIEW & SAVE
+function updateBaseUrlTabPreview() {
+  const input = document.getElementById('baseUrlInputTab');
+  const paramInput = document.getElementById('baseUrlParamTab');
+  const preview = document.getElementById('baseUrlPreviewTab');
+  if (!input || !preview) return;
+  if (input.value && !input.value.startsWith('http')) input.value = configData.baseUrl || '';
+  if (paramInput && !paramInput.value) paramInput.value = configData.baseUrlParam || 'ref';
+  const url = (input.value || '').trim();
+  const param = (paramInput?.value || 'ref').trim();
+  if (!url) { preview.textContent = '—'; return; }
+  const sep = url.includes('?') ? '&' : '?';
+  preview.textContent = url + sep + param + '=YOUR_REF_CODE';
+}
+async function saveBaseUrlFromTab() {
+  const url = document.getElementById('baseUrlInputTab').value.trim();
+  const param = document.getElementById('baseUrlParamTab').value.trim() || 'ref';
+  if (!url || !/^https?:\/\//i.test(url)) return toast('❌ Valid URL required');
+  await db.ref('config').update({ baseUrl: url, baseUrlParam: param, baseUrlUpdatedAt: Date.now() });
+  configData.baseUrl = url;
+  configData.baseUrlParam = param;
+  toast('✅ Base URL saved!');
+  updateBaseUrlTabPreview();
+}
+
+// 1️⃣1️⃣ SUB ADMIN DETAILS CLOSE
+function closeSubAdminDetailsModal() { document.getElementById('subAdminDetailsModal').classList.remove('active'); }
+
+// ═══════════════════════════════════════════════════════════
+// PANEL INIT
+// ═══════════════════════════════════════════════════════════
 function runPanelInit() {
   if (runPanelInit._done) return;
   runPanelInit._done = true;
   loadRevenueSettings();
-  if (currentSession.role === 'super') { 
-    loadAnalytics(); loadVerificationStats(); toggleSurveyFields(); 
-    renderLeaderboardCustomList(); loadExtraRewardPreview(); loadAdsConfig(); 
-    loadSubAdminRequests(); updateBaseUrlTabPreview(); 
-  } else { 
-    loadCurrentAdminData(); loadTasksList(); loadTaskSubmissions(); 
+  if (currentSession.role === 'super') {
+    loadAnalytics(); loadVerificationStats(); toggleSurveyFields();
+    renderLeaderboardCustomList(); loadExtraRewardPreview(); loadAdsConfig();
+    loadSubAdminRequests(); updateBaseUrlTabPreview();
+  } else {
+    loadCurrentAdminData(); loadTasksList(); loadTaskSubmissions();
     if (currentSession.role === 'admin' || currentSession.role === 'subadmin') {
       loadMySubAdminData();
       startMySubAdminReqListener();
@@ -4439,6 +4153,7 @@ function runPanelInit() {
   updateMaxDaysHint('etReward','etTime','etMaxDaysHint');
 }
 
+// CONFIG LISTENER
 db.ref('config').on('value', snap => {
   if (!snap.exists()) return;
   configData = snap.val();
@@ -4457,12 +4172,7 @@ db.ref('config').on('value', snap => {
   loginContactLinkCache = configData.contactLink || '';
   if (configData.revenueSettings) {
     const r = configData.revenueSettings;
-    REVENUE_SETTINGS = {
-      enabled: r.enabled !== false,
-      adminSharePercent: Number(r.adminSharePercent || 30),
-      minWithdrawAmount: Number(r.minWithdrawAmount || 100),
-      perUserCap: Number(r.perUserCap || 0)
-    };
+    REVENUE_SETTINGS = { enabled: r.enabled !== false, adminSharePercent: Number(r.adminSharePercent || 30), minWithdrawAmount: Number(r.minWithdrawAmount || 100), perUserCap: Number(r.perUserCap || 0) };
   }
   if (currentSession && currentSession.role === 'super') {
     document.getElementById('botUsername').value = configData.botUsername || '';
@@ -4541,6 +4251,7 @@ db.ref('subAdminRequests').on('value', () => {
   if (currentSession && currentSession.role === 'super') loadSubAdminRequests();
 });
 
+// DOM READY
 window.addEventListener('DOMContentLoaded', async () => {
   const stored = getStoredSession();
   if (stored) {
@@ -4552,11 +4263,8 @@ window.addEventListener('DOMContentLoaded', async () => {
         currentAdminData = a;
       } else if (stored.role === 'subadmin' && stored.parentAdminId) {
         let snap;
-        if (stored.parentSubAdminId) {
-          snap = await db.ref('admins/' + stored.parentAdminId + '/subAdmins/' + stored.parentSubAdminId + '/subAdmins/' + stored.adminId).once('value');
-        } else {
-          snap = await db.ref('admins/' + stored.parentAdminId + '/subAdmins/' + stored.adminId).once('value');
-        }
+        if (stored.parentSubAdminId) snap = await db.ref('admins/' + stored.parentAdminId + '/subAdmins/' + stored.parentSubAdminId + '/subAdmins/' + stored.adminId).once('value');
+        else snap = await db.ref('admins/' + stored.parentAdminId + '/subAdmins/' + stored.adminId).once('value');
         if (!snap.exists() || snap.val().isBanned) { clearSession(); await initializeAuthUI(); showLoginOverlay(); return; }
         currentAdminData = { id: stored.adminId, ...snap.val() };
       } else if (stored.role === 'super') { const sa = await getSuperAdminData(); if (!sa) clearSession(); }
@@ -4567,11 +4275,13 @@ window.addEventListener('DOMContentLoaded', async () => {
   showLoginOverlay();
 });
 
+// MODAL CLOSE ON BACKDROP CLICK
 ['editTaskModal','depositModal','dmModal','depositSubmitModal','banModal','cancelTaskModal','deleteTaskModal','contactEditModal','lbModal','instantDeleteModal','userViewModal','userEditModal','userDetailsModal','adminViewModal','adminEditModal','revenueWithdrawModal','revenueRejectModal','createSubAdminModal','superCreateSubAdminModal','subAdminDetailsModal'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('click', e => { if (e.target.id === id) el.classList.remove('active'); });
 });
 
+// LEGAL CONTENT
 const LEGAL_CONTENT = {
   privacy: `<span class="last-updated">📅 Last Updated: Sep/23/2026</span><h1>📄 PRIVACY POLICY</h1>
   <h2>১. ভূমিকা</h2><p><strong>Earn Wallet / NexEarn</strong> একটি Telegram-ভিত্তিক মাইক্রো-টাস্ক ও রিওয়ার্ড প্ল্যাটফর্ম।</p>
