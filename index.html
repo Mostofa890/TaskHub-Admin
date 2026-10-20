@@ -484,6 +484,18 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <div class="modal-body">
       <input type="hidden" id="caIndex">
       
+      <!-- 👇 এই অংশটুকু নতুন -->
+      <div class="form-group" style="background:#fef2f2; padding:12px; border-radius:10px; border:1px solid #fecaca; margin-bottom:15px;">
+          <label style="color:#991b1b; display:flex; align-items:center; gap:8px; cursor:pointer; margin-bottom:0;">
+              <input type="checkbox" id="caReplaceAll" style="width:18px; height:18px; cursor:pointer;">
+              <span style="font-weight:800; font-size:.85rem;">🔄 Replace Previous Ads</span>
+          </label>
+          <small style="display:block; margin-top:6px; color:#b91c1c; font-size:.7rem; font-weight:600;">
+              * টিক দিলে ইউজার প্যানেলে আগের সব অ্যাড মুছে গিয়ে শুধু এই নতুন অ্যাডটি দেখাবে।
+          </small>
+      </div>
+      <!-- 👆 নতুন অংশ শেষ -->
+
       <div class="form-group">
         <label>Ad Design Type *</label>
         <select id="caDesignType" onchange="toggleAdDesignFields()">
@@ -1570,7 +1582,12 @@ function renderCustomAdButtons() {
     const statusTxt = b.status === 'active' ? '✅ ACTIVE' : '🚫 INACTIVE';
     const net = b.network || 'custom';
     const isDesign = b.designType === 'html_design';
-    h += `<div class="custom-ad-btn-card"><div class="custom-ad-btn-head"><div class="custom-ad-btn-name"><div class="icon-badge"><i class="fas fa-play"></i></div>${esc(b.name||'Ad '+(i+1))}<span class="custom-ad-network-badge">${isDesign ? 'Custom Design' : (netLabels[net]||net)}</span></div><span class="ad-slot-status ${statusCls}">${statusTxt}</span></div><div style="margin-bottom:8px;"><span class="custom-ad-btn-target"><i class="fas fa-location-dot"></i> ${targetLabels[b.target]||b.target}</span></div><div class="custom-ad-btn-code">${isDesign ? 'Custom HTML Design' : esc(b.code||'// No code')}</div><div class="custom-ad-btn-actions"><button class="btn btn-info btn-small" onclick="openCustomAdModal(${i})"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-warning btn-small" onclick="toggleCustomAdStatus(${i})"><i class="fas fa-power-off"></i> ${b.status==='active'?'Disable':'Enable'}</button><button class="btn btn-red btn-small" onclick="deleteCustomAdButton(${i})"><i class="fas fa-trash"></i> Delete</button></div></div>`;
+    // ডিজাইন টাইপ হলে ব্যাজে Custom Design দেখাবে, নাহলে নেটওয়ার্কের নাম দেখাবে
+    const badgeLabel = isDesign ? 'Custom Design' : (netLabels[net] || net);
+    // ডিজাইন টাইপ হলে কোডের জায়গায় ডিজাইন প্রিভিউ লেখা থাকবে
+    const codePreview = isDesign ? '<span style="color:#10b981; font-weight:700;">🎨 Custom Design Enabled</span>' : esc(b.code || '// No code');
+    
+    h += `<div class="custom-ad-btn-card"><div class="custom-ad-btn-head"><div class="custom-ad-btn-name"><div class="icon-badge"><i class="fas fa-play"></i></div>${esc(b.name||'Ad '+(i+1))}<span class="custom-ad-network-badge">${badgeLabel}</span></div><span class="ad-slot-status ${statusCls}">${statusTxt}</span></div><div style="margin-bottom:8px;"><span class="custom-ad-btn-target"><i class="fas fa-location-dot"></i> ${targetLabels[b.target]||b.target}</span></div><div class="custom-ad-btn-code">${codePreview}</div><div class="custom-ad-btn-actions"><button class="btn btn-info btn-small" onclick="openCustomAdModal(${i})"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-warning btn-small" onclick="toggleCustomAdStatus(${i})"><i class="fas fa-power-off"></i> ${b.status==='active'?'Disable':'Enable'}</button><button class="btn btn-red btn-small" onclick="deleteCustomAdButton(${i})"><i class="fas fa-trash"></i> Delete</button></div></div>`;
   });
   c.innerHTML = h;
 }
@@ -1597,6 +1614,9 @@ function openCustomAdModal(index) {
   document.getElementById('caBtnBg').value = b && b.design ? b.design.btnBg : '#ffffff';
   document.getElementById('caBtnTextColor').value = b && b.design ? b.design.btnTextColor : '#6C5CE7';
   
+  // ✅ নতুন লাইন: চেকবক্স ডিফল্টভাবে আনচেক থাকবে
+  document.getElementById('caReplaceAll').checked = false;
+  
   document.getElementById('customAdModalTitle').textContent = isEdit ? 'Edit Custom Ad' : 'Add Custom Ad';
   toggleAdDesignFields();
   document.getElementById('customAdModal').classList.add('active');
@@ -1612,6 +1632,7 @@ async function saveCustomAdButton() {
   const blockId = document.getElementById('caBlockId').value.trim();
   const code = document.getElementById('caCode').value.trim();
   const status = document.getElementById('caStatus').value;
+  const replaceAll = document.getElementById('caReplaceAll').checked; // ✅ নতুন লাইন
   
   if (!name) return toast('❌ Name required');
   if (designType === 'code' && !code) return toast('❌ Code required');
@@ -1630,10 +1651,21 @@ async function saveCustomAdButton() {
     btnTextColor: document.getElementById('caBtnTextColor').value.trim()
   } : null;
 
-  const btns = Array.isArray(configData.customAdButtons) ? configData.customAdButtons.slice() : [];
+  // ✅ নতুন: Replace All লজিক
+  let btns = Array.isArray(configData.customAdButtons) ? configData.customAdButtons.slice() : [];
+  
+  if (replaceAll) {
+      btns = []; // আগের সব অ্যাড মুছে ফেলা হলো
+  }
+
   const data = { name, target, designType, network, blockId, code, status, design, updatedAt: Date.now() };
-  if (idx === '') btns.push(data);
-  else btns[Number(idx)] = { ...btns[Number(idx)], ...data };
+  
+  if (idx === '') {
+      btns.push(data);
+  } else {
+      btns[Number(idx)] = { ...btns[Number(idx)], ...data };
+  }
+  
   await db.ref('config/customAdButtons').set(btns);
   configData.customAdButtons = btns;
   toast('✅ Saved!');
