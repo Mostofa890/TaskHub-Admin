@@ -483,7 +483,27 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
     <div class="modal-body">
       <input type="hidden" id="caIndex">
-      <div class="form-group"><label>Button Name *</label><input type="text" id="caName" placeholder="e.g. Popup Ad, Direct Link Ad"></div>
+      
+      <div class="form-group">
+        <label>Ad Design Type *</label>
+        <select id="caDesignType" onchange="toggleAdDesignFields()">
+            <option value="code">JavaScript Code (Advanced)</option>
+            <option value="html_design">Custom HTML/CSS Design (Simpler)</option>
+        </select>
+      </div>
+
+      <div id="caDesignHtmlGroup" style="display:none; background:var(--bg-alt); padding:15px; border-radius:12px; margin-bottom:15px;">
+        <div class="alert-box info" style="margin-bottom:10px; padding:10px;"><i class="fas fa-palette"></i><div>কাস্টম ডিজাইন তৈরি করুন (ইউজার প্যানেলে এমনটাই দেখাবে)।</div></div>
+        <div class="form-group"><label>Background Color (CSS)</label><input type="text" id="caBgColor" value="linear-gradient(135deg, #6C5CE7, #a29bfe)" placeholder="e.g. #ff4757 or linear-gradient(...)"></div>
+        <div class="form-group"><label>Text Color</label><input type="text" id="caTextColor" value="#ffffff" placeholder="#ffffff"></div>
+        <div class="form-group"><label>Ad Title</label><input type="text" id="caAdTitle" placeholder="e.g. 🎉 Special Offer!"></div>
+        <div class="form-group"><label>Ad Description</label><input type="text" id="caAdDesc" placeholder="e.g. Watch to earn 5 TK"></div>
+        <div class="form-group"><label>Button Text</label><input type="text" id="caBtnText" value="Claim Reward" placeholder="e.g. Claim Reward"></div>
+        <div class="form-group"><label>Button Color</label><input type="text" id="caBtnBg" value="#ffffff" placeholder="#ffffff"></div>
+        <div class="form-group"><label>Button Text Color</label><input type="text" id="caBtnTextColor" value="#6C5CE7" placeholder="#6C5CE7"></div>
+      </div>
+
+      <div class="form-group"><label>Button Name (Internal) *</label><input type="text" id="caName" placeholder="e.g. Popup Ad, Direct Link Ad"></div>
       <div class="form-group">
         <label>Where to Show (User Panel) *</label>
         <select id="caTarget">
@@ -494,7 +514,8 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
           <option value="claimEarnings">Claim Ad Earnings Button</option>
         </select>
       </div>
-      <div class="form-group">
+      
+      <div class="form-group" id="caNetworkGroup">
         <label>Ad Network / Type *</label>
         <select id="caNetwork" onchange="toggleNetworkFields()">
           <option value="custom">⚙️ Custom Code Only</option>
@@ -520,6 +541,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <label>Block / Zone ID *</label>
         <input type="text" id="caBlockId" placeholder="e.g. 23393 or 11878844">
       </div>
+      
       <div class="form-group" id="caCodeGroup">
         <label>Ad Code (JavaScript) *</label>
         <textarea id="caCode" rows="8" placeholder="// Example:&#10;window.show_11878844('pop')&#10;  .then(() => resolve())&#10;  .catch(() => reject('Closed'));" style="font-family:'Courier New',monospace;font-size:.78rem;line-height:1.55;"></textarea>
@@ -1503,6 +1525,20 @@ const AD_NETWORK_TEMPLATES = {
   adx: (zoneId) => `// Google AdX integration\nresolve();`
 };
 
+function toggleAdDesignFields() {
+  const type = document.getElementById('caDesignType').value;
+  if (type === 'html_design') {
+    document.getElementById('caDesignHtmlGroup').style.display = 'block';
+    document.getElementById('caNetworkGroup').style.display = 'none';
+    document.getElementById('caBlockIdGroup').style.display = 'none';
+    document.getElementById('caCodeGroup').style.display = 'none';
+  } else {
+    document.getElementById('caDesignHtmlGroup').style.display = 'none';
+    document.getElementById('caNetworkGroup').style.display = 'block';
+    toggleNetworkFields();
+  }
+}
+
 function toggleNetworkFields() {
   const net = document.getElementById('caNetwork').value;
   const blockGrp = document.getElementById('caBlockIdGroup');
@@ -1533,7 +1569,8 @@ function renderCustomAdButtons() {
     const statusCls = b.status === 'active' ? 'ok' : 'off';
     const statusTxt = b.status === 'active' ? '✅ ACTIVE' : '🚫 INACTIVE';
     const net = b.network || 'custom';
-    h += `<div class="custom-ad-btn-card"><div class="custom-ad-btn-head"><div class="custom-ad-btn-name"><div class="icon-badge"><i class="fas fa-play"></i></div>${esc(b.name||'Ad '+(i+1))}<span class="custom-ad-network-badge">${netLabels[net]||net}</span></div><span class="ad-slot-status ${statusCls}">${statusTxt}</span></div><div style="margin-bottom:8px;"><span class="custom-ad-btn-target"><i class="fas fa-location-dot"></i> ${targetLabels[b.target]||b.target}</span></div><div class="custom-ad-btn-code">${esc(b.code||'// No code')}</div><div class="custom-ad-btn-actions"><button class="btn btn-info btn-small" onclick="openCustomAdModal(${i})"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-warning btn-small" onclick="toggleCustomAdStatus(${i})"><i class="fas fa-power-off"></i> ${b.status==='active'?'Disable':'Enable'}</button><button class="btn btn-red btn-small" onclick="deleteCustomAdButton(${i})"><i class="fas fa-trash"></i> Delete</button></div></div>`;
+    const isDesign = b.designType === 'html_design';
+    h += `<div class="custom-ad-btn-card"><div class="custom-ad-btn-head"><div class="custom-ad-btn-name"><div class="icon-badge"><i class="fas fa-play"></i></div>${esc(b.name||'Ad '+(i+1))}<span class="custom-ad-network-badge">${isDesign ? 'Custom Design' : (netLabels[net]||net)}</span></div><span class="ad-slot-status ${statusCls}">${statusTxt}</span></div><div style="margin-bottom:8px;"><span class="custom-ad-btn-target"><i class="fas fa-location-dot"></i> ${targetLabels[b.target]||b.target}</span></div><div class="custom-ad-btn-code">${isDesign ? 'Custom HTML Design' : esc(b.code||'// No code')}</div><div class="custom-ad-btn-actions"><button class="btn btn-info btn-small" onclick="openCustomAdModal(${i})"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-warning btn-small" onclick="toggleCustomAdStatus(${i})"><i class="fas fa-power-off"></i> ${b.status==='active'?'Disable':'Enable'}</button><button class="btn btn-red btn-small" onclick="deleteCustomAdButton(${i})"><i class="fas fa-trash"></i> Delete</button></div></div>`;
   });
   c.innerHTML = h;
 }
@@ -1545,12 +1582,23 @@ function openCustomAdModal(index) {
   document.getElementById('caIndex').value = isEdit ? index : '';
   document.getElementById('caName').value = b ? (b.name||'') : '';
   document.getElementById('caTarget').value = b ? (b.target||'adSlot1') : 'adSlot1';
+  document.getElementById('caDesignType').value = b ? (b.designType||'code') : 'code';
   document.getElementById('caNetwork').value = b ? (b.network||'custom') : 'custom';
   document.getElementById('caBlockId').value = b ? (b.blockId||'') : '';
   document.getElementById('caCode').value = b ? (b.code||'') : '';
   document.getElementById('caStatus').value = b ? (b.status||'active') : 'active';
+  
+  // Design fields
+  document.getElementById('caBgColor').value = b && b.design ? b.design.bgColor : 'linear-gradient(135deg, #6C5CE7, #a29bfe)';
+  document.getElementById('caTextColor').value = b && b.design ? b.design.textColor : '#ffffff';
+  document.getElementById('caAdTitle').value = b && b.design ? b.design.title : '';
+  document.getElementById('caAdDesc').value = b && b.design ? b.design.desc : '';
+  document.getElementById('caBtnText').value = b && b.design ? b.design.btnText : 'Claim Reward';
+  document.getElementById('caBtnBg').value = b && b.design ? b.design.btnBg : '#ffffff';
+  document.getElementById('caBtnTextColor').value = b && b.design ? b.design.btnTextColor : '#6C5CE7';
+  
   document.getElementById('customAdModalTitle').textContent = isEdit ? 'Edit Custom Ad' : 'Add Custom Ad';
-  toggleNetworkFields();
+  toggleAdDesignFields();
   document.getElementById('customAdModal').classList.add('active');
 }
 function closeCustomAdModal() { document.getElementById('customAdModal').classList.remove('active'); }
@@ -1559,14 +1607,31 @@ async function saveCustomAdButton() {
   const idx = document.getElementById('caIndex').value;
   const name = document.getElementById('caName').value.trim();
   const target = document.getElementById('caTarget').value;
+  const designType = document.getElementById('caDesignType').value;
   const network = document.getElementById('caNetwork').value;
   const blockId = document.getElementById('caBlockId').value.trim();
   const code = document.getElementById('caCode').value.trim();
   const status = document.getElementById('caStatus').value;
+  
   if (!name) return toast('❌ Name required');
-  if (!code) return toast('❌ Code required');
+  if (designType === 'code' && !code) return toast('❌ Code required');
+  if (designType === 'html_design') {
+    const t = document.getElementById('caAdTitle').value.trim();
+    if(!t) return toast('❌ Title required for design');
+  }
+
+  const design = designType === 'html_design' ? {
+    bgColor: document.getElementById('caBgColor').value.trim(),
+    textColor: document.getElementById('caTextColor').value.trim(),
+    title: document.getElementById('caAdTitle').value.trim(),
+    desc: document.getElementById('caAdDesc').value.trim(),
+    btnText: document.getElementById('caBtnText').value.trim(),
+    btnBg: document.getElementById('caBtnBg').value.trim(),
+    btnTextColor: document.getElementById('caBtnTextColor').value.trim()
+  } : null;
+
   const btns = Array.isArray(configData.customAdButtons) ? configData.customAdButtons.slice() : [];
-  const data = { name, target, network, blockId, code, status, updatedAt: Date.now() };
+  const data = { name, target, designType, network, blockId, code, status, design, updatedAt: Date.now() };
   if (idx === '') btns.push(data);
   else btns[Number(idx)] = { ...btns[Number(idx)], ...data };
   await db.ref('config/customAdButtons').set(btns);
