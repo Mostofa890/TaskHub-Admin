@@ -384,10 +384,28 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .custom-ad-btn-actions .btn{flex:1;min-width:70px}
 .custom-ad-network-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-size:.65rem;font-weight:900;text-transform:uppercase;letter-spacing:.3px;margin-left:6px;background:linear-gradient(135deg,#c7d2fe,#a5b4fc);color:#3730a3}
 @media (max-width:400px){.container{padding:0 12px}.card{padding:16px;border-radius:20px}.header{padding:22px 18px 55px;border-radius:0 0 26px 26px}.header-title{font-size:1rem}.header-status{max-width:90px}.user-stats-grid{grid-template-columns:1fr 1fr}.legal-body{padding:20px 18px 26px}}
+
+/* ============ ADMIN CHAT CSS (NEW) ============ */
+.admin-chat-list{display:flex;flex-direction:column;gap:8px}
+.admin-chat-item{display:flex;align-items:center;gap:12px;padding:12px;background:#fff;border:1.5px solid var(--border);border-radius:14px;cursor:pointer;transition:all .2s;position:relative}
+.admin-chat-item:hover{border-color:var(--primary);background:#faf5ff}
+.admin-chat-item.unread{background:linear-gradient(135deg,#fef3c7,#fde68a);border-color:rgba(245,158,11,.4)}
+.admin-chat-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#6C5CE7,#8b5cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1rem;flex-shrink:0;overflow:hidden}
+.admin-chat-info{flex:1;min-width:0}
+.admin-chat-info .name{font-weight:800;font-size:.9rem;display:flex;align-items:center;gap:6px}
+.admin-chat-info .preview{font-size:.72rem;color:var(--text-muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-chat-meta{text-align:right;font-size:.65rem;color:var(--text-muted);font-weight:700}
+.admin-chat-unread{background:#ef4444;color:#fff;font-size:.62rem;font-weight:900;padding:2px 7px;border-radius:10px;margin-top:4px;display:inline-block}
+.chat-thread-modal{position:fixed;inset:0;z-index:100000;background:#f8fafc;display:none;flex-direction:column;max-width:680px;margin:0 auto;left:50%;transform:translateX(-50%);width:100%}
+.chat-thread-modal.active{display:flex}
+.chat-thread-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;background:linear-gradient(135deg,#4c1d95,#6d28d9);color:#fff}
+.chat-thread-head h3{font-size:1rem;font-weight:800;display:flex;align-items:center;gap:10px}
+.chat-thread-body{flex:1;padding:16px 14px;background:#f8fafc;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
 </style>
 </head>
 <body>
-  <!-- LOGIN OVERLAY -->
+
+<!-- LOGIN OVERLAY -->
 <div class="login-overlay" id="loginOverlay">
   <div class="login-card">
     <div class="login-brand">
@@ -483,19 +501,15 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
     <div class="modal-body">
       <input type="hidden" id="caIndex">
-      
-      <!-- 👇 এই অংশটুকু নতুন -->
       <div class="form-group" style="background:#fef2f2; padding:12px; border-radius:10px; border:1px solid #fecaca; margin-bottom:15px;">
           <label style="color:#991b1b; display:flex; align-items:center; gap:8px; cursor:pointer; margin-bottom:0;">
               <input type="checkbox" id="caReplaceAll" style="width:18px; height:18px; cursor:pointer;">
               <span style="font-weight:800; font-size:.85rem;">🔄 Replace Previous Ads</span>
           </label>
           <small style="display:block; margin-top:6px; color:#b91c1c; font-size:.7rem; font-weight:600;">
-              * টিক দিলে ইউজার প্যানেলে আগের সব অ্যাড মুছে গিয়ে শুধু এই নতুন অ্যাডটি দেখাবে।
+              * টিক দিলে ইউজার প্যানেলে আগের সব অ্যাড মুছে গিয়ে শুধু এই নতুন অ্যাডটি দেখাবে।
           </small>
       </div>
-      <!-- 👆 নতুন অংশ শেষ -->
-
       <div class="form-group">
         <label>Ad Design Type *</label>
         <select id="caDesignType" onchange="toggleAdDesignFields()">
@@ -503,19 +517,17 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
             <option value="html_design">Custom HTML/CSS Design (Simpler)</option>
         </select>
       </div>
-
       <div id="caDesignHtmlGroup" style="display:none; background:var(--bg-alt); padding:15px; border-radius:12px; margin-bottom:15px;">
         <div class="alert-box info" style="margin-bottom:10px; padding:10px;"><i class="fas fa-palette"></i><div>কাস্টম ডিজাইন তৈরি করুন (ইউজার প্যানেলে এমনটাই দেখাবে)।</div></div>
-        <div class="form-group"><label>Background Color (CSS)</label><input type="text" id="caBgColor" value="linear-gradient(135deg, #6C5CE7, #a29bfe)" placeholder="e.g. #ff4757 or linear-gradient(...)"></div>
-        <div class="form-group"><label>Text Color</label><input type="text" id="caTextColor" value="#ffffff" placeholder="#ffffff"></div>
-        <div class="form-group"><label>Ad Title</label><input type="text" id="caAdTitle" placeholder="e.g. 🎉 Special Offer!"></div>
-        <div class="form-group"><label>Ad Description</label><input type="text" id="caAdDesc" placeholder="e.g. Watch to earn 5 TK"></div>
-        <div class="form-group"><label>Button Text</label><input type="text" id="caBtnText" value="Claim Reward" placeholder="e.g. Claim Reward"></div>
-        <div class="form-group"><label>Button Color</label><input type="text" id="caBtnBg" value="#ffffff" placeholder="#ffffff"></div>
-        <div class="form-group"><label>Button Text Color</label><input type="text" id="caBtnTextColor" value="#6C5CE7" placeholder="#6C5CE7"></div>
+        <div class="form-group"><label>Background Color (CSS)</label><input type="text" id="caBgColor" value="linear-gradient(135deg, #6C5CE7, #a29bfe)"></div>
+        <div class="form-group"><label>Text Color</label><input type="text" id="caTextColor" value="#ffffff"></div>
+        <div class="form-group"><label>Ad Title</label><input type="text" id="caAdTitle"></div>
+        <div class="form-group"><label>Ad Description</label><input type="text" id="caAdDesc"></div>
+        <div class="form-group"><label>Button Text</label><input type="text" id="caBtnText" value="Claim Reward"></div>
+        <div class="form-group"><label>Button Color</label><input type="text" id="caBtnBg" value="#ffffff"></div>
+        <div class="form-group"><label>Button Text Color</label><input type="text" id="caBtnTextColor" value="#6C5CE7"></div>
       </div>
-
-      <div class="form-group"><label>Button Name (Internal) *</label><input type="text" id="caName" placeholder="e.g. Popup Ad, Direct Link Ad"></div>
+      <div class="form-group"><label>Button Name (Internal) *</label><input type="text" id="caName"></div>
       <div class="form-group">
         <label>Where to Show (User Panel) *</label>
         <select id="caTarget">
@@ -526,7 +538,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
           <option value="claimEarnings">Claim Ad Earnings Button</option>
         </select>
       </div>
-      
       <div class="form-group" id="caNetworkGroup">
         <label>Ad Network / Type *</label>
         <select id="caNetwork" onchange="toggleNetworkFields()">
@@ -551,15 +562,12 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       </div>
       <div class="form-group" id="caBlockIdGroup" style="display:none;">
         <label>Block / Zone ID *</label>
-        <input type="text" id="caBlockId" placeholder="e.g. 23393 or 11878844">
+        <input type="text" id="caBlockId">
       </div>
-      
       <div class="form-group" id="caCodeGroup">
         <label>Ad Code (JavaScript) *</label>
-        <textarea id="caCode" rows="8" placeholder="// Example:&#10;window.show_11878844('pop')&#10;  .then(() => resolve())&#10;  .catch(() => reject('Closed'));" style="font-family:'Courier New',monospace;font-size:.78rem;line-height:1.55;"></textarea>
-        <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">
-          ✅ Available Helpers: <code style="background:rgba(99,102,241,.15);padding:1px 6px;border-radius:4px;font-weight:800;">resolve()</code>, <code style="background:rgba(239,68,68,.15);padding:1px 6px;border-radius:4px;font-weight:800;">reject('msg')</code>, <code style="background:rgba(6,182,212,.15);padding:1px 6px;border-radius:4px;font-weight:800;">openExternal(url)</code>
-        </small>
+        <textarea id="caCode" rows="8" style="font-family:'Courier New',monospace;font-size:.78rem;line-height:1.55;"></textarea>
+        <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">✅ Helpers: <code>resolve()</code>, <code>reject('msg')</code>, <code>openExternal(url)</code></small>
       </div>
       <div class="form-group"><label>Status</label>
         <select id="caStatus"><option value="active">✅ Active</option><option value="inactive">🚫 Inactive</option></select>
@@ -594,7 +602,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 <div class="modal-overlay" id="depositModal"><div class="modal-box"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-success"><i class="fas fa-money-bill-wave"></i></div>Add Balance to Admin</div><button class="modal-close" onclick="closeDepositModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="depAdminId"><div class="form-group"><label>Admin</label><input type="text" id="depAdminName" disabled></div><div class="form-group"><label>Payment Method *</label><select id="depMethod"><option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option><option value="Bank">Bank</option><option value="Binance">Binance</option><option value="Manual">Manual</option><option value="Other">Other</option></select></div><div class="form-group"><label>Account / Txn Number *</label><input type="text" id="depAccount"></div><div class="form-group"><label>Amount (TK) *</label><input type="number" id="depAmount" step="0.01"></div><div class="form-group"><label>Note (optional)</label><input type="text" id="depNote"></div><button class="btn btn-green" onclick="confirmDeposit()"><i class="fas fa-check"></i> Confirm Deposit</button></div></div></div>
 
 <!-- Deposit Method Modal -->
-<div class="modal-overlay" id="dmModal"><div class="modal-box"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-info"><i class="fas fa-credit-card"></i></div><span id="dmModalTitle">Add Deposit Method</span></div><button class="modal-close" onclick="closeDmModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="dmEditIndex"><div class="form-group"><label>Method Name *</label><input type="text" id="dmName" placeholder="e.g. bKash Personal"></div><div class="form-group"><label>Account / Number *</label><input type="text" id="dmAccount"></div><div class="form-group"><label>Minimum Deposit (TK) *</label><input type="number" id="dmMin" step="0.01"></div><div class="form-group"><label>Instructions (optional)</label><textarea id="dmInstructions" rows="2"></textarea></div><div class="form-group"><label>Status</label><select id="dmActive"><option value="true">✅ Active</option><option value="false">🚫 Disabled</option></select></div><div style="display:flex; gap:10px;"><button class="btn btn-green" onclick="saveDepositMethod()" style="flex:2;"><i class="fas fa-save"></i> Save</button><button class="btn btn-red" onclick="closeDmModal()" style="flex:1;"><i class="fas fa-times"></i> Cancel</button></div></div></div></div>
+<div class="modal-overlay" id="dmModal"><div class="modal-box"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-info"><i class="fas fa-credit-card"></i></div><span id="dmModalTitle">Add Deposit Method</span></div><button class="modal-close" onclick="closeDmModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="dmEditIndex"><div class="form-group"><label>Method Name *</label><input type="text" id="dmName"></div><div class="form-group"><label>Account / Number *</label><input type="text" id="dmAccount"></div><div class="form-group"><label>Minimum Deposit (TK) *</label><input type="number" id="dmMin" step="0.01"></div><div class="form-group"><label>Instructions (optional)</label><textarea id="dmInstructions" rows="2"></textarea></div><div class="form-group"><label>Status</label><select id="dmActive"><option value="true">✅ Active</option><option value="false">🚫 Disabled</option></select></div><div style="display:flex; gap:10px;"><button class="btn btn-green" onclick="saveDepositMethod()" style="flex:2;"><i class="fas fa-save"></i> Save</button><button class="btn btn-red" onclick="closeDmModal()" style="flex:1;"><i class="fas fa-times"></i> Cancel</button></div></div></div></div>
 
 <!-- Deposit Submit Modal -->
 <div class="modal-overlay" id="depositSubmitModal"><div class="modal-box"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-success"><i class="fas fa-paper-plane"></i></div>Submit Deposit Request</div><button class="modal-close" onclick="closeDepositSubmitModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="dsMethodIndex"><div id="dsMethodInfo" style="background:var(--bg-alt); padding:12px 14px; border-radius:12px; margin-bottom:12px; border:1px solid var(--border); font-size:.85rem; font-weight:600;"></div><div class="form-group"><label>Amount Sent (TK) *</label><input type="number" id="dsAmount" step="0.01"></div><div class="form-group"><label>Transaction ID *</label><input type="text" id="dsTxnId"></div><div class="form-group"><label>Additional Note (optional)</label><input type="text" id="dsNote"></div><div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i><div>টাকা পাঠানোর <b>পরে</b> form পূরণ করুন।</div></div><button class="btn btn-green" onclick="submitDepositRequest()"><i class="fas fa-paper-plane"></i> Submit Request</button></div></div></div>
@@ -620,6 +628,31 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 <!-- Admin Withdraw Modal -->
 <div class="modal-overlay" id="adminWithdrawModal"><div class="modal-box"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-success"><i class="fas fa-money-bill-transfer"></i></div>Request Withdraw</div><button class="modal-close" onclick="closeAdminWithdrawModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><div class="form-group"><label>Available Balance</label><input type="text" id="awBalance" disabled></div><div class="form-group"><label>Amount (TK) *</label><input type="number" id="awAmount" step="0.01"></div><div class="form-group"><label>Method *</label><select id="awMethod"><option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option><option value="Bank">Bank</option><option value="Binance">Binance</option><option value="Other">Other</option></select></div><div class="form-group"><label>Account Number *</label><input type="text" id="awAccount"></div><div id="awFeeInfo" style="background:linear-gradient(135deg,#fef3c7,#fde68a); padding:12px; border-radius:10px; margin-bottom:12px; border-left:4px solid #f59e0b; font-size:.82rem; font-weight:700; color:#92400e;"></div><button class="btn btn-green" onclick="submitAdminWithdrawRequest()"><i class="fas fa-paper-plane"></i> Submit Request</button></div></div></div>
 
+<!-- ADMIN CHAT THREAD MODAL (NEW) -->
+<div class="chat-thread-modal" id="adminChatThreadModal">
+  <div class="chat-thread-head">
+    <h3>
+      <button onclick="closeAdminChatThread()" style="background:rgba(255,255,255,.2);border:none;color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer;">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <span id="adminThreadName">User</span>
+    </h3>
+    <span style="font-size:.72rem;opacity:.85;">Live chat</span>
+  </div>
+  <div class="chat-thread-body" id="adminThreadBody">
+    <div style="text-align:center;color:#94a3b8;padding:40px;">
+      <i class="fas fa-comment-dots" style="font-size:2rem;display:block;margin-bottom:10px;"></i>
+      No messages
+    </div>
+  </div>
+  <div style="padding:12px 14px;border-top:1px solid #e2e8f0;background:#fff;display:flex;gap:8px;">
+    <input type="text" id="adminReplyInput" placeholder="Reply..." style="flex:1;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:24px;outline:none;font-family:inherit;" onkeydown="if(event.key==='Enter'){event.preventDefault();sendAdminReply();}">
+    <button id="adminReplyBtn" onclick="sendAdminReply()" style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#6C5CE7,#8b5cf6);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+      <i class="fas fa-paper-plane"></i>
+    </button>
+  </div>
+</div>
+
 <!-- MAIN CONTAINER -->
 <div class="container">
   <div class="tabs-wrapper">
@@ -636,6 +669,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="tab super-only" data-tab="admins" onclick="switchTab('admins', this)"><i class="fas fa-user-shield"></i><span>Admins</span></div>
       <div class="tab super-only" data-tab="adminpayouts" onclick="switchTab('adminpayouts', this)"><i class="fas fa-hand-holding-dollar"></i><span>Admin Payouts</span></div>
       <div class="tab super-only" data-tab="depositmgmt" onclick="switchTab('depositmgmt', this)"><i class="fas fa-vault"></i><span>Deposit Mgmt</span><span class="tlt-count" id="depositPendingBadge" style="display:none; background:linear-gradient(135deg,#ef4444,#f87171); color:#fff; padding:2px 7px; border-radius:999px; font-size:.62rem; font-weight:900; margin-left:4px;">0</span></div>
+      <div class="tab super-only" data-tab="chats" onclick="switchTab('chats', this)"><i class="fas fa-comments"></i><span>Chats</span><span class="tlt-count" id="chatsUnreadBadge" style="display:none; background:#ef4444; color:#fff;">0</span></div>
       <div class="tab" data-tab="tasks" onclick="switchTab('tasks', this)"><i class="fas fa-briefcase"></i><span>Tasks</span></div>
       <div class="tab admin-only hidden" id="tabBtnWallet" data-tab="wallet" onclick="switchTab('wallet', this)"><i class="fas fa-wallet"></i><span>My Wallet</span></div>
       <div class="tab admin-only hidden" id="tabBtnEarnings" data-tab="earnings" onclick="switchTab('earnings', this)"><i class="fas fa-coins"></i><span>Earnings</span></div>
@@ -644,7 +678,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- SETTINGS TAB (abbreviated - all IDs preserved) -->
+  <!-- SETTINGS TAB -->
   <div id="tab-settings" class="tab-content active super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-robot"></i></div>App Configuration</div></div>
@@ -793,7 +827,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-clock-rotate-left"></i></div>All Admin Payouts</div></div><div id="adminWdAllList"></div></div>
   </div>
 
-  <!-- ✅ ADS TAB with all networks -->
+  <!-- ADS TAB -->
   <div id="tab-ads" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-rectangle-ad"></i></div>Custom Ad Buttons</div></div>
@@ -856,6 +890,22 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-credit-card"></i></div>Deposit Methods</div></div><div id="dmMethodsList"></div><button class="btn btn-green" onclick="openDmModal()" style="margin-top:8px;"><i class="fas fa-plus"></i> Add Method</button></div>
     <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-inbox"></i></div>Pending Requests</div></div><div id="pendingDepositReqList"></div></div>
     <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-check-circle"></i></div>All Requests</div></div><div id="allDepositReqList"></div></div>
+  </div>
+
+  <!-- CHATS TAB (NEW) -->
+  <div id="tab-chats" class="tab-content super-only">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-title-icon icon-primary"><i class="fas fa-comments"></i></div>
+          User Chats
+        </div>
+      </div>
+      <div class="alert-box info"><i class="fas fa-info-circle"></i><div>ইউজারদের সাথে রিয়েল-টাইম চ্যাট। নতুন মেসেজ হলে ট্যাবে ব্যাজ দেখাবে।</div></div>
+      <div class="admin-chat-list" id="adminChatList">
+        <div class="empty-state"><p>No chats yet</p></div>
+      </div>
+    </div>
   </div>
 
   <!-- WALLET TAB (Admin) -->
@@ -931,7 +981,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <div class="card" style="margin-top:16px;"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-pink"><i class="fas fa-address-card"></i></div>My Contact</div></div><div id="myContactBoxContact"></div><button class="btn btn-pink" onclick="openContactEditModal()" style="margin-top:10px;"><i class="fas fa-pen"></i> Edit Contact</button></div>
   </div>
 
-  <!-- TASKS TAB (abbreviated - all working) -->
+  <!-- TASKS TAB -->
   <div id="tab-tasks" class="tab-content">
     <div class="card rainbow">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-plus-circle"></i></div><span id="taskFormTitle">Create New Task</span></div></div>
@@ -979,6 +1029,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 
 </div>
+
 <script>
 // ANTI-HACK
 (function initSecurityShield() {
@@ -993,7 +1044,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 })();
 
 const firebaseConfig = {
-  apiKey: "REPLACE_WITH_EXISTING_VALUE_LOCALLY",
+  apiKey: "AIzaSyC_WvNxSQQ58TcJhDcBw5NUrAZjOQe1T2g",
   authDomain: "cat-coins-34d4c.firebaseapp.com",
   databaseURL: "https://cat-coins-34d4c-default-rtdb.firebaseio.com",
   projectId: "cat-coins-34d4c",
@@ -1036,6 +1087,11 @@ const WORKING_THRESHOLD_MS = 30 * 60 * 1000;
 const SESSION_KEY = 'nexearn_admin_session';
 const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
 let currentSession = null;
+
+// ============ ADMIN CHAT VARIABLES (NEW) ============
+let adminChatListListener = null;
+let adminThreadMsgListener = null;
+let adminCurrentThreadKey = null;
 
 function getMaxDaysForReward(r) {
   r = Math.round((Number(r)||0)*100)/100;
@@ -1217,7 +1273,7 @@ function renderDepositHistory() {
   c.innerHTML = h;
 }
 
-function handleLogout() { if (!confirm('Logout?')) return; clearSession(); location.reload(); }
+function handleLogout() { if (!confirm('Logout?')) return; runPanelInit._done = false; clearSession(); location.reload(); }
 
 function renderMyContact() {
   const c = currentAdminData && currentAdminData.adminContact;
@@ -1517,7 +1573,7 @@ async function rejectAdminWd(id) {
   toast('❌ Rejected'); loadAdminWithdrawRequests();
 }
 
-// CUSTOM AD BUTTONS (all networks)
+// CUSTOM AD BUTTONS
 const AD_NETWORK_TEMPLATES = {
   adsgram: (zoneId) => `const ctrl = Adsgram.init({ blockId: '${zoneId}' });\ntry { const res = await ctrl.show(); if (res && res.done) resolve(); else reject('Closed'); } catch(e) { reject(e.message); }`,
   monetag: (zoneId) => `window.show_${zoneId}('pop')\n  .then(() => resolve())\n  .catch(() => reject('Ad closed'));`,
@@ -1573,7 +1629,7 @@ function renderCustomAdButtons() {
   const c = document.getElementById('customAdButtonsContainer');
   if (!c) return;
   const btns = configData.customAdButtons || [];
-  if (!btns.length) { c.innerHTML = '<div class="empty-state" style="padding:20px;"><p>No custom ad buttons yet. Click "Add New Custom Ad" to create one.</p></div>'; return; }
+  if (!btns.length) { c.innerHTML = '<div class="empty-state" style="padding:20px;"><p>No custom ad buttons yet.</p></div>'; return; }
   const targetLabels = { adSlot1: 'Daily Ads — Slot 1', adSlot2: 'Daily Ads — Slot 2', extraReward: 'Extra Rewards', dailyBonus: 'Daily Bonus', claimEarnings: 'Claim Earnings' };
   const netLabels = { custom: 'Custom', adsgram: 'Adsgram', monetag: 'Monetag', gigapub: 'GigaPub', adsterra: 'Adsterra', propellerads: 'PropellerAds', clickadilla: 'ClickAdilla', richads: 'RichAds', hilltopads: 'HilltopAds', adcash: 'AdCash', popads: 'PopAds', exoclick: 'ExoClick', trafficjunky: 'TrafficJunky', onclicka: 'Onclicka', adfrix: 'AdFrix', taddy: 'Taddy', adx: 'AdX' };
   let h = '';
@@ -1582,11 +1638,8 @@ function renderCustomAdButtons() {
     const statusTxt = b.status === 'active' ? '✅ ACTIVE' : '🚫 INACTIVE';
     const net = b.network || 'custom';
     const isDesign = b.designType === 'html_design';
-    // ডিজাইন টাইপ হলে ব্যাজে Custom Design দেখাবে, নাহলে নেটওয়ার্কের নাম দেখাবে
     const badgeLabel = isDesign ? 'Custom Design' : (netLabels[net] || net);
-    // ডিজাইন টাইপ হলে কোডের জায়গায় ডিজাইন প্রিভিউ লেখা থাকবে
     const codePreview = isDesign ? '<span style="color:#10b981; font-weight:700;">🎨 Custom Design Enabled</span>' : esc(b.code || '// No code');
-    
     h += `<div class="custom-ad-btn-card"><div class="custom-ad-btn-head"><div class="custom-ad-btn-name"><div class="icon-badge"><i class="fas fa-play"></i></div>${esc(b.name||'Ad '+(i+1))}<span class="custom-ad-network-badge">${badgeLabel}</span></div><span class="ad-slot-status ${statusCls}">${statusTxt}</span></div><div style="margin-bottom:8px;"><span class="custom-ad-btn-target"><i class="fas fa-location-dot"></i> ${targetLabels[b.target]||b.target}</span></div><div class="custom-ad-btn-code">${codePreview}</div><div class="custom-ad-btn-actions"><button class="btn btn-info btn-small" onclick="openCustomAdModal(${i})"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-warning btn-small" onclick="toggleCustomAdStatus(${i})"><i class="fas fa-power-off"></i> ${b.status==='active'?'Disable':'Enable'}</button><button class="btn btn-red btn-small" onclick="deleteCustomAdButton(${i})"><i class="fas fa-trash"></i> Delete</button></div></div>`;
   });
   c.innerHTML = h;
@@ -1604,8 +1657,6 @@ function openCustomAdModal(index) {
   document.getElementById('caBlockId').value = b ? (b.blockId||'') : '';
   document.getElementById('caCode').value = b ? (b.code||'') : '';
   document.getElementById('caStatus').value = b ? (b.status||'active') : 'active';
-  
-  // Design fields
   document.getElementById('caBgColor').value = b && b.design ? b.design.bgColor : 'linear-gradient(135deg, #6C5CE7, #a29bfe)';
   document.getElementById('caTextColor').value = b && b.design ? b.design.textColor : '#ffffff';
   document.getElementById('caAdTitle').value = b && b.design ? b.design.title : '';
@@ -1613,10 +1664,7 @@ function openCustomAdModal(index) {
   document.getElementById('caBtnText').value = b && b.design ? b.design.btnText : 'Claim Reward';
   document.getElementById('caBtnBg').value = b && b.design ? b.design.btnBg : '#ffffff';
   document.getElementById('caBtnTextColor').value = b && b.design ? b.design.btnTextColor : '#6C5CE7';
-  
-  // ✅ নতুন লাইন: চেকবক্স ডিফল্টভাবে আনচেক থাকবে
   document.getElementById('caReplaceAll').checked = false;
-  
   document.getElementById('customAdModalTitle').textContent = isEdit ? 'Edit Custom Ad' : 'Add Custom Ad';
   toggleAdDesignFields();
   document.getElementById('customAdModal').classList.add('active');
@@ -1632,15 +1680,13 @@ async function saveCustomAdButton() {
   const blockId = document.getElementById('caBlockId').value.trim();
   const code = document.getElementById('caCode').value.trim();
   const status = document.getElementById('caStatus').value;
-  const replaceAll = document.getElementById('caReplaceAll').checked; // ✅ নতুন লাইন
-  
+  const replaceAll = document.getElementById('caReplaceAll').checked;
   if (!name) return toast('❌ Name required');
   if (designType === 'code' && !code) return toast('❌ Code required');
   if (designType === 'html_design') {
     const t = document.getElementById('caAdTitle').value.trim();
     if(!t) return toast('❌ Title required for design');
   }
-
   const design = designType === 'html_design' ? {
     bgColor: document.getElementById('caBgColor').value.trim(),
     textColor: document.getElementById('caTextColor').value.trim(),
@@ -1650,22 +1696,11 @@ async function saveCustomAdButton() {
     btnBg: document.getElementById('caBtnBg').value.trim(),
     btnTextColor: document.getElementById('caBtnTextColor').value.trim()
   } : null;
-
-  // ✅ নতুন: Replace All লজিক
   let btns = Array.isArray(configData.customAdButtons) ? configData.customAdButtons.slice() : [];
-  
-  if (replaceAll) {
-      btns = []; // আগের সব অ্যাড মুছে ফেলা হলো
-  }
-
+  if (replaceAll) btns = [];
   const data = { name, target, designType, network, blockId, code, status, design, updatedAt: Date.now() };
-  
-  if (idx === '') {
-      btns.push(data);
-  } else {
-      btns[Number(idx)] = { ...btns[Number(idx)], ...data };
-  }
-  
+  if (idx === '') { btns.push(data); }
+  else { btns[Number(idx)] = { ...btns[Number(idx)], ...data }; }
   await db.ref('config/customAdButtons').set(btns);
   configData.customAdButtons = btns;
   toast('✅ Saved!');
@@ -2575,7 +2610,7 @@ async function viewAdminFull(adminId) {
     cH = `<div class="info-display-box"><span class="label"><i class="fab ${icons[contact.type]||'fa-link'}"></i> ${contact.type}</span><span class="value">${esc(contact.value)}</span><button class="copy-btn inline" onclick="copyToClipboard('${esc(contact.value).replace(/'/g,"\\'")}', 'Contact')"><i class="fas fa-copy"></i></button></div>`;
   } else cH = '<div style="text-align:center; color:#94a3b8; padding:10px; font-size:.78rem;">No contact</div>';
   const refCode = a.referralCode || 'N/A';
-  document.getElementById('adminViewBody').innerHTML = `<div style="text-align:center; margin-bottom:16px;"><div style="width:64px; height:64px; margin:0 auto 10px; border-radius:18px; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.5rem;">${(a.username||'A').charAt(0).toUpperCase()}</div><div style="font-weight:900; font-size:1.1rem;">${esc(a.username)}</div><div style="font-size:.72rem; color:#94a3b8; margin-top:4px;">ID: ${adminId}</div></div><div class="section-divider"><i class="fas fa-key"></i> Credentials</div><div class="info-display-box"><span class="label">Username</span><span class="value">${esc(a.username)}</span><button class="copy-btn inline" onclick="copyToClipboard('${esc(a.username).replace(/'/g,"\\'")}', 'Username')"><i class="fas fa-copy"></i></button></div><div class="info-display-box" style="background:linear-gradient(135deg,#fef3c7,#fde68a); border-color:rgba(245,158,11,.4);"><span class="label" style="color:#92400e;">Password Hash</span><span class="value" style="font-size:.65rem; color:#92400e;">${esc(a.passwordHash||'N/A')}</span></div><div class="info-display-box" style="background:linear-gradient(135deg,#cffafe,#a5f3fc); border-color:rgba(6,182,212,.4);"><span class="label" style="color:#0e7490;">Ref Code</span><span class="value" style="color:#0891b2; font-weight:900; letter-spacing:2px;">${esc(refCode)}</span></div><div class="section-divider"><i class="fas fa-wallet"></i> Financial</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card green"><div class="num">${Number(a.balance||0).toFixed(2)}</div><div class="label">Balance</div></div><div class="stat-card info"><div class="num">${Number(a.totalDeposited||0).toFixed(2)}</div><div class="label">Deposited</div></div><div class="stat-card warning"><div class="num">${Number(a.totalSpent||0).toFixed(2)}</div><div class="label">Spent</div></div><div class="stat-card purple"><div class="num">${Number(a.totalRefunded||0).toFixed(2)}</div><div class="label">Refunded</div></div><div class="stat-card pink"><div class="num">${Number(a.totalFees||0).toFixed(2)}</div><div class="label">Fees</div></div><div class="stat-card danger"><div class="num">${Number(a.totalServiceCharges||0).toFixed(2)}</div><div class="label">Svc Charges</div></div></div><div class="section-divider"><i class="fas fa-coins"></i> Revenue</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card green"><div class="num">${Number(a.totalRevenue||0).toFixed(2)}</div><div class="label">Revenue</div></div><div class="stat-card info"><div class="num">${Number(a.totalRefCommission||0).toFixed(2)}</div><div class="label">Commission</div></div><div class="stat-card purple"><div class="num">${Number(a.totalTaskBonus||0).toFixed(2)}</div><div class="label">Task Bonus</div></div><div class="stat-card warning"><div class="num">${Number(a.totalWithdrawn||0).toFixed(2)}</div><div class="label">Withdrawn</div></div></div><div class="section-divider"><i class="fas fa-address-card"></i> Contact</div>${cH}<div class="section-divider"><i class="fas fa-money-bill-wave"></i> Deposits</div>${dH}<div style="display:flex; gap:10px; margin-top:16px;"><button class="btn btn-warning" onclick="closeAdminViewModal(); openAdminEditModal('${adminId}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-red" onclick="closeAdminViewModal(); deleteAdminFull('${adminId}')" style="flex:1;"><i class="fas fa-trash"></i> Delete</button></div>`;
+  document.getElementById('adminViewBody').innerHTML = `<div style="text-align:center; margin-bottom:16px;"><div style="width:64px; height:64px; margin:0 auto 10px; border-radius:18px; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.5rem;">${(a.username||'A').charAt(0).toUpperCase()}</div><div style="font-weight:900; font-size:1.1rem;">${esc(a.username)}</div><div style="font-size:.72rem; color:#94a3b8; margin-top:4px;">ID: ${adminId}</div></div><div class="section-divider"><i class="fas fa-key"></i> Credentials</div><div class="info-display-box"><span class="label">Username</span><span class="value">${esc(a.username)}</span><button class="copy-btn inline" onclick="copyToClipboard('${esc(a.username).replace(/'/g,"\\'")}', 'Username')"><i class="fas fa-copy"></i></button></div><div class="info-display-box" style="background:linear-gradient(135deg,#cffafe,#a5f3fc); border-color:rgba(6,182,212,.4);"><span class="label" style="color:#0e7490;">Ref Code</span><span class="value" style="color:#0891b2; font-weight:900; letter-spacing:2px;">${esc(refCode)}</span></div><div class="section-divider"><i class="fas fa-wallet"></i> Financial</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card green"><div class="num">${Number(a.balance||0).toFixed(2)}</div><div class="label">Balance</div></div><div class="stat-card info"><div class="num">${Number(a.totalDeposited||0).toFixed(2)}</div><div class="label">Deposited</div></div><div class="stat-card warning"><div class="num">${Number(a.totalSpent||0).toFixed(2)}</div><div class="label">Spent</div></div><div class="stat-card purple"><div class="num">${Number(a.totalRefunded||0).toFixed(2)}</div><div class="label">Refunded</div></div><div class="stat-card pink"><div class="num">${Number(a.totalFees||0).toFixed(2)}</div><div class="label">Fees</div></div><div class="stat-card danger"><div class="num">${Number(a.totalServiceCharges||0).toFixed(2)}</div><div class="label">Svc Charges</div></div></div><div class="section-divider"><i class="fas fa-coins"></i> Revenue</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card green"><div class="num">${Number(a.totalRevenue||0).toFixed(2)}</div><div class="label">Revenue</div></div><div class="stat-card info"><div class="num">${Number(a.totalRefCommission||0).toFixed(2)}</div><div class="label">Commission</div></div><div class="stat-card purple"><div class="num">${Number(a.totalTaskBonus||0).toFixed(2)}</div><div class="label">Task Bonus</div></div><div class="stat-card warning"><div class="num">${Number(a.totalWithdrawn||0).toFixed(2)}</div><div class="label">Withdrawn</div></div></div><div class="section-divider"><i class="fas fa-address-card"></i> Contact</div>${cH}<div class="section-divider"><i class="fas fa-money-bill-wave"></i> Deposits</div>${dH}<div style="display:flex; gap:10px; margin-top:16px;"><button class="btn btn-warning" onclick="closeAdminViewModal(); openAdminEditModal('${adminId}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-red" onclick="closeAdminViewModal(); deleteAdminFull('${adminId}')" style="flex:1;"><i class="fas fa-trash"></i> Delete</button></div>`;
   document.getElementById('adminViewModal').classList.add('active');
 }
 function closeAdminViewModal() { document.getElementById('adminViewModal').classList.remove('active'); }
@@ -2936,6 +2971,7 @@ db.ref('withdrawals').orderByChild('status').equalTo('pending').on('value', snap
 });
 async function approveWd(id) {
   if (!confirm('Approve?')) return;
+  if (!currentSession) return toast('❌ Session expired. Please login again.');
   try {
     const wdRef = db.ref('withdrawals/' + id);
     let wdSnap = await wdRef.once('value');
@@ -3005,6 +3041,150 @@ function loadAllWithdrawals() {
   });
 }
 
+// ============ ADMIN CHAT MANAGEMENT (NEW) ============
+function loadAdminChats() {
+  const list = document.getElementById('adminChatList');
+  if (!list) return;
+  if (adminChatListListener) db.ref('chats').off('value', adminChatListListener);
+  adminChatListListener = db.ref('chats').on('value', snap => {
+    const threads = [];
+    snap.forEach(c => {
+      const meta = c.child('meta').val() || {};
+      const messages = c.child('messages').val() || {};
+      let unread = 0;
+      let lastMsg = null, lastTime = 0;
+      Object.keys(messages).forEach(k => {
+        const m = messages[k];
+        if (m.from === 'user' && !m.read) unread++;
+        if ((m.timestamp || 0) > lastTime) { lastTime = m.timestamp || 0; lastMsg = m; }
+      });
+      threads.push({
+        key: c.key, meta, unread,
+        lastPreview: lastMsg ? (lastMsg.text || (lastMsg.type === 'image' ? '📷 Image' : '')) : meta.lastMessagePreview || '',
+        lastTime: lastTime || meta.lastMessageAt || 0
+      });
+    });
+    threads.sort((a, b) => b.lastTime - a.lastTime);
+    const totalUnread = threads.reduce((s, t) => s + t.unread, 0);
+    const badge = document.getElementById('chatsUnreadBadge');
+    if (badge) {
+      if (totalUnread > 0) { badge.textContent = totalUnread; badge.style.display = 'inline-block'; }
+      else badge.style.display = 'none';
+    }
+    if (!threads.length) {
+      list.innerHTML = '<div class="empty-state"><p>No chats yet</p></div>';
+      return;
+    }
+    let html = '';
+    threads.forEach(t => {
+      const m = t.meta;
+      const name = m.userName || 'User';
+      const init = (name || 'U').charAt(0).toUpperCase();
+      const time = t.lastTime ? new Date(t.lastTime).toLocaleString('en-GB', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }) : '';
+      const safeKey = esc(t.key);
+      const safeName = esc(name).replace(/'/g, "\\'");
+      html += `<div class="admin-chat-item ${t.unread>0?'unread':''}" onclick="openAdminThread('${safeKey}','${safeName}')">
+          <div class="admin-chat-avatar">${init}</div>
+          <div class="admin-chat-info">
+              <div class="name">${esc(name)}</div>
+              <div class="preview">${esc(t.lastPreview)}</div>
+          </div>
+          <div class="admin-chat-meta">
+              ${time}
+              ${t.unread > 0 ? `<div class="admin-chat-unread">${t.unread}</div>` : ''}
+          </div>
+      </div>`;
+    });
+    list.innerHTML = html;
+  });
+}
+
+function openAdminThread(threadKey, userName) {
+  adminCurrentThreadKey = threadKey;
+  document.getElementById('adminThreadName').textContent = userName;
+  document.getElementById('adminChatThreadModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  loadAdminThreadMessages();
+  db.ref('chats/' + threadKey + '/messages').once('value').then(snap => {
+    const updates = {};
+    snap.forEach(c => {
+      const m = c.val();
+      if (m.from === 'user' && !m.read) updates[c.key + '/read'] = true;
+    });
+    if (Object.keys(updates).length) db.ref('chats/' + threadKey + '/messages').update(updates);
+    db.ref('chats/' + threadKey + '/meta/unreadForAdmin').set(0).catch(()=>{});
+  });
+}
+
+function closeAdminChatThread() {
+  if (adminThreadMsgListener && adminCurrentThreadKey) {
+    db.ref('chats/' + adminCurrentThreadKey + '/messages').off('value', adminThreadMsgListener);
+    adminThreadMsgListener = null;
+  }
+  adminCurrentThreadKey = null;
+  document.getElementById('adminChatThreadModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function loadAdminThreadMessages() {
+  if (adminThreadMsgListener) db.ref('chats/' + adminCurrentThreadKey + '/messages').off('value', adminThreadMsgListener);
+  adminThreadMsgListener = db.ref('chats/' + adminCurrentThreadKey + '/messages').orderByChild('timestamp').on('value', snap => {
+    const body = document.getElementById('adminThreadBody');
+    const msgs = [];
+    snap.forEach(c => { const m = c.val(); m.id = c.key; msgs.push(m); });
+    if (!msgs.length) {
+      body.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:40px;"><i class="fas fa-comment-dots" style="font-size:2rem;display:block;margin-bottom:10px;"></i>No messages</div>';
+      return;
+    }
+    msgs.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+    let html = '';
+    msgs.forEach(m => {
+      const isAdmin = m.from === 'admin';
+      const time = m.timestamp ? new Date(m.timestamp).toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' }) : '';
+      let content = '';
+      if (m.type === 'image' && m.fileUrl) {
+        const safeUrl = String(m.fileUrl).replace(/'/g, "\\'");
+        content = `<img src="${esc(m.fileUrl)}" style="max-width:100%;border-radius:8px;margin-top:4px;display:block;cursor:pointer;" onclick="window.open('${safeUrl}','_blank')" alt="image">`;
+        if (m.text) content += `<div>${esc(m.text)}</div>`;
+      } else content = esc(m.text || '');
+      const bubbleStyle = isAdmin
+        ? 'align-self:flex-end;background:linear-gradient(135deg,#6C5CE7,#8b5cf6);color:#fff;border-bottom-right-radius:4px;'
+        : 'align-self:flex-start;background:#fff;color:#0f172a;border:1px solid #e2e8f0;border-bottom-left-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.04);';
+      html += `<div style="max-width:78%;padding:10px 14px;border-radius:16px;font-size:.88rem;line-height:1.5;word-wrap:break-word;${bubbleStyle}">${content}<span style="font-size:.62rem;opacity:.75;margin-top:4px;display:block;text-align:${isAdmin?'right':'left'};">${time}</span></div>`;
+    });
+    body.innerHTML = html;
+    body.scrollTop = body.scrollHeight;
+  });
+}
+
+async function sendAdminReply() {
+  const input = document.getElementById('adminReplyInput');
+  const btn = document.getElementById('adminReplyBtn');
+  const text = input.value.trim();
+  if (!text) return;
+  if (!adminCurrentThreadKey) return toast('❌ No thread open');
+  btn.disabled = true;
+  try {
+    await db.ref('chats/' + adminCurrentThreadKey + '/messages').push({
+      from: 'admin',
+      adminId: currentSession ? (currentSession.adminId || 'super') : 'super',
+      adminName: currentSession ? currentSession.username : 'Admin',
+      text,
+      type: 'text',
+      timestamp: Date.now(),
+      read: false
+    });
+    await db.ref('chats/' + adminCurrentThreadKey + '/meta').update({
+      lastMessageAt: Date.now(),
+      lastMessagePreview: text.substring(0, 60),
+      lastMessageFrom: 'admin',
+      unreadForUser: 1
+    }).catch(()=>{});
+    input.value = '';
+  } catch (e) { toast('❌ ' + e.message); }
+  finally { btn.disabled = false; }
+}
+
 // TAB SWITCHER
 function switchTab(id, el) {
   const content = document.getElementById('tab-'+id);
@@ -3021,6 +3201,7 @@ function switchTab(id, el) {
   if (id === 'channels') loadVerificationStats();
   if (id === 'extrareward') loadExtraRewardPreview();
   if (id === 'ads') loadAdsConfig();
+  if (id === 'chats') loadAdminChats();
   if (id === 'tasks') {
     currentTaskListTab = 'live';
     document.querySelectorAll('.task-list-tab').forEach(t => { t.classList.remove('active'); t.classList.remove('pending-active'); });
@@ -3051,6 +3232,8 @@ function runPanelInit() {
       if (b) { if (count > 0) { b.textContent = count; b.style.display = 'inline-block'; } else b.style.display = 'none'; }
       if (document.getElementById('tab-depositmgmt') && document.getElementById('tab-depositmgmt').classList.contains('active')) loadAllDepositRequests();
     });
+    // Listen to chats for badge
+    loadAdminChats();
   }
   if (currentSession.role === 'super') { loadAnalytics(); loadVerificationStats(); toggleSurveyFields(); renderLeaderboardCustomList(); loadExtraRewardPreview(); loadAdsConfig(); }
   else { loadCurrentAdminData(); loadTasksList(); loadTaskSubmissions(); }
