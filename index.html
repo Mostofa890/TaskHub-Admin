@@ -249,6 +249,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .stat-card.info::before{background:linear-gradient(90deg,#3b82f6,#60a5fa)}
 .stat-card.purple::before{background:linear-gradient(90deg,#8b5cf6,#a78bfa)}
 .stat-card.pink::before{background:linear-gradient(90deg,#ec4899,#f472b6)}
+.stat-card.deposit::before{background:linear-gradient(90deg,#ea580c,#fb923c)}
 .stat-card .num{font-size:1.75rem;font-weight:900;color:var(--primary);line-height:1.1;letter-spacing:-.03em}
 .stat-card.green .num{color:var(--success)}
 .stat-card.warning .num{color:var(--warning)}
@@ -256,6 +257,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .stat-card.info .num{color:var(--info)}
 .stat-card.purple .num{color:var(--secondary)}
 .stat-card.pink .num{color:var(--pink)}
+.stat-card.deposit .num{color:#ea580c}
 .stat-card .label{font-size:.68rem;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-top:6px}
 .contact-info-box{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid rgba(139,92,246,.3);border-radius:12px;padding:12px 14px;margin-top:10px;font-size:.8rem;font-weight:700;color:#5b21b6;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .contact-info-box i{color:#8b5cf6;font-size:1.1rem}
@@ -289,15 +291,17 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .user-avatar-v2{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.2rem;flex-shrink:0;overflow:hidden;box-shadow:0 6px 14px rgba(99,102,241,.3)}
 .user-info-v2{flex:1;min-width:0}
 .user-info-v2 .name{font-weight:900;font-size:.95rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.user-info-v2 .meta{font-size:.7rem;color:var(--text-muted);font-weight:700;margin-top:3px;display:flex;gap:10px;flex-wrap:wrap}
-.user-stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;padding:12px 14px}
-.user-stat-cell{background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:8px;padding:8px 6px;text-align:center;border:1px solid var(--border)}
-.user-stat-cell .num{font-size:.95rem;font-weight:900;color:var(--text);line-height:1.1}
+.user-info-v2 .meta{font-size:.7rem;color:var(--text-muted);font-weight:700;margin-top:3px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.user-stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:4px;padding:12px 10px}
+.user-stat-cell{background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:8px;padding:8px 4px;text-align:center;border:1px solid var(--border)}
+.user-stat-cell.deposit-cell{background:linear-gradient(135deg,#fff7ed,#fed7aa);border-color:rgba(234,88,12,.3)}
+.user-stat-cell .num{font-size:.85rem;font-weight:900;color:var(--text);line-height:1.1}
 .user-stat-cell .num.green{color:var(--success)}
 .user-stat-cell .num.blue{color:var(--info)}
 .user-stat-cell .num.purple{color:var(--secondary)}
 .user-stat-cell .num.warn{color:var(--warning)}
-.user-stat-cell .lbl{font-size:.55rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin-top:3px;letter-spacing:.05em}
+.user-stat-cell .num.orange{color:#ea580c}
+.user-stat-cell .lbl{font-size:.52rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;margin-top:3px;letter-spacing:.05em}
 .user-actions-row{display:flex;gap:6px;padding:10px 14px 14px;flex-wrap:wrap}
 .user-actions-row .btn{flex:1;min-width:70px;padding:8px 10px;font-size:.72rem}
 .ref-mini-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:linear-gradient(135deg,#f9f9ff,#f2f4ff);border-radius:10px;margin-bottom:6px;border:1px solid rgba(99,102,241,.15)}
@@ -441,7 +445,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .min-watch-box{background:linear-gradient(135deg,#fff7ed,#fed7aa);border:2px solid #fb923c;border-radius:14px;padding:14px;margin-bottom:14px}
 .min-watch-box label{color:#c2410c;font-weight:800;font-size:.82rem;margin-bottom:8px;display:flex;align-items:center;gap:6px}
 .min-watch-box small{display:block;margin-top:8px;font-size:.72rem;color:#9a3412;font-weight:700;line-height:1.5}
-@media (max-width:400px){.container{padding:0 12px}.card{padding:16px;border-radius:20px}.header{padding:22px 18px 55px;border-radius:0 0 26px 26px}.header-title{font-size:1rem}.header-status{max-width:90px}.user-stats-grid{grid-template-columns:1fr 1fr}.legal-body{padding:20px 18px 26px}.pkg-stats-grid{grid-template-columns:1fr 1fr}.user-pkg-grid{grid-template-columns:1fr 1fr}.deposit-grid{grid-template-columns:1fr}}
+@media (max-width:400px){.container{padding:0 12px}.card{padding:16px;border-radius:20px}.header{padding:22px 18px 55px;border-radius:0 0 26px 26px}.header-title{font-size:1rem}.header-status{max-width:90px}.user-stats-grid{grid-template-columns:1fr 1fr 1fr}.legal-body{padding:20px 18px 26px}.pkg-stats-grid{grid-template-columns:1fr 1fr}.user-pkg-grid{grid-template-columns:1fr 1fr}.deposit-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -536,7 +540,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 <!-- ============ MODALS ============ -->
 <div class="modal-overlay" id="userViewModal"><div class="modal-box" style="max-width:640px;"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-info"><i class="fas fa-user-circle"></i></div>User Complete Data</div><button class="modal-close" onclick="closeUserViewModal()"><i class="fas fa-times"></i></button></div><div class="modal-body" id="userViewBody"></div></div></div>
 
-<div class="modal-overlay" id="userEditModal"><div class="modal-box" style="max-width:560px;"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-warning"><i class="fas fa-user-pen"></i></div>Edit User</div><button class="modal-close" onclick="closeUserEditModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="ueUserId"><div class="form-group"><label>Name</label><input type="text" id="ueName"></div><div class="form-group"><label>Username</label><input type="text" id="ueUsername"></div><div class="form-group"><label>Photo URL</label><input type="text" id="uePhoto"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div class="form-group"><label>Balance (TK)</label><input type="number" step="0.01" id="ueBalance"></div><div class="form-group"><label>Total Earned</label><input type="number" step="0.01" id="ueTotalEarned"></div><div class="form-group"><label>Referral Balance</label><input type="number" step="0.01" id="ueReferralBalance"></div><div class="form-group"><label>Total Commission</label><input type="number" step="0.01" id="ueTotalCommission"></div><div class="form-group"><label>Referral Count</label><input type="number" id="ueReferrals"></div><div class="form-group"><label>Ad Claimed Total</label><input type="number" step="0.01" id="ueAdClaimedTotal"></div><div class="form-group"><label>Ad Clicks</label><input type="number" id="ueAdClicks"></div><div class="form-group"><label>Withdraw Count</label><input type="number" id="ueWithdrawCount"></div></div><div class="form-group"><label>Referred By</label><input type="text" id="ueReferredBy"></div><div class="form-group"><label>Ban Status</label><select id="ueIsBanned"><option value="false">✅ Active</option><option value="true">🚫 Banned</option></select></div><div class="form-group"><label>Ban Reason</label><input type="text" id="ueBanReason"></div><div class="form-group"><label>Channel Verified</label><select id="ueChannelVerified"><option value="true">✅ Verified</option><option value="false">❌ Not Verified</option></select></div><div style="display:flex;gap:10px;"><button class="btn btn-green" onclick="saveUserFullEdit()" style="flex:2;"><i class="fas fa-save"></i> Save All</button><button class="btn btn-red" onclick="closeUserEditModal()" style="flex:1;"><i class="fas fa-times"></i> Cancel</button></div></div></div></div>
+<div class="modal-overlay" id="userEditModal"><div class="modal-box" style="max-width:560px;"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-warning"><i class="fas fa-user-pen"></i></div>Edit User</div><button class="modal-close" onclick="closeUserEditModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="ueUserId"><div class="form-group"><label>Name</label><input type="text" id="ueName"></div><div class="form-group"><label>Username</label><input type="text" id="ueUsername"></div><div class="form-group"><label>Photo URL</label><input type="text" id="uePhoto"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div class="form-group"><label>Balance (Withdrawable TK)</label><input type="number" step="0.01" id="ueBalance"></div><div class="form-group"><label>Deposit Balance (TK)</label><input type="number" step="0.01" id="ueAdBalance"></div><div class="form-group"><label>Total Earned</label><input type="number" step="0.01" id="ueTotalEarned"></div><div class="form-group"><label>Referral Balance</label><input type="number" step="0.01" id="ueReferralBalance"></div><div class="form-group"><label>Total Commission</label><input type="number" step="0.01" id="ueTotalCommission"></div><div class="form-group"><label>Referral Count</label><input type="number" id="ueReferrals"></div><div class="form-group"><label>Ad Claimed Total</label><input type="number" step="0.01" id="ueAdClaimedTotal"></div><div class="form-group"><label>Ad Clicks</label><input type="number" id="ueAdClicks"></div><div class="form-group"><label>Withdraw Count</label><input type="number" id="ueWithdrawCount"></div></div><div class="form-group"><label>Referred By</label><input type="text" id="ueReferredBy"></div><div class="form-group"><label>Ban Status</label><select id="ueIsBanned"><option value="false">✅ Active</option><option value="true">🚫 Banned</option></select></div><div class="form-group"><label>Ban Reason</label><input type="text" id="ueBanReason"></div><div class="form-group"><label>Channel Verified</label><select id="ueChannelVerified"><option value="true">✅ Verified</option><option value="false">❌ Not Verified</option></select></div><div style="display:flex;gap:10px;"><button class="btn btn-green" onclick="saveUserFullEdit()" style="flex:2;"><i class="fas fa-save"></i> Save All</button><button class="btn btn-red" onclick="closeUserEditModal()" style="flex:1;"><i class="fas fa-times"></i> Cancel</button></div></div></div></div>
 
 <div class="modal-overlay" id="userDetailsModal"><div class="modal-box" style="max-width:620px;"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-purple"><i class="fas fa-chart-network"></i></div>Full Activity Details</div><button class="modal-close" onclick="closeUserDetailsModal()"><i class="fas fa-times"></i></button></div><div class="modal-body" id="userDetailsBody"></div></div></div>
 
@@ -614,7 +618,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- SETTINGS TAB -->
+  <!-- ============ SETTINGS TAB ============ -->
   <div id="tab-settings" class="tab-content active super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-robot"></i></div>App Configuration</div></div>
@@ -915,74 +919,29 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
           <span id="pkgFormTitle">Create New Package</span>
         </div>
       </div>
-
       <input type="hidden" id="pkgEditId">
-
-      <div class="form-group">
-        <label>Package Name *</label>
-        <input type="text" id="pkgName" placeholder="e.g. Starter Package">
-      </div>
-
+      <div class="form-group"><label>Package Name *</label><input type="text" id="pkgName" placeholder="e.g. Starter Package"></div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <div class="form-group">
-          <label>Duration (Days) *</label>
-          <input type="number" id="pkgDuration" min="1" placeholder="30">
-          <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">প্যাকেজ কেনার পর কতদিন চলবে</small>
-        </div>
-        <div class="form-group">
-          <label>Price (TK) *</label>
-          <input type="number" id="pkgPrice" min="1" step="0.01" placeholder="100">
-        </div>
+        <div class="form-group"><label>Duration (Days) *</label><input type="number" id="pkgDuration" min="1" placeholder="30"><small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">প্যাকেজ কেনার পর কতদিন চলবে</small></div>
+        <div class="form-group"><label>Price (TK) *</label><input type="number" id="pkgPrice" min="1" step="0.01" placeholder="100"></div>
       </div>
-
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <div class="form-group">
-          <label>Daily Income (TK/day) *</label>
-          <input type="number" id="pkgDailyIncome" min="0.01" step="0.01" placeholder="5">
-        </div>
-        <div class="form-group">
-          <label>Profit Rate (%) — Display only</label>
-          <input type="number" id="pkgRate" min="0" step="0.1" placeholder="50">
-          <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">শুধু ইউজারকে দেখানোর জন্য</small>
-        </div>
+        <div class="form-group"><label>Daily Income (TK/day) *</label><input type="number" id="pkgDailyIncome" min="0.01" step="0.01" placeholder="5"></div>
+        <div class="form-group"><label>Profit Rate (%) — Display only</label><input type="number" id="pkgRate" min="0" step="0.1" placeholder="50"><small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">শুধু ইউজারকে দেখানোর জন্য</small></div>
       </div>
-
-      <div class="form-group">
-        <label>Package Description (optional)</label>
-        <textarea id="pkgDesc" rows="2" placeholder="Short description..."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Status</label>
-        <select id="pkgStatus">
-          <option value="active">✅ Active</option>
-          <option value="inactive">🚫 Inactive</option>
-        </select>
-      </div>
-
+      <div class="form-group"><label>Package Description (optional)</label><textarea id="pkgDesc" rows="2" placeholder="Short description..."></textarea></div>
+      <div class="form-group"><label>Status</label><select id="pkgStatus"><option value="active">✅ Active</option><option value="inactive">🚫 Inactive</option></select></div>
       <div style="display:flex;gap:10px;">
         <button class="btn btn-orange" onclick="savePackage()" style="flex:2;"><i class="fas fa-save"></i> Save Package</button>
         <button class="btn btn-red" onclick="resetPackageForm()" style="flex:1;"><i class="fas fa-times"></i> Reset</button>
       </div>
     </div>
-
     <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-icon icon-info"><i class="fas fa-list-check"></i></div>
-          All Packages (<span id="pkgCount">0</span>)
-        </div>
-      </div>
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-list-check"></i></div>All Packages (<span id="pkgCount">0</span>)</div></div>
       <div id="packagesListContainer"></div>
     </div>
-
     <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-icon icon-success"><i class="fas fa-user-check"></i></div>
-          Active User Packages
-        </div>
-      </div>
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-user-check"></i></div>Active User Packages</div></div>
       <div id="activeUserPackagesContainer"></div>
     </div>
   </div>
@@ -1030,64 +989,22 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   <!-- DEPOSIT MGMT TAB -->
   <div id="tab-depositmgmt" class="tab-content super-only">
     <div class="card rainbow">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-icon icon-success"><i class="fas fa-money-bill-transfer"></i></div>
-          Deposit Payment Numbers
-        </div>
-      </div>
-      <div class="alert-box info">
-        <i class="fas fa-info-circle"></i>
-        <div>ইউজাররা এই নাম্বারগুলোতে টাকা পাঠিয়ে ডিপোজিট করবে। bKash / Nagad / Rocket / Upay ইত্যাদির নাম্বার এখানে দিন।</div>
-      </div>
-
-      <div class="form-group">
-        <label>bKash Number (Personal / Agent)</label>
-        <input type="text" id="payBkash" placeholder="01XXXXXXXXX">
-      </div>
-      <div class="form-group">
-        <label>Nagad Number</label>
-        <input type="text" id="payNagad" placeholder="01XXXXXXXXX">
-      </div>
-      <div class="form-group">
-        <label>Rocket Number</label>
-        <input type="text" id="payRocket" placeholder="01XXXXXXXXX-1">
-      </div>
-      <div class="form-group">
-        <label>Upay Number</label>
-        <input type="text" id="payUpay" placeholder="01XXXXXXXXX">
-      </div>
-      <div class="form-group">
-        <label>Minimum Deposit (TK)</label>
-        <input type="number" id="payMinDeposit" min="1" step="0.01" placeholder="50">
-      </div>
-      <div class="form-group">
-        <label>Deposit Instructions</label>
-        <textarea id="payInstructions" rows="3" placeholder="টাকা পাঠানোর নিয়ম..."></textarea>
-      </div>
-
-      <button class="btn btn-green" onclick="saveDepositPaymentInfo()">
-        <i class="fas fa-save"></i> Save Payment Numbers
-      </button>
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-money-bill-transfer"></i></div>Deposit Payment Numbers</div></div>
+      <div class="alert-box info"><i class="fas fa-info-circle"></i><div>ইউজাররা এই নাম্বারগুলোতে টাকা পাঠিয়ে ডিপোজিট করবে। bKash / Nagad / Rocket / Upay ইত্যাদির নাম্বার এখানে দিন।</div></div>
+      <div class="form-group"><label>bKash Number (Personal / Agent)</label><input type="text" id="payBkash" placeholder="01XXXXXXXXX"></div>
+      <div class="form-group"><label>Nagad Number</label><input type="text" id="payNagad" placeholder="01XXXXXXXXX"></div>
+      <div class="form-group"><label>Rocket Number</label><input type="text" id="payRocket" placeholder="01XXXXXXXXX-1"></div>
+      <div class="form-group"><label>Upay Number</label><input type="text" id="payUpay" placeholder="01XXXXXXXXX"></div>
+      <div class="form-group"><label>Minimum Deposit (TK)</label><input type="number" id="payMinDeposit" min="1" step="0.01" placeholder="50"></div>
+      <div class="form-group"><label>Deposit Instructions</label><textarea id="payInstructions" rows="3" placeholder="টাকা পাঠানোর নিয়ম..."></textarea></div>
+      <button class="btn btn-green" onclick="saveDepositPaymentInfo()"><i class="fas fa-save"></i> Save Payment Numbers</button>
     </div>
-
     <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-icon icon-warning"><i class="fas fa-inbox"></i></div>
-          Pending Deposit Requests
-        </div>
-      </div>
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-inbox"></i></div>Pending Deposit Requests</div></div>
       <div id="pendingDepositReqList"></div>
     </div>
-
     <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-icon icon-info"><i class="fas fa-clock-rotate-left"></i></div>
-          All Deposit Requests
-        </div>
-      </div>
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-clock-rotate-left"></i></div>All Deposit Requests</div></div>
       <div id="allDepositReqList"></div>
     </div>
   </div>
@@ -1095,12 +1012,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   <!-- CHATS TAB -->
   <div id="tab-chats" class="tab-content super-only">
     <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-icon icon-primary"><i class="fas fa-comments"></i></div>
-          User Chats
-        </div>
-      </div>
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-comments"></i></div>User Chats</div></div>
       <div class="alert-box info"><i class="fas fa-info-circle"></i><div>ইউজারদের সাথে রিয়েল-টাইম চ্যাট। নতুন মেসেজ হলে ট্যাবে ব্যাজ দেখাবে।</div></div>
       <div class="admin-chat-list" id="adminChatList">
         <div class="empty-state"><p>No chats yet</p></div>
@@ -1121,7 +1033,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <div class="wallet-stat-cell" style="background:rgba(251,191,36,.35);"><div class="val" id="walletTotalRevenue">0.00</div><div class="lbl">💰 Revenue</div></div>
       </div>
     </div>
-
     <div class="card rainbow">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-purple"><i class="fas fa-link"></i></div>My Referral Link</div></div>
       <div class="ref-link-box">
@@ -1142,7 +1053,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="section-divider" style="margin-top:16px;"><i class="fas fa-list"></i> Referred Users</div>
       <div id="myReferredUsersList"></div>
     </div>
-
     <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-pink"><i class="fas fa-address-card"></i></div>My Contact Info</div></div><div id="myContactBox"></div><button class="btn btn-pink" onclick="openContactEditModal()" style="margin-top:10px;"><i class="fas fa-pen"></i> Edit Contact</button></div>
     <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-money-bill-wave"></i></div>Deposit History</div></div><div id="depositHistoryList"></div></div>
   </div>
@@ -1260,10 +1170,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ⚠️ IMPORTANT: Replace with your bot token for chat notifications
-// Recommended: use a proxy server, don't hardcode in production
 const BOT_TOKEN_FOR_NOTIF = "8921657661:AAHBaKSCD-jEHCgbEcYRQRiaD_Yx1vLHm9k";
-const CHAT_NOTIF_COOLDOWN_MS = 60 * 1000; // 1 min
+const CHAT_NOTIF_COOLDOWN_MS = 60 * 1000;
 
 // ============================================
 // HELPERS
@@ -1317,11 +1225,10 @@ let currentSession = null;
 let adminChatListListener = null;
 let adminThreadMsgListener = null;
 let adminCurrentThreadKey = null;
+let adminChatNotifListener = null; // ✅ NEW: chat notification listener
 
-// ✅ Notif cooldown tracking (in-memory)
 const userNotifCooldown = {};
 
-// ✅ Real-time listeners tracking (to prevent duplicates)
 const activeListeners = {
   depositRequests: null,
   chats: null,
@@ -2374,22 +2281,37 @@ function renderSubmissions() {
   c.innerHTML = h;
 }
 
+// ✅ FIX: Task approval → adBalance + pendingConversions
 async function reviewSubmission(subId, action) {
   const sub = allSubmissions.find(x => x.id === subId);
   if (!sub) return;
   if (currentSession.role === 'admin') { const t = currentTaskCache[String(sub.taskId)]; if (!t || t.createdByAdminId !== currentSession.adminId) return toast('❌ Denied'); }
   let reason = '';
   if (action === 'rejected') reason = prompt('Reason:') || '';
-  else if (!confirm(`Approve ${sub.reward} TK?`)) return;
+  else if (!confirm(`Approve ${sub.reward} TK? (Deposit Balance এ যোগ হবে + ২৪ঘন্টা পর Withdrawable এ কনভার্ট হবে)`)) return;
   await db.ref('taskSubmissions/'+subId).update({ status: action, reason, reviewedAt: Date.now(), reviewedBy: currentSession.username });
   if (action === 'approved') {
+    // ✅ CHANGED: adBalance + pendingConversions (24h auto-convert)
     const ur = db.ref('users/'+sub.userId);
     const us = await ur.once('value');
-    if (us.exists()) { const u = us.val(); await ur.update({ balance: Number(u.balance||0)+Number(sub.reward||0), totalEarned: Number(u.totalEarned||0)+Number(sub.reward||0) }); }
+    if (us.exists()) {
+      const u = us.val();
+      await ur.update({
+        adBalance: Number(u.adBalance || 0) + Number(sub.reward || 0),
+        totalEarned: Number(u.totalEarned || 0) + Number(sub.reward || 0)
+      });
+      // Push to pendingConversions (24h countdown)
+      const pcId = 'pc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+      await db.ref('users/'+sub.userId+'/pendingConversions/'+pcId).set({
+        amount: Number(sub.reward || 0),
+        timestamp: Date.now(),
+        source: 'task_approval'
+      });
+    }
     const ts = await db.ref('config/newTasks/'+sub.taskId).once('value');
     if (ts.exists()) await db.ref('config/newTasks/'+sub.taskId).update({ submittedCount: Number(ts.val().submittedCount||0)+1 });
     await giveTaskOwnerBonus(sub.taskId, subId, sub.userName || 'User');
-    toast('✅ Approved!');
+    toast('✅ Approved! Deposit Balance এ যোগ হয়েছে');
   } else toast('❌ Rejected');
   loadTaskSubmissions();
 }
@@ -2635,7 +2557,7 @@ function renderUsers() {
     const photoHtml = u.photo ? `<img src="${esc(u.photo)}" onerror="this.style.display='none';this.parentNode.textContent='${init}'" style="width:100%;height:100%;object-fit:cover;">` : init;
     const banned = u.isBanned === true;
     const st = getUserStatus(u);
-    h += `<div class="user-card-v2 ${banned?'banned':''}"><div class="user-card-top"><div class="user-avatar-v2">${photoHtml}</div><div class="user-info-v2"><div class="name">${esc(u.name||'Unknown')} ${banned?'<span class="status-badge banned">BANNED</span>':'<span class="status-badge active">ACTIVE</span>'} ${u.channelVerified?'<span class="status-badge active">✅ VERIFIED</span>':''} ${getUserStatusBadge(st)}</div><div class="meta"><span><i class="fas fa-id-badge"></i> ${u.id}</span>${u.username ? `<span>@${esc(u.username)}</span>` : ''}</div></div></div><div class="user-stats-grid"><div class="user-stat-cell"><div class="num green">${(u.balance||0).toFixed(2)}</div><div class="lbl">Balance</div></div><div class="user-stat-cell"><div class="num blue">${u._adViews}</div><div class="lbl">Ad Views</div></div><div class="user-stat-cell"><div class="num purple">${u._qualifiedRefs}/${u._totalRefs}</div><div class="lbl">Refs</div></div><div class="user-stat-cell"><div class="num warn">${u._adClicks}</div><div class="lbl">Clicks</div></div></div><div class="user-actions-row"><button class="btn btn-info btn-small" onclick="viewUserFull('${u.id}')"><i class="fas fa-eye"></i> View</button><button class="btn btn-purple btn-small" onclick="viewUserDetails('${u.id}')"><i class="fas fa-sitemap"></i> Details</button><button class="btn btn-warning btn-small" onclick="openUserEditModal('${u.id}')"><i class="fas fa-pen"></i> Edit</button><button class="btn ${banned?'btn-green':'btn-red'} btn-small" onclick="toggleBanUser('${u.id}', ${!banned})"><i class="fas fa-ban"></i> ${banned?'Unban':'Ban'}</button><button class="btn btn-red btn-small" onclick="deleteUserFull('${u.id}')"><i class="fas fa-trash"></i> Delete</button></div></div>`;
+    h += `<div class="user-card-v2 ${banned?'banned':''}"><div class="user-card-top"><div class="user-avatar-v2">${photoHtml}</div><div class="user-info-v2"><div class="name">${esc(u.name||'Unknown')} ${banned?'<span class="status-badge banned">BANNED</span>':'<span class="status-badge active">ACTIVE</span>'} ${u.channelVerified?'<span class="status-badge active">✅ VERIFIED</span>':''} ${getUserStatusBadge(st)}</div><div class="meta"><span><i class="fas fa-id-badge"></i> ${u.id}</span>${u.username ? `<span>@${esc(u.username)}</span>` : ''}</div></div></div><div class="user-stats-grid"><div class="user-stat-cell"><div class="num green">${(u.balance||0).toFixed(2)}</div><div class="lbl">W/D</div></div><div class="user-stat-cell deposit-cell"><div class="num orange">${(u.adBalance||0).toFixed(2)}</div><div class="lbl">Deposit</div></div><div class="user-stat-cell"><div class="num blue">${u._adViews}</div><div class="lbl">Ads</div></div><div class="user-stat-cell"><div class="num purple">${u._qualifiedRefs}/${u._totalRefs}</div><div class="lbl">Refs</div></div><div class="user-stat-cell"><div class="num warn">${u._adClicks}</div><div class="lbl">Clicks</div></div></div><div class="user-actions-row"><button class="btn btn-info btn-small" onclick="viewUserFull('${u.id}')"><i class="fas fa-eye"></i> View</button><button class="btn btn-purple btn-small" onclick="viewUserDetails('${u.id}')"><i class="fas fa-sitemap"></i> Details</button><button class="btn btn-warning btn-small" onclick="openUserEditModal('${u.id}')"><i class="fas fa-pen"></i> Edit</button><button class="btn ${banned?'btn-green':'btn-red'} btn-small" onclick="toggleBanUser('${u.id}', ${!banned})"><i class="fas fa-ban"></i> ${banned?'Unban':'Ban'}</button><button class="btn btn-red btn-small" onclick="deleteUserFull('${u.id}')"><i class="fas fa-trash"></i> Delete</button></div></div>`;
   });
   c.innerHTML = h;
 }
@@ -2649,7 +2571,12 @@ function viewUserFull(userId) {
   if (!avHtml) avHtml = '<div style="text-align:center; color:#94a3b8; padding:8px; font-size:.75rem;">No ad slots</div>';
   const init = (u.name||'U').charAt(0).toUpperCase();
   const st = getUserStatus(u);
-  document.getElementById('userViewBody').innerHTML = `<div style="text-align:center; margin-bottom:16px;"><div style="width:72px; height:72px; margin:0 auto 10px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.8rem; overflow:hidden;">${u.photo ? `<img src="${esc(u.photo)}" style="width:100%; height:100%; object-fit:cover;" onerror="this.parentNode.textContent='${init}'">` : init}</div><div style="font-weight:900; font-size:1.1rem;">${esc(u.name||'Unknown')}</div><div style="font-size:.72rem; color:#94a3b8; margin-top:4px;">ID: ${u.id}</div><div style="margin-top:8px;">${u.isBanned ? '<span class="status-badge banned">🚫 BANNED</span>' : '<span class="status-badge active">✅ ACTIVE</span>'} ${u.channelVerified ? '<span class="status-badge active">✅ VERIFIED</span>' : ''} ${getUserStatusBadge(st)}</div></div><div class="section-divider"><i class="fas fa-wallet"></i> Financial</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card green"><div class="num">${(u.balance||0).toFixed(2)}</div><div class="label">Balance</div></div><div class="stat-card info"><div class="num">${(u.totalEarned||0).toFixed(2)}</div><div class="label">Earned</div></div><div class="stat-card purple"><div class="num">${(u.referralBalance||0).toFixed(2)}</div><div class="label">Ref Bal</div></div><div class="stat-card warning"><div class="num">${(u.adClaimedTotal||0).toFixed(2)}</div><div class="label">Ad Claimed</div></div></div><div class="section-divider"><i class="fas fa-play-circle"></i> Ad Stats</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card info"><div class="num">${u._adViews||0}</div><div class="label">Views</div></div><div class="stat-card warning"><div class="num">${u._adClicks||0}</div><div class="label">Clicks</div></div></div>${avHtml}<div style="display:flex; gap:10px; margin-top:16px;"><button class="btn btn-warning" onclick="closeUserViewModal(); openUserEditModal('${u.id}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-purple" onclick="closeUserViewModal(); viewUserDetails('${u.id}')" style="flex:1;"><i class="fas fa-sitemap"></i> Details</button><button class="btn btn-red" onclick="closeUserViewModal(); deleteUserFull('${u.id}')" style="flex:1;"><i class="fas fa-trash"></i></button></div>`;
+  // Pending conversions
+  const pending = u.pendingConversions || {};
+  const pendingTotal = Object.values(pending).reduce((s, p) => s + Number(p.amount||0), 0);
+  const pendingCount = Object.keys(pending).length;
+  const pendingHtml = pendingCount > 0 ? `<div style="background:linear-gradient(135deg,#fef3c7,#fde68a); border-left:4px solid #f59e0b; border-radius:12px; padding:12px 14px; margin-bottom:14px;"><div style="font-weight:900; color:#92400e; font-size:.85rem; margin-bottom:6px;"><i class="fas fa-hourglass-half"></i> Pending Conversions (${pendingCount})</div><div style="font-size:1.1rem; font-weight:900; color:#ea580c;">${pendingTotal.toFixed(2)} TK</div><div style="font-size:.68rem; color:#92400e; margin-top:4px;">২৪ ঘন্টা পর Withdrawable এ যাবে</div></div>` : '';
+  document.getElementById('userViewBody').innerHTML = `<div style="text-align:center; margin-bottom:16px;"><div style="width:72px; height:72px; margin:0 auto 10px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.8rem; overflow:hidden;">${u.photo ? `<img src="${esc(u.photo)}" style="width:100%; height:100%; object-fit:cover;" onerror="this.parentNode.textContent='${init}'">` : init}</div><div style="font-weight:900; font-size:1.1rem;">${esc(u.name||'Unknown')}</div><div style="font-size:.72rem; color:#94a3b8; margin-top:4px;">ID: ${u.id}</div><div style="margin-top:8px;">${u.isBanned ? '<span class="status-badge banned">🚫 BANNED</span>' : '<span class="status-badge active">✅ ACTIVE</span>'} ${u.channelVerified ? '<span class="status-badge active">✅ VERIFIED</span>' : ''} ${getUserStatusBadge(st)}</div></div>${pendingHtml}<div class="section-divider"><i class="fas fa-wallet"></i> Financial</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card green"><div class="num">${(u.balance||0).toFixed(2)}</div><div class="label">Withdrawable</div></div><div class="stat-card deposit"><div class="num">${(u.adBalance||0).toFixed(2)}</div><div class="label">Deposit Balance</div></div><div class="stat-card info"><div class="num">${(u.totalEarned||0).toFixed(2)}</div><div class="label">Earned</div></div><div class="stat-card purple"><div class="num">${(u.referralBalance||0).toFixed(2)}</div><div class="label">Ref Bal</div></div><div class="stat-card warning"><div class="num">${(u.adClaimedTotal||0).toFixed(2)}</div><div class="label">Ad Claimed</div></div></div><div class="section-divider"><i class="fas fa-play-circle"></i> Ad Stats</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card info"><div class="num">${u._adViews||0}</div><div class="label">Views</div></div><div class="stat-card warning"><div class="num">${u._adClicks||0}</div><div class="label">Clicks</div></div></div>${avHtml}<div style="display:flex; gap:10px; margin-top:16px;"><button class="btn btn-warning" onclick="closeUserViewModal(); openUserEditModal('${u.id}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-purple" onclick="closeUserViewModal(); viewUserDetails('${u.id}')" style="flex:1;"><i class="fas fa-sitemap"></i> Details</button><button class="btn btn-red" onclick="closeUserViewModal(); deleteUserFull('${u.id}')" style="flex:1;"><i class="fas fa-trash"></i></button></div>`;
   document.getElementById('userViewModal').classList.add('active');
 }
 function closeUserViewModal() { document.getElementById('userViewModal').classList.remove('active'); }
@@ -2705,6 +2632,7 @@ function openUserEditModal(userId) {
   document.getElementById('ueUsername').value = u.username || '';
   document.getElementById('uePhoto').value = u.photo || '';
   document.getElementById('ueBalance').value = Number(u.balance||0).toFixed(2);
+  document.getElementById('ueAdBalance').value = Number(u.adBalance||0).toFixed(2);
   document.getElementById('ueTotalEarned').value = Number(u.totalEarned||0).toFixed(2);
   document.getElementById('ueReferralBalance').value = Number(u.referralBalance||0).toFixed(2);
   document.getElementById('ueTotalCommission').value = Number(u.totalCommission||0).toFixed(2);
@@ -2727,6 +2655,7 @@ async function saveUserFullEdit() {
     username: document.getElementById('ueUsername').value.trim(),
     photo: document.getElementById('uePhoto').value.trim(),
     balance: parseFloat(document.getElementById('ueBalance').value) || 0,
+    adBalance: parseFloat(document.getElementById('ueAdBalance').value) || 0,
     totalEarned: parseFloat(document.getElementById('ueTotalEarned').value) || 0,
     referralBalance: parseFloat(document.getElementById('ueReferralBalance').value) || 0,
     totalCommission: parseFloat(document.getElementById('ueTotalCommission').value) || 0,
@@ -3034,14 +2963,13 @@ async function changeSuperPassword() {
 }
 
 // ============================================
-// ✅ FIX: DEPOSIT REQUEST MANAGEMENT (Real-time)
+// DEPOSIT REQUEST MANAGEMENT
 // ============================================
 function loadAllDepositRequests() {
   const p = document.getElementById('pendingDepositReqList');
   const a = document.getElementById('allDepositReqList');
   if (!p && !a) return;
 
-  // Remove old listener if any
   if (activeListeners.depositRequests) {
     db.ref('depositRequests').off('value', activeListeners.depositRequests);
   }
@@ -3055,14 +2983,12 @@ function loadAllDepositRequests() {
     allDepositRequests.sort((x, y) => (y.timestamp || 0) - (x.timestamp || 0));
     const pends = allDepositRequests.filter(r => r.status === 'pending');
 
-    // Update badge
     const badge = document.getElementById('depositPendingBadge');
     if (badge) {
       if (pends.length > 0) { badge.textContent = pends.length; badge.style.display = 'inline-block'; }
       else badge.style.display = 'none';
     }
 
-    // Render pending list
     if (p) {
       if (!pends.length) {
         p.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>No pending deposits</div></div>';
@@ -3106,7 +3032,6 @@ function loadAllDepositRequests() {
       }
     }
 
-    // Render all list
     if (a) {
       if (!allDepositRequests.length) {
         a.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:20px;">No requests</p>';
@@ -3137,26 +3062,27 @@ function loadAllDepositRequests() {
   });
 }
 
+// ✅ FIX: User deposit → adBalance (NOT balance), no pendingConversions
 async function approveDepositReq(reqId) {
-  if (!confirm('Approve this deposit and add balance?')) return;
+  if (!confirm('Approve this deposit? (User হলে Deposit Balance এ যোগ হবে, withdraw করা যাবে না)')) return;
   try {
     const rs = await db.ref('depositRequests/' + reqId).once('value');
     if (!rs.exists()) return toast('❌ Not found');
     const r = rs.val();
     if (r.status !== 'pending') return toast('⚠️ Already processed');
 
-    // ✅ Handle USER deposit
     if (r.adminId && String(r.adminId).startsWith('USER_')) {
       const realUserId = String(r.adminId).replace('USER_', '');
       const userRef = db.ref('users/' + realUserId);
       const userSnap = await userRef.once('value');
       if (!userSnap.exists()) return toast('❌ User not found');
       const u = userSnap.val();
+      // ✅ CHANGED: Deposit goes to adBalance (Deposit Balance), NOT balance
+      // ✅ NO pendingConversions - deposits stay as Deposit Balance forever
       await userRef.update({
-        balance: Number(u.balance || 0) + Number(r.amount),
+        adBalance: Number(u.adBalance || 0) + Number(r.amount),
         totalDeposited: Number(u.totalDeposited || 0) + Number(r.amount)
       });
-      // Save deposit history for user
       const depId = 'dep_' + Date.now();
       await db.ref('users/' + realUserId + '/depositHistory/' + depId).set({
         amount: Number(r.amount),
@@ -3164,10 +3090,10 @@ async function approveDepositReq(reqId) {
         txnId: r.txnId || '',
         status: 'approved',
         timestamp: Date.now(),
-        approvedBy: currentSession.username
+        approvedBy: currentSession.username,
+        note: 'Added to Deposit Balance (cannot be withdrawn)'
       });
     }
-    // ✅ Handle ADMIN deposit
     else if (r.adminId) {
       const ar = db.ref('admins/' + r.adminId);
       const as = await ar.once('value');
@@ -3188,14 +3114,13 @@ async function approveDepositReq(reqId) {
       }
     }
 
-    // Mark as approved
     await db.ref('depositRequests/' + reqId).update({
       status: 'approved',
       reviewedAt: Date.now(),
       reviewedBy: currentSession.username
     });
 
-    toast('✅ Deposit approved & balance added!');
+    toast('✅ Deposit approved! (Deposit Balance এ যোগ হয়েছে)');
     loadAdminsList();
   } catch(e) {
     console.error('approveDepositReq error:', e);
@@ -3457,7 +3382,7 @@ function loadAllWithdrawals() {
 }
 
 // ============================================
-// ✅ FIX 2: ADMIN CHAT with USER Telegram Notification
+// ADMIN CHAT with USER Telegram Notification
 // ============================================
 async function sendUserTelegramNotification(userId, adminName, messageText) {
   if (!BOT_TOKEN_FOR_NOTIF || String(BOT_TOKEN_FOR_NOTIF).trim().length < 20) {
@@ -3467,7 +3392,6 @@ async function sendUserTelegramNotification(userId, adminName, messageText) {
   const now = Date.now();
   const lastTime = userNotifCooldown[userId] || 0;
   if (now - lastTime < CHAT_NOTIF_COOLDOWN_MS) {
-    console.log(`[NOTIF] Cooldown active for user ${userId} — skip`);
     return false;
   }
   try {
@@ -3487,14 +3411,11 @@ async function sendUserTelegramNotification(userId, adminName, messageText) {
     const data = await response.json();
     if (data.ok) {
       userNotifCooldown[userId] = now;
-      console.log(`[NOTIF] ✅ Sent to user ${userId}`);
       return true;
     } else {
-      console.warn('[NOTIF] API error:', data.description);
       return false;
     }
   } catch(e) {
-    console.error('[NOTIF] Failed:', e.message);
     return false;
   }
 }
@@ -3650,7 +3571,6 @@ async function sendAdminReply() {
       unreadForUser: 1
     }).catch(()=>{});
 
-    // ✅ FIX: Send Telegram notification (1-min cooldown)
     const userId = adminCurrentThreadKey.replace('user_', '');
     const adminName = currentSession ? currentSession.username : 'Admin';
     sendUserTelegramNotification(userId, adminName, text).then(sent => {
@@ -3665,6 +3585,55 @@ async function sendAdminReply() {
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-paper-plane"></i>';
   }
+}
+
+// ============================================
+// ✅ NEW: ADMIN CHAT NOTIFICATION LISTENER
+// (Listens to adminNotifications pushed by user panel)
+// ============================================
+function setupAdminChatNotifications() {
+  if (!currentSession || currentSession.role !== 'super') return;
+  if (adminChatNotifListener) {
+    db.ref('adminNotifications').off('child_added', adminChatNotifListener);
+  }
+  adminChatNotifListener = db.ref('adminNotifications').limitToLast(10).on('child_added', snap => {
+    const n = snap.val();
+    if (!n) return;
+    if (n.read) return;
+    // Only fire for recent (within 5 min) to avoid spam on load
+    if (Date.now() - (n.timestamp || 0) > 5 * 60 * 1000) return;
+
+    if (n.type === 'chat') {
+      // Toast notification
+      toast('💬 New chat from ' + (n.fromUserName || 'User') + ': ' + String(n.preview || '').substring(0, 40));
+      // Play a short beep
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+        oscillator.start(audioCtx.currentTime);
+        oscillator.stop(audioCtx.currentTime + 0.4);
+      } catch(e) {}
+
+      // Pulse the chat badge
+      const badge = document.getElementById('chatsUnreadBadge');
+      if (badge) {
+        badge.style.animation = 'none';
+        setTimeout(() => { badge.style.animation = 'pulse 1s infinite'; }, 50);
+      }
+
+      // Auto-mark as read after 30s so it won't re-fire on next login
+      setTimeout(() => {
+        try { snap.ref.update({ read: true }); } catch(e) {}
+      }, 30000);
+    }
+  });
 }
 
 // ============================================
@@ -3704,14 +3673,13 @@ function switchTab(id, el) {
 }
 
 // ============================================
-// ✅ REAL-TIME BADGES (Persistent listeners)
+// REAL-TIME BADGES
 // ============================================
 let depositBadgeListener = null;
 let chatsBadgeListener = null;
 
 function setupRealtimeBadges() {
   if (currentSession && currentSession.role === 'super') {
-    // Deposit badge
     if (depositBadgeListener) db.ref('depositRequests').off('value', depositBadgeListener);
     depositBadgeListener = db.ref('depositRequests').on('value', snap => {
       let count = 0;
@@ -3723,7 +3691,6 @@ function setupRealtimeBadges() {
       }
     });
 
-    // Chats badge
     if (chatsBadgeListener) db.ref('chats').off('value', chatsBadgeListener);
     chatsBadgeListener = db.ref('chats').on('value', snap => {
       let totalUnread = 0;
@@ -3748,6 +3715,7 @@ function cleanupListeners() {
   if (activeListeners.depositRequests) { db.ref('depositRequests').off('value', activeListeners.depositRequests); activeListeners.depositRequests = null; }
   if (activeListeners.chats) { db.ref('chats').off('value', activeListeners.chats); activeListeners.chats = null; }
   if (activeListeners.wdPending) { db.ref('withdrawals').orderByChild('status').equalTo('pending').off('value', activeListeners.wdPending); activeListeners.wdPending = null; }
+  if (adminChatNotifListener) { db.ref('adminNotifications').off('child_added', adminChatNotifListener); adminChatNotifListener = null; }
 }
 
 // ============================================
@@ -3757,8 +3725,8 @@ function runPanelInit() {
   if (runPanelInit._done) return;
   runPanelInit._done = true;
 
-  // ✅ Setup real-time badges
   setupRealtimeBadges();
+  setupAdminChatNotifications(); // ✅ NEW
 
   if (currentSession && currentSession.role === 'super') {
     loadAdminChats();
