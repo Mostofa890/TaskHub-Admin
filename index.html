@@ -3064,64 +3064,83 @@ function loadAllDepositRequests() {
 
 // ✅ FIX: User deposit → adBalance (NOT balance), no pendingConversions
 async function approveDepositReq(reqId) {
-  if (!confirm('Approve this deposit? (User হলে Deposit Balance এ যোগ হবে, withdraw করা যাবে না)')) return;
+  if (!confirm('Approve this deposit?\n\n👤 User deposit → Deposit Balance এ যোগ হবে\n👨‍💼 Admin deposit → Admin Balance এ যোগ হবে')) return;
   try {
     const rs = await db.ref('depositRequests/' + reqId).once('value');
-    if (!rs.exists()) return toast('❌ Not found');
+    if (!rs.exists()) return toast('❌ Request not found');
     const r = rs.val();
     if (r.status !== 'pending') return toast('⚠️ Already processed');
 
+    // ✅ FIX: ৩ ভাবে user detect করা হয়
+    let userId = null;
     if (r.adminId && String(r.adminId).startsWith('USER_')) {
-      const realUserId = String(r.adminId).replace('USER_', '');
-      const userRef = db.ref('users/' + realUserId);
+      userId = String(r.adminId).replace('USER_', '');
+    } else if (r.userId && !r.adminId) {
+      // ইউজার প্যানেল থেকে পাঠানো request — শুধু userId আছে
+      userId = String(r.userId);
+    } else if (r.userId) {
+      // উভয়ই আছে কিন্তু adminId USER_ দিয়ে শুরু হয় না
+      userId = String(r.userId);
+    }
+
+    if (userId) {
+      // ✅ USER DEPOSIT → adBalance (Deposit Balance)
+      const userRef = db.ref('users/' + userId);
       const userSnap = await userRef.once('value');
-      if (!userSnap.exists()) return toast('❌ User not found');
+      if (!userSnap.exists()) return toast('❌ User not found: ' + userId);
       const u = userSnap.val();
+
       await userRef.update({
         adBalance: Number(u.adBalance || 0) + Number(r.amount),
         totalDeposited: Number(u.totalDeposited || 0) + Number(r.amount)
       });
+
       const depId = 'dep_' + Date.now();
-      await db.ref('users/' + realUserId + '/depositHistory/' + depId).set({
+      await db.ref('users/' + userId + '/depositHistory/' + depId).set({
         amount: Number(r.amount),
-        methodName: r.methodName || '',
+        methodName: r.methodName || r.method || '',
+        methodAccount: r.methodAccount || '',
         txnId: r.txnId || '',
         status: 'approved',
         timestamp: Date.now(),
-        approvedBy: currentSession.username,
+        approvedBy: currentSession ? currentSession.username : 'admin',
         note: 'Added to Deposit Balance (cannot be withdrawn)'
       });
-    }
-    else if (r.adminId) {
+
+      console.log(`[APPROVE] User ${userId} adBalance += ${r.amount}`);
+    } else if (r.adminId) {
+      // ✅ ADMIN DEPOSIT → admin balance
       const ar = db.ref('admins/' + r.adminId);
       const as = await ar.once('value');
-      if (as.exists()) {
-        const a = as.val();
-        const dep = a.deposits || {};
-        dep['dep_' + Date.now()] = {
-          method: r.methodName || r.method || 'Deposit',
-          account: r.methodAccount || '',
-          amount: Number(r.amount),
-          timestamp: Date.now()
-        };
-        await ar.update({
-          balance: Number(a.balance || 0) + Number(r.amount),
-          totalDeposited: Number(a.totalDeposited || 0) + Number(r.amount),
-          deposits: dep
-        });
-      }
+      if (!as.exists()) return toast('❌ Admin not found');
+      const a = as.val();
+      const dep = a.deposits || {};
+      dep['dep_' + Date.now()] = {
+        method: r.methodName || r.method || 'Deposit',
+        account: r.methodAccount || '',
+        amount: Number(r.amount),
+        txnId: r.txnId || '',
+        timestamp: Date.now()
+      };
+      await ar.update({
+        balance: Number(a.balance || 0) + Number(r.amount),
+        totalDeposited: Number(a.totalDeposited || 0) + Number(r.amount),
+        deposits: dep
+      });
+    } else {
+      return toast('❌ Invalid: no userId or adminId');
     }
 
     await db.ref('depositRequests/' + reqId).update({
       status: 'approved',
       reviewedAt: Date.now(),
-      reviewedBy: currentSession.username
+      reviewedBy: currentSession ? currentSession.username : 'admin'
     });
 
-    toast('✅ Deposit approved! (Deposit Balance এ যোগ হয়েছে)');
-    loadAdminsList();
+    toast('✅ Deposit approved! ' + (userId ? '→ Deposit Balance এ যোগ হয়েছে' : '→ Admin Balance এ যোগ হয়েছে'));
+    if (typeof loadAdminsList === 'function') loadAdminsList();
   } catch(e) {
-    console.error('approveDepositReq error:', e);
+    console.error('[APPROVE ERROR]', e);
     toast('❌ ' + e.message);
   }
 }
