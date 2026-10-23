@@ -2995,7 +2995,7 @@ function loadAllDepositRequests() {
       } else {
         let h = '';
         pends.forEach(r => {
-          const isUserDeposit = r.adminId && String(r.adminId).startsWith('USER_');
+          const isUserDeposit = (r.userId && !r.adminId) || (r.adminId && String(r.adminId).startsWith('USER_'));
           const sourceLabel = isUserDeposit ? '👤 USER' : '👨‍💼 ADMIN';
           const sourceClass = isUserDeposit ? 'info' : 'warning';
           const userName = r.userName || r.adminName || 'Unknown';
@@ -3039,7 +3039,7 @@ function loadAllDepositRequests() {
         let h = '';
         allDepositRequests.slice(0, 50).forEach(r => {
           const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
-          const isUser = r.adminId && String(r.adminId).startsWith('USER_');
+          const isUser = (r.userId && !r.adminId) || (r.adminId && String(r.adminId).startsWith('USER_'));
           const srcLabel = isUser ? '👤' : '👨‍💼';
           const dt = r.timestamp ? new Date(r.timestamp).toLocaleString('en-GB', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}) : '';
           h += `<div class="dreq-item ${cls}">
@@ -3077,8 +3077,6 @@ async function approveDepositReq(reqId) {
       const userSnap = await userRef.once('value');
       if (!userSnap.exists()) return toast('❌ User not found');
       const u = userSnap.val();
-      // ✅ CHANGED: Deposit goes to adBalance (Deposit Balance), NOT balance
-      // ✅ NO pendingConversions - deposits stay as Deposit Balance forever
       await userRef.update({
         adBalance: Number(u.adBalance || 0) + Number(r.amount),
         totalDeposited: Number(u.totalDeposited || 0) + Number(r.amount)
