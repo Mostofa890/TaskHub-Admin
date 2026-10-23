@@ -911,40 +911,80 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 
   <!-- PACKAGES TAB -->
-  <div id="tab-packages" class="tab-content super-only">
-    <div class="card rainbow">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-icon icon-orange"><i class="fas fa-box-open"></i></div>
-          <span id="pkgFormTitle">Create New Package</span>
-        </div>
-      </div>
-      <input type="hidden" id="pkgEditId">
-      <div class="form-group"><label>Package Name *</label><input type="text" id="pkgName" placeholder="e.g. Starter Package"></div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <div class="form-group"><label>Duration (Days) *</label><input type="number" id="pkgDuration" min="1" placeholder="30"><small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">প্যাকেজ কেনার পর কতদিন চলবে</small></div>
-        <div class="form-group"><label>Price (TK) *</label><input type="number" id="pkgPrice" min="1" step="0.01" placeholder="100"></div>
-      </div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <div class="form-group"><label>Daily Income (TK/day) *</label><input type="number" id="pkgDailyIncome" min="0.01" step="0.01" placeholder="5"></div>
-        <div class="form-group"><label>Profit Rate (%) — Display only</label><input type="number" id="pkgRate" min="0" step="0.1" placeholder="50"><small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">শুধু ইউজারকে দেখানোর জন্য</small></div>
-      </div>
-      <div class="form-group"><label>Package Description (optional)</label><textarea id="pkgDesc" rows="2" placeholder="Short description..."></textarea></div>
-      <div class="form-group"><label>Status</label><select id="pkgStatus"><option value="active">✅ Active</option><option value="inactive">🚫 Inactive</option></select></div>
-      <div style="display:flex;gap:10px;">
-        <button class="btn btn-orange" onclick="savePackage()" style="flex:2;"><i class="fas fa-save"></i> Save Package</button>
-        <button class="btn btn-red" onclick="resetPackageForm()" style="flex:1;"><i class="fas fa-times"></i> Reset</button>
+  <!-- PACKAGES TAB -->
+<div id="tab-packages" class="tab-content super-only">
+  <div class="card rainbow">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-title-icon icon-orange"><i class="fas fa-box-open"></i></div>
+        <span id="pkgFormTitle">Create New Package</span>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-list-check"></i></div>All Packages (<span id="pkgCount">0</span>)</div></div>
-      <div id="packagesListContainer"></div>
+    <input type="hidden" id="pkgEditId">
+    
+    <div class="form-group">
+      <label>Package Name *</label>
+      <input type="text" id="pkgName" placeholder="e.g. Starter Package">
     </div>
-    <div class="card">
-      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-user-check"></i></div>Active User Packages</div></div>
-      <div id="activeUserPackagesContainer"></div>
+    
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div class="form-group">
+        <label>Duration (Days) *</label>
+        <input type="number" id="pkgDuration" min="1" placeholder="30" oninput="calculatePackagePreview()">
+        <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">প্যাকেজটি কতদিন চলবে</small>
+      </div>
+      <div class="form-group">
+        <label>Price (TK) *</label>
+        <input type="number" id="pkgPrice" min="1" step="0.01" placeholder="100" oninput="calculatePackagePreview()">
+      </div>
+    </div>
+    
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div class="form-group">
+        <label>Profit Rate (%) *</label>
+        <input type="number" id="pkgRate" min="0" step="0.1" placeholder="50" oninput="calculatePackagePreview()">
+        <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">মোট লাভের শতকরা হার</small>
+      </div>
+      <div class="form-group">
+        <label>Total Return (TK) — Auto</label>
+        <input type="text" id="pkgTotalReturnDisplay" readonly style="background:#f1f5f9; color:#0f172a; font-weight:800; border-color:#cbd5e1;">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Daily Income (TK) — Auto</label>
+      <input type="text" id="pkgDailyIncomeDisplay" readonly style="background:#f1f5f9; color:#059669; font-weight:800; border:1.5px solid #10b981;">
+      <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:#10b981;">স্বয়ংক্রিয়ভাবে প্রতিদিনের ইনকাম</small>
+    </div>
+
+    <div class="form-group">
+      <label>Package Description (optional)</label>
+      <textarea id="pkgDesc" rows="2" placeholder="Short description..."></textarea>
+    </div>
+    
+    <div class="form-group">
+      <label>Status</label>
+      <select id="pkgStatus">
+        <option value="active">✅ Active</option>
+        <option value="inactive">🚫 Inactive</option>
+      </select>
+    </div>
+    
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-orange" onclick="savePackage()" style="flex:2;"><i class="fas fa-save"></i> Save Package</button>
+      <button class="btn btn-red" onclick="resetPackageForm()" style="flex:1;"><i class="fas fa-times"></i> Reset</button>
     </div>
   </div>
+  
+  <div class="card">
+    <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-list-check"></i></div>All Packages (<span id="pkgCount">0</span>)</div></div>
+    <div id="packagesListContainer"></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-user-check"></i></div>Active User Packages</div></div>
+    <div id="activeUserPackagesContainer"></div>
+  </div>
+</div>
 
   <!-- EXTRA REWARDS TAB -->
   <div id="tab-extrareward" class="tab-content super-only">
@@ -1883,6 +1923,111 @@ async function savePackage() {
 }
 
 function resetPackageForm() {
+// ============================================
+// PACKAGES (Auto Calculate & Update)
+// ============================================
+function calculatePackagePreview() {
+  const price = parseFloat(document.getElementById('pkgPrice').value) || 0;
+  const rate = parseFloat(document.getElementById('pkgRate').value) || 0;
+  const duration = parseInt(document.getElementById('pkgDuration').value) || 1;
+
+  // অটোমেটিক ক্যালকুলেশন: মোট রিটার্ন = মূল্য + (মূল্য * লাভের পার্সেন্ট / ১০০)
+  const totalReturn = price + (price * rate / 100);
+  const dailyIncome = totalReturn / duration;
+
+  document.getElementById('pkgTotalReturnDisplay').value = totalReturn > 0 ? totalReturn.toFixed(2) + ' TK' : '0.00 TK';
+  document.getElementById('pkgDailyIncomeDisplay').value = dailyIncome > 0 ? dailyIncome.toFixed(2) + ' TK' : '0.00 TK';
+}
+
+async function loadPackagesList() {
+  const c = document.getElementById('packagesListContainer');
+  if (!c) return;
+  c.innerHTML = '<p style="text-align:center;padding:16px;color:#94a3b8;">Loading...</p>';
+  const snap = await db.ref('packages').once('value');
+  allPackagesCache = {};
+  const list = [];
+  snap.forEach(x => { const p = {id: x.key, ...x.val()}; allPackagesCache[x.key] = p; list.push(p); });
+  list.sort((a,b) => (a.price||0) - (b.price||0));
+  const cnt = document.getElementById('pkgCount'); if (cnt) cnt.textContent = list.length;
+  if (!list.length) { c.innerHTML = '<div class="empty-state" style="padding:20px;"><p>No packages yet</p></div>'; return; }
+  
+  let h = '';
+  list.forEach(p => {
+    const statusCls = p.status === 'active' ? 'active' : 'cancelled';
+    const isInactive = p.status === 'inactive';
+    
+    // পুরনো প্যাকেজের জন্য ফলব্যাক ক্যালকুলেশন
+    const totalReturn = p.totalReturn || (p.price + (p.price * (p.rate || 0) / 100));
+    const dailyIncome = p.dailyIncome || (totalReturn / (p.duration || 1));
+
+    h += `<div class="pkg-card ${isInactive?'inactive':''}">
+      <div class="pkg-head">
+        <div class="pkg-name"><div class="pkg-icon-badge"><i class="fas fa-box"></i></div>${esc(p.name)}</div>
+        <span class="status-badge ${statusCls}">${(p.status||'active').toUpperCase()}</span>
+      </div>
+      <div class="pkg-stats-grid">
+        <div class="pkg-stat price"><div class="val">${Number(p.price).toFixed(2)}</div><div class="lbl">Price TK</div></div>
+        <div class="pkg-stat return"><div class="val">${Number(totalReturn).toFixed(2)}</div><div class="lbl">Total Return</div></div>
+        <div class="pkg-stat rate"><div class="val">${p.rate||0}%</div><div class="lbl">Profit</div></div>
+      </div>
+      <div class="pkg-meta">
+        <span><i class="fas fa-calendar"></i> ${p.duration} days</span>
+        <span><i class="fas fa-coins"></i> ${Number(dailyIncome).toFixed(2)} TK/day</span>
+      </div>
+      ${p.description ? `<div style="font-size:.72rem;color:#64748b;margin-bottom:10px;">${esc(p.description)}</div>` : ''}
+      <div class="pkg-actions">
+        <button class="btn btn-info btn-small" onclick="editPackage('${p.id}')"><i class="fas fa-pen"></i> Edit</button>
+        <button class="btn btn-warning btn-small" onclick="togglePackageStatus('${p.id}')"><i class="fas fa-power-off"></i> ${p.status==='active'?'Disable':'Enable'}</button>
+        <button class="btn btn-red btn-small" onclick="deletePackage('${p.id}')"><i class="fas fa-trash"></i> Delete</button>
+      </div>
+    </div>`;
+  });
+  c.innerHTML = h;
+}
+
+async function savePackage() {
+  const editId = document.getElementById('pkgEditId').value;
+  const name = document.getElementById('pkgName').value.trim();
+  const duration = parseInt(document.getElementById('pkgDuration').value) || 0;
+  const price = parseFloat(document.getElementById('pkgPrice').value) || 0;
+  const rate = parseFloat(document.getElementById('pkgRate').value) || 0;
+  const desc = document.getElementById('pkgDesc').value.trim();
+  const status = document.getElementById('pkgStatus').value;
+
+  if (!name) return toast('❌ Package name required');
+  if (duration <= 0) return toast('❌ Duration > 0');
+  if (price <= 0) return toast('❌ Price > 0');
+  if (rate < 0) return toast('❌ Valid Profit Rate');
+
+  // অটোমেটিক ক্যালকুলেশন
+  const totalReturn = price + (price * rate / 100);
+  const dailyIncome = totalReturn / duration;
+
+  const data = { 
+    name, 
+    duration, 
+    price, 
+    rate, 
+    dailyIncome, 
+    totalReturn, 
+    description: desc, 
+    status, 
+    updatedAt: Date.now() 
+  };
+
+  if (editId) { 
+    await db.ref('packages/' + editId).update(data); 
+    toast('✅ Package updated'); 
+  } else { 
+    data.createdAt = Date.now(); 
+    data.createdBy = currentSession ? currentSession.username : 'admin'; 
+    await db.ref('packages').push(data); 
+    toast('✅ Package created'); 
+  }
+  resetPackageForm(); loadPackagesList();
+}
+
+function resetPackageForm() {
   document.getElementById('pkgEditId').value = '';
   document.getElementById('pkgName').value = '';
   document.getElementById('pkgDuration').value = '';
@@ -1891,7 +2036,7 @@ function resetPackageForm() {
   document.getElementById('pkgDesc').value = '';
   document.getElementById('pkgStatus').value = 'active';
   document.getElementById('pkgFormTitle').textContent = 'Create New Package';
-  calculatePackagePreview(); // Reset calculation boxes
+  calculatePackagePreview(); 
 }
 
 function editPackage(id) {
@@ -1906,7 +2051,7 @@ function editPackage(id) {
   document.getElementById('pkgStatus').value = p.status || 'active';
   document.getElementById('pkgFormTitle').textContent = 'Edit Package';
   
-  calculatePackagePreview(); // Update calculation boxes when editing
+  calculatePackagePreview(); 
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
