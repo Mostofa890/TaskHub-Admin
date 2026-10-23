@@ -1803,6 +1803,22 @@ async function saveExtraRewardSettings() {
 // ============================================
 // PACKAGES
 // ============================================
+// ============================================
+// PACKAGES (Auto Calculation Feature Added)
+// ============================================
+function calculatePackagePreview() {
+  const price = parseFloat(document.getElementById('pkgPrice').value) || 0;
+  const rate = parseFloat(document.getElementById('pkgRate').value) || 0;
+  const duration = parseInt(document.getElementById('pkgDuration').value) || 1;
+
+  // Calculation Logic: Total Return = Price + (Price * Rate / 100)
+  const totalReturn = price + (price * rate / 100);
+  const dailyIncome = totalReturn / duration;
+
+  document.getElementById('pkgTotalReturnDisplay').value = totalReturn > 0 ? totalReturn.toFixed(2) + ' TK' : '0.00 TK';
+  document.getElementById('pkgDailyIncomeDisplay').value = dailyIncome > 0 ? dailyIncome.toFixed(2) + ' TK' : '0.00 TK';
+}
+
 async function loadPackagesList() {
   const c = document.getElementById('packagesListContainer');
   if (!c) return;
@@ -1818,7 +1834,11 @@ async function loadPackagesList() {
   list.forEach(p => {
     const statusCls = p.status === 'active' ? 'active' : 'cancelled';
     const isInactive = p.status === 'inactive';
-    h += `<div class="pkg-card ${isInactive?'inactive':''}"><div class="pkg-head"><div class="pkg-name"><div class="pkg-icon-badge"><i class="fas fa-box"></i></div>${esc(p.name)}</div><span class="status-badge ${statusCls}">${(p.status||'active').toUpperCase()}</span></div><div class="pkg-stats-grid"><div class="pkg-stat price"><div class="val">${Number(p.price).toFixed(2)}</div><div class="lbl">Price TK</div></div><div class="pkg-stat return"><div class="val">${Number(p.dailyIncome*p.duration).toFixed(2)}</div><div class="lbl">Total Return</div></div><div class="pkg-stat rate"><div class="val">${p.rate||0}%</div><div class="lbl">Rate</div></div></div><div class="pkg-meta"><span><i class="fas fa-calendar"></i> ${p.duration} days</span><span><i class="fas fa-coins"></i> ${Number(p.dailyIncome).toFixed(2)} TK/day</span></div>${p.description ? `<div style="font-size:.72rem;color:#64748b;margin-bottom:10px;">${esc(p.description)}</div>` : ''}<div class="pkg-actions"><button class="btn btn-info btn-small" onclick="editPackage('${p.id}')"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-warning btn-small" onclick="togglePackageStatus('${p.id}')"><i class="fas fa-power-off"></i> ${p.status==='active'?'Disable':'Enable'}</button><button class="btn btn-red btn-small" onclick="deletePackage('${p.id}')"><i class="fas fa-trash"></i> Delete</button></div></div>`;
+    // Fallback calculation for old packages
+    const totalReturn = p.totalReturn || (p.price + (p.price * (p.rate || 0) / 100));
+    const dailyIncome = p.dailyIncome || (totalReturn / (p.duration || 1));
+
+    h += `<div class="pkg-card ${isInactive?'inactive':''}"><div class="pkg-head"><div class="pkg-name"><div class="pkg-icon-badge"><i class="fas fa-box"></i></div>${esc(p.name)}</div><span class="status-badge ${statusCls}">${(p.status||'active').toUpperCase()}</span></div><div class="pkg-stats-grid"><div class="pkg-stat price"><div class="val">${Number(p.price).toFixed(2)}</div><div class="lbl">Price TK</div></div><div class="pkg-stat return"><div class="val">${Number(totalReturn).toFixed(2)}</div><div class="lbl">Total Return</div></div><div class="pkg-stat rate"><div class="val">${p.rate||0}%</div><div class="lbl">Profit</div></div></div><div class="pkg-meta"><span><i class="fas fa-calendar"></i> ${p.duration} days</span><span><i class="fas fa-coins"></i> ${Number(dailyIncome).toFixed(2)} TK/day</span></div>${p.description ? `<div style="font-size:.72rem;color:#64748b;margin-bottom:10px;">${esc(p.description)}</div>` : ''}<div class="pkg-actions"><button class="btn btn-info btn-small" onclick="editPackage('${p.id}')"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-warning btn-small" onclick="togglePackageStatus('${p.id}')"><i class="fas fa-power-off"></i> ${p.status==='active'?'Disable':'Enable'}</button><button class="btn btn-red btn-small" onclick="deletePackage('${p.id}')"><i class="fas fa-trash"></i> Delete</button></div></div>`;
   });
   c.innerHTML = h;
 }
@@ -1828,17 +1848,40 @@ async function savePackage() {
   const name = document.getElementById('pkgName').value.trim();
   const duration = parseInt(document.getElementById('pkgDuration').value) || 0;
   const price = parseFloat(document.getElementById('pkgPrice').value) || 0;
-  const dailyIncome = parseFloat(document.getElementById('pkgDailyIncome').value) || 0;
   const rate = parseFloat(document.getElementById('pkgRate').value) || 0;
   const desc = document.getElementById('pkgDesc').value.trim();
   const status = document.getElementById('pkgStatus').value;
+
   if (!name) return toast('❌ Package name required');
   if (duration <= 0) return toast('❌ Duration > 0');
   if (price <= 0) return toast('❌ Price > 0');
-  if (dailyIncome <= 0) return toast('❌ Daily income > 0');
-  const data = { name, duration, price, dailyIncome, rate, description: desc, status, totalReturn: dailyIncome * duration, updatedAt: Date.now() };
-  if (editId) { await db.ref('packages/' + editId).update(data); toast('✅ Package updated'); }
-  else { data.createdAt = Date.now(); data.createdBy = currentSession ? currentSession.username : 'admin'; await db.ref('packages').push(data); toast('✅ Package created'); }
+  if (rate < 0) return toast('❌ Valid Profit Rate');
+
+  // Auto Calculate
+  const totalReturn = price + (price * rate / 100);
+  const dailyIncome = totalReturn / duration;
+
+  const data = { 
+    name, 
+    duration, 
+    price, 
+    rate, 
+    dailyIncome, // Automatically calculated
+    totalReturn, // Automatically calculated
+    description: desc, 
+    status, 
+    updatedAt: Date.now() 
+  };
+
+  if (editId) { 
+    await db.ref('packages/' + editId).update(data); 
+    toast('✅ Package updated'); 
+  } else { 
+    data.createdAt = Date.now(); 
+    data.createdBy = currentSession ? currentSession.username : 'admin'; 
+    await db.ref('packages').push(data); 
+    toast('✅ Package created'); 
+  }
   resetPackageForm(); loadPackagesList();
 }
 
@@ -1847,11 +1890,11 @@ function resetPackageForm() {
   document.getElementById('pkgName').value = '';
   document.getElementById('pkgDuration').value = '';
   document.getElementById('pkgPrice').value = '';
-  document.getElementById('pkgDailyIncome').value = '';
   document.getElementById('pkgRate').value = '';
   document.getElementById('pkgDesc').value = '';
   document.getElementById('pkgStatus').value = 'active';
   document.getElementById('pkgFormTitle').textContent = 'Create New Package';
+  calculatePackagePreview(); // Reset calculation boxes
 }
 
 function editPackage(id) {
@@ -1861,11 +1904,12 @@ function editPackage(id) {
   document.getElementById('pkgName').value = p.name || '';
   document.getElementById('pkgDuration').value = p.duration || '';
   document.getElementById('pkgPrice').value = p.price || '';
-  document.getElementById('pkgDailyIncome').value = p.dailyIncome || '';
   document.getElementById('pkgRate').value = p.rate || '';
   document.getElementById('pkgDesc').value = p.description || '';
   document.getElementById('pkgStatus').value = p.status || 'active';
   document.getElementById('pkgFormTitle').textContent = 'Edit Package';
+  
+  calculatePackagePreview(); // Update calculation boxes when editing
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
