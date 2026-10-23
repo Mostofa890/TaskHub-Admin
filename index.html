@@ -2963,7 +2963,7 @@ async function changeSuperPassword() {
 }
 
 // ============================================
-// DEPOSIT REQUEST MANAGEMENT
+// DEPOSIT REQUEST MANAGEMENT (Fully Fixed)
 // ============================================
 function loadAllDepositRequests() {
   const p = document.getElementById('pendingDepositReqList');
@@ -2989,17 +2989,20 @@ function loadAllDepositRequests() {
       else badge.style.display = 'none';
     }
 
+    // Helper: user detect
+    const isUserReq = (r) => (r.userId && !r.adminId) || (r.adminId && String(r.adminId).startsWith('USER_'));
+
     if (p) {
       if (!pends.length) {
         p.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>No pending deposits</div></div>';
       } else {
         let h = '';
         pends.forEach(r => {
-          const isUserDeposit = (r.userId && !r.adminId) || (r.adminId && String(r.adminId).startsWith('USER_'));
-          const sourceLabel = isUserDeposit ? '👤 USER' : '👨‍💼 ADMIN';
-          const sourceClass = isUserDeposit ? 'info' : 'warning';
+          const isUser = isUserReq(r);
+          const sourceLabel = isUser ? '👤 USER' : '👨‍💼 ADMIN';
+          const sourceClass = isUser ? 'info' : 'warning';
           const userName = r.userName || r.adminName || 'Unknown';
-          const userTgId = r.userTelegramId || r.userId || 'N/A';
+          const userTgId = r.userTelegramId || r.userId || r.adminId || 'N/A';
           const dt = r.timestamp ? new Date(r.timestamp).toLocaleString('en-GB', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}) : 'N/A';
           h += `<div class="dreq-item pending new-flash">
             <div class="dreq-head">
@@ -3039,7 +3042,7 @@ function loadAllDepositRequests() {
         let h = '';
         allDepositRequests.slice(0, 50).forEach(r => {
           const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
-          const isUser = (r.userId && !r.adminId) || (r.adminId && String(r.adminId).startsWith('USER_'));
+          const isUser = isUserReq(r);
           const srcLabel = isUser ? '👤' : '👨‍💼';
           const dt = r.timestamp ? new Date(r.timestamp).toLocaleString('en-GB', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}) : '';
           h += `<div class="dreq-item ${cls}">
@@ -3062,7 +3065,6 @@ function loadAllDepositRequests() {
   });
 }
 
-// ✅ FIX: User deposit → adBalance (NOT balance), no pendingConversions
 async function approveDepositReq(reqId) {
   if (!confirm('Approve this deposit?\n\n👤 User deposit → Deposit Balance এ যোগ হবে\n👨‍💼 Admin deposit → Admin Balance এ যোগ হবে')) return;
   try {
@@ -3071,27 +3073,33 @@ async function approveDepositReq(reqId) {
     const r = rs.val();
     if (r.status !== 'pending') return toast('⚠️ Already processed');
 
-    // ✅ FIX: ৩ ভাবে user detect করা হয়
+    // ✅ FIX: ৩ ভাবে user detect
     let userId = null;
     if (r.adminId && String(r.adminId).startsWith('USER_')) {
       userId = String(r.adminId).replace('USER_', '');
     } else if (r.userId && !r.adminId) {
-      // ইউজার প্যানেল থেকে পাঠানো request — শুধু userId আছে
       userId = String(r.userId);
     } else if (r.userId) {
-      // উভয়ই আছে কিন্তু adminId USER_ দিয়ে শুরু হয় না
       userId = String(r.userId);
     }
 
+    console.log('[APPROVE] Request data:', { reqId, userId, adminId: r.adminId, amount: r.amount, status: r.status });
+
     if (userId) {
-      // ✅ USER DEPOSIT → adBalance (Deposit Balance)
+      console.log('[APPROVE] Processing as USER deposit for userId:', userId);
       const userRef = db.ref('users/' + userId);
       const userSnap = await userRef.once('value');
-      if (!userSnap.exists()) return toast('❌ User not found: ' + userId);
+      if (!userSnap.exists()) {
+        console.error('[APPROVE] User not found:', userId);
+        return toast('❌ User not found: ' + userId);
+      }
       const u = userSnap.val();
+      const oldAdBal = Number(u.adBalance || 0);
+      const newAdBal = oldAdBal + Number(r.amount);
+      console.log('[APPROVE] adBalance:', oldAdBal, '→', newAdBal);
 
       await userRef.update({
-        adBalance: Number(u.adBalance || 0) + Number(r.amount),
+        adBalance: newAdBal,
         totalDeposited: Number(u.totalDeposited || 0) + Number(r.amount)
       });
 
@@ -3107,9 +3115,9 @@ async function approveDepositReq(reqId) {
         note: 'Added to Deposit Balance (cannot be withdrawn)'
       });
 
-      console.log(`[APPROVE] User ${userId} adBalance += ${r.amount}`);
+      console.log('[APPROVE] ✅ User adBalance updated to:', newAdBal);
     } else if (r.adminId) {
-      // ✅ ADMIN DEPOSIT → admin balance
+      console.log('[APPROVE] Processing as ADMIN deposit for adminId:', r.adminId);
       const ar = db.ref('admins/' + r.adminId);
       const as = await ar.once('value');
       if (!as.exists()) return toast('❌ Admin not found');
@@ -3127,7 +3135,9 @@ async function approveDepositReq(reqId) {
         totalDeposited: Number(a.totalDeposited || 0) + Number(r.amount),
         deposits: dep
       });
+      console.log('[APPROVE] ✅ Admin balance updated');
     } else {
+      console.error('[APPROVE] No userId or adminId in request!');
       return toast('❌ Invalid: no userId or adminId');
     }
 
@@ -3137,6 +3147,7 @@ async function approveDepositReq(reqId) {
       reviewedBy: currentSession ? currentSession.username : 'admin'
     });
 
+    console.log('[APPROVE] ✅ Request marked as approved');
     toast('✅ Deposit approved! ' + (userId ? '→ Deposit Balance এ যোগ হয়েছে' : '→ Admin Balance এ যোগ হয়েছে'));
     if (typeof loadAdminsList === 'function') loadAdminsList();
   } catch(e) {
@@ -3159,740 +3170,6 @@ async function rejectDepositReq(reqId) {
     toast('❌ ' + e.message);
   }
 }
-
-// ============================================
-// ADMIN DEPOSIT VIEW
-// ============================================
-function renderDepositMethodsAdminView() {
-  const c = document.getElementById('dmMethodsAdminView');
-  if (!c) return;
-  const dp = configData.depositPayment || {};
-  const providers = [
-    { key: 'bkash', name: 'bKash', icon: 'bKash', num: dp.bkash },
-    { key: 'nagad', name: 'Nagad', icon: 'নগদ', num: dp.nagad },
-    { key: 'rocket', name: 'Rocket', icon: 'R', num: dp.rocket },
-    { key: 'upay', name: 'Upay', icon: 'U', num: dp.upay }
-  ].filter(p => p.num && String(p.num).trim().length > 0);
-  if (!providers.length) {
-    c.innerHTML = '<div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i><div>Super Admin এখনো নাম্বার সেট করেনি।</div></div>';
-    return;
-  }
-  const minDep = Number(dp.minDeposit || 50);
-  let h = '';
-  providers.forEach(p => {
-    h += `<div class="deposit-provider-card ${p.key}">
-      <div class="deposit-provider-head">
-        <div class="deposit-provider-name">
-          <div class="deposit-provider-icon ${p.key}">${p.icon}</div>
-          <div>${p.name}</div>
-        </div>
-        <div class="deposit-min-badge">Min ${minDep.toFixed(0)} TK</div>
-      </div>
-      <div class="deposit-account-row">
-        <span class="lbl">📱 Number:</span>
-        <span class="val">${esc(p.num)}</span>
-      </div>
-      ${dp.instructions ? `<div class="deposit-instructions">${esc(dp.instructions)}</div>` : ''}
-      <button class="btn btn-green btn-small" style="margin-top:12px; width:100%;" onclick="openDepositSubmitModal('${p.key}','${p.name}','${esc(p.num)}')"><i class="fas fa-paper-plane"></i> I've Sent Money</button>
-    </div>`;
-  });
-  c.innerHTML = h;
-}
-
-function openDepositSubmitModal(key, name, num) {
-  document.getElementById('dsMethodIndex').value = key;
-  document.getElementById('dsMethodInfo').innerHTML = `<div>Method: <b>${esc(name)}</b></div><div>Number: <b style="color:#dc2626;">${esc(num)}</b></div>`;
-  document.getElementById('dsAmount').value = ''; document.getElementById('dsTxnId').value = ''; document.getElementById('dsNote').value = '';
-  document.getElementById('depositSubmitModal').classList.add('active');
-}
-function closeDepositSubmitModal() { document.getElementById('depositSubmitModal').classList.remove('active'); }
-async function submitDepositRequest() {
-  const key = document.getElementById('dsMethodIndex').value;
-  const dp = configData.depositPayment || {};
-  const minDep = Number(dp.minDeposit || 50);
-  const nameMap = { bkash:'bKash', nagad:'Nagad', rocket:'Rocket', upay:'Upay' };
-  const numMap = { bkash: dp.bkash, nagad: dp.nagad, rocket: dp.rocket, upay: dp.upay };
-  const mName = nameMap[key] || key;
-  const mNum = numMap[key] || '';
-  if (!mNum) return toast('❌ Not configured');
-  const amt = parseFloat(document.getElementById('dsAmount').value);
-  const txn = document.getElementById('dsTxnId').value.trim();
-  const note = document.getElementById('dsNote').value.trim();
-  if (!amt || amt <= 0) return toast('❌ Valid amount');
-  if (amt < minDep) return toast(`❌ Min ${minDep} TK`);
-  if (!txn || txn.length < 4) return toast('❌ Valid Txn');
-  const reqId = 'depreq_'+Date.now()+'_'+currentSession.adminId;
-  await db.ref('depositRequests/'+reqId).set({
-    adminId: currentSession.adminId,
-    adminName: currentSession.username,
-    methodName: mName,
-    methodAccount: mNum,
-    amount: amt,
-    txnId: txn,
-    note,
-    status: 'pending',
-    source: 'admin',
-    timestamp: Date.now()
-  });
-  toast('✅ Submitted!'); closeDepositSubmitModal(); renderMyDepositRequests();
-}
-async function renderMyDepositRequests() {
-  const c = document.getElementById('myDepositRequestsList');
-  if (!c || !currentSession || currentSession.role !== 'admin') return;
-  c.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:16px;">Loading...</p>';
-  const snap = await db.ref('depositRequests').orderByChild('adminId').equalTo(currentSession.adminId).once('value');
-  let list = []; snap.forEach(x => list.push({ id: x.key, ...x.val() }));
-  list.sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
-  if (!list.length) { c.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:20px;">No requests</p>'; return; }
-  let h = '';
-  list.forEach(r => {
-    const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
-    h += `<div class="dreq-item ${cls}"><div class="dreq-head"><div class="dreq-amount">${Number(r.amount).toFixed(2)} TK</div><span class="status-badge ${cls}">${r.status.toUpperCase()}</span></div><div class="dreq-info"><b>Method:</b> ${esc(r.methodName||r.method||'')}<br><b>Txn:</b> ${esc(r.txnId)}</div></div>`;
-  });
-  c.innerHTML = h;
-}
-
-// ============================================
-// CONTACT INFO
-// ============================================
-function renderContactInfo() {
-  const link = configData.contactLink || '';
-  const bt = configData.contactBtnText || 'Message Super Admin';
-  const n = configData.contactNote || 'Contact for issues';
-  const btt = document.getElementById('contactBtnTextDisplay');
-  const chn = document.getElementById('contactHeroNote');
-  if (btt) btt.textContent = bt;
-  if (chn) chn.textContent = n;
-  const b = document.getElementById('contactActionBtn');
-  if (b) { if (!link) { b.disabled = true; b.style.opacity = '0.6'; } else { b.disabled = false; b.style.opacity = '1'; } }
-}
-function openContactLink() {
-  const l = configData.contactLink || '';
-  if (!l) return toast('❌ Not configured');
-  window.open(l, '_blank');
-}
-
-// ============================================
-// SETTINGS SAVE
-// ============================================
-async function saveBecomeAdminSettings() {
-  const en = document.getElementById('becomeAdminEnabled').value === 'true';
-  const l = document.getElementById('becomeAdminLink').value.trim();
-  if (en && (!l || !/^https?:\/\//i.test(l))) return toast('❌ Valid https link');
-  await db.ref('config').update({ becomeAdminEnabled: en, becomeAdminLink: l, becomeAdminTitle: document.getElementById('becomeAdminTitle').value.trim(), becomeAdminSub: document.getElementById('becomeAdminSub').value.trim(), becomeAdminBtnText: document.getElementById('becomeAdminBtnText').value.trim() });
-  toast('✅ Saved');
-}
-async function saveServiceCharge() {
-  const rate = parseFloat(document.getElementById('serviceChargeRate').value) || 0;
-  if (rate < 0 || rate > 100) return toast('❌ 0-100');
-  await db.ref('config').update({ serviceChargeRate: rate });
-  SERVICE_CHARGE_RATE = rate;
-  configData.serviceChargeRate = rate;
-  toast(`✅ Set ${rate}%`);
-  updateTaskCostPreview();
-}
-function saveSettings() {
-  const methods = document.getElementById('paymentMethods').value.split(',').map(x => x.trim());
-  const levels = getWithdrawLevelsFromUI();
-  const rawBot = document.getElementById('botUsername').value;
-  const clean = sanitizeBotUsername(rawBot);
-  db.ref('config').update({ botUsername: clean, currencySymbol: document.getElementById('currencySymbol').value, contactLink: document.getElementById('contactLink').value.trim(), contactBtnText: document.getElementById('contactBtnText').value.trim(), contactNote: document.getElementById('contactNote').value.trim(), dailyBonusAmount: Number(document.getElementById('dailyBonusAmount').value), refBonus: Number(document.getElementById('refBonus').value), minReferralBalance: Number(document.getElementById('minReferralBalance').value) || 20, refCommissionRate: Number(document.getElementById('refCommissionRate').value) || 2, refCommissionMode: selectedCommissionMode, tutorialLink: document.getElementById('tutorialLink').value, supportLink: document.getElementById('supportLink').value, minWithdraw: Number(document.getElementById('minWithdraw').value), withdrawNotice: document.getElementById('withdrawNotice').value, paymentMethods: methods, withdrawLevels: levels, adResetHour: Number(document.getElementById('adResetHour').value) || 0 }).then(() => { toast('✅ Saved'); withdrawLevels = levels; if (currentSession && currentSession.role === 'admin') generateAdminRefCode(); const be = document.getElementById('botUsername'); if (be) onBotUsernameInput(be); });
-}
-function saveMaintenance() {
-  db.ref('config/maintenance').set({ active: document.getElementById('maintenanceMode').value === 'true', message: document.getElementById('maintenanceMsg').value, estimatedMinutes: Number(document.getElementById('maintenanceTime').value) || 30 }).then(() => toast('✅ Updated'));
-}
-
-// ============================================
-// WITHDRAWALS (User) - Real-time
-// ============================================
-function loadPendingUserWithdrawals() {
-  const c = document.getElementById('wd-container');
-  if (!c) return;
-
-  if (activeListeners.wdPending) {
-    db.ref('withdrawals').orderByChild('status').equalTo('pending').off('value', activeListeners.wdPending);
-  }
-
-  activeListeners.wdPending = db.ref('withdrawals').orderByChild('status').equalTo('pending').on('value', snap => {
-    let h = '';
-    if (snap.exists()) snap.forEach(child => {
-      const r = child.val(), k = child.key;
-      const dt = r.timestamp ? new Date(r.timestamp).toLocaleString('en-GB', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}) : '';
-      h += `<div style="background:#fffbeb; border:1px solid var(--border); padding:16px; border-radius:16px; margin-bottom:12px; border-left:4px solid #f59e0b;"><div style="display:flex; justify-content:space-between; margin-bottom:12px;"><span style="background:#dbeafe; color:#1e40af; padding:5px 12px; border-radius:8px; font-weight:800; font-size:.75rem;">${esc(r.method)}</span><span style="font-weight:900; color:var(--primary); font-size:1.2rem;">${r.amount} TK</span></div><div style="font-size:.82rem; line-height:1.7;"><b>Account:</b> <span style="color:#dc2626;">${esc(r.account)}</span><br><b>User ID:</b> ${r.userId}<br><b>Name:</b> ${esc(r.userName)}<br><b>Date:</b> ${dt}</div><div style="display:flex; gap:8px; margin-top:14px;"><button class="btn btn-green btn-small" onclick="approveWd('${k}')" style="flex:1;"><i class="fas fa-check"></i> Approve</button><button class="btn btn-red btn-small" onclick="rejectWd('${k}','${r.userId}',${r.amount})" style="flex:1;"><i class="fas fa-times"></i> Reject</button></div></div>`;
-    });
-    else h = '<div class="empty-state"><p>No pending</p></div>';
-    c.innerHTML = h;
-  });
-}
-
-async function approveWd(id) {
-  if (!confirm('Approve?')) return;
-  if (!currentSession) return toast('❌ Session expired');
-  try {
-    const wdRef = db.ref('withdrawals/' + id);
-    let wdSnap = await wdRef.once('value');
-    if (!wdSnap.exists()) return toast('❌ Withdrawal not found');
-    let request = wdSnap.val();
-
-    if (request.status === 'pending') {
-      const result = await wdRef.transaction(current => {
-        if (!current || current.status !== 'pending') return;
-        current.status = 'approved';
-        current.reviewedAt = Date.now();
-        current.reviewedBy = currentSession.username;
-        return current;
-      });
-      if (result.committed) request = result.snapshot.val();
-      else {
-        wdSnap = await wdRef.once('value');
-        if (!wdSnap.exists() || wdSnap.val().status !== 'approved') return toast('⚠️ Already processed');
-        request = wdSnap.val();
-      }
-    } else if (request.status !== 'approved') {
-      return toast('⚠️ Already processed');
-    }
-
-    if (request.countedAtRequest === false) {
-      const userRef = db.ref('users/' + request.userId);
-      const userResult = await userRef.transaction(user => {
-        if (!user) return;
-        const counted = user.approvedWithdrawalCounted || {};
-        if (counted[id]) return user;
-        counted[id] = true;
-        user.approvedWithdrawalCounted = counted;
-        user.withdrawCount = Number(user.withdrawCount || 0) + 1;
-        return user;
-      });
-      if (!userResult.committed) {
-        const userSnap = await userRef.once('value');
-        const counted = userSnap.exists() && userSnap.val().approvedWithdrawalCounted || {};
-        if (!counted[id]) throw new Error('Could not update approved withdrawal count');
-      }
-    }
-
-    toast('✅ Approved');
-  } catch (e) {
-    console.error('Withdrawal approval failed:', e);
-    toast('❌ Approval failed. Retry the approval to sync the count.');
-  }
-}
-async function rejectWd(id, uid, amt) {
-  if (!confirm('Reject & refund?')) return;
-  const ur = db.ref('users/'+uid); const s = await ur.once('value');
-  if (s.exists()) await ur.update({ balance: Number(s.val().balance||0)+Number(amt) });
-  await db.ref('withdrawals/'+id).update({ status: 'rejected' });
-  toast('✅ Refunded');
-}
-function loadAllWithdrawals() {
-  db.ref('withdrawals').once('value', snap => {
-    const c = document.getElementById('allWdContainer');
-    if (!c) return;
-    let h = '';
-    if (snap.exists()) snap.forEach(child => {
-      const r = child.val();
-      const col = r.status === 'approved' ? '#10b981' : r.status === 'pending' ? '#f59e0b' : '#ef4444';
-      h += `<div style="border-bottom:1px solid var(--border); padding:12px 0; font-size:.82rem;"><b>${esc(r.userName||'User')}</b> (${r.userId}) • ${esc(r.method)} - ${esc(r.account)} — <b style="color:var(--primary);">${r.amount} TK</b> <span style="color:${col}; font-weight:800; margin-left:8px;">${(r.status||'').toUpperCase()}</span></div>`;
-    });
-    else h = '<p style="text-align:center; color:#94a3b8;">No withdrawals</p>';
-    c.innerHTML = h;
-  });
-}
-
-// ============================================
-// ADMIN CHAT with USER Telegram Notification
-// ============================================
-async function sendUserTelegramNotification(userId, adminName, messageText) {
-  if (!BOT_TOKEN_FOR_NOTIF || String(BOT_TOKEN_FOR_NOTIF).trim().length < 20) {
-    console.warn('[NOTIF] BOT_TOKEN not configured');
-    return false;
-  }
-  const now = Date.now();
-  const lastTime = userNotifCooldown[userId] || 0;
-  if (now - lastTime < CHAT_NOTIF_COOLDOWN_MS) {
-    return false;
-  }
-  try {
-    const escapedText = String(messageText || '').substring(0, 200);
-    const notifText = '💬 <b>New Message from ' + esc(adminName || 'Admin') + '</b>\n\n📩 "' + escapedText + (escapedText.length >= 200 ? '...' : '') + '"\n\n👉 Open the app to reply.';
-
-    const response = await fetch('https://api.telegram.org/bot' + BOT_TOKEN_FOR_NOTIF + '/sendMessage', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: userId,
-        text: notifText,
-        parse_mode: 'HTML',
-        disable_web_page_preview: true
-      })
-    });
-    const data = await response.json();
-    if (data.ok) {
-      userNotifCooldown[userId] = now;
-      return true;
-    } else {
-      return false;
-    }
-  } catch(e) {
-    return false;
-  }
-}
-
-function loadAdminChats() {
-  const list = document.getElementById('adminChatList');
-  if (!list) return;
-
-  if (activeListeners.chats) {
-    db.ref('chats').off('value', activeListeners.chats);
-  }
-
-  activeListeners.chats = db.ref('chats').on('value', snap => {
-    const threads = [];
-    snap.forEach(c => {
-      const meta = c.child('meta').val() || {};
-      const messages = c.child('messages').val() || {};
-      let unread = 0;
-      let lastMsg = null, lastTime = 0;
-      Object.keys(messages).forEach(k => {
-        const m = messages[k];
-        if (m.from === 'user' && !m.read) unread++;
-        if ((m.timestamp || 0) > lastTime) { lastTime = m.timestamp || 0; lastMsg = m; }
-      });
-      threads.push({
-        key: c.key, meta, unread,
-        lastPreview: lastMsg ? (lastMsg.text || (lastMsg.type === 'image' ? '📷 Image' : '')) : meta.lastMessagePreview || '',
-        lastTime: lastTime || meta.lastMessageAt || 0
-      });
-    });
-    threads.sort((a, b) => b.lastTime - a.lastTime);
-    const totalUnread = threads.reduce((s, t) => s + t.unread, 0);
-    const badge = document.getElementById('chatsUnreadBadge');
-    if (badge) {
-      if (totalUnread > 0) { badge.textContent = totalUnread; badge.style.display = 'inline-block'; }
-      else badge.style.display = 'none';
-    }
-    if (!threads.length) {
-      list.innerHTML = '<div class="empty-state"><p>No chats yet</p></div>';
-      return;
-    }
-    let html = '';
-    threads.forEach(t => {
-      const m = t.meta;
-      const name = m.userName || 'User';
-      const init = (name || 'U').charAt(0).toUpperCase();
-      const time = t.lastTime ? new Date(t.lastTime).toLocaleString('en-GB', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }) : '';
-      const safeKey = esc(t.key);
-      const safeName = esc(name).replace(/'/g, "\\'");
-      html += `<div class="admin-chat-item ${t.unread>0?'unread':''}" onclick="openAdminThread('${safeKey}','${safeName}')">
-          <div class="admin-chat-avatar">${init}</div>
-          <div class="admin-chat-info">
-              <div class="name">${esc(name)}</div>
-              <div class="preview">${esc(t.lastPreview)}</div>
-          </div>
-          <div class="admin-chat-meta">
-              ${time}
-              ${t.unread > 0 ? `<div class="admin-chat-unread">${t.unread}</div>` : ''}
-          </div>
-      </div>`;
-    });
-    list.innerHTML = html;
-  });
-}
-
-function openAdminThread(threadKey, userName) {
-  if (adminThreadMsgListener && adminCurrentThreadKey) {
-    db.ref('chats/' + adminCurrentThreadKey + '/messages').off('value', adminThreadMsgListener);
-    adminThreadMsgListener = null;
-  }
-  adminCurrentThreadKey = threadKey;
-  document.getElementById('adminThreadName').textContent = userName;
-  document.getElementById('adminChatThreadModal').classList.add('active');
-  document.body.style.overflow = 'hidden';
-  loadAdminThreadMessages();
-  db.ref('chats/' + threadKey + '/messages').once('value').then(snap => {
-    const updates = {};
-    snap.forEach(c => {
-      const m = c.val();
-      if (m.from === 'user' && !m.read) updates[c.key + '/read'] = true;
-    });
-    if (Object.keys(updates).length) db.ref('chats/' + threadKey + '/messages').update(updates);
-    db.ref('chats/' + threadKey + '/meta/unreadForAdmin').set(0).catch(()=>{});
-  });
-}
-
-function closeAdminChatThread() {
-  if (adminThreadMsgListener && adminCurrentThreadKey) {
-    db.ref('chats/' + adminCurrentThreadKey + '/messages').off('value', adminThreadMsgListener);
-    adminThreadMsgListener = null;
-  }
-  adminCurrentThreadKey = null;
-  document.getElementById('adminChatThreadModal').classList.remove('active');
-  document.body.style.overflow = '';
-}
-
-function loadAdminThreadMessages() {
-  if (adminThreadMsgListener) db.ref('chats/' + adminCurrentThreadKey + '/messages').off('value', adminThreadMsgListener);
-  adminThreadMsgListener = db.ref('chats/' + adminCurrentThreadKey + '/messages').orderByChild('timestamp').on('value', snap => {
-    const body = document.getElementById('adminThreadBody');
-    const msgs = [];
-    snap.forEach(c => { const m = c.val(); m.id = c.key; msgs.push(m); });
-    if (!msgs.length) {
-      body.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:40px;"><i class="fas fa-comment-dots" style="font-size:2rem;display:block;margin-bottom:10px;"></i>No messages</div>';
-      return;
-    }
-    msgs.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-    let html = '';
-    msgs.forEach(m => {
-      const isAdmin = m.from === 'admin';
-      const time = m.timestamp ? new Date(m.timestamp).toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' }) : '';
-      let content = '';
-      if (m.type === 'image' && m.fileUrl) {
-        const safeUrlStr = String(m.fileUrl).replace(/'/g, "\\'");
-        content = `<img src="${esc(m.fileUrl)}" style="max-width:100%;border-radius:8px;margin-top:4px;display:block;cursor:pointer;" onclick="window.open('${safeUrlStr}','_blank')" alt="image">`;
-        if (m.text) content += `<div>${esc(m.text)}</div>`;
-      } else content = esc(m.text || '');
-      const bubbleStyle = isAdmin
-        ? 'align-self:flex-end;background:linear-gradient(135deg,#6C5CE7,#8b5cf6);color:#fff;border-bottom-right-radius:4px;'
-        : 'align-self:flex-start;background:#fff;color:#0f172a;border:1px solid #e2e8f0;border-bottom-left-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.04);';
-      html += `<div style="max-width:78%;padding:10px 14px;border-radius:16px;font-size:.88rem;line-height:1.5;word-wrap:break-word;${bubbleStyle}">${content}<span style="font-size:.62rem;opacity:.75;margin-top:4px;display:block;text-align:${isAdmin?'right':'left'};">${time}</span></div>`;
-    });
-    body.innerHTML = html;
-    body.scrollTop = body.scrollHeight;
-  });
-}
-
-async function sendAdminReply() {
-  const input = document.getElementById('adminReplyInput');
-  const btn = document.getElementById('adminReplyBtn');
-  const text = input.value.trim();
-  if (!text) return;
-  if (!adminCurrentThreadKey) return toast('❌ No thread open');
-
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-
-  try {
-    await db.ref('chats/' + adminCurrentThreadKey + '/messages').push({
-      from: 'admin',
-      adminId: currentSession ? (currentSession.adminId || 'super') : 'super',
-      adminName: currentSession ? currentSession.username : 'Admin',
-      text,
-      type: 'text',
-      timestamp: Date.now(),
-      read: false
-    });
-
-    await db.ref('chats/' + adminCurrentThreadKey + '/meta').update({
-      lastMessageAt: Date.now(),
-      lastMessagePreview: text.substring(0, 60),
-      lastMessageFrom: 'admin',
-      unreadForUser: 1
-    }).catch(()=>{});
-
-    const userId = adminCurrentThreadKey.replace('user_', '');
-    const adminName = currentSession ? currentSession.username : 'Admin';
-    sendUserTelegramNotification(userId, adminName, text).then(sent => {
-      if (sent) console.log('[NOTIF] User notified');
-    }).catch(() => {});
-
-    input.value = '';
-    toast('✅ Sent!');
-  } catch (e) {
-    toast('❌ ' + e.message);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-paper-plane"></i>';
-  }
-}
-
-// ============================================
-// ✅ NEW: ADMIN CHAT NOTIFICATION LISTENER
-// (Listens to adminNotifications pushed by user panel)
-// ============================================
-function setupAdminChatNotifications() {
-  if (!currentSession || currentSession.role !== 'super') return;
-  if (adminChatNotifListener) {
-    db.ref('adminNotifications').off('child_added', adminChatNotifListener);
-  }
-  adminChatNotifListener = db.ref('adminNotifications').limitToLast(10).on('child_added', snap => {
-    const n = snap.val();
-    if (!n) return;
-    if (n.read) return;
-    // Only fire for recent (within 5 min) to avoid spam on load
-    if (Date.now() - (n.timestamp || 0) > 5 * 60 * 1000) return;
-
-    if (n.type === 'chat') {
-      // Toast notification
-      toast('💬 New chat from ' + (n.fromUserName || 'User') + ': ' + String(n.preview || '').substring(0, 40));
-      // Play a short beep
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.frequency.value = 800;
-        oscillator.type = 'sine';
-        gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-        oscillator.start(audioCtx.currentTime);
-        oscillator.stop(audioCtx.currentTime + 0.4);
-      } catch(e) {}
-
-      // Pulse the chat badge
-      const badge = document.getElementById('chatsUnreadBadge');
-      if (badge) {
-        badge.style.animation = 'none';
-        setTimeout(() => { badge.style.animation = 'pulse 1s infinite'; }, 50);
-      }
-
-      // Auto-mark as read after 30s so it won't re-fire on next login
-      setTimeout(() => {
-        try { snap.ref.update({ read: true }); } catch(e) {}
-      }, 30000);
-    }
-  });
-}
-
-// ============================================
-// TAB SWITCHER
-// ============================================
-function switchTab(id, el) {
-  const content = document.getElementById('tab-'+id);
-  if (!content || content.classList.contains('hidden')) return toast('❌ Access denied');
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  content.classList.add('active');
-  if (id === 'users') loadUsers();
-  if (id === 'withdrawals') loadAllWithdrawals();
-  if (id === 'adminpayouts') loadAdminWithdrawRequests();
-  if (id === 'referrals') loadReferralStats();
-  if (id === 'analytics') loadAnalytics();
-  if (id === 'channels') loadVerificationStats();
-  if (id === 'extrareward') loadExtraRewardPreview();
-  if (id === 'ads') loadAdProvidersConfig();
-  if (id === 'packages') { loadPackagesList(); loadActiveUserPackages(); }
-  if (id === 'chats') loadAdminChats();
-  if (id === 'tasks') {
-    currentTaskListTab = 'live';
-    document.querySelectorAll('.task-list-tab').forEach(t => { t.classList.remove('active'); t.classList.remove('pending-active'); });
-    const lt = document.querySelector('.task-list-tab[data-tlt="live"]');
-    if (lt) lt.classList.add('active');
-    loadTasksList(); loadTaskSubmissions(); updateTaskCostPreview();
-  }
-  if (id === 'admins') loadAdminsList();
-  if (id === 'depositmgmt') { loadDepositPaymentInfo(); loadAllDepositRequests(); }
-  if (id === 'wallet') { loadCurrentAdminData(); renderMyContact(); }
-  if (id === 'earnings') loadCurrentAdminData();
-  if (id === 'deposit') { renderDepositMethodsAdminView(); renderMyDepositRequests(); }
-  if (id === 'contact') { renderContactInfo(); renderMyContact(); }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ============================================
-// REAL-TIME BADGES
-// ============================================
-let depositBadgeListener = null;
-let chatsBadgeListener = null;
-
-function setupRealtimeBadges() {
-  if (currentSession && currentSession.role === 'super') {
-    if (depositBadgeListener) db.ref('depositRequests').off('value', depositBadgeListener);
-    depositBadgeListener = db.ref('depositRequests').on('value', snap => {
-      let count = 0;
-      snap.forEach(c => { const v = c.val(); if (v && v.status === 'pending') count++; });
-      const b = document.getElementById('depositPendingBadge');
-      if (b) {
-        if (count > 0) { b.textContent = count; b.style.display = 'inline-block'; }
-        else b.style.display = 'none';
-      }
-    });
-
-    if (chatsBadgeListener) db.ref('chats').off('value', chatsBadgeListener);
-    chatsBadgeListener = db.ref('chats').on('value', snap => {
-      let totalUnread = 0;
-      snap.forEach(thread => {
-        const messages = thread.child('messages').val() || {};
-        Object.values(messages).forEach(m => {
-          if (m && m.from === 'user' && !m.read) totalUnread++;
-        });
-      });
-      const badge = document.getElementById('chatsUnreadBadge');
-      if (badge) {
-        if (totalUnread > 0) { badge.textContent = totalUnread; badge.style.display = 'inline-block'; }
-        else badge.style.display = 'none';
-      }
-    });
-  }
-}
-
-function cleanupListeners() {
-  if (depositBadgeListener) { db.ref('depositRequests').off('value', depositBadgeListener); depositBadgeListener = null; }
-  if (chatsBadgeListener) { db.ref('chats').off('value', chatsBadgeListener); chatsBadgeListener = null; }
-  if (activeListeners.depositRequests) { db.ref('depositRequests').off('value', activeListeners.depositRequests); activeListeners.depositRequests = null; }
-  if (activeListeners.chats) { db.ref('chats').off('value', activeListeners.chats); activeListeners.chats = null; }
-  if (activeListeners.wdPending) { db.ref('withdrawals').orderByChild('status').equalTo('pending').off('value', activeListeners.wdPending); activeListeners.wdPending = null; }
-  if (adminChatNotifListener) { db.ref('adminNotifications').off('child_added', adminChatNotifListener); adminChatNotifListener = null; }
-}
-
-// ============================================
-// PANEL INIT
-// ============================================
-function runPanelInit() {
-  if (runPanelInit._done) return;
-  runPanelInit._done = true;
-
-  setupRealtimeBadges();
-  setupAdminChatNotifications(); // ✅ NEW
-
-  if (currentSession && currentSession.role === 'super') {
-    loadAdminChats();
-  }
-  if (currentSession.role === 'super') {
-    loadAnalytics(); loadVerificationStats(); toggleSurveyFields();
-    renderLeaderboardCustomList(); loadExtraRewardPreview();
-    loadAdProvidersConfig(); loadPackagesList(); loadActiveUserPackages();
-    loadDepositPaymentInfo();
-    loadAllDepositRequests();
-    loadPendingUserWithdrawals();
-  } else {
-    loadCurrentAdminData(); loadTasksList(); loadTaskSubmissions();
-    renderDepositMethodsAdminView();
-  }
-  setInterval(() => { if (currentSession && currentSession.role === 'admin') loadCurrentAdminData(); }, 30000);
-  updateMaxDaysHint('newTaskReward','newTaskTime','taskMaxDaysHint');
-  updateMaxDaysHint('etReward','etTime','etMaxDaysHint');
-}
-
-// ============================================
-// CONFIG LISTENER
-// ============================================
-db.ref('config').on('value', snap => {
-  if (!snap.exists()) return;
-  configData = snap.val();
-  if (!configData.depositMethods) configData.depositMethods = [];
-  if (!Array.isArray(configData.leaderboardCustom)) configData.leaderboardCustom = [];
-  if (!Array.isArray(configData.adSlots)) configData.adSlots = [];
-  if (!configData.depositPayment) configData.depositPayment = {};
-  channelLinks = configData.channelLinks || [];
-  withdrawLevels = configData.withdrawLevels || [];
-  MIN_REFERRAL_BALANCE = configData.minReferralBalance || 20;
-  SERVICE_CHARGE_RATE = Number(configData.serviceChargeRate !== undefined ? configData.serviceChargeRate : 10);
-  loginContactLinkCache = configData.contactLink || '';
-  if (configData.adminRevenue) adminRevenueConfig = { ...adminRevenueConfig, ...configData.adminRevenue };
-
-  if (currentSession && currentSession.role === 'super') {
-    const be = document.getElementById('botUsername');
-    if (be) { be.value = sanitizeBotUsername(configData.botUsername||''); onBotUsernameInput(be); }
-    const setV = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
-    setV('currencySymbol', configData.currencySymbol || 'TK');
-    setV('contactLink', configData.contactLink || '');
-    setV('contactBtnText', configData.contactBtnText || '');
-    setV('contactNote', configData.contactNote || '');
-    setV('dailyBonusAmount', configData.dailyBonusAmount || 20);
-    setV('refBonus', configData.refBonus || 5);
-    setV('minReferralBalance', MIN_REFERRAL_BALANCE);
-    setV('refCommissionRate', configData.refCommissionRate || 2);
-    setV('tutorialLink', configData.tutorialLink || '');
-    setV('supportLink', configData.supportLink || '');
-    setV('minWithdraw', configData.minWithdraw || 10);
-    setV('withdrawNotice', configData.withdrawNotice || '');
-    setV('paymentMethods', (configData.paymentMethods || ['Bkash','Nagad']).join(', '));
-    setV('adResetHour', configData.adResetHour || 0);
-    setV('dailyAdLimit', configData.dailyAdLimit || 10);
-    setV('adReward', configData.adReward || 0.5);
-    setV('serviceChargeRate', SERVICE_CHARGE_RATE);
-    setV('becomeAdminEnabled', String(configData.becomeAdminEnabled === true));
-    setV('becomeAdminLink', configData.becomeAdminLink || '');
-    setV('becomeAdminTitle', configData.becomeAdminTitle || '');
-    setV('becomeAdminSub', configData.becomeAdminSub || '');
-    setV('becomeAdminBtnText', configData.becomeAdminBtnText || '');
-    selectedCommissionMode = configData.refCommissionMode || 'bonus';
-    selectCommissionMode(selectedCommissionMode);
-    loadAdminRevenueSettings();
-    const mw = document.getElementById('minAdWatchSeconds');
-    if (mw) mw.value = configData.minAdWatchSeconds !== undefined ? configData.minAdWatchSeconds : 10;
-    if (configData.maintenance) {
-      setV('maintenanceMode', configData.maintenance.active ? 'true' : 'false');
-      setV('maintenanceMsg', configData.maintenance.message || '');
-      setV('maintenanceTime', configData.maintenance.estimatedMinutes || '');
-    }
-    const er = configData.extraReward || {};
-    const ee = document.getElementById('extraRewardEnabled');
-    const ea = document.getElementById('extraRewardAmount');
-    const el2 = document.getElementById('extraRewardLimit');
-    const et = document.getElementById('extraRewardTitle');
-    const ei = document.getElementById('extraRewardInfo');
-    if (ee) ee.value = String(er.enabled !== false);
-    if (ea) ea.value = er.amount !== undefined ? er.amount : 0.5;
-    if (el2) el2.value = er.dailyLimit !== undefined ? er.dailyLimit : 5;
-    if (et) et.value = er.title || 'Pop-up Ad দেখে আয় করুন';
-    if (ei) ei.value = er.infoText || 'Pop-up Ad সম্পূর্ণ দেখলেই রিওয়ার্ড পাবেন।';
-    loadExtraRewardPreview();
-    renderChannelLinks(); renderWithdrawLevels();
-    renderLeaderboardCustomList();
-    if (document.getElementById('tab-ads') && document.getElementById('tab-ads').classList.contains('active')) loadAdProvidersConfig();
-    if (document.getElementById('tab-depositmgmt') && document.getElementById('tab-depositmgmt').classList.contains('active')) loadDepositPaymentInfo();
-  }
-  if (currentSession && currentSession.role === 'admin') {
-    renderDepositMethodsAdminView(); renderContactInfo();
-    if (configData.botUsername) generateAdminRefCode();
-  }
-  if (currentSession) {
-    updateMaxDaysHint('newTaskReward','newTaskTime','taskMaxDaysHint');
-    updateMaxDaysHint('etReward','etTime','etMaxDaysHint');
-    const nt = document.getElementById('newTaskType'); if (nt) applyLinkRulesForType(nt.value, 'newTask');
-    const et = document.getElementById('etType'); if (et) applyLinkRulesForType(et.value, 'et');
-  }
-});
-
-// ============================================
-// BOOT
-// ============================================
-window.addEventListener('DOMContentLoaded', async () => {
-  const stored = getStoredSession();
-  if (stored) {
-    currentSession = stored;
-    try {
-      if (stored.role === 'admin' && stored.adminId) {
-        const a = await getAdminData(stored.adminId);
-        if (!a || a.isActive === false || a.isBanned || a.isSuspended) { clearSession(); await initializeAuthUI(); showLoginOverlay(); return; }
-        currentAdminData = a;
-      } else if (stored.role === 'super') { const sa = await getSuperAdminData(); if (!sa) clearSession(); }
-      if (currentSession) { onLoginSuccess(currentSession, false); return; }
-    } catch(e) { if (currentSession) { onLoginSuccess(currentSession, false); return; } }
-  }
-  await initializeAuthUI();
-  showLoginOverlay();
-});
-
-window.addEventListener('beforeunload', () => {
-  cleanupListeners();
-});
-
-['editTaskModal','depositModal','depositSubmitModal','banModal','cancelTaskModal','deleteTaskModal','contactEditModal','lbModal','instantDeleteModal','userViewModal','userEditModal','userDetailsModal','adminViewModal','adminEditModal','adminWithdrawModal'].forEach(id => {
-  const el = document.getElementById(id);
-  if (el) el.addEventListener('click', e => { if (e.target.id === id) el.classList.remove('active'); });
-});
-
-// ============================================
-// LEGAL MODALS
-// ============================================
-const LEGAL_CONTENT = {
-  privacy: `<span class="last-updated">📅 Last Updated: Sep/23/2026</span><h1>📄 PRIVACY POLICY</h1><h2>১. ভূমিকা</h2><p><strong>Earn Wallet / NexEarn</strong> একটি Telegram-ভিত্তিক মাইক্রো-টাস্ক ও রিওয়ার্ড প্ল্যাটফর্ম।</p><div class="warn-box"><strong>⚠️ গুরুত্বপূর্ণ:</strong> Firebase Realtime Database-এ সংরক্ষিত ডেটা এনক্রিপ্টেড নয়।</div><h2>১২. যোগাযোগ</h2><ul><li>Telegram: <a href="https://t.me/NexEarn2Support" target="_blank">Support</a></li></ul><p style="text-align:center; font-weight:800; color:#4c1d95;">© 2025 Earn Wallet</p>`,
-  disclaimer: `<span class="last-updated">📅 Last Updated: Sep/23/2026</span><h1>⚠️ DISCLAIMER</h1><h2>১. প্ল্যাটফর্মের উদ্দেশ্য</h2><p>Earn Wallet একটি মাইক্রো-টাস্ক প্ল্যাটফর্ম।</p><div class="danger-box">🚫 Fraud করলে account ban, balance বাতিল</div><p style="text-align:center; font-weight:800; color:#4c1d95;">© 2025 Earn Wallet</p>`
-};
-function openLegalModal(type) {
-  const m = document.getElementById('legalModal');
-  const t = document.getElementById('legalModalTitle');
-  const b = document.getElementById('legalModalBody');
-  if (type === 'privacy') { t.innerHTML = '<i class="fas fa-shield-halved"></i> Privacy Policy'; b.innerHTML = LEGAL_CONTENT.privacy; }
-  else { t.innerHTML = '<i class="fas fa-triangle-exclamation"></i> Disclaimer'; b.innerHTML = LEGAL_CONTENT.disclaimer; }
-  m.classList.add('active');
-}
-function closeLegalModal() { document.getElementById('legalModal').classList.remove('active'); }
-const _lm = document.getElementById('legalModal');
-if (_lm) _lm.addEventListener('click', function(e) { if (e.target === this) closeLegalModal(); });
 </script>
 </body>
 </html>
