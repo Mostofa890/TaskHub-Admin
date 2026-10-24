@@ -911,80 +911,79 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 
   <!-- PACKAGES TAB -->
-  <!-- PACKAGES TAB -->
-<div id="tab-packages" class="tab-content super-only">
-  <div class="card rainbow">
-    <div class="card-header">
-      <div class="card-title">
-        <div class="card-title-icon icon-orange"><i class="fas fa-box-open"></i></div>
-        <span id="pkgFormTitle">Create New Package</span>
+  <div id="tab-packages" class="tab-content super-only">
+    <div class="card rainbow">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-title-icon icon-orange"><i class="fas fa-box-open"></i></div>
+          <span id="pkgFormTitle">Create New Package</span>
+        </div>
       </div>
-    </div>
-    <input type="hidden" id="pkgEditId">
-    
-    <div class="form-group">
-      <label>Package Name *</label>
-      <input type="text" id="pkgName" placeholder="e.g. Starter Package">
-    </div>
-    
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <input type="hidden" id="pkgEditId">
+      
       <div class="form-group">
-        <label>Duration (Days) *</label>
-        <input type="number" id="pkgDuration" min="1" placeholder="30" oninput="calculatePackagePreview()">
-        <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">প্যাকেজটি কতদিন চলবে</small>
+        <label>Package Name *</label>
+        <input type="text" id="pkgName" placeholder="e.g. Starter Package">
       </div>
-      <div class="form-group">
-        <label>Price (TK) *</label>
-        <input type="number" id="pkgPrice" min="1" step="0.01" placeholder="100" oninput="calculatePackagePreview()">
+      
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-group">
+          <label>Duration (Days) *</label>
+          <input type="number" id="pkgDuration" min="1" placeholder="30" oninput="calculatePackagePreview()">
+          <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">প্যাকেজটি কতদিন চলবে</small>
+        </div>
+        <div class="form-group">
+          <label>Price (TK) *</label>
+          <input type="number" id="pkgPrice" min="1" step="0.01" placeholder="100" oninput="calculatePackagePreview()">
+        </div>
       </div>
-    </div>
-    
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <div class="form-group">
-        <label>Profit Rate (%) *</label>
-        <input type="number" id="pkgRate" min="0" step="0.1" placeholder="50" oninput="calculatePackagePreview()">
-        <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">মোট লাভের শতকরা হার</small>
+      
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div class="form-group">
+          <label>Profit Rate (%) *</label>
+          <input type="number" id="pkgRate" min="0" step="0.1" placeholder="50" oninput="calculatePackagePreview()">
+          <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">মোট লাভের শতকরা হার</small>
+        </div>
+        <div class="form-group">
+          <label>Total Return (TK) — Auto</label>
+          <input type="text" id="pkgTotalReturnDisplay" readonly style="background:#f1f5f9; color:#0f172a; font-weight:800; border-color:#cbd5e1;">
+        </div>
       </div>
-      <div class="form-group">
-        <label>Total Return (TK) — Auto</label>
-        <input type="text" id="pkgTotalReturnDisplay" readonly style="background:#f1f5f9; color:#0f172a; font-weight:800; border-color:#cbd5e1;">
-      </div>
-    </div>
 
-    <div class="form-group">
-      <label>Daily Income (TK) — Auto</label>
-      <input type="text" id="pkgDailyIncomeDisplay" readonly style="background:#f1f5f9; color:#059669; font-weight:800; border:1.5px solid #10b981;">
-      <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:#10b981;">স্বয়ংক্রিয়ভাবে প্রতিদিনের ইনকাম</small>
-    </div>
+      <div class="form-group">
+        <label>Daily Income (TK) — Auto</label>
+        <input type="text" id="pkgDailyIncomeDisplay" readonly style="background:#f1f5f9; color:#059669; font-weight:800; border:1.5px solid #10b981;">
+        <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:#10b981;">স্বয়ংক্রিয়ভাবে প্রতিদিনের ইনকাম</small>
+      </div>
 
-    <div class="form-group">
-      <label>Package Description (optional)</label>
-      <textarea id="pkgDesc" rows="2" placeholder="Short description..."></textarea>
+      <div class="form-group">
+        <label>Package Description (optional)</label>
+        <textarea id="pkgDesc" rows="2" placeholder="Short description..."></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label>Status</label>
+        <select id="pkgStatus">
+          <option value="active">✅ Active</option>
+          <option value="inactive">🚫 Inactive</option>
+        </select>
+      </div>
+      
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-orange" onclick="savePackage()" style="flex:2;"><i class="fas fa-save"></i> Save Package</button>
+        <button class="btn btn-red" onclick="resetPackageForm()" style="flex:1;"><i class="fas fa-times"></i> Reset</button>
+      </div>
     </div>
     
-    <div class="form-group">
-      <label>Status</label>
-      <select id="pkgStatus">
-        <option value="active">✅ Active</option>
-        <option value="inactive">🚫 Inactive</option>
-      </select>
+    <div class="card">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-list-check"></i></div>All Packages (<span id="pkgCount">0</span>)</div></div>
+      <div id="packagesListContainer"></div>
     </div>
-    
-    <div style="display:flex;gap:10px;">
-      <button class="btn btn-orange" onclick="savePackage()" style="flex:2;"><i class="fas fa-save"></i> Save Package</button>
-      <button class="btn btn-red" onclick="resetPackageForm()" style="flex:1;"><i class="fas fa-times"></i> Reset</button>
+    <div class="card">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-user-check"></i></div>Active User Packages</div></div>
+      <div id="activeUserPackagesContainer"></div>
     </div>
   </div>
-  
-  <div class="card">
-    <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-list-check"></i></div>All Packages (<span id="pkgCount">0</span>)</div></div>
-    <div id="packagesListContainer"></div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-user-check"></i></div>Active User Packages</div></div>
-    <div id="activeUserPackagesContainer"></div>
-  </div>
-</div>
 
   <!-- EXTRA REWARDS TAB -->
   <div id="tab-extrareward" class="tab-content super-only">
@@ -1265,7 +1264,7 @@ let currentSession = null;
 let adminChatListListener = null;
 let adminThreadMsgListener = null;
 let adminCurrentThreadKey = null;
-let adminChatNotifListener = null; // ✅ NEW: chat notification listener
+let adminChatNotifListener = null; 
 
 const userNotifCooldown = {};
 
@@ -1841,89 +1840,6 @@ async function saveExtraRewardSettings() {
 }
 
 // ============================================
-// PACKAGES (Auto Calculation Feature Added)
-// ============================================
-function calculatePackagePreview() {
-  const price = parseFloat(document.getElementById('pkgPrice').value) || 0;
-  const rate = parseFloat(document.getElementById('pkgRate').value) || 0;
-  const duration = parseInt(document.getElementById('pkgDuration').value) || 1;
-
-  // Calculation Logic: Total Return = Price + (Price * Rate / 100)
-  const totalReturn = price + (price * rate / 100);
-  const dailyIncome = totalReturn / duration;
-
-  document.getElementById('pkgTotalReturnDisplay').value = totalReturn > 0 ? totalReturn.toFixed(2) + ' TK' : '0.00 TK';
-  document.getElementById('pkgDailyIncomeDisplay').value = dailyIncome > 0 ? dailyIncome.toFixed(2) + ' TK' : '0.00 TK';
-}
-
-async function loadPackagesList() {
-  const c = document.getElementById('packagesListContainer');
-  if (!c) return;
-  c.innerHTML = '<p style="text-align:center;padding:16px;color:#94a3b8;">Loading...</p>';
-  const snap = await db.ref('packages').once('value');
-  allPackagesCache = {};
-  const list = [];
-  snap.forEach(x => { const p = {id: x.key, ...x.val()}; allPackagesCache[x.key] = p; list.push(p); });
-  list.sort((a,b) => (a.price||0) - (b.price||0));
-  const cnt = document.getElementById('pkgCount'); if (cnt) cnt.textContent = list.length;
-  if (!list.length) { c.innerHTML = '<div class="empty-state" style="padding:20px;"><p>No packages yet</p></div>'; return; }
-  let h = '';
-  list.forEach(p => {
-    const statusCls = p.status === 'active' ? 'active' : 'cancelled';
-    const isInactive = p.status === 'inactive';
-    // Fallback calculation for old packages
-    const totalReturn = p.totalReturn || (p.price + (p.price * (p.rate || 0) / 100));
-    const dailyIncome = p.dailyIncome || (totalReturn / (p.duration || 1));
-
-    h += `<div class="pkg-card ${isInactive?'inactive':''}"><div class="pkg-head"><div class="pkg-name"><div class="pkg-icon-badge"><i class="fas fa-box"></i></div>${esc(p.name)}</div><span class="status-badge ${statusCls}">${(p.status||'active').toUpperCase()}</span></div><div class="pkg-stats-grid"><div class="pkg-stat price"><div class="val">${Number(p.price).toFixed(2)}</div><div class="lbl">Price TK</div></div><div class="pkg-stat return"><div class="val">${Number(totalReturn).toFixed(2)}</div><div class="lbl">Total Return</div></div><div class="pkg-stat rate"><div class="val">${p.rate||0}%</div><div class="lbl">Profit</div></div></div><div class="pkg-meta"><span><i class="fas fa-calendar"></i> ${p.duration} days</span><span><i class="fas fa-coins"></i> ${Number(dailyIncome).toFixed(2)} TK/day</span></div>${p.description ? `<div style="font-size:.72rem;color:#64748b;margin-bottom:10px;">${esc(p.description)}</div>` : ''}<div class="pkg-actions"><button class="btn btn-info btn-small" onclick="editPackage('${p.id}')"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-warning btn-small" onclick="togglePackageStatus('${p.id}')"><i class="fas fa-power-off"></i> ${p.status==='active'?'Disable':'Enable'}</button><button class="btn btn-red btn-small" onclick="deletePackage('${p.id}')"><i class="fas fa-trash"></i> Delete</button></div></div>`;
-  });
-  c.innerHTML = h;
-}
-
-async function savePackage() {
-  const editId = document.getElementById('pkgEditId').value;
-  const name = document.getElementById('pkgName').value.trim();
-  const duration = parseInt(document.getElementById('pkgDuration').value) || 0;
-  const price = parseFloat(document.getElementById('pkgPrice').value) || 0;
-  const rate = parseFloat(document.getElementById('pkgRate').value) || 0;
-  const desc = document.getElementById('pkgDesc').value.trim();
-  const status = document.getElementById('pkgStatus').value;
-
-  if (!name) return toast('❌ Package name required');
-  if (duration <= 0) return toast('❌ Duration > 0');
-  if (price <= 0) return toast('❌ Price > 0');
-  if (rate < 0) return toast('❌ Valid Profit Rate');
-
-  // Auto Calculate
-  const totalReturn = price + (price * rate / 100);
-  const dailyIncome = totalReturn / duration;
-
-  const data = { 
-    name, 
-    duration, 
-    price, 
-    rate, 
-    dailyIncome, // Automatically calculated
-    totalReturn, // Automatically calculated
-    description: desc, 
-    status, 
-    updatedAt: Date.now() 
-  };
-
-  if (editId) { 
-    await db.ref('packages/' + editId).update(data); 
-    toast('✅ Package updated'); 
-  } else { 
-    data.createdAt = Date.now(); 
-    data.createdBy = currentSession ? currentSession.username : 'admin'; 
-    await db.ref('packages').push(data); 
-    toast('✅ Package created'); 
-  }
-  resetPackageForm(); loadPackagesList();
-}
-
-function resetPackageForm() {
-// ============================================
 // PACKAGES (Auto Calculate & Update)
 // ============================================
 function calculatePackagePreview() {
@@ -1931,7 +1847,6 @@ function calculatePackagePreview() {
   const rate = parseFloat(document.getElementById('pkgRate').value) || 0;
   const duration = parseInt(document.getElementById('pkgDuration').value) || 1;
 
-  // অটোমেটিক ক্যালকুলেশন: মোট রিটার্ন = মূল্য + (মূল্য * লাভের পার্সেন্ট / ১০০)
   const totalReturn = price + (price * rate / 100);
   const dailyIncome = totalReturn / duration;
 
@@ -1956,7 +1871,6 @@ async function loadPackagesList() {
     const statusCls = p.status === 'active' ? 'active' : 'cancelled';
     const isInactive = p.status === 'inactive';
     
-    // পুরনো প্যাকেজের জন্য ফলব্যাক ক্যালকুলেশন
     const totalReturn = p.totalReturn || (p.price + (p.price * (p.rate || 0) / 100));
     const dailyIncome = p.dailyIncome || (totalReturn / (p.duration || 1));
 
@@ -1999,7 +1913,6 @@ async function savePackage() {
   if (price <= 0) return toast('❌ Price > 0');
   if (rate < 0) return toast('❌ Valid Profit Rate');
 
-  // অটোমেটিক ক্যালকুলেশন
   const totalReturn = price + (price * rate / 100);
   const dailyIncome = totalReturn / duration;
 
@@ -2467,7 +2380,6 @@ function renderSubmissions() {
   c.innerHTML = h;
 }
 
-// ✅ FIX: Task approval → adBalance + pendingConversions
 async function reviewSubmission(subId, action) {
   const sub = allSubmissions.find(x => x.id === subId);
   if (!sub) return;
@@ -2477,7 +2389,6 @@ async function reviewSubmission(subId, action) {
   else if (!confirm(`Approve ${sub.reward} TK? (Deposit Balance এ যোগ হবে + ২৪ঘন্টা পর Withdrawable এ কনভার্ট হবে)`)) return;
   await db.ref('taskSubmissions/'+subId).update({ status: action, reason, reviewedAt: Date.now(), reviewedBy: currentSession.username });
   if (action === 'approved') {
-    // ✅ CHANGED: adBalance + pendingConversions (24h auto-convert)
     const ur = db.ref('users/'+sub.userId);
     const us = await ur.once('value');
     if (us.exists()) {
@@ -2486,7 +2397,6 @@ async function reviewSubmission(subId, action) {
         adBalance: Number(u.adBalance || 0) + Number(sub.reward || 0),
         totalEarned: Number(u.totalEarned || 0) + Number(sub.reward || 0)
       });
-      // Push to pendingConversions (24h countdown)
       const pcId = 'pc_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
       await db.ref('users/'+sub.userId+'/pendingConversions/'+pcId).set({
         amount: Number(sub.reward || 0),
@@ -2757,7 +2667,6 @@ function viewUserFull(userId) {
   if (!avHtml) avHtml = '<div style="text-align:center; color:#94a3b8; padding:8px; font-size:.75rem;">No ad slots</div>';
   const init = (u.name||'U').charAt(0).toUpperCase();
   const st = getUserStatus(u);
-  // Pending conversions
   const pending = u.pendingConversions || {};
   const pendingTotal = Object.values(pending).reduce((s, p) => s + Number(p.amount||0), 0);
   const pendingCount = Object.keys(pending).length;
@@ -3175,17 +3084,19 @@ function loadAllDepositRequests() {
       else badge.style.display = 'none';
     }
 
+    const isUserReq = (r) => (r.userId && !r.adminId) || (r.adminId && String(r.adminId).startsWith('USER_'));
+
     if (p) {
       if (!pends.length) {
         p.innerHTML = '<div class="alert-box success"><i class="fas fa-check-circle"></i><div>No pending deposits</div></div>';
       } else {
         let h = '';
         pends.forEach(r => {
-          const isUserDeposit = (r.userId && !r.adminId) || (r.adminId && String(r.adminId).startsWith('USER_'));
-          const sourceLabel = isUserDeposit ? '👤 USER' : '👨‍💼 ADMIN';
-          const sourceClass = isUserDeposit ? 'info' : 'warning';
+          const isUser = isUserReq(r);
+          const sourceLabel = isUser ? '👤 USER' : '👨‍💼 ADMIN';
+          const sourceClass = isUser ? 'info' : 'warning';
           const userName = r.userName || r.adminName || 'Unknown';
-          const userTgId = r.userTelegramId || r.userId || 'N/A';
+          const userTgId = r.userTelegramId || r.userId || r.adminId || 'N/A';
           const dt = r.timestamp ? new Date(r.timestamp).toLocaleString('en-GB', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}) : 'N/A';
           h += `<div class="dreq-item pending new-flash">
             <div class="dreq-head">
@@ -3225,7 +3136,7 @@ function loadAllDepositRequests() {
         let h = '';
         allDepositRequests.slice(0, 50).forEach(r => {
           const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
-          const isUser = (r.userId && !r.adminId) || (r.adminId && String(r.adminId).startsWith('USER_'));
+          const isUser = isUserReq(r);
           const srcLabel = isUser ? '👤' : '👨‍💼';
           const dt = r.timestamp ? new Date(r.timestamp).toLocaleString('en-GB', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'}) : '';
           h += `<div class="dreq-item ${cls}">
@@ -3248,7 +3159,6 @@ function loadAllDepositRequests() {
   });
 }
 
-// ✅ FIX: User deposit → adBalance (NOT balance), no pendingConversions
 async function approveDepositReq(reqId) {
   if (!confirm('Approve this deposit?\n\n👤 User deposit → Deposit Balance এ যোগ হবে\n👨‍💼 Admin deposit → Admin Balance এ যোগ হবে')) return;
   try {
@@ -3257,27 +3167,28 @@ async function approveDepositReq(reqId) {
     const r = rs.val();
     if (r.status !== 'pending') return toast('⚠️ Already processed');
 
-    // ✅ FIX: ৩ ভাবে user detect করা হয়
     let userId = null;
     if (r.adminId && String(r.adminId).startsWith('USER_')) {
       userId = String(r.adminId).replace('USER_', '');
     } else if (r.userId && !r.adminId) {
-      // ইউজার প্যানেল থেকে পাঠানো request — শুধু userId আছে
       userId = String(r.userId);
     } else if (r.userId) {
-      // উভয়ই আছে কিন্তু adminId USER_ দিয়ে শুরু হয় না
       userId = String(r.userId);
     }
 
     if (userId) {
-      // ✅ USER DEPOSIT → adBalance (Deposit Balance)
       const userRef = db.ref('users/' + userId);
       const userSnap = await userRef.once('value');
-      if (!userSnap.exists()) return toast('❌ User not found: ' + userId);
+      if (!userSnap.exists()) {
+        console.error('[APPROVE] User not found:', userId);
+        return toast('❌ User not found: ' + userId);
+      }
       const u = userSnap.val();
+      const oldAdBal = Number(u.adBalance || 0);
+      const newAdBal = oldAdBal + Number(r.amount);
 
       await userRef.update({
-        adBalance: Number(u.adBalance || 0) + Number(r.amount),
+        adBalance: newAdBal,
         totalDeposited: Number(u.totalDeposited || 0) + Number(r.amount)
       });
 
@@ -3292,10 +3203,7 @@ async function approveDepositReq(reqId) {
         approvedBy: currentSession ? currentSession.username : 'admin',
         note: 'Added to Deposit Balance (cannot be withdrawn)'
       });
-
-      console.log(`[APPROVE] User ${userId} adBalance += ${r.amount}`);
     } else if (r.adminId) {
-      // ✅ ADMIN DEPOSIT → admin balance
       const ar = db.ref('admins/' + r.adminId);
       const as = await ar.once('value');
       if (!as.exists()) return toast('❌ Admin not found');
@@ -3314,6 +3222,7 @@ async function approveDepositReq(reqId) {
         deposits: dep
       });
     } else {
+      console.error('[APPROVE] No userId or adminId in request!');
       return toast('❌ Invalid: no userId or adminId');
     }
 
@@ -3790,10 +3699,6 @@ async function sendAdminReply() {
   }
 }
 
-// ============================================
-// ✅ NEW: ADMIN CHAT NOTIFICATION LISTENER
-// (Listens to adminNotifications pushed by user panel)
-// ============================================
 function setupAdminChatNotifications() {
   if (!currentSession || currentSession.role !== 'super') return;
   if (adminChatNotifListener) {
@@ -3803,13 +3708,10 @@ function setupAdminChatNotifications() {
     const n = snap.val();
     if (!n) return;
     if (n.read) return;
-    // Only fire for recent (within 5 min) to avoid spam on load
     if (Date.now() - (n.timestamp || 0) > 5 * 60 * 1000) return;
 
     if (n.type === 'chat') {
-      // Toast notification
       toast('💬 New chat from ' + (n.fromUserName || 'User') + ': ' + String(n.preview || '').substring(0, 40));
-      // Play a short beep
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const oscillator = audioCtx.createOscillator();
@@ -3824,14 +3726,12 @@ function setupAdminChatNotifications() {
         oscillator.stop(audioCtx.currentTime + 0.4);
       } catch(e) {}
 
-      // Pulse the chat badge
       const badge = document.getElementById('chatsUnreadBadge');
       if (badge) {
         badge.style.animation = 'none';
         setTimeout(() => { badge.style.animation = 'pulse 1s infinite'; }, 50);
       }
 
-      // Auto-mark as read after 30s so it won't re-fire on next login
       setTimeout(() => {
         try { snap.ref.update({ read: true }); } catch(e) {}
       }, 30000);
@@ -3929,7 +3829,7 @@ function runPanelInit() {
   runPanelInit._done = true;
 
   setupRealtimeBadges();
-  setupAdminChatNotifications(); // ✅ NEW
+  setupAdminChatNotifications(); 
 
   if (currentSession && currentSession.role === 'super') {
     loadAdminChats();
