@@ -819,6 +819,102 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <button class="btn btn-green" onclick="saveDepositPaymentInfo()"><i class="fas fa-save"></i> Save Payment Numbers</button>
     </div>
 
+    <!-- DEPOSIT MGMT TAB (with Payment Type admin control) -->
+  <div id="tab-depositmgmt" class="tab-content super-only">
+    <div class="card rainbow">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-title-icon icon-success"><i class="fas fa-money-bill-transfer"></i></div>
+          Deposit Payment Methods
+        </div>
+      </div>
+      <div class="alert-box info">
+        <i class="fas fa-info-circle"></i>
+        <div>প্রতিটি মেথডের জন্য <b>আলাদা নাম্বার</b> এবং <b>আলাদা মিনিমাম ডিপোজিট</b> সেট করুন। খালি রাখলে সেই মেথড ইউজার প্যানেলে দেখাবে না।</div>
+      </div>
+
+      <!-- bKash -->
+      <div class="deposit-provider-card bkash">
+        <div class="deposit-provider-head">
+          <div class="deposit-provider-name">
+            <div class="deposit-provider-icon bkash">bKash</div>
+            <div>bKash</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>📱 bKash Number</label>
+          <input type="text" id="payBkashNumber" placeholder="01XXXXXXXXX">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>💰 Minimum Deposit (TK)</label>
+          <input type="number" id="payBkashMin" min="1" step="0.01" placeholder="50">
+        </div>
+      </div>
+
+      <!-- Nagad -->
+      <div class="deposit-provider-card nagad">
+        <div class="deposit-provider-head">
+          <div class="deposit-provider-name">
+            <div class="deposit-provider-icon nagad">নগদ</div>
+            <div>Nagad</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>📱 Nagad Number</label>
+          <input type="text" id="payNagadNumber" placeholder="01XXXXXXXXX">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>💰 Minimum Deposit (TK)</label>
+          <input type="number" id="payNagadMin" min="1" step="0.01" placeholder="50">
+        </div>
+      </div>
+
+      <!-- Rocket -->
+      <div class="deposit-provider-card rocket">
+        <div class="deposit-provider-head">
+          <div class="deposit-provider-name">
+            <div class="deposit-provider-icon rocket">R</div>
+            <div>Rocket</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>📱 Rocket Number</label>
+          <input type="text" id="payRocketNumber" placeholder="01XXXXXXXXX-1">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>💰 Minimum Deposit (TK)</label>
+          <input type="number" id="payRocketMin" min="1" step="0.01" placeholder="50">
+        </div>
+      </div>
+
+      <!-- Upay -->
+      <div class="deposit-provider-card upay">
+        <div class="deposit-provider-head">
+          <div class="deposit-provider-name">
+            <div class="deposit-provider-icon upay">U</div>
+            <div>Upay</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>📱 Upay Number</label>
+          <input type="text" id="payUpayNumber" placeholder="01XXXXXXXXX">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>💰 Minimum Deposit (TK)</label>
+          <input type="number" id="payUpayMin" min="1" step="0.01" placeholder="50">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>📝 Deposit Instructions</label>
+        <textarea id="payInstructions" rows="3" placeholder="টাকা পাঠানোর নিয়ম..."></textarea>
+      </div>
+
+      <button class="btn btn-green" onclick="saveDepositPaymentInfo()">
+        <i class="fas fa-save"></i> Save All Payment Methods
+      </button>
+    </div>
+
     <!-- NEW: Payment Type Settings -->
     <div class="card rainbow">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-list-check"></i></div>Deposit Payment Type Options</div></div>
@@ -1729,15 +1825,25 @@ async function loadActiveUserPackages() {
 // ============================================
 function loadDepositPaymentInfo() {
   const dp = configData.depositPayment || {};
+  const methods = dp.methods || {};
+
+  const legacyMin = Number(dp.minDeposit || 50);
+  const bk = methods.bkash  || { number: dp.bkash  || '', minDeposit: legacyMin };
+  const ng = methods.nagad  || { number: dp.nagad  || '', minDeposit: legacyMin };
+  const rk = methods.rocket || { number: dp.rocket || '', minDeposit: legacyMin };
+  const up = methods.upay   || { number: dp.upay   || '', minDeposit: legacyMin };
+
   const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
-  set('payBkash', dp.bkash || '');
-  set('payNagad', dp.nagad || '');
-  set('payRocket', dp.rocket || '');
-  set('payUpay', dp.upay || '');
-  set('payMinDeposit', dp.minDeposit || 50);
+  set('payBkashNumber',  bk.number || '');
+  set('payBkashMin',     bk.minDeposit || '');
+  set('payNagadNumber',  ng.number || '');
+  set('payNagadMin',     ng.minDeposit || '');
+  set('payRocketNumber', rk.number || '');
+  set('payRocketMin',    rk.minDeposit || '');
+  set('payUpayNumber',   up.number || '');
+  set('payUpayMin',      up.minDeposit || '');
   set('payInstructions', dp.instructions || '');
 
-  // Load payment types
   const pt = Array.isArray(dp.paymentTypes) && dp.paymentTypes.length ? dp.paymentTypes : ['Send Money', 'Cash Out'];
   const ptSM = document.getElementById('ptSendMoney');
   const ptCO = document.getElementById('ptCashOut');
@@ -1746,19 +1852,41 @@ function loadDepositPaymentInfo() {
 }
 
 async function saveDepositPaymentInfo() {
+  const methods = {
+    bkash: {
+      number: (document.getElementById('payBkashNumber').value || '').trim(),
+      minDeposit: Number(document.getElementById('payBkashMin').value) || 0
+    },
+    nagad: {
+      number: (document.getElementById('payNagadNumber').value || '').trim(),
+      minDeposit: Number(document.getElementById('payNagadMin').value) || 0
+    },
+    rocket: {
+      number: (document.getElementById('payRocketNumber').value || '').trim(),
+      minDeposit: Number(document.getElementById('payRocketMin').value) || 0
+    },
+    upay: {
+      number: (document.getElementById('payUpayNumber').value || '').trim(),
+      minDeposit: Number(document.getElementById('payUpayMin').value) || 0
+    }
+  };
+
+  for (const [k, v] of Object.entries(methods)) {
+    if (v.number && (!v.minDeposit || v.minDeposit <= 0)) {
+      return toast(`❌ ${k.toUpperCase()}: নাম্বার দিয়েছেন কিন্তু মিনিমাম ডিপোজিট সেট করেননি`);
+    }
+  }
+
   const data = {
-    bkash: document.getElementById('payBkash').value.trim(),
-    nagad: document.getElementById('payNagad').value.trim(),
-    rocket: document.getElementById('payRocket').value.trim(),
-    upay: document.getElementById('payUpay').value.trim(),
-    minDeposit: Number(document.getElementById('payMinDeposit').value) || 50,
-    instructions: document.getElementById('payInstructions').value.trim(),
+    methods,
+    instructions: (document.getElementById('payInstructions').value || '').trim(),
     paymentTypes: (configData.depositPayment && configData.depositPayment.paymentTypes) || ['Send Money', 'Cash Out'],
     updatedAt: Date.now()
   };
+
   await db.ref('config/depositPayment').set(data);
   configData.depositPayment = data;
-  toast('✅ Payment info saved');
+  toast('✅ সব পেমেন্ট মেথড সেভ হয়েছে');
 }
 
 async function savePaymentTypes() {
@@ -1768,7 +1896,7 @@ async function savePaymentTypes() {
   if (sm && sm.checked) types.push('Send Money');
   if (co && co.checked) types.push('Cash Out');
   if (types.length === 0) return toast('❌ কমপক্ষে ১টি অপশন সিলেক্ট করুন');
-  
+
   const dp = configData.depositPayment || {};
   await db.ref('config/depositPayment/paymentTypes').set(types);
   configData.depositPayment = { ...dp, paymentTypes: types };
@@ -3004,17 +3132,19 @@ function renderDepositMethodsAdminView() {
   const c = document.getElementById('dmMethodsAdminView');
   if (!c) return;
   const dp = configData.depositPayment || {};
+  const methods = dp.methods || {};
+  const legacyMin = Number(dp.minDeposit || 50);
   const providers = [
-    { key: 'bkash', name: 'bKash', icon: 'bKash', num: dp.bkash },
-    { key: 'nagad', name: 'Nagad', icon: 'নগদ', num: dp.nagad },
-    { key: 'rocket', name: 'Rocket', icon: 'R', num: dp.rocket },
-    { key: 'upay', name: 'Upay', icon: 'U', num: dp.upay }
-  ].filter(p => p.num && String(p.num).trim().length > 0);
+    { key: 'bkash',  name: 'bKash',  icon: 'bKash', data: methods.bkash  || { number: dp.bkash,  minDeposit: legacyMin } },
+    { key: 'nagad',  name: 'Nagad',  icon: 'নগদ',  data: methods.nagad  || { number: dp.nagad,  minDeposit: legacyMin } },
+    { key: 'rocket', name: 'Rocket', icon: 'R',    data: methods.rocket || { number: dp.rocket, minDeposit: legacyMin } },
+    { key: 'upay',   name: 'Upay',   icon: 'U',    data: methods.upay   || { number: dp.upay,   minDeposit: legacyMin } }
+  ].filter(p => p.data && p.data.number && String(p.data.number).trim().length > 0);
+
   if (!providers.length) {
-    c.innerHTML = '<div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i><div>Super Admin এখনো নাম্বার সেট করেনি।</div></div>';
+    c.innerHTML = '<div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i><div>Super Admin এখনো কোনো নাম্বার সেট করেনি।</div></div>';
     return;
   }
-  const minDep = Number(dp.minDeposit || 50);
   let h = '';
   providers.forEach(p => {
     h += `<div class="deposit-provider-card ${p.key}">
@@ -3023,47 +3153,66 @@ function renderDepositMethodsAdminView() {
           <div class="deposit-provider-icon ${p.key}">${p.icon}</div>
           <div>${p.name}</div>
         </div>
-        <div class="deposit-min-badge">Min ${minDep.toFixed(0)} TK</div>
+        <div class="deposit-min-badge">Min ${Number(p.data.minDeposit || 0).toFixed(0)} TK</div>
       </div>
       <div class="deposit-account-row">
         <span class="lbl">📱 Number:</span>
-        <span class="val">${esc(p.num)}</span>
+        <span class="val">${esc(p.data.number)}</span>
       </div>
       ${dp.instructions ? `<div class="deposit-instructions">${esc(dp.instructions)}</div>` : ''}
-      <button class="btn btn-green btn-small" style="margin-top:12px; width:100%;" onclick="openDepositSubmitModal('${p.key}','${p.name}','${esc(p.num)}')"><i class="fas fa-paper-plane"></i> I've Sent Money</button>
+      <button class="btn btn-green btn-small" style="margin-top:12px; width:100%;" onclick="openDepositSubmitModal('${p.key}','${p.name}','${esc(p.data.number)}',${Number(p.data.minDeposit || 0)})"
+        <i class="fas fa-paper-plane"></i> I've Sent Money
+      </button>
     </div>`;
   });
   c.innerHTML = h;
 }
 
-function openDepositSubmitModal(key, name, num) {
+function openDepositSubmitModal(key, name, num, minDep) {
   document.getElementById('dsMethodIndex').value = key;
-  document.getElementById('dsMethodInfo').innerHTML = `<div>Method: <b>${esc(name)}</b></div><div>Number: <b style="color:#dc2626;">${esc(num)}</b></div>`;
-  document.getElementById('dsAmount').value = ''; document.getElementById('dsTxnId').value = ''; document.getElementById('dsNote').value = '';
+  document.getElementById('dsMethodInfo').innerHTML =
+    `<div>Method: <b>${esc(name)}</b></div>` +
+    `<div>Number: <b style="color:#dc2626;">${esc(num)}</b></div>` +
+    `<div>Minimum: <b style="color:#f59e0b;">${Number(minDep || 0).toFixed(0)} TK</b></div>`;
+  document.getElementById('dsMethodInfo').dataset.minDep = String(minDep || 0);
+  document.getElementById('dsAmount').value = '';
+  document.getElementById('dsTxnId').value = '';
+  document.getElementById('dsNote').value = '';
   document.getElementById('depositSubmitModal').classList.add('active');
 }
+
 function closeDepositSubmitModal() { document.getElementById('depositSubmitModal').classList.remove('active'); }
+
 async function submitDepositRequest() {
   const key = document.getElementById('dsMethodIndex').value;
   const dp = configData.depositPayment || {};
-  const minDep = Number(dp.minDeposit || 50);
-  const nameMap = { bkash:'bKash', nagad:'Nagad', rocket:'Rocket', upay:'Upay' };
-  const numMap = { bkash: dp.bkash, nagad: dp.nagad, rocket: dp.rocket, upay: dp.upay };
+  const methods = dp.methods || {};
+  const nameMap = { bkash: 'bKash', nagad: 'Nagad', rocket: 'Rocket', upay: 'Upay' };
+  const legacyMin = Number(dp.minDeposit || 50);
+  const legacyNumMap = { bkash: dp.bkash, nagad: dp.nagad, rocket: dp.rocket, upay: dp.upay };
+
+  const mData = (methods[key]) || { number: legacyNumMap[key] || '', minDeposit: legacyMin };
   const mName = nameMap[key] || key;
-  const mNum = numMap[key] || '';
-  if (!mNum) return toast('❌ Not configured');
+  const mNum = mData.number || '';
+  const mMin = Number(mData.minDeposit || 0);
+
+  if (!mNum) return toast('❌ এই মেথডে নাম্বার সেট করা নেই');
+
   const amt = parseFloat(document.getElementById('dsAmount').value);
   const txn = document.getElementById('dsTxnId').value.trim();
   const note = document.getElementById('dsNote').value.trim();
+
   if (!amt || amt <= 0) return toast('❌ Valid amount');
-  if (amt < minDep) return toast(`❌ Min ${minDep} TK`);
+  if (amt < mMin) return toast(`❌ ${mName} এর জন্য সর্বনিম্ন ${mMin.toFixed(0)} TK`);
   if (!txn || txn.length < 4) return toast('❌ Valid Txn');
-  const reqId = 'depreq_'+Date.now()+'_'+currentSession.adminId;
-  await db.ref('depositRequests/'+reqId).set({
+
+  const reqId = 'depreq_' + Date.now() + '_' + currentSession.adminId;
+  await db.ref('depositRequests/' + reqId).set({
     adminId: currentSession.adminId,
     adminName: currentSession.username,
     methodName: mName,
     methodAccount: mNum,
+    minDeposit: mMin,
     amount: amt,
     txnId: txn,
     note,
@@ -3071,7 +3220,9 @@ async function submitDepositRequest() {
     source: 'admin',
     timestamp: Date.now()
   });
-  toast('✅ Submitted!'); closeDepositSubmitModal(); renderMyDepositRequests();
+  toast('✅ Submitted!');
+  closeDepositSubmitModal();
+  renderMyDepositRequests();
 }
 async function renderMyDepositRequests() {
   const c = document.getElementById('myDepositRequestsList');
