@@ -292,7 +292,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .user-info-v2{flex:1;min-width:0}
 .user-info-v2 .name{font-weight:900;font-size:.95rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .user-info-v2 .meta{font-size:.7rem;color:var(--text-muted);font-weight:700;margin-top:3px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.user-stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:4px;padding:12px 10px}
+.user-stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;padding:12px 10px}
 .user-stat-cell{background:linear-gradient(135deg,#f8fafc,#f1f5f9);border-radius:8px;padding:8px 4px;text-align:center;border:1px solid var(--border)}
 .user-stat-cell.deposit-cell{background:linear-gradient(135deg,#fff7ed,#fed7aa);border-color:rgba(234,88,12,.3)}
 .user-stat-cell .num{font-size:.85rem;font-weight:900;color:var(--text);line-height:1.1}
@@ -321,32 +321,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .info-display-box .value{color:var(--text);font-family:'Courier New',monospace;word-break:break-all;flex:1;min-width:0}
 .section-divider{margin:20px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:900;color:var(--primary)}
 .section-divider i{font-size:1rem}
-.extra-preview-card{margin:14px 0;background:linear-gradient(135deg,#f39c12,#e84393);color:#fff;padding:16px;border-radius:16px;position:relative;overflow:hidden;box-shadow:0 12px 28px rgba(232,67,147,.35)}
-.extra-preview-card::before{content:'';position:absolute;width:130px;height:130px;background:rgba(255,255,255,.15);border-radius:50%;top:-60px;right:-40px}
-.extra-preview-card .ep-header{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;margin-bottom:6px}
-.extra-preview-card .ep-label{font-size:.68rem;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;opacity:.95;display:flex;align-items:center;gap:6px}
-.extra-preview-card .ep-count{background:rgba(255,255,255,.25);padding:3px 9px;border-radius:20px;font-size:.68rem;font-weight:900}
-.extra-preview-card .ep-title{font-size:1rem;font-weight:900;margin:2px 0 4px;position:relative;z-index:1}
-.extra-preview-card .ep-amt{font-size:1.7rem;font-weight:900;margin:2px 0 4px;position:relative;z-index:1}
-.extra-preview-card .ep-amt small{font-size:.8rem;font-weight:700;opacity:.9}
-.extra-preview-card .ep-info{font-size:.7rem;font-weight:700;opacity:.95;position:relative;z-index:1;background:rgba(0,0,0,.15);padding:7px 10px;border-radius:9px;display:flex;align-items:center;gap:7px;margin-bottom:10px;line-height:1.4}
-.extra-preview-card .ep-btn{width:100%;padding:12px;border-radius:12px;border:none;font-weight:900;font-size:.85rem;background:#fff;color:#e84393;box-shadow:0 8px 20px rgba(0,0,0,.18);position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:7px;cursor:default;font-family:inherit}
 .preview-label{font-size:.7rem;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:1px;text-align:center;margin-bottom:8px}
-.provider-slot-card{background:linear-gradient(135deg,#faf5ff,#f3e8ff);padding:16px;border-radius:14px;margin-bottom:14px;border:1.5px solid rgba(139,92,246,.25);position:relative;overflow:hidden}
-.provider-slot-card.slot-0{background:linear-gradient(135deg,#eef2ff,#e0e7ff);border-color:rgba(99,102,241,.3)}
-.provider-slot-card.slot-1{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-color:rgba(16,185,129,.3)}
-.provider-slot-card.slot-2{background:linear-gradient(135deg,#fef3c7,#fde68a);border-color:rgba(245,158,11,.3)}
-.provider-slot-card.slot-3{background:linear-gradient(135deg,#fce7f3,#fbcfe8);border-color:rgba(236,72,153,.3)}
-.provider-slot-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px}
-.provider-slot-name{font-weight:900;color:var(--secondary);font-size:.95rem;display:flex;align-items:center;gap:8px}
-.provider-slot-name .num-badge{background:linear-gradient(135deg,#8b5cf6,#a78bfa);color:#fff;font-size:.65rem;padding:3px 9px;border-radius:999px;font-weight:900;min-width:22px;text-align:center}
-.provider-status-badge{font-size:.62rem;font-weight:900;padding:4px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
-.provider-status-badge.ok{background:var(--success-bg);color:#065f46}
-.provider-status-badge.off{background:rgba(148,163,184,.25);color:#475569}
-.provider-status-badge.adsgram{background:linear-gradient(135deg,#6366f1,#818cf8);color:#fff}
-.provider-status-badge.monetag{background:linear-gradient(135deg,#10b981,#34d399);color:#fff}
-.provider-status-badge.adexium{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff}
-.provider-status-badge.gigapub{background:linear-gradient(135deg,#ec4899,#f472b6);color:#fff}
 .pkg-card{background:linear-gradient(135deg,#fff,#f8fafc);border:1.5px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px;position:relative;overflow:hidden;transition:all .25s}
 .pkg-card:hover{border-color:var(--orange);box-shadow:var(--shadow-md);transform:translateY(-2px)}
 .pkg-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#f97316,#fbbf24)}
@@ -440,12 +415,8 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .revenue-log-item{display:flex;justify-content:space-between;padding:10px 12px;background:#f8fafc;border-radius:10px;margin-bottom:8px;border-left:3px solid #10b981}
 .revenue-log-item.referral{border-left-color:#10b981;background:linear-gradient(135deg,#f0fdf4,#ecfdf5)}
 .revenue-log-item.task{border-left-color:#8b5cf6;background:linear-gradient(135deg,#f5f3ff,#ede9fe)}
-.revenue-log-item.ad{border-left-color:#06b6d4;background:linear-gradient(135deg,#ecfeff,#cffafe)}
 .deposit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.min-watch-box{background:linear-gradient(135deg,#fff7ed,#fed7aa);border:2px solid #fb923c;border-radius:14px;padding:14px;margin-bottom:14px}
-.min-watch-box label{color:#c2410c;font-weight:800;font-size:.82rem;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.min-watch-box small{display:block;margin-top:8px;font-size:.72rem;color:#9a3412;font-weight:700;line-height:1.5}
-@media (max-width:400px){.container{padding:0 12px}.card{padding:16px;border-radius:20px}.header{padding:22px 18px 55px;border-radius:0 0 26px 26px}.header-title{font-size:1rem}.header-status{max-width:90px}.user-stats-grid{grid-template-columns:1fr 1fr 1fr}.legal-body{padding:20px 18px 26px}.pkg-stats-grid{grid-template-columns:1fr 1fr}.user-pkg-grid{grid-template-columns:1fr 1fr}.deposit-grid{grid-template-columns:1fr}}
+@media (max-width:400px){.container{padding:0 12px}.card{padding:16px;border-radius:20px}.header{padding:22px 18px 55px;border-radius:0 0 26px 26px}.header-title{font-size:1rem}.header-status{max-width:90px}.user-stats-grid{grid-template-columns:1fr 1fr}.legal-body{padding:20px 18px 26px}.pkg-stats-grid{grid-template-columns:1fr 1fr}.user-pkg-grid{grid-template-columns:1fr 1fr}.deposit-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -537,10 +508,10 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 
 <div class="toast" id="toast">Saved!</div>
 
-<!-- ============ MODALS ============ -->
+<!-- MODALS -->
 <div class="modal-overlay" id="userViewModal"><div class="modal-box" style="max-width:640px;"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-info"><i class="fas fa-user-circle"></i></div>User Complete Data</div><button class="modal-close" onclick="closeUserViewModal()"><i class="fas fa-times"></i></button></div><div class="modal-body" id="userViewBody"></div></div></div>
 
-<div class="modal-overlay" id="userEditModal"><div class="modal-box" style="max-width:560px;"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-warning"><i class="fas fa-user-pen"></i></div>Edit User</div><button class="modal-close" onclick="closeUserEditModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="ueUserId"><div class="form-group"><label>Name</label><input type="text" id="ueName"></div><div class="form-group"><label>Username</label><input type="text" id="ueUsername"></div><div class="form-group"><label>Photo URL</label><input type="text" id="uePhoto"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div class="form-group"><label>Balance (Withdrawable TK)</label><input type="number" step="0.01" id="ueBalance"></div><div class="form-group"><label>Deposit Balance (TK)</label><input type="number" step="0.01" id="ueAdBalance"></div><div class="form-group"><label>Total Earned</label><input type="number" step="0.01" id="ueTotalEarned"></div><div class="form-group"><label>Referral Balance</label><input type="number" step="0.01" id="ueReferralBalance"></div><div class="form-group"><label>Total Commission</label><input type="number" step="0.01" id="ueTotalCommission"></div><div class="form-group"><label>Referral Count</label><input type="number" id="ueReferrals"></div><div class="form-group"><label>Ad Claimed Total</label><input type="number" step="0.01" id="ueAdClaimedTotal"></div><div class="form-group"><label>Ad Clicks</label><input type="number" id="ueAdClicks"></div><div class="form-group"><label>Withdraw Count</label><input type="number" id="ueWithdrawCount"></div></div><div class="form-group"><label>Referred By</label><input type="text" id="ueReferredBy"></div><div class="form-group"><label>Ban Status</label><select id="ueIsBanned"><option value="false">✅ Active</option><option value="true">🚫 Banned</option></select></div><div class="form-group"><label>Ban Reason</label><input type="text" id="ueBanReason"></div><div class="form-group"><label>Channel Verified</label><select id="ueChannelVerified"><option value="true">✅ Verified</option><option value="false">❌ Not Verified</option></select></div><div style="display:flex;gap:10px;"><button class="btn btn-green" onclick="saveUserFullEdit()" style="flex:2;"><i class="fas fa-save"></i> Save All</button><button class="btn btn-red" onclick="closeUserEditModal()" style="flex:1;"><i class="fas fa-times"></i> Cancel</button></div></div></div></div>
+<div class="modal-overlay" id="userEditModal"><div class="modal-box" style="max-width:560px;"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-warning"><i class="fas fa-user-pen"></i></div>Edit User</div><button class="modal-close" onclick="closeUserEditModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="ueUserId"><div class="form-group"><label>Name</label><input type="text" id="ueName"></div><div class="form-group"><label>Username</label><input type="text" id="ueUsername"></div><div class="form-group"><label>Photo URL</label><input type="text" id="uePhoto"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div class="form-group"><label>Balance (Withdrawable TK)</label><input type="number" step="0.01" id="ueBalance"></div><div class="form-group"><label>Deposit Balance (TK)</label><input type="number" step="0.01" id="ueAdBalance"></div><div class="form-group"><label>Total Earned</label><input type="number" step="0.01" id="ueTotalEarned"></div><div class="form-group"><label>Referral Balance</label><input type="number" step="0.01" id="ueReferralBalance"></div><div class="form-group"><label>Total Commission</label><input type="number" step="0.01" id="ueTotalCommission"></div><div class="form-group"><label>Referral Count</label><input type="number" id="ueReferrals"></div><div class="form-group"><label>Withdraw Count</label><input type="number" id="ueWithdrawCount"></div></div><div class="form-group"><label>Referred By</label><input type="text" id="ueReferredBy"></div><div class="form-group"><label>Ban Status</label><select id="ueIsBanned"><option value="false">✅ Active</option><option value="true">🚫 Banned</option></select></div><div class="form-group"><label>Ban Reason</label><input type="text" id="ueBanReason"></div><div class="form-group"><label>Channel Verified</label><select id="ueChannelVerified"><option value="true">✅ Verified</option><option value="false">❌ Not Verified</option></select></div><div style="display:flex;gap:10px;"><button class="btn btn-green" onclick="saveUserFullEdit()" style="flex:2;"><i class="fas fa-save"></i> Save All</button><button class="btn btn-red" onclick="closeUserEditModal()" style="flex:1;"><i class="fas fa-times"></i> Cancel</button></div></div></div></div>
 
 <div class="modal-overlay" id="userDetailsModal"><div class="modal-box" style="max-width:620px;"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-purple"><i class="fas fa-chart-network"></i></div>Full Activity Details</div><button class="modal-close" onclick="closeUserDetailsModal()"><i class="fas fa-times"></i></button></div><div class="modal-body" id="userDetailsBody"></div></div></div>
 
@@ -555,8 +526,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 <div class="modal-overlay" id="depositSubmitModal"><div class="modal-box"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-success"><i class="fas fa-paper-plane"></i></div>Submit Deposit Request</div><button class="modal-close" onclick="closeDepositSubmitModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="dsMethodIndex"><div id="dsMethodInfo" style="background:var(--bg-alt); padding:12px 14px; border-radius:12px; margin-bottom:12px; border:1px solid var(--border); font-size:.85rem; font-weight:600;"></div><div class="form-group"><label>Amount Sent (TK) *</label><input type="number" id="dsAmount" step="0.01"></div><div class="form-group"><label>Transaction ID *</label><input type="text" id="dsTxnId"></div><div class="form-group"><label>Additional Note (optional)</label><input type="text" id="dsNote"></div><div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i><div>টাকা পাঠানোর <b>পরে</b> form পূরণ করুন।</div></div><button class="btn btn-green" onclick="submitDepositRequest()"><i class="fas fa-paper-plane"></i> Submit Request</button></div></div></div>
 
 <div class="modal-overlay" id="banModal"><div class="modal-box"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-danger"><i class="fas fa-ban"></i></div><span id="banModalTitle">Ban Admin</span></div><button class="modal-close" onclick="closeBanModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="banAdminId"><input type="hidden" id="banAction"><div class="form-group"><label>Admin</label><input type="text" id="banAdminName" disabled></div><div class="form-group"><label>Reason *</label><textarea id="banReason" rows="3"></textarea></div><button class="btn btn-red" onclick="confirmBan()"><i class="fas fa-ban"></i> Confirm</button></div></div></div>
-
-<div class="modal-overlay" id="cancelTaskModal"><div class="modal-box"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-danger"><i class="fas fa-times-circle"></i></div>Cancel Task</div><button class="modal-close" onclick="closeCancelTaskModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="ctTaskId"><div class="form-group"><label>Cancel Reason *</label><textarea id="ctReason" rows="3"></textarea></div><button class="btn btn-warning" onclick="confirmCancelTask()"><i class="fas fa-times-circle"></i> Cancel Task</button></div></div></div>
 
 <div class="modal-overlay" id="deleteTaskModal"><div class="modal-box"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-danger"><i class="fas fa-trash"></i></div>Delete Task & Refund</div><button class="modal-close" onclick="closeDeleteTaskModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="dtTaskId"><div id="dtRefundInfo" style="background:linear-gradient(135deg,#ecfdf5,#d1fae5); padding:14px; border-radius:12px; margin-bottom:14px; border-left:4px solid #10b981;"></div><div class="form-group"><label>Delete Reason *</label><textarea id="dtReason" rows="3"></textarea></div><button class="btn btn-red" onclick="confirmDeleteTask()"><i class="fas fa-trash"></i> Delete & Refund</button></div></div></div>
 
@@ -601,9 +570,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="tab super-only" data-tab="analytics" onclick="switchTab('analytics', this)"><i class="fas fa-chart-pie"></i><span>Analytics</span></div>
       <div class="tab super-only" data-tab="users" onclick="switchTab('users', this)"><i class="fas fa-users"></i><span>Users</span></div>
       <div class="tab super-only" data-tab="withdrawals" onclick="switchTab('withdrawals', this)"><i class="fas fa-money-bill-transfer"></i><span>Payouts</span></div>
-      <div class="tab super-only" data-tab="ads" onclick="switchTab('ads', this)"><i class="fas fa-rectangle-ad"></i><span>Ads</span></div>
       <div class="tab super-only" data-tab="packages" onclick="switchTab('packages', this)"><i class="fas fa-box-open"></i><span>Packages</span></div>
-      <div class="tab super-only" data-tab="extrareward" onclick="switchTab('extrareward', this)"><i class="fas fa-bolt"></i><span>Extra Rewards</span></div>
       <div class="tab super-only" data-tab="maintenance" onclick="switchTab('maintenance', this)"><i class="fas fa-wrench"></i><span>System</span></div>
       <div class="tab super-only" data-tab="referrals" onclick="switchTab('referrals', this)"><i class="fas fa-user-group"></i><span>Referrals</span></div>
       <div class="tab super-only" data-tab="admins" onclick="switchTab('admins', this)"><i class="fas fa-user-shield"></i><span>Admins</span></div>
@@ -618,13 +585,12 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ============ SETTINGS TAB ============ -->
+  <!-- SETTINGS TAB -->
   <div id="tab-settings" class="tab-content active super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-robot"></i></div>App Configuration</div></div>
       <div class="form-group"><label>Bot Username (without @)</label><input type="text" id="botUsername" oninput="onBotUsernameInput(this)" placeholder="e.g. TaskHubBD24Bot"><small id="botUserHint" style="display:block; margin-top:6px; font-size:.7rem; font-weight:700; color:#64748b;"></small></div>
       <div class="form-group"><label>Currency Symbol</label><input type="text" id="currencySymbol"></div>
-      <div class="form-group"><label>Ad Reset Hour (0-23)</label><input type="number" id="adResetHour" min="0" max="23"></div>
     </div>
 
     <div class="card rainbow">
@@ -716,7 +682,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ANALYTICS TAB -->
+  <!-- ANALYTICS TAB (Ad-related parts removed) -->
   <div id="tab-analytics" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-chart-line"></i></div>Activity Analytics</div></div>
@@ -730,13 +696,13 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div id="analyticsRangeLabel" style="font-size:.75rem; color:var(--text-muted); font-weight:700; margin-bottom:14px; text-align:center; padding:8px; background:var(--bg-alt); border-radius:10px;"></div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
         <div class="stat-card info"><div class="num" id="anaUsersActive">0</div><div class="label">Active Users</div></div>
-        <div class="stat-card green"><div class="num" id="anaAdViews">0</div><div class="label">Ad Views</div></div>
-        <div class="stat-card warning"><div class="num" id="anaAdClicks">0</div><div class="label">Ad Clicks</div></div>
         <div class="stat-card purple"><div class="num" id="anaTasksDone">0</div><div class="label">Tasks Done</div></div>
         <div class="stat-card pink"><div class="num" id="anaWithdrawals">0</div><div class="label">Withdrawals</div></div>
         <div class="stat-card danger"><div class="num" id="anaEarnings">0</div><div class="label">Total Paid</div></div>
+        <div class="stat-card deposit"><div class="num" id="anaDeposits">0</div><div class="label">Deposits</div></div>
+        <div class="stat-card green"><div class="num" id="anaDepositTotal">0</div><div class="label">Deposit Total</div></div>
       </div>
-      <div style="overflow-x:auto;"><table style="width:100%; font-size:.82rem; border-collapse:separate; border-spacing:0 6px;"><thead><tr><th style="text-align:left; padding:10px; color:#94a3b8;">User</th><th style="text-align:left; padding:10px; color:#94a3b8;">Views</th><th style="text-align:left; padding:10px; color:#94a3b8;">Clicks</th><th style="text-align:left; padding:10px; color:#94a3b8;">Earned</th></tr></thead><tbody id="analyticsTableBody"></tbody></table></div>
+      <div style="overflow-x:auto;"><table style="width:100%; font-size:.82rem; border-collapse:separate; border-spacing:0 6px;"><thead><tr><th style="text-align:left; padding:10px; color:#94a3b8;">User</th><th style="text-align:left; padding:10px; color:#94a3b8;">Tasks</th><th style="text-align:left; padding:10px; color:#94a3b8;">Earned</th></tr></thead><tbody id="analyticsTableBody"></tbody></table></div>
     </div>
   </div>
 
@@ -767,149 +733,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-clock-rotate-left"></i></div>All Admin Payouts</div></div><div id="adminWdAllList"></div></div>
   </div>
 
-  <!-- ADS TAB -->
-  <div id="tab-ads" class="tab-content super-only">
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-icon icon-primary"><i class="fas fa-rectangle-ad"></i></div>
-          Ad Provider Settings
-        </div>
-      </div>
-
-      <div class="alert-box info">
-        <i class="fas fa-info-circle"></i>
-        <div><b>🌐 Supported Providers:</b> Adsgram, Monetag, Adexium, Gigapub। শুধুমাত্র এই ৪টি প্রোভাইডারের <b>Ad Code / Zone ID / Block ID</b> দিন — ইউজার প্যানেলে এই কোড দিয়েই অ্যাড রান হবে।</div>
-      </div>
-
-      <div class="form-group">
-        <label>Daily Ad Limit (per user)</label>
-        <input type="number" id="dailyAdLimit" min="1">
-      </div>
-      <div class="form-group">
-        <label>Reward Per Ad (TK)</label>
-        <input type="number" step="0.01" id="adReward">
-      </div>
-      <div class="min-watch-box">
-        <label><i class="fas fa-hourglass-half"></i> ⏱️ Minimum Ad Watch Time (Seconds) *</label>
-        <input type="number" id="minAdWatchSeconds" min="3" max="120" placeholder="10">
-        <small>ইউজারকে কমপক্ষে এই সময় অ্যাড দেখতে হবে। কম দেখলে reward পাবে না।</small>
-      </div>
-
-      <div class="section-divider"><i class="fas fa-layer-group"></i> Ad Slots (4 Providers)</div>
-
-      <div class="provider-slot-card slot-0">
-        <div class="provider-slot-head">
-          <div class="provider-slot-name"><span class="num-badge">1</span> Daily Ad Slot #1</div>
-          <span class="provider-status-badge off" id="slotStatus_0">—</span>
-        </div>
-        <div class="form-group">
-          <label>Provider</label>
-          <select id="slotProvider_0" onchange="onSlotProviderChange(0)">
-            <option value="none">🚫 Disabled</option>
-            <option value="adsgram">📺 Adsgram</option>
-            <option value="monetag">💰 Monetag</option>
-            <option value="adexium">🎯 Adexium</option>
-            <option value="gigapub">🌐 Gigapub</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Ad Code / Zone ID / Block ID *</label>
-          <textarea id="slotCode_0" rows="3" placeholder="উদাহরণ: 23393 অথবা পূর্ণ <script> কোড" style="font-family:'Courier New',monospace;font-size:.78rem;"></textarea>
-          <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">
-            • <b>Adsgram:</b> শুধু <code>blockId</code> (যেমন <code>23393</code>)<br>
-            • <b>Monetag:</b> শুধু <code>zoneId</code> (যেমন <code>1234567</code>)<br>
-            • <b>Adexium:</b> শুধু <code>zoneId</code><br>
-            • <b>Gigapub:</b> শুধু <code>placementId</code>
-          </small>
-        </div>
-        <div class="form-group" style="margin-bottom:0;">
-          <label>Status</label>
-          <select id="slotStatusSel_0"><option value="active">✅ Active</option><option value="inactive">🚫 Inactive</option></select>
-        </div>
-      </div>
-
-      <div class="provider-slot-card slot-1">
-        <div class="provider-slot-head">
-          <div class="provider-slot-name"><span class="num-badge">2</span> Daily Ad Slot #2</div>
-          <span class="provider-status-badge off" id="slotStatus_1">—</span>
-        </div>
-        <div class="form-group">
-          <label>Provider</label>
-          <select id="slotProvider_1" onchange="onSlotProviderChange(1)">
-            <option value="none">🚫 Disabled</option>
-            <option value="adsgram">📺 Adsgram</option>
-            <option value="monetag">💰 Monetag</option>
-            <option value="adexium">🎯 Adexium</option>
-            <option value="gigapub">🌐 Gigapub</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Ad Code / Zone ID / Block ID *</label>
-          <textarea id="slotCode_1" rows="3" placeholder="Ad code / Zone ID" style="font-family:'Courier New',monospace;font-size:.78rem;"></textarea>
-        </div>
-        <div class="form-group" style="margin-bottom:0;">
-          <label>Status</label>
-          <select id="slotStatusSel_1"><option value="active">✅ Active</option><option value="inactive">🚫 Inactive</option></select>
-        </div>
-      </div>
-
-      <div class="provider-slot-card slot-2">
-        <div class="provider-slot-head">
-          <div class="provider-slot-name"><span class="num-badge">3</span> Daily Ad Slot #3</div>
-          <span class="provider-status-badge off" id="slotStatus_2">—</span>
-        </div>
-        <div class="form-group">
-          <label>Provider</label>
-          <select id="slotProvider_2" onchange="onSlotProviderChange(2)">
-            <option value="none">🚫 Disabled</option>
-            <option value="adsgram">📺 Adsgram</option>
-            <option value="monetag">💰 Monetag</option>
-            <option value="adexium">🎯 Adexium</option>
-            <option value="gigapub">🌐 Gigapub</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Ad Code / Zone ID / Block ID *</label>
-          <textarea id="slotCode_2" rows="3" placeholder="Ad code / Zone ID" style="font-family:'Courier New',monospace;font-size:.78rem;"></textarea>
-        </div>
-        <div class="form-group" style="margin-bottom:0;">
-          <label>Status</label>
-          <select id="slotStatusSel_2"><option value="active">✅ Active</option><option value="inactive">🚫 Inactive</option></select>
-        </div>
-      </div>
-
-      <div class="provider-slot-card slot-3">
-        <div class="provider-slot-head">
-          <div class="provider-slot-name"><span class="num-badge">4</span> Daily Ad Slot #4</div>
-          <span class="provider-status-badge off" id="slotStatus_3">—</span>
-        </div>
-        <div class="form-group">
-          <label>Provider</label>
-          <select id="slotProvider_3" onchange="onSlotProviderChange(3)">
-            <option value="none">🚫 Disabled</option>
-            <option value="adsgram">📺 Adsgram</option>
-            <option value="monetag">💰 Monetag</option>
-            <option value="adexium">🎯 Adexium</option>
-            <option value="gigapub">🌐 Gigapub</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Ad Code / Zone ID / Block ID *</label>
-          <textarea id="slotCode_3" rows="3" placeholder="Ad code / Zone ID" style="font-family:'Courier New',monospace;font-size:.78rem;"></textarea>
-        </div>
-        <div class="form-group" style="margin-bottom:0;">
-          <label>Status</label>
-          <select id="slotStatusSel_3"><option value="active">✅ Active</option><option value="inactive">🚫 Inactive</option></select>
-        </div>
-      </div>
-
-      <button class="btn btn-purple" onclick="saveAdProviders()" style="margin-top:16px;">
-        <i class="fas fa-save"></i> Save Ad Settings
-      </button>
-    </div>
-  </div>
-
   <!-- PACKAGES TAB -->
   <div id="tab-packages" class="tab-content super-only">
     <div class="card rainbow">
@@ -920,12 +743,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         </div>
       </div>
       <input type="hidden" id="pkgEditId">
-      
-      <div class="form-group">
-        <label>Package Name *</label>
-        <input type="text" id="pkgName" placeholder="e.g. Starter Package">
-      </div>
-      
+      <div class="form-group"><label>Package Name *</label><input type="text" id="pkgName" placeholder="e.g. Starter Package"></div>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         <div class="form-group">
           <label>Duration (Days) *</label>
@@ -937,44 +755,27 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
           <input type="number" id="pkgPrice" min="1" step="0.01" placeholder="100" oninput="calculatePackagePreview()">
         </div>
       </div>
-      
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         <div class="form-group">
           <label>Profit Rate (%) *</label>
           <input type="number" id="pkgRate" min="0" step="0.1" placeholder="50" oninput="calculatePackagePreview()">
-          <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">মোট লাভের শতকরা হার</small>
         </div>
         <div class="form-group">
           <label>Total Return (TK) — Auto</label>
           <input type="text" id="pkgTotalReturnDisplay" readonly style="background:#f1f5f9; color:#0f172a; font-weight:800; border-color:#cbd5e1;">
         </div>
       </div>
-
       <div class="form-group">
         <label>Daily Income (TK) — Auto</label>
         <input type="text" id="pkgDailyIncomeDisplay" readonly style="background:#f1f5f9; color:#059669; font-weight:800; border:1.5px solid #10b981;">
-        <small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:#10b981;">স্বয়ংক্রিয়ভাবে প্রতিদিনের ইনকাম</small>
       </div>
-
-      <div class="form-group">
-        <label>Package Description (optional)</label>
-        <textarea id="pkgDesc" rows="2" placeholder="Short description..."></textarea>
-      </div>
-      
-      <div class="form-group">
-        <label>Status</label>
-        <select id="pkgStatus">
-          <option value="active">✅ Active</option>
-          <option value="inactive">🚫 Inactive</option>
-        </select>
-      </div>
-      
+      <div class="form-group"><label>Package Description (optional)</label><textarea id="pkgDesc" rows="2" placeholder="Short description..."></textarea></div>
+      <div class="form-group"><label>Status</label><select id="pkgStatus"><option value="active">✅ Active</option><option value="inactive">🚫 Inactive</option></select></div>
       <div style="display:flex;gap:10px;">
         <button class="btn btn-orange" onclick="savePackage()" style="flex:2;"><i class="fas fa-save"></i> Save Package</button>
         <button class="btn btn-red" onclick="resetPackageForm()" style="flex:1;"><i class="fas fa-times"></i> Reset</button>
       </div>
     </div>
-    
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-list-check"></i></div>All Packages (<span id="pkgCount">0</span>)</div></div>
       <div id="packagesListContainer"></div>
@@ -982,27 +783,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-user-check"></i></div>Active User Packages</div></div>
       <div id="activeUserPackagesContainer"></div>
-    </div>
-  </div>
-
-  <!-- EXTRA REWARDS TAB -->
-  <div id="tab-extrareward" class="tab-content super-only">
-    <div class="card rainbow">
-      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-orange"><i class="fas fa-bolt"></i></div>Extra Rewards (Monetag Pop-up)</div></div>
-      <div class="alert-box info"><i class="fas fa-info-circle"></i><div>User App-এর Home পেজে একটি আলাদা "Extra Rewards" কার্ড যোগ হবে।</div></div>
-      <div class="form-group"><label>Feature Status</label><select id="extraRewardEnabled"><option value="true">✅ Enabled</option><option value="false">🚫 Disabled</option></select></div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"><div class="form-group"><label>Reward Per Ad (TK) *</label><input type="number" id="extraRewardAmount" step="0.01" min="0.01" placeholder="0.50"></div><div class="form-group"><label>Daily Limit *</label><input type="number" id="extraRewardLimit" min="1" placeholder="5"></div></div>
-      <div class="form-group"><label>Card Title</label><input type="text" id="extraRewardTitle" placeholder="Pop-up Ad দেখে আয় করুন"></div>
-      <div class="form-group"><label>Info Text</label><textarea id="extraRewardInfo" rows="2"></textarea></div>
-      <div class="preview-label">📱 Live Preview</div>
-      <div class="extra-preview-card">
-        <div class="ep-header"><div class="ep-label"><i class="fas fa-bolt"></i> EXTRA REWARDS</div><div class="ep-count" id="prevCount">0/5</div></div>
-        <div class="ep-title" id="prevTitle">Pop-up Ad দেখে আয় করুন</div>
-        <div class="ep-amt"><span id="prevAmount">0.50</span> <small>TK / view</small></div>
-        <div class="ep-info"><i class="fas fa-info-circle"></i><span id="prevInfo">Pop-up Ad সম্পূর্ণ দেখলেই রিওয়ার্ড পাবেন।</span></div>
-        <div class="ep-btn"><i class="fas fa-play-circle"></i> Watch Ad & Earn</div>
-      </div>
-      <button class="btn btn-orange" onclick="saveExtraRewardSettings()"><i class="fas fa-save"></i> Save Extra Rewards</button>
     </div>
   </div>
 
@@ -1025,7 +805,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-users-gear"></i></div>All Admins</div></div><div id="adminsListContainer">Loading...</div></div>
   </div>
 
-  <!-- DEPOSIT MGMT TAB -->
+  <!-- DEPOSIT MGMT TAB (with Payment Type admin control) -->
   <div id="tab-depositmgmt" class="tab-content super-only">
     <div class="card rainbow">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-money-bill-transfer"></i></div>Deposit Payment Numbers</div></div>
@@ -1038,6 +818,27 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="form-group"><label>Deposit Instructions</label><textarea id="payInstructions" rows="3" placeholder="টাকা পাঠানোর নিয়ম..."></textarea></div>
       <button class="btn btn-green" onclick="saveDepositPaymentInfo()"><i class="fas fa-save"></i> Save Payment Numbers</button>
     </div>
+
+    <!-- NEW: Payment Type Settings -->
+    <div class="card rainbow">
+      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-list-check"></i></div>Deposit Payment Type Options</div></div>
+      <div class="alert-box info"><i class="fas fa-info-circle"></i><div>ইউজার ডিপোজিট পেজে যে ড্রপডাউন অপশন দেখবে (Send Money / Cash Out)। এখান থেকে সিলেক্ট করুন।</div></div>
+      <div class="form-group">
+        <label style="font-size:.85rem;">Available Options</label>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+          <label style="display:flex;align-items:center;gap:10px;background:var(--bg-alt);padding:12px 14px;border-radius:10px;cursor:pointer;font-weight:700;border:1.5px solid var(--border);">
+            <input type="checkbox" id="ptSendMoney" style="width:20px;height:20px;cursor:pointer;">
+            <span>💸 Send Money</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:10px;background:var(--bg-alt);padding:12px 14px;border-radius:10px;cursor:pointer;font-weight:700;border:1.5px solid var(--border);">
+            <input type="checkbox" id="ptCashOut" style="width:20px;height:20px;cursor:pointer;">
+            <span>🏧 Cash Out</span>
+          </label>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="savePaymentTypes()"><i class="fas fa-save"></i> Save Payment Types</button>
+    </div>
+
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-inbox"></i></div>Pending Deposit Requests</div></div>
       <div id="pendingDepositReqList"></div>
@@ -1052,7 +853,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   <div id="tab-chats" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-comments"></i></div>User Chats</div></div>
-      <div class="alert-box info"><i class="fas fa-info-circle"></i><div>ইউজারদের সাথে রিয়েল-টাইম চ্যাট। নতুন মেসেজ হলে ট্যাবে ব্যাজ দেখাবে।</div></div>
+      <div class="alert-box info"><i class="fas fa-info-circle"></i><div>ইউজারদের সাথে রিয়েল-টাইম চ্যাট।</div></div>
       <div class="admin-chat-list" id="adminChatList">
         <div class="empty-state"><p>No chats yet</p></div>
       </div>
@@ -1244,9 +1045,8 @@ const TASK_DELETE_FEE = 10;
 let SERVICE_CHARGE_RATE = 10;
 const LB_MAX_ENTRIES = 10;
 const MIN_TASK_REWARD = 0.10;
-const AD_PROVIDERS_LIST = ['adsgram','monetag','adexium','gigapub'];
 
-let configData = { adSlots: [], depositPayment: {}, newTasks: {}, depositMethods: [], leaderboardCustom: [], minAdWatchSeconds: 10 };
+let configData = { depositPayment: {}, newTasks: {}, depositMethods: [], leaderboardCustom: [] };
 let allUsers = [], filteredUsers = [], channelLinks = [], withdrawLevels = [];
 let MIN_REFERRAL_BALANCE = 20, selectedCommissionMode = 'bonus';
 let editingTaskId = null, allSubmissions = [], currentSubFilter = 'pending', currentTaskCache = {};
@@ -1264,7 +1064,7 @@ let currentSession = null;
 let adminChatListListener = null;
 let adminThreadMsgListener = null;
 let adminCurrentThreadKey = null;
-let adminChatNotifListener = null; 
+let adminChatNotifListener = null;
 
 const userNotifCooldown = {};
 
@@ -1611,9 +1411,9 @@ async function loadRevenueHistory() {
   let h = '';
   logs.slice(0, 30).forEach(l => {
     const dt = new Date(l.timestamp).toLocaleString('en-GB', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'});
-    const icon = l.type === 'task_bonus' ? '📋' : l.type === 'ad_view' ? '👁️' : '👥';
-    const label = l.type === 'task_bonus' ? 'Task Bonus' : l.type === 'ad_view' ? 'Ad View' : 'Referral';
-    const cls = l.type === 'task_bonus' ? 'task' : l.type === 'ad_view' ? 'ad' : 'referral';
+    const icon = l.type === 'task_bonus' ? '📋' : '👥';
+    const label = l.type === 'task_bonus' ? 'Task Bonus' : 'Referral';
+    const cls = l.type === 'task_bonus' ? 'task' : 'referral';
     h += `<div class="revenue-log-item ${cls}"><div><div style="font-weight:800; font-size:.82rem;">${icon} ${label}</div><div style="font-size:.7rem; color:#94a3b8; margin-top:3px;">${dt}${l.fromUserName ? ' • '+esc(l.fromUserName) : ''}</div></div><div style="font-weight:900; color:#10b981; font-size:.95rem;">+${Number(l.amount).toFixed(2)}</div></div>`;
   });
   c.innerHTML = h;
@@ -1759,88 +1559,7 @@ async function rejectAdminWd(id) {
 }
 
 // ============================================
-// AD PROVIDERS
-// ============================================
-function onSlotProviderChange(i) {
-  const provider = document.getElementById('slotProvider_'+i).value;
-  const statusEl = document.getElementById('slotStatus_'+i);
-  if (!statusEl) return;
-  if (provider === 'none') {
-    statusEl.className = 'provider-status-badge off';
-    statusEl.textContent = 'DISABLED';
-  } else {
-    statusEl.className = 'provider-status-badge ' + provider;
-    const labels = { adsgram:'ADSGRAM ✅', monetag:'MONETAG ✅', adexium:'ADEXIUM ✅', gigapub:'GIGAPUB ✅' };
-    statusEl.textContent = labels[provider] || (provider.toUpperCase() + ' ✅');
-  }
-}
-
-function loadAdProvidersConfig() {
-  const slots = Array.isArray(configData.adSlots) ? configData.adSlots : [];
-  for (let i = 0; i < 4; i++) {
-    const s = slots[i] || {};
-    const provEl = document.getElementById('slotProvider_'+i);
-    const codeEl = document.getElementById('slotCode_'+i);
-    const stEl = document.getElementById('slotStatusSel_'+i);
-    if (provEl) provEl.value = AD_PROVIDERS_LIST.includes(s.provider) ? s.provider : 'none';
-    if (codeEl) codeEl.value = s.code || s.customCode || '';
-    if (stEl) stEl.value = s.status || 'inactive';
-    onSlotProviderChange(i);
-  }
-}
-
-async function saveAdProviders() {
-  const slots = [];
-  for (let i = 0; i < 4; i++) {
-    const provider = document.getElementById('slotProvider_'+i).value;
-    const code = document.getElementById('slotCode_'+i).value.trim();
-    const status = document.getElementById('slotStatusSel_'+i).value;
-    if (provider !== 'none' && !code) {
-      return toast(`❌ Slot ${i+1}: ${provider.toUpperCase()} এর জন্য Code/Zone ID দিন`);
-    }
-    slots.push({ provider, code, status, network: provider, blockId: code, customCode: code });
-  }
-  const dailyAdLimit = Number(document.getElementById('dailyAdLimit').value) || 10;
-  const adReward = Number(document.getElementById('adReward').value) || 0.5;
-  const minAdWatchSeconds = Math.max(3, Math.min(120, Number(document.getElementById('minAdWatchSeconds').value) || 10));
-  await db.ref('config').update({ adSlots: slots, dailyAdLimit, adReward, minAdWatchSeconds });
-  configData.adSlots = slots;
-  toast('✅ Ad Providers Saved!');
-}
-
-// ============================================
-// EXTRA REWARDS
-// ============================================
-function loadExtraRewardPreview() {
-  const en = document.getElementById('extraRewardEnabled').value === 'true';
-  const amt = parseFloat(document.getElementById('extraRewardAmount').value) || 0.5;
-  const lim = parseInt(document.getElementById('extraRewardLimit').value) || 5;
-  const t = document.getElementById('extraRewardTitle').value.trim() || 'Pop-up Ad দেখে আয় করুন';
-  const inf = document.getElementById('extraRewardInfo').value.trim() || 'Pop-up Ad সম্পূর্ণ দেখলেই রিওয়ার্ড পাবেন।';
-  document.getElementById('prevCount').textContent = '0/'+lim;
-  document.getElementById('prevTitle').textContent = t;
-  document.getElementById('prevAmount').textContent = amt.toFixed(2);
-  document.getElementById('prevInfo').textContent = inf;
-  const card = document.querySelector('.extra-preview-card');
-  if (card) card.style.opacity = en ? '1' : '0.4';
-}
-
-async function saveExtraRewardSettings() {
-  const en = document.getElementById('extraRewardEnabled').value === 'true';
-  const amt = parseFloat(document.getElementById('extraRewardAmount').value);
-  const lim = parseInt(document.getElementById('extraRewardLimit').value);
-  const t = document.getElementById('extraRewardTitle').value.trim() || 'Pop-up Ad দেখে আয় করুন';
-  const inf = document.getElementById('extraRewardInfo').value.trim() || 'Pop-up Ad সম্পূর্ণ দেখলেই রিওয়ার্ড পাবেন।';
-  if (isNaN(amt) || amt <= 0) return toast('❌ Amount > 0');
-  if (isNaN(lim) || lim <= 0) return toast('❌ Limit > 0');
-  if (lim > 100) return toast('❌ Max 100');
-  await db.ref('config/extraReward').set({ enabled: en, amount: Number(amt), dailyLimit: Number(lim), title: t, infoText: inf, updatedAt: Date.now() });
-  toast('✅ Saved!');
-  loadExtraRewardPreview();
-}
-
-// ============================================
-// PACKAGES (Auto Calculate & Update)
+// PACKAGES
 // ============================================
 function calculatePackagePreview() {
   const price = parseFloat(document.getElementById('pkgPrice').value) || 0;
@@ -2017,6 +1736,13 @@ function loadDepositPaymentInfo() {
   set('payUpay', dp.upay || '');
   set('payMinDeposit', dp.minDeposit || 50);
   set('payInstructions', dp.instructions || '');
+
+  // Load payment types
+  const pt = Array.isArray(dp.paymentTypes) && dp.paymentTypes.length ? dp.paymentTypes : ['Send Money', 'Cash Out'];
+  const ptSM = document.getElementById('ptSendMoney');
+  const ptCO = document.getElementById('ptCashOut');
+  if (ptSM) ptSM.checked = pt.includes('Send Money');
+  if (ptCO) ptCO.checked = pt.includes('Cash Out');
 }
 
 async function saveDepositPaymentInfo() {
@@ -2027,11 +1753,26 @@ async function saveDepositPaymentInfo() {
     upay: document.getElementById('payUpay').value.trim(),
     minDeposit: Number(document.getElementById('payMinDeposit').value) || 50,
     instructions: document.getElementById('payInstructions').value.trim(),
+    paymentTypes: (configData.depositPayment && configData.depositPayment.paymentTypes) || ['Send Money', 'Cash Out'],
     updatedAt: Date.now()
   };
   await db.ref('config/depositPayment').set(data);
   configData.depositPayment = data;
   toast('✅ Payment info saved');
+}
+
+async function savePaymentTypes() {
+  const types = [];
+  const sm = document.getElementById('ptSendMoney');
+  const co = document.getElementById('ptCashOut');
+  if (sm && sm.checked) types.push('Send Money');
+  if (co && co.checked) types.push('Cash Out');
+  if (types.length === 0) return toast('❌ কমপক্ষে ১টি অপশন সিলেক্ট করুন');
+  
+  const dp = configData.depositPayment || {};
+  await db.ref('config/depositPayment/paymentTypes').set(types);
+  configData.depositPayment = { ...dp, paymentTypes: types };
+  toast('✅ Payment Types saved!');
 }
 
 // ============================================
@@ -2413,7 +2154,7 @@ async function reviewSubmission(subId, action) {
 }
 
 // ============================================
-// ANALYTICS
+// ANALYTICS (ad removed)
 // ============================================
 function getAnalyticsRangeBounds(range) {
   const now = new Date();
@@ -2433,34 +2174,43 @@ async function loadAnalytics() {
   const { start, end, label } = getAnalyticsRangeBounds(analyticsRange);
   document.getElementById('analyticsRangeLabel').textContent = label;
   const us = await db.ref('users').once('value');
-  let activeSet = new Set(), tv = 0, tc = 0, data = [];
+  let activeSet = new Set(), data = [];
   us.forEach(c => {
     const u = c.val(), uid = c.key;
-    let v = 0, e = 0;
-    const ah = u.adHistory || {};
-    for (const k in ah) { const ts = Number(ah[k].timestamp||0); if (ts >= start && ts < end) { if (ah[k].type !== 'bonus') v++; e += Number(ah[k].amount||0); activeSet.add(uid); } }
-    if (Number(u.adClicks||0) > 0) activeSet.add(uid);
-    tv += v; tc += v > 0 ? v : 0;
-    data.push({ name: u.name || 'User', id: uid, views: v, clicks: v > 0 ? 1 : 0, earned: e });
+    let e = 0;
+    if (u.lastActive && u.lastActive >= start && u.lastActive < end) activeSet.add(uid);
+    data.push({ name: u.name || 'User', id: uid, tasks: 0, earned: e });
   });
   let td = 0;
   const ts = await db.ref('taskSubmissions').once('value');
-  ts.forEach(c => { const s = c.val(); const t = Number(s.createdAt || s.timestamp || 0); if (t >= start && t < end && (s.status === 'approved' || s.autoApproved)) { td++; activeSet.add(String(s.userId)); } });
+  ts.forEach(c => {
+    const s = c.val();
+    const t = Number(s.createdAt || s.timestamp || 0);
+    if (t >= start && t < end && (s.status === 'approved' || s.autoApproved)) {
+      td++;
+      activeSet.add(String(s.userId));
+      const du = data.find(d => d.id === String(s.userId));
+      if (du) { du.tasks++; du.earned += Number(s.reward || 0); }
+    }
+  });
   let wc = 0, wa = 0;
   const ws = await db.ref('withdrawals').once('value');
   ws.forEach(c => { const w = c.val(); const t = Number(w.timestamp||0); if (t >= start && t < end) { wc++; if (w.status === 'approved') wa += Number(w.amount||0); } });
-  data.sort((a,b) => b.views - a.views || b.earned - a.earned);
+  let dc = 0, dTotal = 0;
+  const ds = await db.ref('depositRequests').once('value');
+  ds.forEach(c => { const d = c.val(); const t = Number(d.timestamp||0); if (t >= start && t < end && d.status === 'approved') { dc++; dTotal += Number(d.amount||0); } });
+  data.sort((a,b) => b.tasks - a.tasks || b.earned - a.earned);
   document.getElementById('anaUsersActive').textContent = activeSet.size;
-  document.getElementById('anaAdViews').textContent = tv;
-  document.getElementById('anaAdClicks').textContent = tc;
   document.getElementById('anaTasksDone').textContent = td;
   document.getElementById('anaWithdrawals').textContent = wc;
   document.getElementById('anaEarnings').textContent = wa.toFixed(2);
+  const dEl = document.getElementById('anaDeposits'); if (dEl) dEl.textContent = dc;
+  const dtEl = document.getElementById('anaDepositTotal'); if (dtEl) dtEl.textContent = dTotal.toFixed(2);
   let h = '';
   data.slice(0, 30).forEach(u => {
-    h += `<tr><td style="padding:10px; background:#f8fafc; border-radius:8px 0 0 8px;">${esc(u.name)}<br><small style="color:#94a3b8;">${u.id}</small></td><td style="padding:10px; background:#f8fafc; font-weight:800;">${u.views}</td><td style="padding:10px; background:#f8fafc; font-weight:800;">${u.clicks}</td><td style="padding:10px; background:#f8fafc; font-weight:800; color:var(--success); border-radius:0 8px 8px 0;">${u.earned.toFixed(2)} TK</td></tr>`;
+    h += `<tr><td style="padding:10px; background:#f8fafc; border-radius:8px 0 0 8px;">${esc(u.name)}<br><small style="color:#94a3b8;">${u.id}</small></td><td style="padding:10px; background:#f8fafc; font-weight:800;">${u.tasks}</td><td style="padding:10px; background:#f8fafc; font-weight:800; color:var(--success); border-radius:0 8px 8px 0;">${u.earned.toFixed(2)} TK</td></tr>`;
   });
-  document.getElementById('analyticsTableBody').innerHTML = h || '<tr><td colspan="4" style="text-align:center; padding:20px; color:#94a3b8;">No data</td></tr>';
+  document.getElementById('analyticsTableBody').innerHTML = h || '<tr><td colspan="3" style="text-align:center; padding:20px; color:#94a3b8;">No data</td></tr>';
 }
 
 // ============================================
@@ -2632,8 +2382,6 @@ async function loadUsers() {
     let q = 0;
     if (keys.length) await Promise.all(keys.map(async rid => { const b = await db.ref('users/'+rid+'/balance').once('value'); if (Number(b.val()||0) >= MIN_REFERRAL_BALANCE) q++; }));
     u._qualifiedRefs = q; u._totalRefs = keys.length;
-    let v = 0; const da = u.dailyAds || {}; for (let k in da) v += Number(da[k]) || 0;
-    u._adViews = v; u._adClicks = u.adClicks || 0;
   }));
   filterUsers();
 }
@@ -2653,25 +2401,20 @@ function renderUsers() {
     const photoHtml = u.photo ? `<img src="${esc(u.photo)}" onerror="this.style.display='none';this.parentNode.textContent='${init}'" style="width:100%;height:100%;object-fit:cover;">` : init;
     const banned = u.isBanned === true;
     const st = getUserStatus(u);
-    h += `<div class="user-card-v2 ${banned?'banned':''}"><div class="user-card-top"><div class="user-avatar-v2">${photoHtml}</div><div class="user-info-v2"><div class="name">${esc(u.name||'Unknown')} ${banned?'<span class="status-badge banned">BANNED</span>':'<span class="status-badge active">ACTIVE</span>'} ${u.channelVerified?'<span class="status-badge active">✅ VERIFIED</span>':''} ${getUserStatusBadge(st)}</div><div class="meta"><span><i class="fas fa-id-badge"></i> ${u.id}</span>${u.username ? `<span>@${esc(u.username)}</span>` : ''}</div></div></div><div class="user-stats-grid"><div class="user-stat-cell"><div class="num green">${(u.balance||0).toFixed(2)}</div><div class="lbl">W/D</div></div><div class="user-stat-cell deposit-cell"><div class="num orange">${(u.adBalance||0).toFixed(2)}</div><div class="lbl">Deposit</div></div><div class="user-stat-cell"><div class="num blue">${u._adViews}</div><div class="lbl">Ads</div></div><div class="user-stat-cell"><div class="num purple">${u._qualifiedRefs}/${u._totalRefs}</div><div class="lbl">Refs</div></div><div class="user-stat-cell"><div class="num warn">${u._adClicks}</div><div class="lbl">Clicks</div></div></div><div class="user-actions-row"><button class="btn btn-info btn-small" onclick="viewUserFull('${u.id}')"><i class="fas fa-eye"></i> View</button><button class="btn btn-purple btn-small" onclick="viewUserDetails('${u.id}')"><i class="fas fa-sitemap"></i> Details</button><button class="btn btn-warning btn-small" onclick="openUserEditModal('${u.id}')"><i class="fas fa-pen"></i> Edit</button><button class="btn ${banned?'btn-green':'btn-red'} btn-small" onclick="toggleBanUser('${u.id}', ${!banned})"><i class="fas fa-ban"></i> ${banned?'Unban':'Ban'}</button><button class="btn btn-red btn-small" onclick="deleteUserFull('${u.id}')"><i class="fas fa-trash"></i> Delete</button></div></div>`;
+    h += `<div class="user-card-v2 ${banned?'banned':''}"><div class="user-card-top"><div class="user-avatar-v2">${photoHtml}</div><div class="user-info-v2"><div class="name">${esc(u.name||'Unknown')} ${banned?'<span class="status-badge banned">BANNED</span>':'<span class="status-badge active">ACTIVE</span>'} ${u.channelVerified?'<span class="status-badge active">✅ VERIFIED</span>':''} ${getUserStatusBadge(st)}</div><div class="meta"><span><i class="fas fa-id-badge"></i> ${u.id}</span>${u.username ? `<span>@${esc(u.username)}</span>` : ''}</div></div></div><div class="user-stats-grid"><div class="user-stat-cell"><div class="num green">${(u.balance||0).toFixed(2)}</div><div class="lbl">W/D</div></div><div class="user-stat-cell deposit-cell"><div class="num orange">${(u.adBalance||0).toFixed(2)}</div><div class="lbl">Deposit</div></div><div class="user-stat-cell"><div class="num purple">${u._qualifiedRefs}/${u._totalRefs}</div><div class="lbl">Refs</div></div></div><div class="user-actions-row"><button class="btn btn-info btn-small" onclick="viewUserFull('${u.id}')"><i class="fas fa-eye"></i> View</button><button class="btn btn-purple btn-small" onclick="viewUserDetails('${u.id}')"><i class="fas fa-sitemap"></i> Details</button><button class="btn btn-warning btn-small" onclick="openUserEditModal('${u.id}')"><i class="fas fa-pen"></i> Edit</button><button class="btn ${banned?'btn-green':'btn-red'} btn-small" onclick="toggleBanUser('${u.id}', ${!banned})"><i class="fas fa-ban"></i> ${banned?'Unban':'Ban'}</button><button class="btn btn-red btn-small" onclick="deleteUserFull('${u.id}')"><i class="fas fa-trash"></i> Delete</button></div></div>`;
   });
   c.innerHTML = h;
 }
 
 function viewUserFull(userId) {
   const u = currentUserCache[userId]; if (!u) return toast('❌ Not found');
-  const da = u.dailyAds || {};
-  const slots = (configData.adSlots || []).slice(0, 6);
-  let avHtml = '';
-  for (let i = 0; i < Math.min(6, slots.length); i++) { const s = slots[i]; if (!s || ((!s.provider || s.provider === 'none') && !s.code)) continue; avHtml += `<div style="display:flex; justify-content:space-between; padding:6px 10px; background:#f8fafc; border-radius:6px; margin-bottom:4px; font-size:.78rem;"><span>Slot ${i+1} (${s.provider||'custom'})</span><b>${Number(da[i]||0)} views</b></div>`; }
-  if (!avHtml) avHtml = '<div style="text-align:center; color:#94a3b8; padding:8px; font-size:.75rem;">No ad slots</div>';
   const init = (u.name||'U').charAt(0).toUpperCase();
   const st = getUserStatus(u);
   const pending = u.pendingConversions || {};
   const pendingTotal = Object.values(pending).reduce((s, p) => s + Number(p.amount||0), 0);
   const pendingCount = Object.keys(pending).length;
   const pendingHtml = pendingCount > 0 ? `<div style="background:linear-gradient(135deg,#fef3c7,#fde68a); border-left:4px solid #f59e0b; border-radius:12px; padding:12px 14px; margin-bottom:14px;"><div style="font-weight:900; color:#92400e; font-size:.85rem; margin-bottom:6px;"><i class="fas fa-hourglass-half"></i> Pending Conversions (${pendingCount})</div><div style="font-size:1.1rem; font-weight:900; color:#ea580c;">${pendingTotal.toFixed(2)} TK</div><div style="font-size:.68rem; color:#92400e; margin-top:4px;">২৪ ঘন্টা পর Withdrawable এ যাবে</div></div>` : '';
-  document.getElementById('userViewBody').innerHTML = `<div style="text-align:center; margin-bottom:16px;"><div style="width:72px; height:72px; margin:0 auto 10px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.8rem; overflow:hidden;">${u.photo ? `<img src="${esc(u.photo)}" style="width:100%; height:100%; object-fit:cover;" onerror="this.parentNode.textContent='${init}'">` : init}</div><div style="font-weight:900; font-size:1.1rem;">${esc(u.name||'Unknown')}</div><div style="font-size:.72rem; color:#94a3b8; margin-top:4px;">ID: ${u.id}</div><div style="margin-top:8px;">${u.isBanned ? '<span class="status-badge banned">🚫 BANNED</span>' : '<span class="status-badge active">✅ ACTIVE</span>'} ${u.channelVerified ? '<span class="status-badge active">✅ VERIFIED</span>' : ''} ${getUserStatusBadge(st)}</div></div>${pendingHtml}<div class="section-divider"><i class="fas fa-wallet"></i> Financial</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card green"><div class="num">${(u.balance||0).toFixed(2)}</div><div class="label">Withdrawable</div></div><div class="stat-card deposit"><div class="num">${(u.adBalance||0).toFixed(2)}</div><div class="label">Deposit Balance</div></div><div class="stat-card info"><div class="num">${(u.totalEarned||0).toFixed(2)}</div><div class="label">Earned</div></div><div class="stat-card purple"><div class="num">${(u.referralBalance||0).toFixed(2)}</div><div class="label">Ref Bal</div></div><div class="stat-card warning"><div class="num">${(u.adClaimedTotal||0).toFixed(2)}</div><div class="label">Ad Claimed</div></div></div><div class="section-divider"><i class="fas fa-play-circle"></i> Ad Stats</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card info"><div class="num">${u._adViews||0}</div><div class="label">Views</div></div><div class="stat-card warning"><div class="num">${u._adClicks||0}</div><div class="label">Clicks</div></div></div>${avHtml}<div style="display:flex; gap:10px; margin-top:16px;"><button class="btn btn-warning" onclick="closeUserViewModal(); openUserEditModal('${u.id}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-purple" onclick="closeUserViewModal(); viewUserDetails('${u.id}')" style="flex:1;"><i class="fas fa-sitemap"></i> Details</button><button class="btn btn-red" onclick="closeUserViewModal(); deleteUserFull('${u.id}')" style="flex:1;"><i class="fas fa-trash"></i></button></div>`;
+  document.getElementById('userViewBody').innerHTML = `<div style="text-align:center; margin-bottom:16px;"><div style="width:72px; height:72px; margin:0 auto 10px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.8rem; overflow:hidden;">${u.photo ? `<img src="${esc(u.photo)}" style="width:100%; height:100%; object-fit:cover;" onerror="this.parentNode.textContent='${init}'">` : init}</div><div style="font-weight:900; font-size:1.1rem;">${esc(u.name||'Unknown')}</div><div style="font-size:.72rem; color:#94a3b8; margin-top:4px;">ID: ${u.id}</div><div style="margin-top:8px;">${u.isBanned ? '<span class="status-badge banned">🚫 BANNED</span>' : '<span class="status-badge active">✅ ACTIVE</span>'} ${u.channelVerified ? '<span class="status-badge active">✅ VERIFIED</span>' : ''} ${getUserStatusBadge(st)}</div></div>${pendingHtml}<div class="section-divider"><i class="fas fa-wallet"></i> Financial</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card green"><div class="num">${(u.balance||0).toFixed(2)}</div><div class="label">Withdrawable</div></div><div class="stat-card deposit"><div class="num">${(u.adBalance||0).toFixed(2)}</div><div class="label">Deposit Balance</div></div><div class="stat-card info"><div class="num">${(u.totalEarned||0).toFixed(2)}</div><div class="label">Earned</div></div><div class="stat-card purple"><div class="num">${(u.referralBalance||0).toFixed(2)}</div><div class="label">Ref Bal</div></div></div><div style="display:flex; gap:10px; margin-top:16px;"><button class="btn btn-warning" onclick="closeUserViewModal(); openUserEditModal('${u.id}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-purple" onclick="closeUserViewModal(); viewUserDetails('${u.id}')" style="flex:1;"><i class="fas fa-sitemap"></i> Details</button><button class="btn btn-red" onclick="closeUserViewModal(); deleteUserFull('${u.id}')" style="flex:1;"><i class="fas fa-trash"></i></button></div>`;
   document.getElementById('userViewModal').classList.add('active');
 }
 function closeUserViewModal() { document.getElementById('userViewModal').classList.remove('active'); }
@@ -2732,8 +2475,6 @@ function openUserEditModal(userId) {
   document.getElementById('ueReferralBalance').value = Number(u.referralBalance||0).toFixed(2);
   document.getElementById('ueTotalCommission').value = Number(u.totalCommission||0).toFixed(2);
   document.getElementById('ueReferrals').value = Number(u.referrals||0);
-  document.getElementById('ueAdClaimedTotal').value = Number(u.adClaimedTotal||0).toFixed(2);
-  document.getElementById('ueAdClicks').value = Number(u.adClicks||0);
   document.getElementById('ueWithdrawCount').value = Number(u.withdrawCount||0);
   document.getElementById('ueReferredBy').value = u.referredBy || '';
   document.getElementById('ueIsBanned').value = String(u.isBanned === true);
@@ -2755,8 +2496,6 @@ async function saveUserFullEdit() {
     referralBalance: parseFloat(document.getElementById('ueReferralBalance').value) || 0,
     totalCommission: parseFloat(document.getElementById('ueTotalCommission').value) || 0,
     referrals: parseInt(document.getElementById('ueReferrals').value) || 0,
-    adClaimedTotal: parseFloat(document.getElementById('ueAdClaimedTotal').value) || 0,
-    adClicks: parseInt(document.getElementById('ueAdClicks').value) || 0,
     withdrawCount: parseInt(document.getElementById('ueWithdrawCount').value) || 0,
     referredBy: document.getElementById('ueReferredBy').value.trim() || null,
     isBanned: document.getElementById('ueIsBanned').value === 'true',
@@ -3112,6 +2851,7 @@ function loadAllDepositRequests() {
               <b>💳 Method:</b> ${esc(r.methodName || r.method || '')}<br>
               <b>📱 From Account:</b> <span style="color:#dc2626; font-family:monospace;">${esc(r.methodAccount || '')}</span><br>
               <b>🔑 Txn:</b> <span style="font-family:monospace;">${esc(r.txnId || '')}</span><br>
+              ${r.paymentType ? `<b>📋 Type:</b> ${esc(r.paymentType)}<br>` : ''}
               <b>📅 Date:</b> ${dt}
               ${r.note ? '<br><b>📝 Note:</b> ' + esc(r.note) : ''}
             </div>
@@ -3148,6 +2888,7 @@ function loadAllDepositRequests() {
             </div>
             <div class="dreq-info">
               <b>${Number(r.amount || 0).toFixed(2)} TK</b> • Txn: <span style="font-family:monospace;">${esc(r.txnId || 'N/A')}</span>
+              ${r.paymentType ? `<br>Type: ${esc(r.paymentType)}` : ''}
               <div style="font-size:.7rem; color:#94a3b8; margin-top:4px;">${dt}</div>
               ${r.reason ? '<br><span style="color:#dc2626;">❌ ' + esc(r.reason) + '</span>' : ''}
             </div>
@@ -3198,6 +2939,7 @@ async function approveDepositReq(reqId) {
         methodName: r.methodName || r.method || '',
         methodAccount: r.methodAccount || '',
         txnId: r.txnId || '',
+        paymentType: r.paymentType || '',
         status: 'approved',
         timestamp: Date.now(),
         approvedBy: currentSession ? currentSession.username : 'admin',
@@ -3391,7 +3133,7 @@ function saveSettings() {
   const levels = getWithdrawLevelsFromUI();
   const rawBot = document.getElementById('botUsername').value;
   const clean = sanitizeBotUsername(rawBot);
-  db.ref('config').update({ botUsername: clean, currencySymbol: document.getElementById('currencySymbol').value, contactLink: document.getElementById('contactLink').value.trim(), contactBtnText: document.getElementById('contactBtnText').value.trim(), contactNote: document.getElementById('contactNote').value.trim(), dailyBonusAmount: Number(document.getElementById('dailyBonusAmount').value), refBonus: Number(document.getElementById('refBonus').value), minReferralBalance: Number(document.getElementById('minReferralBalance').value) || 20, refCommissionRate: Number(document.getElementById('refCommissionRate').value) || 2, refCommissionMode: selectedCommissionMode, tutorialLink: document.getElementById('tutorialLink').value, supportLink: document.getElementById('supportLink').value, minWithdraw: Number(document.getElementById('minWithdraw').value), withdrawNotice: document.getElementById('withdrawNotice').value, paymentMethods: methods, withdrawLevels: levels, adResetHour: Number(document.getElementById('adResetHour').value) || 0 }).then(() => { toast('✅ Saved'); withdrawLevels = levels; if (currentSession && currentSession.role === 'admin') generateAdminRefCode(); const be = document.getElementById('botUsername'); if (be) onBotUsernameInput(be); });
+  db.ref('config').update({ botUsername: clean, currencySymbol: document.getElementById('currencySymbol').value, contactLink: document.getElementById('contactLink').value.trim(), contactBtnText: document.getElementById('contactBtnText').value.trim(), contactNote: document.getElementById('contactNote').value.trim(), dailyBonusAmount: Number(document.getElementById('dailyBonusAmount').value), refBonus: Number(document.getElementById('refBonus').value), minReferralBalance: Number(document.getElementById('minReferralBalance').value) || 20, refCommissionRate: Number(document.getElementById('refCommissionRate').value) || 2, refCommissionMode: selectedCommissionMode, tutorialLink: document.getElementById('tutorialLink').value, supportLink: document.getElementById('supportLink').value, minWithdraw: Number(document.getElementById('minWithdraw').value), withdrawNotice: document.getElementById('withdrawNotice').value, paymentMethods: methods, withdrawLevels: levels }).then(() => { toast('✅ Saved'); withdrawLevels = levels; if (currentSession && currentSession.role === 'admin') generateAdminRefCode(); const be = document.getElementById('botUsername'); if (be) onBotUsernameInput(be); });
 }
 function saveMaintenance() {
   db.ref('config/maintenance').set({ active: document.getElementById('maintenanceMode').value === 'true', message: document.getElementById('maintenanceMsg').value, estimatedMinutes: Number(document.getElementById('maintenanceTime').value) || 30 }).then(() => toast('✅ Updated'));
@@ -3494,69 +3236,43 @@ function loadAllWithdrawals() {
 }
 
 // ============================================
-// ADMIN CHAT with USER Telegram Notification
+// ADMIN CHAT
 // ============================================
 async function sendUserTelegramNotification(userId, adminName, messageText) {
-  if (!BOT_TOKEN_FOR_NOTIF || String(BOT_TOKEN_FOR_NOTIF).trim().length < 20) {
-    console.warn('[NOTIF] BOT_TOKEN not configured');
-    return false;
-  }
+  if (!BOT_TOKEN_FOR_NOTIF || String(BOT_TOKEN_FOR_NOTIF).trim().length < 20) return false;
   const now = Date.now();
   const lastTime = userNotifCooldown[userId] || 0;
-  if (now - lastTime < CHAT_NOTIF_COOLDOWN_MS) {
-    return false;
-  }
+  if (now - lastTime < CHAT_NOTIF_COOLDOWN_MS) return false;
   try {
     const escapedText = String(messageText || '').substring(0, 200);
     const notifText = '💬 <b>New Message from ' + esc(adminName || 'Admin') + '</b>\n\n📩 "' + escapedText + (escapedText.length >= 200 ? '...' : '') + '"\n\n👉 Open the app to reply.';
-
     const response = await fetch('https://api.telegram.org/bot' + BOT_TOKEN_FOR_NOTIF + '/sendMessage', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: userId,
-        text: notifText,
-        parse_mode: 'HTML',
-        disable_web_page_preview: true
-      })
+      body: JSON.stringify({ chat_id: userId, text: notifText, parse_mode: 'HTML', disable_web_page_preview: true })
     });
     const data = await response.json();
-    if (data.ok) {
-      userNotifCooldown[userId] = now;
-      return true;
-    } else {
-      return false;
-    }
-  } catch(e) {
+    if (data.ok) { userNotifCooldown[userId] = now; return true; }
     return false;
-  }
+  } catch(e) { return false; }
 }
 
 function loadAdminChats() {
   const list = document.getElementById('adminChatList');
   if (!list) return;
-
-  if (activeListeners.chats) {
-    db.ref('chats').off('value', activeListeners.chats);
-  }
-
+  if (activeListeners.chats) db.ref('chats').off('value', activeListeners.chats);
   activeListeners.chats = db.ref('chats').on('value', snap => {
     const threads = [];
     snap.forEach(c => {
       const meta = c.child('meta').val() || {};
       const messages = c.child('messages').val() || {};
-      let unread = 0;
-      let lastMsg = null, lastTime = 0;
+      let unread = 0, lastMsg = null, lastTime = 0;
       Object.keys(messages).forEach(k => {
         const m = messages[k];
         if (m.from === 'user' && !m.read) unread++;
         if ((m.timestamp || 0) > lastTime) { lastTime = m.timestamp || 0; lastMsg = m; }
       });
-      threads.push({
-        key: c.key, meta, unread,
-        lastPreview: lastMsg ? (lastMsg.text || (lastMsg.type === 'image' ? '📷 Image' : '')) : meta.lastMessagePreview || '',
-        lastTime: lastTime || meta.lastMessageAt || 0
-      });
+      threads.push({ key: c.key, meta, unread, lastPreview: lastMsg ? (lastMsg.text || (lastMsg.type === 'image' ? '📷 Image' : '')) : meta.lastMessagePreview || '', lastTime: lastTime || meta.lastMessageAt || 0 });
     });
     threads.sort((a, b) => b.lastTime - a.lastTime);
     const totalUnread = threads.reduce((s, t) => s + t.unread, 0);
@@ -3565,10 +3281,7 @@ function loadAdminChats() {
       if (totalUnread > 0) { badge.textContent = totalUnread; badge.style.display = 'inline-block'; }
       else badge.style.display = 'none';
     }
-    if (!threads.length) {
-      list.innerHTML = '<div class="empty-state"><p>No chats yet</p></div>';
-      return;
-    }
+    if (!threads.length) { list.innerHTML = '<div class="empty-state"><p>No chats yet</p></div>'; return; }
     let html = '';
     threads.forEach(t => {
       const m = t.meta;
@@ -3661,80 +3374,37 @@ async function sendAdminReply() {
   const text = input.value.trim();
   if (!text) return;
   if (!adminCurrentThreadKey) return toast('❌ No thread open');
-
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-
   try {
     await db.ref('chats/' + adminCurrentThreadKey + '/messages').push({
       from: 'admin',
       adminId: currentSession ? (currentSession.adminId || 'super') : 'super',
       adminName: currentSession ? currentSession.username : 'Admin',
-      text,
-      type: 'text',
-      timestamp: Date.now(),
-      read: false
+      text, type: 'text', timestamp: Date.now(), read: false
     });
-
     await db.ref('chats/' + adminCurrentThreadKey + '/meta').update({
-      lastMessageAt: Date.now(),
-      lastMessagePreview: text.substring(0, 60),
-      lastMessageFrom: 'admin',
-      unreadForUser: 1
+      lastMessageAt: Date.now(), lastMessagePreview: text.substring(0, 60), lastMessageFrom: 'admin', unreadForUser: 1
     }).catch(()=>{});
-
     const userId = adminCurrentThreadKey.replace('user_', '');
     const adminName = currentSession ? currentSession.username : 'Admin';
-    sendUserTelegramNotification(userId, adminName, text).then(sent => {
-      if (sent) console.log('[NOTIF] User notified');
-    }).catch(() => {});
-
+    sendUserTelegramNotification(userId, adminName, text).catch(() => {});
     input.value = '';
     toast('✅ Sent!');
-  } catch (e) {
-    toast('❌ ' + e.message);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-paper-plane"></i>';
-  }
+  } catch (e) { toast('❌ ' + e.message); }
+  finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i>'; }
 }
 
 function setupAdminChatNotifications() {
   if (!currentSession || currentSession.role !== 'super') return;
-  if (adminChatNotifListener) {
-    db.ref('adminNotifications').off('child_added', adminChatNotifListener);
-  }
+  if (adminChatNotifListener) db.ref('adminNotifications').off('child_added', adminChatNotifListener);
   adminChatNotifListener = db.ref('adminNotifications').limitToLast(10).on('child_added', snap => {
     const n = snap.val();
-    if (!n) return;
-    if (n.read) return;
+    if (!n || n.read) return;
     if (Date.now() - (n.timestamp || 0) > 5 * 60 * 1000) return;
-
     if (n.type === 'chat') {
       toast('💬 New chat from ' + (n.fromUserName || 'User') + ': ' + String(n.preview || '').substring(0, 40));
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.frequency.value = 800;
-        oscillator.type = 'sine';
-        gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-        oscillator.start(audioCtx.currentTime);
-        oscillator.stop(audioCtx.currentTime + 0.4);
-      } catch(e) {}
-
-      const badge = document.getElementById('chatsUnreadBadge');
-      if (badge) {
-        badge.style.animation = 'none';
-        setTimeout(() => { badge.style.animation = 'pulse 1s infinite'; }, 50);
-      }
-
-      setTimeout(() => {
-        try { snap.ref.update({ read: true }); } catch(e) {}
-      }, 30000);
+      setTimeout(() => { try { snap.ref.update({ read: true }); } catch(e) {} }, 30000);
     }
   });
 }
@@ -3755,8 +3425,6 @@ function switchTab(id, el) {
   if (id === 'referrals') loadReferralStats();
   if (id === 'analytics') loadAnalytics();
   if (id === 'channels') loadVerificationStats();
-  if (id === 'extrareward') loadExtraRewardPreview();
-  if (id === 'ads') loadAdProvidersConfig();
   if (id === 'packages') { loadPackagesList(); loadActiveUserPackages(); }
   if (id === 'chats') loadAdminChats();
   if (id === 'tasks') {
@@ -3829,15 +3497,13 @@ function runPanelInit() {
   runPanelInit._done = true;
 
   setupRealtimeBadges();
-  setupAdminChatNotifications(); 
+  setupAdminChatNotifications();
 
-  if (currentSession && currentSession.role === 'super') {
-    loadAdminChats();
-  }
+  if (currentSession && currentSession.role === 'super') loadAdminChats();
   if (currentSession.role === 'super') {
     loadAnalytics(); loadVerificationStats(); toggleSurveyFields();
-    renderLeaderboardCustomList(); loadExtraRewardPreview();
-    loadAdProvidersConfig(); loadPackagesList(); loadActiveUserPackages();
+    renderLeaderboardCustomList();
+    loadPackagesList(); loadActiveUserPackages();
     loadDepositPaymentInfo();
     loadAllDepositRequests();
     loadPendingUserWithdrawals();
@@ -3858,7 +3524,6 @@ db.ref('config').on('value', snap => {
   configData = snap.val();
   if (!configData.depositMethods) configData.depositMethods = [];
   if (!Array.isArray(configData.leaderboardCustom)) configData.leaderboardCustom = [];
-  if (!Array.isArray(configData.adSlots)) configData.adSlots = [];
   if (!configData.depositPayment) configData.depositPayment = {};
   channelLinks = configData.channelLinks || [];
   withdrawLevels = configData.withdrawLevels || [];
@@ -3884,9 +3549,6 @@ db.ref('config').on('value', snap => {
     setV('minWithdraw', configData.minWithdraw || 10);
     setV('withdrawNotice', configData.withdrawNotice || '');
     setV('paymentMethods', (configData.paymentMethods || ['Bkash','Nagad']).join(', '));
-    setV('adResetHour', configData.adResetHour || 0);
-    setV('dailyAdLimit', configData.dailyAdLimit || 10);
-    setV('adReward', configData.adReward || 0.5);
     setV('serviceChargeRate', SERVICE_CHARGE_RATE);
     setV('becomeAdminEnabled', String(configData.becomeAdminEnabled === true));
     setV('becomeAdminLink', configData.becomeAdminLink || '');
@@ -3896,28 +3558,13 @@ db.ref('config').on('value', snap => {
     selectedCommissionMode = configData.refCommissionMode || 'bonus';
     selectCommissionMode(selectedCommissionMode);
     loadAdminRevenueSettings();
-    const mw = document.getElementById('minAdWatchSeconds');
-    if (mw) mw.value = configData.minAdWatchSeconds !== undefined ? configData.minAdWatchSeconds : 10;
     if (configData.maintenance) {
       setV('maintenanceMode', configData.maintenance.active ? 'true' : 'false');
       setV('maintenanceMsg', configData.maintenance.message || '');
       setV('maintenanceTime', configData.maintenance.estimatedMinutes || '');
     }
-    const er = configData.extraReward || {};
-    const ee = document.getElementById('extraRewardEnabled');
-    const ea = document.getElementById('extraRewardAmount');
-    const el2 = document.getElementById('extraRewardLimit');
-    const et = document.getElementById('extraRewardTitle');
-    const ei = document.getElementById('extraRewardInfo');
-    if (ee) ee.value = String(er.enabled !== false);
-    if (ea) ea.value = er.amount !== undefined ? er.amount : 0.5;
-    if (el2) el2.value = er.dailyLimit !== undefined ? er.dailyLimit : 5;
-    if (et) et.value = er.title || 'Pop-up Ad দেখে আয় করুন';
-    if (ei) ei.value = er.infoText || 'Pop-up Ad সম্পূর্ণ দেখলেই রিওয়ার্ড পাবেন।';
-    loadExtraRewardPreview();
     renderChannelLinks(); renderWithdrawLevels();
     renderLeaderboardCustomList();
-    if (document.getElementById('tab-ads') && document.getElementById('tab-ads').classList.contains('active')) loadAdProvidersConfig();
     if (document.getElementById('tab-depositmgmt') && document.getElementById('tab-depositmgmt').classList.contains('active')) loadDepositPaymentInfo();
   }
   if (currentSession && currentSession.role === 'admin') {
@@ -3952,11 +3599,9 @@ window.addEventListener('DOMContentLoaded', async () => {
   showLoginOverlay();
 });
 
-window.addEventListener('beforeunload', () => {
-  cleanupListeners();
-});
+window.addEventListener('beforeunload', () => { cleanupListeners(); });
 
-['editTaskModal','depositModal','depositSubmitModal','banModal','cancelTaskModal','deleteTaskModal','contactEditModal','lbModal','instantDeleteModal','userViewModal','userEditModal','userDetailsModal','adminViewModal','adminEditModal','adminWithdrawModal'].forEach(id => {
+['editTaskModal','depositModal','depositSubmitModal','banModal','deleteTaskModal','contactEditModal','lbModal','instantDeleteModal','userViewModal','userEditModal','userDetailsModal','adminViewModal','adminEditModal','adminWithdrawModal'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('click', e => { if (e.target.id === id) el.classList.remove('active'); });
 });
