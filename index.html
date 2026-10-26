@@ -682,7 +682,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     </div>
   </div>
 
-  <!-- ANALYTICS TAB (Ad-related parts removed) -->
+  <!-- ANALYTICS TAB -->
   <div id="tab-analytics" class="tab-content super-only">
     <div class="card">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-chart-line"></i></div>Activity Analytics</div></div>
@@ -805,21 +805,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-users-gear"></i></div>All Admins</div></div><div id="adminsListContainer">Loading...</div></div>
   </div>
 
-  <!-- DEPOSIT MGMT TAB (with Payment Type admin control) -->
-  <div id="tab-depositmgmt" class="tab-content super-only">
-    <div class="card rainbow">
-      <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-money-bill-transfer"></i></div>Deposit Payment Numbers</div></div>
-      <div class="alert-box info"><i class="fas fa-info-circle"></i><div>ইউজাররা এই নাম্বারগুলোতে টাকা পাঠিয়ে ডিপোজিট করবে। bKash / Nagad / Rocket / Upay ইত্যাদির নাম্বার এখানে দিন।</div></div>
-      <div class="form-group"><label>bKash Number (Personal / Agent)</label><input type="text" id="payBkash" placeholder="01XXXXXXXXX"></div>
-      <div class="form-group"><label>Nagad Number</label><input type="text" id="payNagad" placeholder="01XXXXXXXXX"></div>
-      <div class="form-group"><label>Rocket Number</label><input type="text" id="payRocket" placeholder="01XXXXXXXXX-1"></div>
-      <div class="form-group"><label>Upay Number</label><input type="text" id="payUpay" placeholder="01XXXXXXXXX"></div>
-      <div class="form-group"><label>Minimum Deposit (TK)</label><input type="number" id="payMinDeposit" min="1" step="0.01" placeholder="50"></div>
-      <div class="form-group"><label>Deposit Instructions</label><textarea id="payInstructions" rows="3" placeholder="টাকা পাঠানোর নিয়ম..."></textarea></div>
-      <button class="btn btn-green" onclick="saveDepositPaymentInfo()"><i class="fas fa-save"></i> Save Payment Numbers</button>
-    </div>
-
-    <!-- DEPOSIT MGMT TAB (with Payment Type admin control) -->
+  <!-- DEPOSIT MGMT TAB -->
   <div id="tab-depositmgmt" class="tab-content super-only">
     <div class="card rainbow">
       <div class="card-header">
@@ -830,7 +816,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       </div>
       <div class="alert-box info">
         <i class="fas fa-info-circle"></i>
-        <div>প্রতিটি মেথডের জন্য <b>আলাদা নাম্বার</b> এবং <b>আলাদা মিনিমাম ডিপোজিট</b> সেট করুন। খালি রাখলে সেই মেথড ইউজার প্যানেলে দেখাবে না।</div>
+        <div>প্রতিটি মেথডের জন্য <b>আলাদা নাম্বার</b> এবং <b>আলাদা মিনিমাম ডিপোজিট</b> সেট করুন। নাম্বার খালি রাখলে সেই মেথড ইউজার প্যানেলে দেখাবে না।</div>
       </div>
 
       <!-- bKash -->
@@ -915,7 +901,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       </button>
     </div>
 
-    <!-- NEW: Payment Type Settings -->
+    <!-- Payment Type Settings -->
     <div class="card rainbow">
       <div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-list-check"></i></div>Deposit Payment Type Options</div></div>
       <div class="alert-box info"><i class="fas fa-info-circle"></i><div>ইউজার ডিপোজিট পেজে যে ড্রপডাউন অপশন দেখবে (Send Money / Cash Out)। এখান থেকে সিলেক্ট করুন।</div></div>
@@ -1157,7 +1143,6 @@ const SESSION_KEY = 'nexearn_admin_session';
 const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
 let currentSession = null;
 
-let adminChatListListener = null;
 let adminThreadMsgListener = null;
 let adminCurrentThreadKey = null;
 let adminChatNotifListener = null;
@@ -1661,10 +1646,8 @@ function calculatePackagePreview() {
   const price = parseFloat(document.getElementById('pkgPrice').value) || 0;
   const rate = parseFloat(document.getElementById('pkgRate').value) || 0;
   const duration = parseInt(document.getElementById('pkgDuration').value) || 1;
-
   const totalReturn = price + (price * rate / 100);
   const dailyIncome = totalReturn / duration;
-
   document.getElementById('pkgTotalReturnDisplay').value = totalReturn > 0 ? totalReturn.toFixed(2) + ' TK' : '0.00 TK';
   document.getElementById('pkgDailyIncomeDisplay').value = dailyIncome > 0 ? dailyIncome.toFixed(2) + ' TK' : '0.00 TK';
 }
@@ -1680,15 +1663,12 @@ async function loadPackagesList() {
   list.sort((a,b) => (a.price||0) - (b.price||0));
   const cnt = document.getElementById('pkgCount'); if (cnt) cnt.textContent = list.length;
   if (!list.length) { c.innerHTML = '<div class="empty-state" style="padding:20px;"><p>No packages yet</p></div>'; return; }
-  
   let h = '';
   list.forEach(p => {
     const statusCls = p.status === 'active' ? 'active' : 'cancelled';
     const isInactive = p.status === 'inactive';
-    
     const totalReturn = p.totalReturn || (p.price + (p.price * (p.rate || 0) / 100));
     const dailyIncome = p.dailyIncome || (totalReturn / (p.duration || 1));
-
     h += `<div class="pkg-card ${isInactive?'inactive':''}">
       <div class="pkg-head">
         <div class="pkg-name"><div class="pkg-icon-badge"><i class="fas fa-box"></i></div>${esc(p.name)}</div>
@@ -1722,36 +1702,15 @@ async function savePackage() {
   const rate = parseFloat(document.getElementById('pkgRate').value) || 0;
   const desc = document.getElementById('pkgDesc').value.trim();
   const status = document.getElementById('pkgStatus').value;
-
   if (!name) return toast('❌ Package name required');
   if (duration <= 0) return toast('❌ Duration > 0');
   if (price <= 0) return toast('❌ Price > 0');
   if (rate < 0) return toast('❌ Valid Profit Rate');
-
   const totalReturn = price + (price * rate / 100);
   const dailyIncome = totalReturn / duration;
-
-  const data = { 
-    name, 
-    duration, 
-    price, 
-    rate, 
-    dailyIncome, 
-    totalReturn, 
-    description: desc, 
-    status, 
-    updatedAt: Date.now() 
-  };
-
-  if (editId) { 
-    await db.ref('packages/' + editId).update(data); 
-    toast('✅ Package updated'); 
-  } else { 
-    data.createdAt = Date.now(); 
-    data.createdBy = currentSession ? currentSession.username : 'admin'; 
-    await db.ref('packages').push(data); 
-    toast('✅ Package created'); 
-  }
+  const data = { name, duration, price, rate, dailyIncome, totalReturn, description: desc, status, updatedAt: Date.now() };
+  if (editId) { await db.ref('packages/' + editId).update(data); toast('✅ Package updated'); }
+  else { data.createdAt = Date.now(); data.createdBy = currentSession ? currentSession.username : 'admin'; await db.ref('packages').push(data); toast('✅ Package created'); }
   resetPackageForm(); loadPackagesList();
 }
 
@@ -1764,7 +1723,7 @@ function resetPackageForm() {
   document.getElementById('pkgDesc').value = '';
   document.getElementById('pkgStatus').value = 'active';
   document.getElementById('pkgFormTitle').textContent = 'Create New Package';
-  calculatePackagePreview(); 
+  calculatePackagePreview();
 }
 
 function editPackage(id) {
@@ -1778,8 +1737,7 @@ function editPackage(id) {
   document.getElementById('pkgDesc').value = p.description || '';
   document.getElementById('pkgStatus').value = p.status || 'active';
   document.getElementById('pkgFormTitle').textContent = 'Edit Package';
-  
-  calculatePackagePreview(); 
+  calculatePackagePreview();
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
@@ -1821,12 +1779,11 @@ async function loadActiveUserPackages() {
 }
 
 // ============================================
-// DEPOSIT PAYMENT INFO
+// DEPOSIT PAYMENT INFO (NEW: per-method number + minDeposit)
 // ============================================
 function loadDepositPaymentInfo() {
   const dp = configData.depositPayment || {};
   const methods = dp.methods || {};
-
   const legacyMin = Number(dp.minDeposit || 50);
   const bk = methods.bkash  || { number: dp.bkash  || '', minDeposit: legacyMin };
   const ng = methods.nagad  || { number: dp.nagad  || '', minDeposit: legacyMin };
@@ -1896,7 +1853,6 @@ async function savePaymentTypes() {
   if (sm && sm.checked) types.push('Send Money');
   if (co && co.checked) types.push('Cash Out');
   if (types.length === 0) return toast('❌ কমপক্ষে ১টি অপশন সিলেক্ট করুন');
-
   const dp = configData.depositPayment || {};
   await db.ref('config/depositPayment/paymentTypes').set(types);
   configData.depositPayment = { ...dp, paymentTypes: types };
@@ -2282,7 +2238,7 @@ async function reviewSubmission(subId, action) {
 }
 
 // ============================================
-// ANALYTICS (ad removed)
+// ANALYTICS
 // ============================================
 function getAnalyticsRangeBounds(range) {
   const now = new Date();
@@ -2980,6 +2936,7 @@ function loadAllDepositRequests() {
               <b>📱 From Account:</b> <span style="color:#dc2626; font-family:monospace;">${esc(r.methodAccount || '')}</span><br>
               <b>🔑 Txn:</b> <span style="font-family:monospace;">${esc(r.txnId || '')}</span><br>
               ${r.paymentType ? `<b>📋 Type:</b> ${esc(r.paymentType)}<br>` : ''}
+              ${r.minDeposit ? `<b>💰 Min:</b> ${Number(r.minDeposit).toFixed(0)} TK<br>` : ''}
               <b>📅 Date:</b> ${dt}
               ${r.note ? '<br><b>📝 Note:</b> ' + esc(r.note) : ''}
             </div>
@@ -3068,6 +3025,7 @@ async function approveDepositReq(reqId) {
         methodAccount: r.methodAccount || '',
         txnId: r.txnId || '',
         paymentType: r.paymentType || '',
+        minDeposit: r.minDeposit || 0,
         status: 'approved',
         timestamp: Date.now(),
         approvedBy: currentSession ? currentSession.username : 'admin',
@@ -3140,7 +3098,6 @@ function renderDepositMethodsAdminView() {
     { key: 'rocket', name: 'Rocket', icon: 'R',    data: methods.rocket || { number: dp.rocket, minDeposit: legacyMin } },
     { key: 'upay',   name: 'Upay',   icon: 'U',    data: methods.upay   || { number: dp.upay,   minDeposit: legacyMin } }
   ].filter(p => p.data && p.data.number && String(p.data.number).trim().length > 0);
-
   if (!providers.length) {
     c.innerHTML = '<div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i><div>Super Admin এখনো কোনো নাম্বার সেট করেনি।</div></div>';
     return;
@@ -3160,7 +3117,7 @@ function renderDepositMethodsAdminView() {
         <span class="val">${esc(p.data.number)}</span>
       </div>
       ${dp.instructions ? `<div class="deposit-instructions">${esc(dp.instructions)}</div>` : ''}
-      <button class="btn btn-green btn-small" style="margin-top:12px; width:100%;" onclick="openDepositSubmitModal('${p.key}','${p.name}','${esc(p.data.number)}',${Number(p.data.minDeposit || 0)})"
+      <button class="btn btn-green btn-small" style="margin-top:12px; width:100%;" onclick="openDepositSubmitModal('${p.key}','${p.name}','${esc(p.data.number)}',${Number(p.data.minDeposit || 0)})">
         <i class="fas fa-paper-plane"></i> I've Sent Money
       </button>
     </div>`;
@@ -3190,22 +3147,17 @@ async function submitDepositRequest() {
   const nameMap = { bkash: 'bKash', nagad: 'Nagad', rocket: 'Rocket', upay: 'Upay' };
   const legacyMin = Number(dp.minDeposit || 50);
   const legacyNumMap = { bkash: dp.bkash, nagad: dp.nagad, rocket: dp.rocket, upay: dp.upay };
-
   const mData = (methods[key]) || { number: legacyNumMap[key] || '', minDeposit: legacyMin };
   const mName = nameMap[key] || key;
   const mNum = mData.number || '';
   const mMin = Number(mData.minDeposit || 0);
-
   if (!mNum) return toast('❌ এই মেথডে নাম্বার সেট করা নেই');
-
   const amt = parseFloat(document.getElementById('dsAmount').value);
   const txn = document.getElementById('dsTxnId').value.trim();
   const note = document.getElementById('dsNote').value.trim();
-
   if (!amt || amt <= 0) return toast('❌ Valid amount');
   if (amt < mMin) return toast(`❌ ${mName} এর জন্য সর্বনিম্ন ${mMin.toFixed(0)} TK`);
   if (!txn || txn.length < 4) return toast('❌ Valid Txn');
-
   const reqId = 'depreq_' + Date.now() + '_' + currentSession.adminId;
   await db.ref('depositRequests/' + reqId).set({
     adminId: currentSession.adminId,
@@ -3224,6 +3176,7 @@ async function submitDepositRequest() {
   closeDepositSubmitModal();
   renderMyDepositRequests();
 }
+
 async function renderMyDepositRequests() {
   const c = document.getElementById('myDepositRequestsList');
   if (!c || !currentSession || currentSession.role !== 'admin') return;
@@ -3291,16 +3244,14 @@ function saveMaintenance() {
 }
 
 // ============================================
-// WITHDRAWALS (User) - Real-time
+// WITHDRAWALS (User)
 // ============================================
 function loadPendingUserWithdrawals() {
   const c = document.getElementById('wd-container');
   if (!c) return;
-
   if (activeListeners.wdPending) {
     db.ref('withdrawals').orderByChild('status').equalTo('pending').off('value', activeListeners.wdPending);
   }
-
   activeListeners.wdPending = db.ref('withdrawals').orderByChild('status').equalTo('pending').on('value', snap => {
     let h = '';
     if (snap.exists()) snap.forEach(child => {
@@ -3321,7 +3272,6 @@ async function approveWd(id) {
     let wdSnap = await wdRef.once('value');
     if (!wdSnap.exists()) return toast('❌ Withdrawal not found');
     let request = wdSnap.val();
-
     if (request.status === 'pending') {
       const result = await wdRef.transaction(current => {
         if (!current || current.status !== 'pending') return;
@@ -3339,7 +3289,6 @@ async function approveWd(id) {
     } else if (request.status !== 'approved') {
       return toast('⚠️ Already processed');
     }
-
     if (request.countedAtRequest === false) {
       const userRef = db.ref('users/' + request.userId);
       const userResult = await userRef.transaction(user => {
@@ -3357,7 +3306,6 @@ async function approveWd(id) {
         if (!counted[id]) throw new Error('Could not update approved withdrawal count');
       }
     }
-
     toast('✅ Approved');
   } catch (e) {
     console.error('Withdrawal approval failed:', e);
@@ -3612,7 +3560,6 @@ function setupRealtimeBadges() {
         else b.style.display = 'none';
       }
     });
-
     if (chatsBadgeListener) db.ref('chats').off('value', chatsBadgeListener);
     chatsBadgeListener = db.ref('chats').on('value', snap => {
       let totalUnread = 0;
