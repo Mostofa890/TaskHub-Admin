@@ -517,13 +517,9 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 
 <div class="modal-overlay" id="adminViewModal"><div class="modal-box" style="max-width:600px;"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-warning"><i class="fas fa-user-shield"></i></div>Admin Complete Data</div><button class="modal-close" onclick="closeAdminViewModal()"><i class="fas fa-times"></i></button></div><div class="modal-body" id="adminViewBody"></div></div></div>
 
-<div class="modal-overlay" id="adminEditModal"><div class="modal-box" style="max-width:560px;"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-warning"><i class="fas fa-user-pen"></i></div>Edit Admin</div><button class="modal-close" onclick="closeAdminEditModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="aeAdminId"><div class="form-group"><label>Username</label><input type="text" id="aeUsername"></div><div class="form-group"><label>New Password</label><input type="password" id="aePassword" placeholder="Leave empty to keep"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div class="form-group"><label>Balance</label><input type="number" step="0.01" id="aeBalance"></div><div class="form-group"><label>Total Deposited</label><input type="number" step="0.01" id="aeTotalDeposited"></div><div class="form-group"><label>Total Spent</label><input type="number" step="0.01" id="aeTotalSpent"></div><div class="form-group"><label>Total Refunded</label><input type="number" step="0.01" id="aeTotalRefunded"></div><div class="form-group"><label>Total Fees</label><input type="number" step="0.01" id="aeTotalFees"></div><div class="form-group"><label>Total Service Charges</label><input type="number" step="0.01" id="aeTotalServiceCharges"></div><div class="form-group"><label>Total Revenue</label><input type="number" step="0.01" id="aeTotalRevenue"></div><div class="form-group"><label>Total Ref Commission</label><input type="number" step="0.01" id="aeTotalRefCommission"></div><div class="form-group"><label>Total Withdrawn</label><input type="number" step="0.01" id="aeTotalWithdrawn"></div><div class="form-group"><label>Total Withdraw Fees</label><input type="number" step="0.01" id="aeTotalWithdrawFees"></div></div><div class="form-group"><label>Referral Code</label><input type="text" id="aeReferralCode"></div><div class="form-group"><label>Active Status</label><select id="aeIsActive"><option value="true">✅ Active</option><option value="false">🚫 Disabled</option></select></div><div class="form-group"><label>Ban Status</label><select id="aeIsBanned"><option value="false">✅ Not Banned</option><option value="true">🚫 Banned</option></select></div><div class="form-group"><label>Suspend Status</label><select id="aeIsSuspended"><option value="false">✅ Not Suspended</option><option value="true">⏸️ Suspended</option></select></div><div style="display:flex;gap:10px;"><button class="btn btn-green" onclick="saveAdminFullEdit()" style="flex:2;"><i class="fas fa-save"></i> Save All</button><button class="btn btn-red" onclick="closeAdminEditModal()" style="flex:1;"><i class="fas fa-times"></i> Cancel</button></div></div></div></div>
+<div class="modal-overlay" id="adminEditModal"><div class="modal-box" style="max-width:560px;"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-warning"><i class="fas fa-user-pen"></i></div>Edit Admin</div><button class="modal-close" onclick="closeAdminEditModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="aeAdminId"><div class="form-group"><label>Username</label><input type="text" id="aeUsername"></div><div class="form-group"><label>New Password</label><input type="password" id="aePassword" placeholder="Leave empty to keep"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div class="form-group"><label>Balance</label><input type="number" step="0.01" id="aeBalance"></div><div class="form-group"><label>Required Active Refs</label><input type="number" id="aeRequiredActiveRefs"></div><div class="form-group"><label>Total Spent</label><input type="number" step="0.01" id="aeTotalSpent"></div><div class="form-group"><label>Total Refunded</label><input type="number" step="0.01" id="aeTotalRefunded"></div><div class="form-group"><label>Total Fees</label><input type="number" step="0.01" id="aeTotalFees"></div><div class="form-group"><label>Total Service Charges</label><input type="number" step="0.01" id="aeTotalServiceCharges"></div><div class="form-group"><label>Total Revenue</label><input type="number" step="0.01" id="aeTotalRevenue"></div><div class="form-group"><label>Total Ref Commission</label><input type="number" step="0.01" id="aeTotalRefCommission"></div><div class="form-group"><label>Total Withdrawn</label><input type="number" step="0.01" id="aeTotalWithdrawn"></div><div class="form-group"><label>Total Withdraw Fees</label><input type="number" step="0.01" id="aeTotalWithdrawFees"></div></div><div class="form-group"><label>Referral Code</label><input type="text" id="aeReferralCode"></div><div class="form-group"><label>Active Status</label><select id="aeIsActive"><option value="true">✅ Active</option><option value="false">🚫 Disabled</option></select></div><div class="form-group"><label>Ban Status</label><select id="aeIsBanned"><option value="false">✅ Not Banned</option><option value="true">🚫 Banned</option></select></div><div class="form-group"><label>Suspend Status</label><select id="aeIsSuspended"><option value="false">✅ Not Suspended</option><option value="true">⏸️ Suspended</option></select></div><div style="display:flex;gap:10px;"><button class="btn btn-green" onclick="saveAdminFullEdit()" style="flex:2;"><i class="fas fa-save"></i> Save All</button><button class="btn btn-red" onclick="closeAdminEditModal()" style="flex:1;"><i class="fas fa-times"></i> Cancel</button></div></div></div></div>
 
 <div class="modal-overlay" id="editTaskModal"><div class="modal-box"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-warning"><i class="fas fa-pen"></i></div>Edit Task</div><button class="modal-close" onclick="closeEditTaskModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="etTaskId"><div class="form-group"><label>Task Title *</label><input type="text" id="etTitle"></div><div class="form-group"><label>Description</label><textarea id="etDesc" rows="2"></textarea></div><div style="display:flex; gap:10px; flex-wrap:wrap;"><div class="form-group" style="flex:1; min-width:180px;"><label>Task Type</label><select id="etType" onchange="toggleEditSurveyFields()"><option value="survey">📊 Survey</option><option value="youtube_video_view">▶️ YouTube Video View</option><option value="youtube_like">👍 YouTube Like</option><option value="youtube_subscribe">🔔 YouTube Subscribe</option><option value="app_install">📲 App Install</option><option value="website_visit">🌐 Website Visit</option><option value="telegram_join">✈️ Telegram Join</option><option value="facebook_like">👍 Facebook Like</option><option value="instagram_follow">👥 Instagram Follow</option><option value="voice_recording">🎙️ Voice Recording</option><option value="image_upload">📷 Image Upload</option><option value="text_writing">✍️ Text Writing</option><option value="general">📋 General</option><option value="other">🔧 Other</option></select></div><div class="form-group" style="flex:1; min-width:180px;"><label>Category</label><select id="etCat"><option value="General">General</option><option value="Survey">Survey</option><option value="YouTube Video View">YouTube Video View</option><option value="YouTube Like">YouTube Like</option><option value="YouTube Subscribe">YouTube Subscribe</option><option value="App Install">App Install</option><option value="Website Visit">Website Visit</option><option value="Telegram Join">Telegram Join</option><option value="Facebook Like">Facebook Like</option><option value="Instagram Follow">Instagram Follow</option><option value="Voice Recording">Voice Recording</option><option value="Image Upload">Image Upload</option><option value="Text Writing">Text Writing</option><option value="Other">Other</option></select></div></div><div style="display:flex; gap:10px; flex-wrap:wrap;"><div class="form-group" style="flex:1; min-width:120px;"><label>Reward (TK)</label><input type="number" id="etReward" step="0.01" min="0.10" oninput="updateMaxDaysHint('etReward','etTime','etMaxDaysHint');"></div><div class="form-group" style="flex:1; min-width:120px;"><label>Total Slots</label><input type="number" id="etSlots"></div></div><div style="display:flex; gap:10px; flex-wrap:wrap;"><div class="form-group" style="flex:1; min-width:120px;"><label>Time Limit (Days)</label><input type="number" id="etTime" min="1" oninput="updateMaxDaysHint('etReward','etTime','etMaxDaysHint');"><small id="etMaxDaysHint" style="display:block; margin-top:6px; font-size:.7rem; font-weight:700;"></small></div><div class="form-group" style="flex:1; min-width:120px; display:none;" id="etTimerGroup"><label>⏱️ Timer (Seconds)</label><input type="number" id="etTimer" min="5"></div></div><div class="form-group" id="etLinkGroup"><label id="etLinkLabel">🔗 Task Link</label><input type="url" id="etLink"><small id="etLinkHint" style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);"></small></div><div class="alert-box warning" id="etPendingWarn" style="display:none;"><i class="fas fa-exclamation-triangle"></i><div>এই task edit করলে <b>আবার Super Admin approval-এ যাবে</b>।</div></div><div style="display:flex; gap:10px; margin-top:8px;"><button class="btn btn-green" onclick="saveEditTask()" style="flex:2;"><i class="fas fa-check"></i> Update Task</button><button class="btn btn-red" onclick="closeEditTaskModal()" style="flex:1;"><i class="fas fa-times"></i> Cancel</button></div></div></div></div>
-
-<div class="modal-overlay" id="depositModal"><div class="modal-box"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-success"><i class="fas fa-money-bill-wave"></i></div>Add Balance to Admin</div><button class="modal-close" onclick="closeDepositModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="depAdminId"><div class="form-group"><label>Admin</label><input type="text" id="depAdminName" disabled></div><div class="form-group"><label>Payment Method *</label><select id="depMethod"><option value="bKash">bKash</option><option value="Nagad">Nagad</option><option value="Rocket">Rocket</option><option value="Bank">Bank</option><option value="Binance">Binance</option><option value="Manual">Manual</option><option value="Other">Other</option></select></div><div class="form-group"><label>Account / Txn Number *</label><input type="text" id="depAccount"></div><div class="form-group"><label>Amount (TK) *</label><input type="number" id="depAmount" step="0.01"></div><div class="form-group"><label>Note (optional)</label><input type="text" id="depNote"></div><button class="btn btn-green" onclick="confirmDeposit()"><i class="fas fa-check"></i> Confirm Deposit</button></div></div></div>
-
-<div class="modal-overlay" id="depositSubmitModal"><div class="modal-box"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-success"><i class="fas fa-paper-plane"></i></div>Submit Deposit Request</div><button class="modal-close" onclick="closeDepositSubmitModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="dsMethodIndex"><div id="dsMethodInfo" style="background:var(--bg-alt); padding:12px 14px; border-radius:12px; margin-bottom:12px; border:1px solid var(--border); font-size:.85rem; font-weight:600;"></div><div class="form-group"><label>Amount Sent (TK) *</label><input type="number" id="dsAmount" step="0.01"></div><div class="form-group"><label>Transaction ID *</label><input type="text" id="dsTxnId"></div><div class="form-group"><label>Additional Note (optional)</label><input type="text" id="dsNote"></div><div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i><div>টাকা পাঠানোর <b>পরে</b> form পূরণ করুন।</div></div><button class="btn btn-green" onclick="submitDepositRequest()"><i class="fas fa-paper-plane"></i> Submit Request</button></div></div></div>
 
 <div class="modal-overlay" id="banModal"><div class="modal-box"><div class="modal-header"><div class="modal-title"><div class="card-title-icon icon-danger"><i class="fas fa-ban"></i></div><span id="banModalTitle">Ban Admin</span></div><button class="modal-close" onclick="closeBanModal()"><i class="fas fa-times"></i></button></div><div class="modal-body"><input type="hidden" id="banAdminId"><input type="hidden" id="banAction"><div class="form-group"><label>Admin</label><input type="text" id="banAdminName" disabled></div><div class="form-group"><label>Reason *</label><textarea id="banReason" rows="3"></textarea></div><button class="btn btn-red" onclick="confirmBan()"><i class="fas fa-ban"></i> Confirm</button></div></div></div>
 
@@ -553,7 +549,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       No messages
     </div>
 </div>
-<!-- 👇 এই লাইনটি যোগ করুন 👇 -->
 <div id="adminTypingIndicator" style="display:none; padding: 5px 15px; font-size: 0.75rem; color: #6C5CE7; font-weight: 700; background: #f8fafc;">
     <i class="fas fa-ellipsis-h fa-fade"></i> User is typing...
 </div>
@@ -584,7 +579,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div class="tab" data-tab="tasks" onclick="switchTab('tasks', this)"><i class="fas fa-briefcase"></i><span>Tasks</span></div>
       <div class="tab admin-only hidden" id="tabBtnWallet" data-tab="wallet" onclick="switchTab('wallet', this)"><i class="fas fa-wallet"></i><span>My Wallet</span></div>
       <div class="tab admin-only hidden" id="tabBtnEarnings" data-tab="earnings" onclick="switchTab('earnings', this)"><i class="fas fa-coins"></i><span>Earnings</span></div>
-      <div class="tab admin-only hidden" id="tabBtnDeposit" data-tab="deposit" onclick="switchTab('deposit', this)"><i class="fas fa-circle-dollar-to-slot"></i><span>Deposit</span></div>
       <div class="tab admin-only hidden" id="tabBtnContact" data-tab="contact" onclick="switchTab('contact', this)"><i class="fas fa-headset"></i><span>Contact</span></div>
     </div>
   </div>
@@ -805,7 +799,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   <!-- ADMINS TAB -->
   <div id="tab-admins" class="tab-content super-only">
     <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-key"></i></div>Change Super Password</div></div><div class="form-group"><label>Current Password</label><input type="password" id="curSuperPw"></div><div class="form-group"><label>New Password</label><input type="password" id="newSuperPw"></div><div class="form-group"><label>Confirm New Password</label><input type="password" id="confSuperPw"></div><button class="btn btn-warning" onclick="changeSuperPassword()"><i class="fas fa-key"></i> Change</button></div>
-    <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-user-plus"></i></div>Add New Admin</div></div><div class="form-group"><label>Username *</label><input type="text" id="newAdminUsername"></div><div class="form-group"><label>Password *</label><input type="password" id="newAdminPassword"></div><div class="form-group"><label>Confirm Password *</label><input type="password" id="newAdminConfirmPassword"></div><button class="btn btn-green" onclick="addNewAdmin()"><i class="fas fa-user-plus"></i> Add Admin</button></div>
+    <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-user-plus"></i></div>Add New Admin</div></div><div class="form-group"><label>Username *</label><input type="text" id="newAdminUsername"></div><div class="form-group"><label>Password *</label><input type="password" id="newAdminPassword"></div><div class="form-group"><label>Confirm Password *</label><input type="password" id="newAdminConfirmPassword"></div><div class="form-group"><label>Required Active Refs (For Withdraw & Task)</label><input type="number" id="newAdminReqRefs" value="5"></div><button class="btn btn-green" onclick="addNewAdmin()"><i class="fas fa-user-plus"></i> Add Admin</button></div>
     <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-users-gear"></i></div>All Admins</div></div><div id="adminsListContainer">Loading...</div></div>
   </div>
 
@@ -948,15 +942,14 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 
   <!-- WALLET TAB (Admin) -->
   <div id="tab-wallet" class="tab-content admin-only hidden">
-    <div class="wallet-hero">
+    <div class="wallet-hero" style="background:linear-gradient(135deg,#059669 0%,#10b981 40%,#06b6d4 100%);box-shadow:0 20px 40px -10px rgba(5,150,105,.55);">
       <i class="fas fa-wallet wallet-icon"></i>
-      <div class="wallet-label">Available Balance</div>
+      <div class="wallet-label">Commission Balance</div>
       <div class="wallet-amount"><span id="walletBalance">0.00</span> <span style="font-size:1.4rem;">TK</span></div>
       <div class="wallet-sub">এই balance দিয়ে Task বানাতে পারবেন</div>
-      <div class="wallet-stats three">
-        <div class="wallet-stat-cell"><div class="val" id="walletTotalDeposited">0.00</div><div class="lbl">Deposited</div></div>
-        <div class="wallet-stat-cell"><div class="val" id="walletTotalSpent">0.00</div><div class="lbl">Spent</div></div>
-        <div class="wallet-stat-cell" style="background:rgba(251,191,36,.35);"><div class="val" id="walletTotalRevenue">0.00</div><div class="lbl">💰 Revenue</div></div>
+      <div class="wallet-stats">
+        <div class="wallet-stat-cell"><div class="val" id="walletActiveRefsStatus">0 / 5</div><div class="lbl">Active Refs</div></div>
+        <div class="wallet-stat-cell"><div class="val" id="walletTotalRevenue">0.00</div><div class="lbl">💰 Revenue</div></div>
       </div>
     </div>
     <div class="card rainbow">
@@ -970,7 +963,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <button class="btn btn-info btn-small" onclick="copyAdminRefCode()" style="flex:1;"><i class="fas fa-copy"></i> Copy Code</button>
         <button class="btn btn-green btn-small" onclick="copyAdminRefLink()" style="flex:1;"><i class="fas fa-link"></i> Copy Link</button>
       </div>
-      <div class="alert-box info" style="margin-bottom:14px;"><i class="fas fa-info-circle"></i><div>এই link শেয়ার করুন। কেউ এই link দিয়ে join করলে তার ইনকামের <b id="commRateDisplay">5%</b> আপনি পাবেন।</div></div>
+      <div class="alert-box warning" style="margin-bottom:14px;"><i class="fas fa-exclamation-triangle"></i><div><b>⚠️ শর্ত:</b> টাস্ক তৈরি বা উইথড্র করতে আপনার রেফার করা ইউজারদের মধ্যে <b>কমপক্ষে <span id="requiredRefsDisplay">5</span> জনের প্যাকেজ একটিভ</b> থাকতে হবে।</div></div>
       <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
         <div class="stat-card green"><div class="num" id="myRefUsersCount">0</div><div class="label">Referred</div></div>
         <div class="stat-card info"><div class="num" id="myRefCommission">0</div><div class="label">Total Comm</div></div>
@@ -980,7 +973,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <div id="myReferredUsersList"></div>
     </div>
     <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-pink"><i class="fas fa-address-card"></i></div>My Contact Info</div></div><div id="myContactBox"></div><button class="btn btn-pink" onclick="openContactEditModal()" style="margin-top:10px;"><i class="fas fa-pen"></i> Edit Contact</button></div>
-    <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-money-bill-wave"></i></div>Deposit History</div></div><div id="depositHistoryList"></div></div>
   </div>
 
   <!-- EARNINGS TAB (Admin) -->
@@ -998,12 +990,6 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
     <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-money-bill-transfer"></i></div>Withdraw Earnings</div></div><div class="alert-box success"><i class="fas fa-lightbulb"></i><div><b>💰 Rules:</b> Min <b id="withdrawMinDisplay">100</b> TK। Fee: <b id="withdrawFeeDisplay">2%</b>।</div></div><button class="btn btn-green" onclick="openAdminWithdrawModal()"><i class="fas fa-paper-plane"></i> Request Withdraw</button></div>
     <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>My Withdraw Requests</div></div><div id="myAdminWdList"></div></div>
     <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-history"></i></div>Revenue History</div></div><div id="revenueHistoryList"></div></div>
-  </div>
-
-  <!-- DEPOSIT TAB (Admin) -->
-  <div id="tab-deposit" class="tab-content admin-only hidden">
-    <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-list"></i></div>Select Method</div></div><div id="dmMethodsAdminView"></div></div>
-    <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-clock-rotate-left"></i></div>My Requests</div></div><div id="myDepositRequestsList"></div></div>
   </div>
 
   <!-- CONTACT TAB (Admin) -->
@@ -1306,44 +1292,52 @@ function onLoginSuccess(session, isNew) {
   runPanelInit();
 }
 
+async function calculateAdminQualifiedRefs(adminData) {
+    if (!adminData || !adminData.referredUsers) return 0;
+    let count = 0;
+    const refUsers = adminData.referredUsers || {};
+    for (const uid of Object.keys(refUsers)) {
+        const us = await db.ref('users/'+uid).once('value');
+        if (us.exists() && Number(us.val().activePackageCount || 0) > 0) {
+            count++;
+        }
+    }
+    return count;
+}
+
 async function loadCurrentAdminData() {
   if (!currentSession || currentSession.role !== 'admin') return;
   try {
     const s = await db.ref('admins/'+currentSession.adminId).once('value');
     if (!s.exists()) return;
     currentAdminData = {id: currentSession.adminId, ...s.val()};
-    updateWalletUI(); renderDepositHistory(); renderMyDepositRequests(); renderMyContact();
+    
+    // Calculate Qualified Refs
+    currentAdminData.qualifiedRefsCount = await calculateAdminQualifiedRefs(currentAdminData);
+    const reqRefs = Number(currentAdminData.requiredActiveRefs || 5);
+    
+    const walletStatusEl = document.getElementById('walletActiveRefsStatus');
+    if (walletStatusEl) walletStatusEl.textContent = `${currentAdminData.qualifiedRefsCount} / ${reqRefs}`;
+    
+    const reqRefsDisplay = document.getElementById('requiredRefsDisplay');
+    if (reqRefsDisplay) reqRefsDisplay.textContent = reqRefs;
+
+    updateWalletUI(); renderMyContact();
     await generateAdminRefCode();
     await loadMyAdminReferralStats();
     await loadMyEarnings();
     await loadMyAdminWithdrawRequests();
     await loadRevenueHistory();
-  } catch(e) {}
+  } catch(e) { console.error(e); }
 }
 
 function updateWalletUI() {
   if (!currentAdminData) return;
   document.getElementById('walletBalance').textContent = (currentAdminData.balance||0).toFixed(2);
-  document.getElementById('walletTotalDeposited').textContent = (currentAdminData.totalDeposited||0).toFixed(2);
-  document.getElementById('walletTotalSpent').textContent = (currentAdminData.totalSpent||0).toFixed(2);
   const r = document.getElementById('walletTotalRevenue'); if (r) r.textContent = (currentAdminData.totalRevenue||0).toFixed(2);
   const tw = document.getElementById('taskWalletInfo');
   if (tw) { tw.style.display = 'block'; document.getElementById('taskWalletBal').textContent = (currentAdminData.balance||0).toFixed(2); }
   updateTaskCostPreview();
-}
-
-function renderDepositHistory() {
-  const c = document.getElementById('depositHistoryList'); if (!c) return;
-  const dep = (currentAdminData && currentAdminData.deposits) || {};
-  const keys = Object.keys(dep).sort((a,b) => (dep[b].timestamp||0) - (dep[a].timestamp||0));
-  if (!keys.length) { c.innerHTML = '<div class="empty-state" style="padding:20px;"><p>No deposits yet</p></div>'; return; }
-  let h = '';
-  keys.forEach(k => {
-    const d = dep[k];
-    const dt = new Date(d.timestamp).toLocaleString('en-GB', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'});
-    h += `<div style="display:flex; justify-content:space-between; padding:12px 14px; background:linear-gradient(135deg,#f0fdf4,#dcfce7); border-radius:12px; margin-bottom:8px;"><div><div style="font-weight:800; font-size:.82rem;">${esc(d.method)}</div><div style="font-size:.72rem; color:#64748b; margin-top:3px;">${esc(d.account)} • ${dt}</div></div><div style="font-weight:900; color:var(--success);">+${Number(d.amount).toFixed(2)}</div></div>`;
-  });
-  c.innerHTML = h;
 }
 
 function handleLogout() { if (!confirm('Logout?')) return; cleanupListeners(); clearSession(); location.reload(); }
@@ -1469,8 +1463,13 @@ async function loadMyAdminReferralStats() {
     if (!us.exists()) continue;
     const u = us.val();
     const earned = Number(u.totalEarned||0);
-    const comm = earned * rate / 100;
-    h += `<div class="ref-mini-item"><div class="ref-mini-avatar">${(u.name||'U').charAt(0).toUpperCase()}</div><div class="ref-mini-info"><h5>${esc(u.name||'User')}</h5><p>ID: ${uid} • Earned: ${earned.toFixed(2)} TK</p></div><div class="ref-mini-bal qualified">+${comm.toFixed(2)}</div></div>`;
+    const activePkgs = Number(u.activePackageCount || 0);
+    const isQualified = activePkgs > 0;
+    h += `<div class="ref-mini-item" style="${isQualified ? 'border-color:#10b981; background:linear-gradient(135deg,#f0fdf4,#dcfce7);' : ''}">
+        <div class="ref-mini-avatar" style="background:${isQualified?'linear-gradient(135deg,#10b981,#34d399)':'var(--bg-alt)'};color:${isQualified?'#fff':'var(--text-muted)'};">${(u.name||'U').charAt(0).toUpperCase()}</div>
+        <div class="ref-mini-info"><h5>${esc(u.name||'User')}</h5><p>ID: ${uid} • ${isQualified?'✅ Active Package':''}</p></div>
+        <div class="ref-mini-bal ${isQualified?'qualified':'not-qualified'}">${activePkgs > 0 ? activePkgs+' pkg' : 'No pkg'}</div>
+    </div>`;
   }
   container.innerHTML = h;
 }
@@ -1556,6 +1555,14 @@ document.addEventListener('input', e => { if (e.target && e.target.id === 'awAmo
 
 async function submitAdminWithdrawRequest() {
   if (!currentSession || currentSession.role !== 'admin') return;
+  
+  // CHECK ACTIVE REFS
+  const reqRefs = Number(currentAdminData.requiredActiveRefs || 5);
+  const qRefs = Number(currentAdminData.qualifiedRefsCount || 0);
+  if (qRefs < reqRefs) {
+      return toast(`❌ উইথড্র করার জন্য কমপক্ষে ${reqRefs} জন একটিভ রেফারেল লাগবে। আপনার আছে ${qRefs} জন।`);
+  }
+
   const amt = parseFloat(document.getElementById('awAmount').value);
   const method = document.getElementById('awMethod').value;
   const acc = document.getElementById('awAccount').value.trim();
@@ -1783,7 +1790,7 @@ async function loadActiveUserPackages() {
 }
 
 // ============================================
-// DEPOSIT PAYMENT INFO (NEW: per-method number + minDeposit)
+// DEPOSIT PAYMENT INFO
 // ============================================
 function loadDepositPaymentInfo() {
   const dp = configData.depositPayment || {};
@@ -1943,7 +1950,15 @@ async function saveNewTask() {
   const cost = reward * slots;
   const svc = cost * (SERVICE_CHARGE_RATE/100);
   const debit = cost + svc;
+  
   if (currentSession.role === 'admin') {
+    // CHECK ACTIVE REFS
+    const reqRefs = Number(currentAdminData.requiredActiveRefs || 5);
+    const qRefs = Number(currentAdminData.qualifiedRefsCount || 0);
+    if (qRefs < reqRefs) {
+        return toast(`❌ আপনাকে টাস্ক তৈরি করতে হলে কমপক্ষে ${reqRefs} জন একটিভ রেফারেল লাগবে। আপনার আছে ${qRefs} জন।`);
+    }
+    // Balance check
     const bal = currentAdminData ? Number(currentAdminData.balance||0) : 0;
     if (bal < debit) return toast(`❌ অপর্যাপ্ত! প্রয়োজন ${debit.toFixed(2)}`);
   }
@@ -2690,7 +2705,7 @@ async function loadAdminsList() {
   as.forEach(child => {
     cnt++;
     const a = child.val();
-    const bal = Number(a.balance||0), dep = Number(a.totalDeposited||0), sp = Number(a.totalSpent||0);
+    const bal = Number(a.balance||0), sp = Number(a.totalSpent||0);
     const rev = Number(a.totalRevenue||0);
     const banned = a.isBanned === true, susp = a.isSuspended === true;
     const cls = banned ? 'banned' : susp ? 'suspended' : '';
@@ -2698,7 +2713,7 @@ async function loadAdminsList() {
     const contact = a.adminContact || null;
     const cH = contact && contact.value ? `<div style="margin-top:6px; font-size:.72rem; color:#7c3aed; font-weight:700;"><i class="fas fa-address-card"></i> ${esc(contact.type)}: <span style="font-family:monospace; color:#4338ca;">${esc(contact.value)}</span></div>` : '';
     const refH = a.referralCode ? `<div style="margin-top:6px; font-size:.72rem; color:#0891b2; font-weight:700;"><i class="fas fa-link"></i> Code: <span style="font-family:monospace; color:#0e7490;">${esc(a.referralCode)}</span></div>` : '';
-    h += `<div class="admin-item ${cls}"><div class="admin-item-top"><div class="admin-item-left"><div class="admin-item-avatar">${(a.username||'A').charAt(0).toUpperCase()}</div><div class="admin-item-info"><div class="name">${esc(a.username)} <span class="status-badge admin">ADMIN</span> ${sb}</div><div class="meta">Created: ${a.createdAt ? new Date(a.createdAt).toLocaleDateString() : 'N/A'}</div>${cH}${refH}</div></div></div><div class="admin-balance-box" style="grid-template-columns:1fr 1fr 1fr 1fr;"><div class="admin-balance-cell green"><div class="val">${bal.toFixed(2)}</div><div class="lbl">Balance</div></div><div class="admin-balance-cell"><div class="val">${dep.toFixed(2)}</div><div class="lbl">Deposited</div></div><div class="admin-balance-cell warn"><div class="val">${sp.toFixed(2)}</div><div class="lbl">Spent</div></div><div class="admin-balance-cell revenue"><div class="val">${rev.toFixed(2)}</div><div class="lbl">💰 Revenue</div></div></div><div class="admin-item-actions"><button class="btn btn-info btn-small" onclick="viewAdminFull('${child.key}')"><i class="fas fa-eye"></i> View</button><button class="btn btn-warning btn-small" onclick="openAdminEditModal('${child.key}')"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-green btn-small" onclick="openDepositModal('${child.key}')"><i class="fas fa-plus"></i> Add</button><button class="btn btn-purple btn-small" onclick="openAdminContact('${child.key}')"><i class="fas fa-address-card"></i></button>${banned ? `<button class="btn btn-green btn-small" onclick="unbanAdmin('${child.key}')"><i class="fas fa-unlock"></i> Unban</button>` : `<button class="btn btn-red btn-small" onclick="openBanModal('${child.key}', '${esc(a.username)}', 'ban')"><i class="fas fa-ban"></i> Ban</button>`}${susp ? `<button class="btn btn-green btn-small" onclick="unsuspendAdmin('${child.key}')"><i class="fas fa-play"></i> Resume</button>` : `<button class="btn btn-warning btn-small" onclick="openBanModal('${child.key}', '${esc(a.username)}', 'suspend')"><i class="fas fa-pause"></i> Suspend</button>`}<button class="btn btn-red btn-small" onclick="deleteAdminFull('${child.key}')"><i class="fas fa-trash"></i> Delete</button></div></div>`;
+    h += `<div class="admin-item ${cls}"><div class="admin-item-top"><div class="admin-item-left"><div class="admin-item-avatar">${(a.username||'A').charAt(0).toUpperCase()}</div><div class="admin-item-info"><div class="name">${esc(a.username)} <span class="status-badge admin">ADMIN</span> ${sb}</div><div class="meta">Created: ${a.createdAt ? new Date(a.createdAt).toLocaleDateString() : 'N/A'} • Req Refs: ${a.requiredActiveRefs || 5}</div>${cH}${refH}</div></div></div><div class="admin-balance-box" style="grid-template-columns:1fr 1fr 1fr;"><div class="admin-balance-cell green"><div class="val">${bal.toFixed(2)}</div><div class="lbl">Balance</div></div><div class="admin-balance-cell warn"><div class="val">${sp.toFixed(2)}</div><div class="lbl">Spent</div></div><div class="admin-balance-cell revenue"><div class="val">${rev.toFixed(2)}</div><div class="lbl">💰 Revenue</div></div></div><div class="admin-item-actions"><button class="btn btn-info btn-small" onclick="viewAdminFull('${child.key}')"><i class="fas fa-eye"></i> View</button><button class="btn btn-warning btn-small" onclick="openAdminEditModal('${child.key}')"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-purple btn-small" onclick="openAdminContact('${child.key}')"><i class="fas fa-address-card"></i></button>${banned ? `<button class="btn btn-green btn-small" onclick="unbanAdmin('${child.key}')"><i class="fas fa-unlock"></i> Unban</button>` : `<button class="btn btn-red btn-small" onclick="openBanModal('${child.key}', '${esc(a.username)}', 'ban')"><i class="fas fa-ban"></i> Ban</button>`}${susp ? `<button class="btn btn-green btn-small" onclick="unsuspendAdmin('${child.key}')"><i class="fas fa-play"></i> Resume</button>` : `<button class="btn btn-warning btn-small" onclick="openBanModal('${child.key}', '${esc(a.username)}', 'suspend')"><i class="fas fa-pause"></i> Suspend</button>`}<button class="btn btn-red btn-small" onclick="deleteAdminFull('${child.key}')"><i class="fas fa-trash"></i> Delete</button></div></div>`;
   });
   if (!cnt) h += '<div class="empty-state" style="padding:20px;"><p>No admins yet</p></div>';
   c.innerHTML = h;
@@ -2708,18 +2723,6 @@ async function viewAdminFull(adminId) {
   const snap = await db.ref('admins/'+adminId).once('value');
   if (!snap.exists()) return toast('❌ Not found');
   const a = snap.val();
-  const deposits = a.deposits || {};
-  const dk = Object.keys(deposits).sort((x,y) => (deposits[y].timestamp||0)-(deposits[x].timestamp||0));
-  let dH = '';
-  if (!dk.length) dH = '<div style="text-align:center; color:#94a3b8; padding:10px; font-size:.78rem;">No deposits</div>';
-  else {
-    dH = '<div style="max-height:200px; overflow-y:auto;">';
-    dk.slice(0, 30).forEach(k => {
-      const d = deposits[k];
-      dH += `<div style="display:flex; justify-content:space-between; padding:8px 10px; background:#f8fafc; border-radius:8px; margin-bottom:6px; font-size:.78rem;"><div><b>${esc(d.method)}</b><br><span style="color:#94a3b8; font-size:.7rem;">${esc(d.account)}</span></div><div style="font-weight:900; color:#10b981;">+${Number(d.amount).toFixed(2)}</div></div>`;
-    });
-    dH += '</div>';
-  }
   const contact = a.adminContact || {};
   let cH = '';
   if (contact.value) {
@@ -2727,7 +2730,9 @@ async function viewAdminFull(adminId) {
     cH = `<div class="info-display-box"><span class="label"><i class="fab ${icons[contact.type]||'fa-link'}"></i> ${contact.type}</span><span class="value">${esc(contact.value)}</span><button class="copy-btn inline" onclick="copyToClipboard('${esc(contact.value).replace(/'/g,"\\'")}', 'Contact')"><i class="fas fa-copy"></i></button></div>`;
   } else cH = '<div style="text-align:center; color:#94a3b8; padding:10px; font-size:.78rem;">No contact</div>';
   const refCode = a.referralCode || 'N/A';
-  document.getElementById('adminViewBody').innerHTML = `<div style="text-align:center; margin-bottom:16px;"><div style="width:64px; height:64px; margin:0 auto 10px; border-radius:18px; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.5rem;">${(a.username||'A').charAt(0).toUpperCase()}</div><div style="font-weight:900; font-size:1.1rem;">${esc(a.username)}</div><div style="font-size:.72rem; color:#94a3b8; margin-top:4px;">ID: ${adminId}</div></div><div class="section-divider"><i class="fas fa-key"></i> Credentials</div><div class="info-display-box"><span class="label">Username</span><span class="value">${esc(a.username)}</span><button class="copy-btn inline" onclick="copyToClipboard('${esc(a.username).replace(/'/g,"\\'")}', 'Username')"><i class="fas fa-copy"></i></button></div><div class="info-display-box" style="background:linear-gradient(135deg,#cffafe,#a5f3fc); border-color:rgba(6,182,212,.4);"><span class="label" style="color:#0e7490;">Ref Code</span><span class="value" style="color:#0891b2; font-weight:900; letter-spacing:2px;">${esc(refCode)}</span></div><div class="section-divider"><i class="fas fa-wallet"></i> Financial</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card green"><div class="num">${Number(a.balance||0).toFixed(2)}</div><div class="label">Balance</div></div><div class="stat-card info"><div class="num">${Number(a.totalDeposited||0).toFixed(2)}</div><div class="label">Deposited</div></div><div class="stat-card warning"><div class="num">${Number(a.totalSpent||0).toFixed(2)}</div><div class="label">Spent</div></div><div class="stat-card purple"><div class="num">${Number(a.totalRefunded||0).toFixed(2)}</div><div class="label">Refunded</div></div><div class="stat-card pink"><div class="num">${Number(a.totalFees||0).toFixed(2)}</div><div class="label">Fees</div></div><div class="stat-card danger"><div class="num">${Number(a.totalServiceCharges||0).toFixed(2)}</div><div class="label">Svc Charges</div></div></div><div class="section-divider"><i class="fas fa-coins"></i> Revenue</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card green"><div class="num">${Number(a.totalRevenue||0).toFixed(2)}</div><div class="label">Revenue</div></div><div class="stat-card info"><div class="num">${Number(a.totalRefCommission||0).toFixed(2)}</div><div class="label">Commission</div></div><div class="stat-card purple"><div class="num">${Number(a.totalTaskBonus||0).toFixed(2)}</div><div class="label">Task Bonus</div></div><div class="stat-card warning"><div class="num">${Number(a.totalWithdrawn||0).toFixed(2)}</div><div class="label">Withdrawn</div></div></div><div class="section-divider"><i class="fas fa-address-card"></i> Contact</div>${cH}<div class="section-divider"><i class="fas fa-money-bill-wave"></i> Deposits</div>${dH}<div style="display:flex; gap:10px; margin-top:16px;"><button class="btn btn-warning" onclick="closeAdminViewModal(); openAdminEditModal('${adminId}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-red" onclick="closeAdminViewModal(); deleteAdminFull('${adminId}')" style="flex:1;"><i class="fas fa-trash"></i> Delete</button></div>`;
+  const reqRefs = a.requiredActiveRefs || 5;
+  
+  document.getElementById('adminViewBody').innerHTML = `<div style="text-align:center; margin-bottom:16px;"><div style="width:64px; height:64px; margin:0 auto 10px; border-radius:18px; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.5rem;">${(a.username||'A').charAt(0).toUpperCase()}</div><div style="font-weight:900; font-size:1.1rem;">${esc(a.username)}</div><div style="font-size:.72rem; color:#94a3b8; margin-top:4px;">ID: ${adminId}</div></div><div class="section-divider"><i class="fas fa-key"></i> Credentials</div><div class="info-display-box"><span class="label">Username</span><span class="value">${esc(a.username)}</span><button class="copy-btn inline" onclick="copyToClipboard('${esc(a.username).replace(/'/g,"\\'")}', 'Username')"><i class="fas fa-copy"></i></button></div><div class="info-display-box" style="background:linear-gradient(135deg,#cffafe,#a5f3fc); border-color:rgba(6,182,212,.4);"><span class="label" style="color:#0e7490;">Ref Code</span><span class="value" style="color:#0891b2; font-weight:900; letter-spacing:2px;">${esc(refCode)}</span></div><div class="info-display-box" style="background:linear-gradient(135deg,#fffbeb,#fef3c7); border-color:rgba(245,158,11,.4);"><span class="label" style="color:#92400e;">Req Active Refs</span><span class="value" style="color:#92400e; font-weight:900;">${reqRefs} Users</span></div><div class="section-divider"><i class="fas fa-wallet"></i> Financial</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card green"><div class="num">${Number(a.balance||0).toFixed(2)}</div><div class="label">Balance</div></div><div class="stat-card warning"><div class="num">${Number(a.totalSpent||0).toFixed(2)}</div><div class="label">Spent</div></div><div class="stat-card purple"><div class="num">${Number(a.totalRefunded||0).toFixed(2)}</div><div class="label">Refunded</div></div><div class="stat-card pink"><div class="num">${Number(a.totalFees||0).toFixed(2)}</div><div class="label">Fees</div></div><div class="stat-card danger"><div class="num">${Number(a.totalServiceCharges||0).toFixed(2)}</div><div class="label">Svc Charges</div></div></div><div class="section-divider"><i class="fas fa-coins"></i> Revenue</div><div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;"><div class="stat-card green"><div class="num">${Number(a.totalRevenue||0).toFixed(2)}</div><div class="label">Revenue</div></div><div class="stat-card info"><div class="num">${Number(a.totalRefCommission||0).toFixed(2)}</div><div class="label">Commission</div></div><div class="stat-card purple"><div class="num">${Number(a.totalTaskBonus||0).toFixed(2)}</div><div class="label">Task Bonus</div></div><div class="stat-card warning"><div class="num">${Number(a.totalWithdrawn||0).toFixed(2)}</div><div class="label">Withdrawn</div></div></div><div class="section-divider"><i class="fas fa-address-card"></i> Contact</div>${cH}<div style="display:flex; gap:10px; margin-top:16px;"><button class="btn btn-warning" onclick="closeAdminViewModal(); openAdminEditModal('${adminId}')" style="flex:1;"><i class="fas fa-pen"></i> Edit</button><button class="btn btn-red" onclick="closeAdminViewModal(); deleteAdminFull('${adminId}')" style="flex:1;"><i class="fas fa-trash"></i> Delete</button></div>`;
   document.getElementById('adminViewModal').classList.add('active');
 }
 function closeAdminViewModal() { document.getElementById('adminViewModal').classList.remove('active'); }
@@ -2740,7 +2745,7 @@ async function openAdminEditModal(adminId) {
   document.getElementById('aeUsername').value = a.username || '';
   document.getElementById('aePassword').value = '';
   document.getElementById('aeBalance').value = Number(a.balance||0).toFixed(2);
-  document.getElementById('aeTotalDeposited').value = Number(a.totalDeposited||0).toFixed(2);
+  document.getElementById('aeRequiredActiveRefs').value = a.requiredActiveRefs || 5;
   document.getElementById('aeTotalSpent').value = Number(a.totalSpent||0).toFixed(2);
   document.getElementById('aeTotalRefunded').value = Number(a.totalRefunded||0).toFixed(2);
   document.getElementById('aeTotalFees').value = Number(a.totalFees||0).toFixed(2);
@@ -2762,7 +2767,7 @@ async function saveAdminFullEdit() {
   const ud = {
     username: document.getElementById('aeUsername').value.trim(),
     balance: parseFloat(document.getElementById('aeBalance').value) || 0,
-    totalDeposited: parseFloat(document.getElementById('aeTotalDeposited').value) || 0,
+    requiredActiveRefs: parseInt(document.getElementById('aeRequiredActiveRefs').value) || 5,
     totalSpent: parseFloat(document.getElementById('aeTotalSpent').value) || 0,
     totalRefunded: parseFloat(document.getElementById('aeTotalRefunded').value) || 0,
     totalFees: parseFloat(document.getElementById('aeTotalFees').value) || 0,
@@ -2815,39 +2820,12 @@ async function confirmBan() {
 }
 async function unbanAdmin(id) { if (!confirm('Unban?')) return; await db.ref('admins/'+id).update({ isBanned: false, banReason: null }); toast('✅ Done'); loadAdminsList(); }
 async function unsuspendAdmin(id) { if (!confirm('Resume?')) return; await db.ref('admins/'+id).update({ isSuspended: false, suspendReason: null }); toast('✅ Done'); loadAdminsList(); }
-function openDepositModal(adminId) {
-  db.ref('admins/'+adminId).once('value').then(s => {
-    if (!s.exists()) return;
-    const a = s.val();
-    document.getElementById('depAdminId').value = adminId;
-    document.getElementById('depAdminName').value = a.username + ' (Bal: ' + Number(a.balance||0).toFixed(2) + ')';
-    document.getElementById('depAccount').value = ''; document.getElementById('depAmount').value = ''; document.getElementById('depNote').value = '';
-    document.getElementById('depositModal').classList.add('active');
-  });
-}
-function closeDepositModal() { document.getElementById('depositModal').classList.remove('active'); }
-async function confirmDeposit() {
-  const id = document.getElementById('depAdminId').value;
-  const m = document.getElementById('depMethod').value;
-  const acc = document.getElementById('depAccount').value.trim();
-  const amt = parseFloat(document.getElementById('depAmount').value);
-  const n = document.getElementById('depNote').value.trim();
-  if (!acc || acc.length < 4) return toast('❌ Valid account');
-  if (!amt || amt <= 0) return toast('❌ Valid amount');
-  const ar = db.ref('admins/'+id);
-  const s = await ar.once('value');
-  const a = s.val();
-  const dep = a.deposits || {};
-  dep['dep_'+Date.now()] = { method: m, account: acc, amount: amt, note: n, addedBy: currentSession.username, timestamp: Date.now() };
-  await ar.update({ balance: Number(a.balance||0)+amt, totalDeposited: Number(a.totalDeposited||0)+amt, deposits: dep });
-  toast(`✅ ${amt.toFixed(2)} TK added`);
-  closeDepositModal(); loadAdminsList();
-}
 
 async function addNewAdmin() {
   const u = document.getElementById('newAdminUsername').value.trim();
   const p = document.getElementById('newAdminPassword').value;
   const cp = document.getElementById('newAdminConfirmPassword').value;
+  const reqRefs = parseInt(document.getElementById('newAdminReqRefs').value) || 5;
   if (!u || u.length < 3) return toast('❌ Username min 3');
   if (!p || p.length < 4) return toast('❌ Password min 4');
   if (p !== cp) return toast('❌ Do not match');
@@ -2860,11 +2838,12 @@ async function addNewAdmin() {
   const nr = db.ref('admins').push();
   const id = nr.key;
   const rc = 'ADM' + id.substring(0, 6).toUpperCase() + Math.random().toString(36).substring(2, 6).toUpperCase();
-  await nr.set({ username: u, passwordHash: hash, role: 'admin', isActive: true, balance: 0, totalDeposited: 0, totalSpent: 0, totalRefunded: 0, totalFees: 0, totalServiceCharges: 0, totalRevenue: 0, totalRefCommission: 0, totalTaskBonus: 0, totalWithdrawn: 0, totalWithdrawFees: 0, referralCode: rc, referredUsers: {}, commissionLogs: {}, deposits: {}, adminContact: null, isBanned: false, isSuspended: false, createdAt: Date.now(), createdBy: currentSession.username });
+  await nr.set({ username: u, passwordHash: hash, role: 'admin', isActive: true, balance: 0, requiredActiveRefs: reqRefs, totalSpent: 0, totalRefunded: 0, totalFees: 0, totalServiceCharges: 0, totalRevenue: 0, totalRefCommission: 0, totalTaskBonus: 0, totalWithdrawn: 0, totalWithdrawFees: 0, referralCode: rc, referredUsers: {}, commissionLogs: {}, adminContact: null, isBanned: false, isSuspended: false, createdAt: Date.now(), createdBy: currentSession.username });
   toast('✅ Admin added: ' + u);
   document.getElementById('newAdminUsername').value = '';
   document.getElementById('newAdminPassword').value = '';
   document.getElementById('newAdminConfirmPassword').value = '';
+  document.getElementById('newAdminReqRefs').value = '5';
   loadAdminsList();
 }
 
@@ -3085,116 +3064,6 @@ async function rejectDepositReq(reqId) {
   } catch(e) {
     toast('❌ ' + e.message);
   }
-}
-
-// ============================================
-// ADMIN DEPOSIT VIEW
-// ============================================
-function renderDepositMethodsAdminView() {
-  const c = document.getElementById('dmMethodsAdminView');
-  if (!c) return;
-  const dp = configData.depositPayment || {};
-  const methods = dp.methods || {};
-  const legacyMin = Number(dp.minDeposit || 50);
-  const providers = [
-    { key: 'bkash',  name: 'bKash',  icon: 'bKash', data: methods.bkash  || { number: dp.bkash,  minDeposit: legacyMin } },
-    { key: 'nagad',  name: 'Nagad',  icon: 'নগদ',  data: methods.nagad  || { number: dp.nagad,  minDeposit: legacyMin } },
-    { key: 'rocket', name: 'Rocket', icon: 'R',    data: methods.rocket || { number: dp.rocket, minDeposit: legacyMin } },
-    { key: 'upay',   name: 'Upay',   icon: 'U',    data: methods.upay   || { number: dp.upay,   minDeposit: legacyMin } }
-  ].filter(p => p.data && p.data.number && String(p.data.number).trim().length > 0);
-  if (!providers.length) {
-    c.innerHTML = '<div class="alert-box warning"><i class="fas fa-exclamation-triangle"></i><div>Super Admin এখনো কোনো নাম্বার সেট করেনি।</div></div>';
-    return;
-  }
-  let h = '';
-  providers.forEach(p => {
-    h += `<div class="deposit-provider-card ${p.key}">
-      <div class="deposit-provider-head">
-        <div class="deposit-provider-name">
-          <div class="deposit-provider-icon ${p.key}">${p.icon}</div>
-          <div>${p.name}</div>
-        </div>
-        <div class="deposit-min-badge">Min ${Number(p.data.minDeposit || 0).toFixed(0)} TK</div>
-      </div>
-      <div class="deposit-account-row">
-        <span class="lbl">📱 Number:</span>
-        <span class="val">${esc(p.data.number)}</span>
-      </div>
-      ${dp.instructions ? `<div class="deposit-instructions">${esc(dp.instructions)}</div>` : ''}
-      <button class="btn btn-green btn-small" style="margin-top:12px; width:100%;" onclick="openDepositSubmitModal('${p.key}','${p.name}','${esc(p.data.number)}',${Number(p.data.minDeposit || 0)})">
-        <i class="fas fa-paper-plane"></i> I've Sent Money
-      </button>
-    </div>`;
-  });
-  c.innerHTML = h;
-}
-
-function openDepositSubmitModal(key, name, num, minDep) {
-  document.getElementById('dsMethodIndex').value = key;
-  document.getElementById('dsMethodInfo').innerHTML =
-    `<div>Method: <b>${esc(name)}</b></div>` +
-    `<div>Number: <b style="color:#dc2626;">${esc(num)}</b></div>` +
-    `<div>Minimum: <b style="color:#f59e0b;">${Number(minDep || 0).toFixed(0)} TK</b></div>`;
-  document.getElementById('dsMethodInfo').dataset.minDep = String(minDep || 0);
-  document.getElementById('dsAmount').value = '';
-  document.getElementById('dsTxnId').value = '';
-  document.getElementById('dsNote').value = '';
-  document.getElementById('depositSubmitModal').classList.add('active');
-}
-
-function closeDepositSubmitModal() { document.getElementById('depositSubmitModal').classList.remove('active'); }
-
-async function submitDepositRequest() {
-  const key = document.getElementById('dsMethodIndex').value;
-  const dp = configData.depositPayment || {};
-  const methods = dp.methods || {};
-  const nameMap = { bkash: 'bKash', nagad: 'Nagad', rocket: 'Rocket', upay: 'Upay' };
-  const legacyMin = Number(dp.minDeposit || 50);
-  const legacyNumMap = { bkash: dp.bkash, nagad: dp.nagad, rocket: dp.rocket, upay: dp.upay };
-  const mData = (methods[key]) || { number: legacyNumMap[key] || '', minDeposit: legacyMin };
-  const mName = nameMap[key] || key;
-  const mNum = mData.number || '';
-  const mMin = Number(mData.minDeposit || 0);
-  if (!mNum) return toast('❌ এই মেথডে নাম্বার সেট করা নেই');
-  const amt = parseFloat(document.getElementById('dsAmount').value);
-  const txn = document.getElementById('dsTxnId').value.trim();
-  const note = document.getElementById('dsNote').value.trim();
-  if (!amt || amt <= 0) return toast('❌ Valid amount');
-  if (amt < mMin) return toast(`❌ ${mName} এর জন্য সর্বনিম্ন ${mMin.toFixed(0)} TK`);
-  if (!txn || txn.length < 4) return toast('❌ Valid Txn');
-  const reqId = 'depreq_' + Date.now() + '_' + currentSession.adminId;
-  await db.ref('depositRequests/' + reqId).set({
-    adminId: currentSession.adminId,
-    adminName: currentSession.username,
-    methodName: mName,
-    methodAccount: mNum,
-    minDeposit: mMin,
-    amount: amt,
-    txnId: txn,
-    note,
-    status: 'pending',
-    source: 'admin',
-    timestamp: Date.now()
-  });
-  toast('✅ Submitted!');
-  closeDepositSubmitModal();
-  renderMyDepositRequests();
-}
-
-async function renderMyDepositRequests() {
-  const c = document.getElementById('myDepositRequestsList');
-  if (!c || !currentSession || currentSession.role !== 'admin') return;
-  c.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:16px;">Loading...</p>';
-  const snap = await db.ref('depositRequests').orderByChild('adminId').equalTo(currentSession.adminId).once('value');
-  let list = []; snap.forEach(x => list.push({ id: x.key, ...x.val() }));
-  list.sort((a,b) => (b.timestamp||0)-(a.timestamp||0));
-  if (!list.length) { c.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:20px;">No requests</p>'; return; }
-  let h = '';
-  list.forEach(r => {
-    const cls = r.status === 'approved' ? 'approved' : r.status === 'rejected' ? 'rejected' : 'pending';
-    h += `<div class="dreq-item ${cls}"><div class="dreq-head"><div class="dreq-amount">${Number(r.amount).toFixed(2)} TK</div><span class="status-badge ${cls}">${r.status.toUpperCase()}</span></div><div class="dreq-info"><b>Method:</b> ${esc(r.methodName||r.method||'')}<br><b>Txn:</b> ${esc(r.txnId)}</div></div>`;
-  });
-  c.innerHTML = h;
 }
 
 // ============================================
@@ -3420,10 +3289,9 @@ function openAdminThread(threadKey, userName) {
   document.body.style.overflow = 'hidden';
   loadAdminThreadMessages();
   
-  // 👇 নতুন: অ্যাডমিন অনলাইন স্ট্যাটাস সেট করা 👇
   const onlineRef = db.ref('chats/' + threadKey + '/meta/adminOnline');
   onlineRef.set(true);
-  onlineRef.onDisconnect().set(false); // ইন্টারনেট কেটে গেলে বা অ্যাপ বন্ধ করলে অটো false হবে
+  onlineRef.onDisconnect().set(false);
 
   db.ref('chats/' + threadKey + '/messages').once('value').then(snap => {
     const updates = {};
@@ -3448,7 +3316,6 @@ function closeAdminChatThread() {
     if (indicator) indicator.style.display = 'none';
   }
   
-  // 👇 নতুন: চ্যাট বন্ধ করলে অফলাইন স্ট্যাটাস সেট করা 👇
   if (adminCurrentThreadKey) {
     db.ref('chats/' + adminCurrentThreadKey + '/meta/adminOnline').set(false);
   }
@@ -3592,7 +3459,6 @@ function switchTab(id, el) {
   if (id === 'depositmgmt') { loadDepositPaymentInfo(); loadAllDepositRequests(); }
   if (id === 'wallet') { loadCurrentAdminData(); renderMyContact(); }
   if (id === 'earnings') loadCurrentAdminData();
-  if (id === 'deposit') { renderDepositMethodsAdminView(); renderMyDepositRequests(); }
   if (id === 'contact') { renderContactInfo(); renderMyContact(); }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -3662,7 +3528,6 @@ function runPanelInit() {
     loadPendingUserWithdrawals();
   } else {
     loadCurrentAdminData(); loadTasksList(); loadTaskSubmissions();
-    renderDepositMethodsAdminView();
   }
   setInterval(() => { if (currentSession && currentSession.role === 'admin') loadCurrentAdminData(); }, 30000);
   updateMaxDaysHint('newTaskReward','newTaskTime','taskMaxDaysHint');
@@ -3721,7 +3586,7 @@ db.ref('config').on('value', snap => {
     if (document.getElementById('tab-depositmgmt') && document.getElementById('tab-depositmgmt').classList.contains('active')) loadDepositPaymentInfo();
   }
   if (currentSession && currentSession.role === 'admin') {
-    renderDepositMethodsAdminView(); renderContactInfo();
+    renderContactInfo();
     if (configData.botUsername) generateAdminRefCode();
   }
   if (currentSession) {
