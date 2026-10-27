@@ -552,7 +552,11 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
       <i class="fas fa-comment-dots" style="font-size:2rem;display:block;margin-bottom:10px;"></i>
       No messages
     </div>
-  </div>
+</div>
+<!-- 👇 এই লাইনটি যোগ করুন 👇 -->
+<div id="adminTypingIndicator" style="display:none; padding: 5px 15px; font-size: 0.75rem; color: #6C5CE7; font-weight: 700; background: #f8fafc;">
+    <i class="fas fa-ellipsis-h fa-fade"></i> User is typing...
+</div>
   <div style="padding:12px 14px;border-top:1px solid #e2e8f0;background:#fff;display:flex;gap:8px;">
     <input type="text" id="adminReplyInput" placeholder="Reply..." style="flex:1;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:24px;outline:none;font-family:inherit;" onkeydown="if(event.key==='Enter'){event.preventDefault();sendAdminReply();}">
     <button id="adminReplyBtn" onclick="sendAdminReply()" style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#6C5CE7,#8b5cf6);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;">
@@ -3436,62 +3440,95 @@ function closeAdminChatThread() {
   document.body.style.overflow = '';
 }
 
+let adminTypingListener = null;
+
 function loadAdminThreadMessages() {
-  if (adminThreadMsgListener) db.ref('chats/' + adminCurrentThreadKey + '/messages').off('value', adminThreadMsgListener);
-  adminThreadMsgListener = db.ref('chats/' + adminCurrentThreadKey + '/messages').orderByChild('timestamp').on('value', snap => {
-    const body = document.getElementById('adminThreadBody');
-    const msgs = [];
-    snap.forEach(c => { const m = c.val(); m.id = c.key; msgs.push(m); });
-    if (!msgs.length) {
-      body.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:40px;"><i class="fas fa-comment-dots" style="font-size:2rem;display:block;margin-bottom:10px;"></i>No messages</div>';
-      return;
-    }
-    msgs.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-    let html = '';
-    msgs.forEach(m => {
-      const isAdmin = m.from === 'admin';
-      const time = m.timestamp ? new Date(m.timestamp).toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' }) : '';
-      let content = '';
-      if (m.type === 'image' && m.fileUrl) {
-        const safeUrlStr = String(m.fileUrl).replace(/'/g, "\\'");
-        content = `<img src="${esc(m.fileUrl)}" style="max-width:100%;border-radius:8px;margin-top:4px;display:block;cursor:pointer;" onclick="window.open('${safeUrlStr}','_blank')" alt="image">`;
-        if (m.text) content += `<div>${esc(m.text)}</div>`;
-      } else content = esc(m.text || '');
-      const bubbleStyle = isAdmin
-        ? 'align-self:flex-end;background:linear-gradient(135deg,#6C5CE7,#8b5cf6);color:#fff;border-bottom-right-radius:4px;'
-        : 'align-self:flex-start;background:#fff;color:#0f172a;border:1px solid #e2e8f0;border-bottom-left-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.04);';
-      html += `<div style="max-width:78%;padding:10px 14px;border-radius:16px;font-size:.88rem;line-height:1.5;word-wrap:break-word;${bubbleStyle}">${content}<span style="font-size:.62rem;opacity:.75;margin-top:4px;display:block;text-align:${isAdmin?'right':'left'};">${time}</span></div>`;
+    if (adminThreadMsgListener) db.ref('chats/' + adminCurrentThreadKey + '/messages').off('value', adminThreadMsgListener);
+    adminThreadMsgListener = db.ref('chats/' + adminCurrentThreadKey + '/messages').orderByChild('timestamp').on('value', snap => {
+        const body = document.getElementById('adminThreadBody');
+        const msgs = [];
+        snap.forEach(c => { const m = c.val(); m.id = c.key; msgs.push(m); });
+        if (!msgs.length) {
+            body.innerHTML = '<div style="text-align:center;color:#94a3b8;padding:40px;"><i class="fas fa-comment-dots" style="font-size:2rem;display:block;margin-bottom:10px;"></i>No messages</div>';
+            return;
+        }
+        msgs.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+        let html = '';
+        msgs.forEach(m => {
+            const isAdmin = m.from === 'admin';
+            const time = m.timestamp ? new Date(m.timestamp).toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' }) : '';
+            let content = '';
+            if (m.type === 'image' && m.fileUrl) {
+                const safeUrlStr = String(m.fileUrl).replace(/'/g, "\\'");
+                content = `<img src="${esc(m.fileUrl)}" style="max-width:100%;border-radius:8px;margin-top:4px;display:block;cursor:pointer;" onclick="window.open('${safeUrlStr}','_blank')" alt="image">`;
+                if (m.text) content += `<div>${esc(m.text)}</div>`;
+            } else content = esc(m.text || '');
+            const bubbleStyle = isAdmin
+                ? 'align-self:flex-end;background:linear-gradient(135deg,#6C5CE7,#8b5cf6);color:#fff;border-bottom-right-radius:4px;'
+                : 'align-self:flex-start;background:#fff;color:#0f172a;border:1px solid #e2e8f0;border-bottom-left-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.04);';
+            html += `<div style="max-width:78%;padding:10px 14px;border-radius:16px;font-size:.88rem;line-height:1.5;word-wrap:break-word;${bubbleStyle}">${content}<span style="font-size:.62rem;opacity:.75;margin-top:4px;display:block;text-align:${isAdmin?'right':'left'};">${time}</span></div>`;
+        });
+        body.innerHTML = html;
+        body.scrollTop = body.scrollHeight;
     });
-    body.innerHTML = html;
-    body.scrollTop = body.scrollHeight;
-  });
+
+    // 👇 ইউজারের টাইপিং ডিটেক্ট করার লিসেনার 👇
+    if (adminTypingListener) db.ref('chats/' + adminCurrentThreadKey + '/meta/userTyping').off('value', adminTypingListener);
+    adminTypingListener = db.ref('chats/' + adminCurrentThreadKey + '/meta/userTyping').on('value', snap => {
+        const isTyping = snap.val() === true;
+        const indicator = document.getElementById('adminTypingIndicator');
+        if (indicator) {
+            if (isTyping) {
+                indicator.style.display = 'block';
+                document.getElementById('adminThreadBody').scrollTop = document.getElementById('adminThreadBody').scrollHeight;
+            } else {
+                indicator.style.display = 'none';
+            }
+        }
+    });
 }
 
 async function sendAdminReply() {
-  const input = document.getElementById('adminReplyInput');
-  const btn = document.getElementById('adminReplyBtn');
-  const text = input.value.trim();
-  if (!text) return;
-  if (!adminCurrentThreadKey) return toast('❌ No thread open');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-  try {
-    await db.ref('chats/' + adminCurrentThreadKey + '/messages').push({
-      from: 'admin',
-      adminId: currentSession ? (currentSession.adminId || 'super') : 'super',
-      adminName: currentSession ? currentSession.username : 'Admin',
-      text, type: 'text', timestamp: Date.now(), read: false
-    });
-    await db.ref('chats/' + adminCurrentThreadKey + '/meta').update({
-      lastMessageAt: Date.now(), lastMessagePreview: text.substring(0, 60), lastMessageFrom: 'admin', unreadForUser: 1
-    }).catch(()=>{});
-    const userId = adminCurrentThreadKey.replace('user_', '');
-    const adminName = currentSession ? currentSession.username : 'Admin';
-    sendUserTelegramNotification(userId, adminName, text).catch(() => {});
-    input.value = '';
-    toast('✅ Sent!');
-  } catch (e) { toast('❌ ' + e.message); }
-  finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i>'; }
+    const input = document.getElementById('adminReplyInput');
+    const btn = document.getElementById('adminReplyBtn');
+    const text = input.value.trim();
+    if (!text) return;
+    if (!adminCurrentThreadKey) return toast('❌ No thread open');
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    
+    try {
+        await db.ref('chats/' + adminCurrentThreadKey + '/messages').push({
+            from: 'admin',
+            adminId: currentSession ? (currentSession.adminId || 'super') : 'super',
+            adminName: currentSession ? currentSession.username : 'Admin',
+            text, type: 'text', timestamp: Date.now(), read: false
+        });
+        
+        await db.ref('chats/' + adminCurrentThreadKey + '/meta').update({
+            lastMessageAt: Date.now(), 
+            lastMessagePreview: text.substring(0, 60), 
+            lastMessageFrom: 'admin', 
+            lastAdminId: currentSession ? (currentSession.adminId || 'super') : 'super',
+            unreadForUser: 1 
+        }).catch(()=>{});
+
+        // 👇 ইউজারকে টেলিগ্রাম মেসেজ পাঠানো 👇
+        const userId = adminCurrentThreadKey.replace('user_', '');
+        const adminName = currentSession ? currentSession.username : 'Admin';
+        const BOT_TOKEN = "8921657661:AAHBaKSCD-jEHCgbEcYRQRiaD_Yx1vLHm9k";
+        const tgMsg = `💬 *New Reply from ${adminName}*\n\n"${text}"\n\n👉 Open the app to reply.`;
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: userId, text: tgMsg, parse_mode: 'Markdown' })
+        }).catch(()=>{});
+
+        input.value = '';
+        toast('✅ Sent!');
+    } catch (e) { toast('❌ ' + e.message); }
+    finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i>'; }
 }
 
 function setupAdminChatNotifications() {
@@ -3703,7 +3740,24 @@ window.addEventListener('beforeunload', () => { cleanupListeners(); });
   const el = document.getElementById(id);
   if (el) el.addEventListener('click', e => { if (e.target.id === id) el.classList.remove('active'); });
 });
-
+  
+let adminTypingTimeout = null;
+document.addEventListener('DOMContentLoaded', () => {
+    const adminReplyInput = document.getElementById('adminReplyInput');
+    if (adminReplyInput) {
+        adminReplyInput.addEventListener('input', () => {
+            if (!adminCurrentThreadKey) return;
+            if (adminReplyInput.value.length > 0) {
+                db.ref('chats/' + adminCurrentThreadKey + '/meta/adminTyping').set(true);
+            }
+            clearTimeout(adminTypingTimeout);
+            adminTypingTimeout = setTimeout(() => {
+                db.ref('chats/' + adminCurrentThreadKey + '/meta/adminTyping').set(false);
+            }, 1500);
+        });
+    }
+});
+  
 // ============================================
 // LEGAL MODALS
 // ============================================
