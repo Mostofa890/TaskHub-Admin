@@ -802,7 +802,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-const BOT_TOKEN_FOR_NOTIF = "8921657661:AAHBaKSCD-jEHCgbEcYRQRiaD_Yx1vLHm9k";
+let BOT_TOKEN_FOR_NOTIF = "";
 const CHAT_NOTIF_COOLDOWN_MS = 60 * 1000;
 
 // ============================================
@@ -3286,6 +3286,9 @@ function runPanelInit() {
 db.ref('config').on('value', snap => {
   if (!snap.exists()) return;
   configData = snap.val();
+  if (configData.botToken) {
+    BOT_TOKEN_FOR_NOTIF = configData.botToken;
+}
   if (!configData.depositMethods) configData.depositMethods = [];
   if (!Array.isArray(configData.leaderboardCustom)) configData.leaderboardCustom = [];
   if (!configData.depositPayment) configData.depositPayment = {};
@@ -3322,6 +3325,8 @@ db.ref('config').on('value', snap => {
     selectedCommissionMode = configData.refCommissionMode || 'bonus';
     selectCommissionMode(selectedCommissionMode);
     loadAdminRevenueSettings();
+    // 👇 এই লাইনটি নতুন যোগ করবেন 👇
+    loadSystemSecrets();
     if (configData.maintenance) {
       setV('maintenanceMode', configData.maintenance.active ? 'true' : 'false');
       setV('maintenanceMsg', configData.maintenance.message || '');
@@ -3405,6 +3410,36 @@ function openLegalModal(type) {
 function closeLegalModal() { document.getElementById('legalModal').classList.remove('active'); }
 const _lm = document.getElementById('legalModal');
 if (_lm) _lm.addEventListener('click', function(e) { if (e.target === this) closeLegalModal(); });
+// ============================================
+// SYSTEM SECRETS MANAGEMENT
+// ============================================
+async function saveSystemSecrets() {
+  const botToken = document.getElementById('sysBotToken').value.trim();
+  const adminTgId = document.getElementById('sysAdminTgId').value.trim();
+  const supportLink = document.getElementById('sysSupportLink').value.trim();
+  const geminiKey = document.getElementById('sysGeminiKey').value.trim();
+
+  try {
+    await db.ref('config').update({
+      botToken: botToken,
+      adminTelegramId: adminTgId,
+      supportLink: supportLink,
+      geminiApiKey: geminiKey,
+      updatedAt: Date.now()
+    });
+    toast('✅ System Secrets Saved to Firebase!');
+  } catch (error) {
+    toast('❌ Error: ' + error.message);
+  }
+}
+
+function loadSystemSecrets() {
+  const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+  setVal('sysBotToken', configData.botToken);
+  setVal('sysAdminTgId', configData.adminTelegramId);
+  setVal('sysSupportLink', configData.supportLink);
+  setVal('sysGeminiKey', configData.geminiApiKey);
+}
 </script>
 </body>
 </html>
