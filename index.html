@@ -963,7 +963,13 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
         <button class="btn btn-info btn-small" onclick="copyAdminRefCode()" style="flex:1;"><i class="fas fa-copy"></i> Copy Code</button>
         <button class="btn btn-green btn-small" onclick="copyAdminRefLink()" style="flex:1;"><i class="fas fa-link"></i> Copy Link</button>
       </div>
-      <div class="alert-box warning" style="margin-bottom:14px;"><i class="fas fa-exclamation-triangle"></i><div><b>⚠️ শর্ত:</b> টাস্ক তৈরি বা উইথড্র করতে আপনার রেফার করা ইউজারদের মধ্যে <b>কমপক্ষে <span id="requiredRefsDisplay">5</span> জনের প্যাকেজ একটিভ</b> থাকতে হবে।</div></div>
+      <div class="alert-box warning" style="margin-bottom:14px;">
+    <i class="fas fa-exclamation-triangle"></i>
+    <div>
+        <b>⚠️ উইথড্র শর্ত:</b> উইথড্র করতে আপনার রেফার করা ইউজারদের মধ্যে <b>কমপক্ষে <span id="requiredRefsDisplay">5</span> জনের ডিপোজিট বা প্যাকেজ একটিভ</b> থাকতে হবে। <br><br>
+        <b>📋 টাস্ক তৈরি:</b> শুধু আপনার ব্যালেন্সে টাকা থাকলেই টাস্ক তৈরি করতে পারবেন (রেফারেলের প্রয়োজন নেই)।
+    </div>
+</div>
       <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
         <div class="stat-card green"><div class="num" id="myRefUsersCount">0</div><div class="label">Referred</div></div>
         <div class="stat-card info"><div class="num" id="myRefCommission">0</div><div class="label">Total Comm</div></div>
@@ -1298,8 +1304,16 @@ async function calculateAdminQualifiedRefs(adminData) {
     const refUsers = adminData.referredUsers || {};
     for (const uid of Object.keys(refUsers)) {
         const us = await db.ref('users/'+uid).once('value');
-        if (us.exists() && Number(us.val().activePackageCount || 0) > 0) {
-            count++;
+        if (us.exists()) {
+            const u = us.val();
+            const hasDeposited = Number(u.totalDeposited || 0) > 0;
+            const hasAdBalance = Number(u.adBalance || 0) > 0;
+            const hasPackage = Number(u.activePackageCount || 0) > 0;
+            
+            // যদি ইউজার কোনো টাকা ডিপোজিট করে থাকে বা প্যাকেজ কিনে থাকে
+            if (hasDeposited || hasAdBalance || hasPackage) {
+                count++;
+            }
         }
     }
     return count;
@@ -1939,29 +1953,28 @@ async function saveNewTask() {
   const days = parseInt(document.getElementById('newTaskTime').value) || 7;
   const timer = parseInt(document.getElementById('newTaskTimer').value) || 60;
   const url = document.getElementById('newTaskLink').value.trim();
+  
   if (!title) return toast('❌ Title required');
   if (reward < MIN_TASK_REWARD) return toast(`❌ Min ${MIN_TASK_REWARD.toFixed(2)} TK`);
+  
   const isSuper = currentSession.role === 'super';
   if (!isSuper) { const max = getMaxDaysForReward(reward); if (days > max) return toast(`❌ Max ${max} days`); }
+  
   const noLink = TYPE_NO_LINK.includes(type);
   const optLink = TYPE_LINK_OPTIONAL.includes(type);
   if (!noLink && !optLink && !url) return toast('❌ Link required');
+  
   const needsTimer = TYPE_TIMER_NEEDED.includes(type);
   const cost = reward * slots;
   const svc = cost * (SERVICE_CHARGE_RATE/100);
   const debit = cost + svc;
   
   if (currentSession.role === 'admin') {
-    // CHECK ACTIVE REFS
-    const reqRefs = Number(currentAdminData.requiredActiveRefs || 5);
-    const qRefs = Number(currentAdminData.qualifiedRefsCount || 0);
-    if (qRefs < reqRefs) {
-        return toast(`❌ আপনাকে টাস্ক তৈরি করতে হলে কমপক্ষে ${reqRefs} জন একটিভ রেফারেল লাগবে। আপনার আছে ${qRefs} জন।`);
-    }
-    // Balance check
+    // শুধুমাত্র ব্যালেন্স চেক করবে, রেফারেল লাগবে না
     const bal = currentAdminData ? Number(currentAdminData.balance||0) : 0;
-    if (bal < debit) return toast(`❌ অপর্যাপ্ত! প্রয়োজন ${debit.toFixed(2)}`);
+    if (bal < debit) return toast(`❌ অপর্যাপ্ত! প্রয়োজন ${debit.toFixed(2)} TK`);
   }
+  
   const status = isSuper ? 'active' : 'pending';
   const td = { title, description: desc, type, category: cat, reward, totalSlots: slots, timeLimit: days+' days', timeLimitDays: days, timer: needsTimer ? timer : 0, url, status, updatedAt: Date.now(), createdByAdminId: currentSession.adminId, createdByName: currentSession.username, taskCost: cost, serviceCharge: svc, approvedBy: isSuper ? currentSession.username : null, approvedAt: isSuper ? Date.now() : null };
   try {
@@ -1986,7 +1999,6 @@ async function saveNewTask() {
     resetTaskForm(); loadTasksList();
   } catch(e) { toast('❌ '+e.message); }
 }
-
 function resetTaskForm() {
   editingTaskId = null;
   document.getElementById('newTaskTitle').value = '';
