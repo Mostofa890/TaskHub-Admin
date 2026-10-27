@@ -3419,6 +3419,12 @@ function openAdminThread(threadKey, userName) {
   document.getElementById('adminChatThreadModal').classList.add('active');
   document.body.style.overflow = 'hidden';
   loadAdminThreadMessages();
+  
+  // 👇 নতুন: অ্যাডমিন অনলাইন স্ট্যাটাস সেট করা 👇
+  const onlineRef = db.ref('chats/' + threadKey + '/meta/adminOnline');
+  onlineRef.set(true);
+  onlineRef.onDisconnect().set(false); // ইন্টারনেট কেটে গেলে বা অ্যাপ বন্ধ করলে অটো false হবে
+
   db.ref('chats/' + threadKey + '/messages').once('value').then(snap => {
     const updates = {};
     snap.forEach(c => {
@@ -3435,11 +3441,23 @@ function closeAdminChatThread() {
     db.ref('chats/' + adminCurrentThreadKey + '/messages').off('value', adminThreadMsgListener);
     adminThreadMsgListener = null;
   }
+  if (adminTypingListener && adminCurrentThreadKey) {
+    db.ref('chats/' + adminCurrentThreadKey + '/meta/userTyping').off('value', adminTypingListener);
+    adminTypingListener = null;
+    const indicator = document.getElementById('adminTypingIndicator');
+    if (indicator) indicator.style.display = 'none';
+  }
+  
+  // 👇 নতুন: চ্যাট বন্ধ করলে অফলাইন স্ট্যাটাস সেট করা 👇
+  if (adminCurrentThreadKey) {
+    db.ref('chats/' + adminCurrentThreadKey + '/meta/adminOnline').set(false);
+  }
+
   adminCurrentThreadKey = null;
   document.getElementById('adminChatThreadModal').classList.remove('active');
   document.body.style.overflow = '';
 }
-
+  
 let adminTypingListener = null;
 
 function loadAdminThreadMessages() {
