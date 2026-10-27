@@ -550,42 +550,167 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
   </div>
 
   <!-- SETTINGS TAB -->
-  <div id="tab-settings" class="tab-content active super-only">
-    <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-robot"></i></div>App Configuration</div></div><div class="form-group"><label>Bot Username (without @)</label><input type="text" id="botUsername" oninput="onBotUsernameInput(this)" placeholder="e.g. TaskHubBD24Bot"><small id="botUserHint" style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:#64748b;"></small></div><div class="form-group"><label>Currency Symbol</label><input type="text" id="currencySymbol"></div></div>
-    <div class="card rainbow"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-coins"></i></div>Admin Revenue System</div></div><div class="alert-box success"><i class="fas fa-lightbulb"></i><div><b>💡 দুই পক্ষের লাভ:</b> অ্যাডমিনরা ইউজার ইনকাম থেকে কমিশন পাবে এবং আপনি লাভ করবেন।</div></div><div class="form-group"><label>Revenue Mode</label><select id="adminRevenueMode"><option value="none">🚫 Disabled</option><option value="referral_commission">👥 Referral Commission</option><option value="task_bonus">📋 Task Completion Bonus</option><option value="hybrid">🏆 Hybrid (Both)</option></select></div><div class="revenue-box"><div class="revenue-box-title green"><i class="fas fa-users"></i> Referral Commission</div><div class="form-group"><label>Commission Rate (%)</label><input type="number" id="adminRefCommissionRate" step="0.1" value="5" min="0" max="50"></div><div class="form-group" style="margin-bottom:0;"><label>Max Daily Commission (TK)</label><input type="number" id="adminRefMaxDaily" step="0.01" value="50"></div></div><div class="revenue-box warning"><div class="revenue-box-title warning"><i class="fas fa-tasks"></i> Task Completion Bonus</div><div class="form-group"><label>Per Completion Bonus (TK)</label><input type="number" id="adminPerTaskBonus" step="0.01" value="0.10"></div><div class="form-group" style="margin-bottom:0;"><label>Max Daily Bonus (TK)</label><input type="number" id="adminTaskMaxDaily" step="0.01" value="20"></div></div><div class="revenue-box info"><div class="revenue-box-title info"><i class="fas fa-money-bill-transfer"></i> Admin Withdraw</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div class="form-group" style="margin-bottom:0;"><label>Min Withdraw (TK)</label><input type="number" id="adminMinWithdraw" value="100"></div><div class="form-group" style="margin-bottom:0;"><label>Withdraw Fee (%)</label><input type="number" id="adminWithdrawFee" step="0.1" value="2"></div></div></div><button class="btn btn-warning" onclick="saveAdminRevenueSettings()"><i class="fas fa-save"></i> Save Admin Revenue</button></div>
-    <div class="card rainbow"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-trophy"></i></div>Leaderboard Top Users</div></div><div class="lb-limit-bar"><span><i class="fas fa-users"></i> Custom Entries</span><span class="count"><span id="lbCount">0</span> / 10</span></div><div id="lbListContainer"></div><button class="btn btn-warning" id="lbAddBtn" onclick="openLbModal()" style="margin-top:10px;"><i class="fas fa-plus"></i> Add User</button></div>
-    <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-purple"><i class="fas fa-percent"></i></div>Service Charge</div></div><div class="form-group"><label>Rate (%)</label><input type="number" id="serviceChargeRate" step="0.1" min="0" max="100"></div><button class="btn btn-purple" onclick="saveServiceCharge()"><i class="fas fa-save"></i> Save</button></div>
-    <div class="card rainbow"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-crown"></i></div>Become Admin Slider</div></div><div class="form-group"><label>Status</label><select id="becomeAdminEnabled"><option value="true">✅ Enabled</option><option value="false">🚫 Disabled</option></select></div><div class="form-group"><label>Application Link *</label><input type="url" id="becomeAdminLink" placeholder="https://t.me/YourUsername"></div><div class="form-group"><label>Title</label><input type="text" id="becomeAdminTitle"></div><div class="form-group"><label>Subtitle</label><input type="text" id="becomeAdminSub"></div><div class="form-group"><label>Apply Button Text</label><input type="text" id="becomeAdminBtnText"></div><button class="btn btn-warning" onclick="saveBecomeAdminSettings()"><i class="fas fa-save"></i> Save Slider</button></div>
-    <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-pink"><i class="fas fa-headset"></i></div>Contact / Support</div></div><div class="form-group"><label>Contact Link URL *</label><input type="url" id="contactLink"></div><div class="form-group"><label>Contact Button Text</label><input type="text" id="contactBtnText"></div><div class="form-group"><label>Contact Note</label><textarea id="contactNote" rows="2"></textarea></div></div>
-    <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-gift"></i></div>Referral & Bonus</div></div><div class="form-group"><label>Daily Login Bonus</label><input type="number" id="dailyBonusAmount"></div><div class="form-group"><label>Bonus Per Referral</label><input type="number" id="refBonus"></div><div class="form-group"><label>Min Referral Balance</label><input type="number" id="minReferralBalance"></div><div class="form-group"><label>Commission Rate (%)</label><input type="number" id="refCommissionRate" step="0.1"></div><div class="form-group"><label>Commission Mode</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;"><div id="modeOption-bonus" onclick="selectCommissionMode('bonus')" style="padding:16px 12px;border:2px solid var(--border);border-radius:12px;cursor:pointer;text-align:center;"><div style="font-size:1.75rem;margin-bottom:6px;">🎁</div><div style="font-weight:900;font-size:.85rem;">Bonus Mode</div></div><div id="modeOption-deduct" onclick="selectCommissionMode('deduct')" style="padding:16px 12px;border:2px solid var(--border);border-radius:12px;cursor:pointer;text-align:center;"><div style="font-size:1.75rem;margin-bottom:6px;">💸</div><div style="font-weight:900;font-size:.85rem;">Deduct Mode</div></div></div></div><div class="form-group"><label>Tutorial Video Link</label><input type="text" id="tutorialLink"></div><div class="form-group"><label>Support Channel Link</label><input type="text" id="supportLink"></div></div>
-    <div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-cyan"><i class="fas fa-money-bill-wave"></i></div>Withdrawal System</div></div><div class="form-group"><label>Minimum Withdraw Amount</label><input type="number" id="minWithdraw"></div><div class="form-group"><label>Withdraw Notice</label><textarea id="withdrawNotice" rows="2"></textarea></div><div class="form-group"><label>Payment Methods</label><input type="text" id="paymentMethods"></div><div style="padding:14px;background:linear-gradient(135deg,rgba(99,102,241,.06),rgba(139,92,246,.06));border-radius:14px;border:1.5px solid rgba(99,102,241,.2);"><div style="font-size:.9rem;color:var(--primary);margin-bottom:10px;font-weight:800;"><i class="fas fa-layer-group"></i> Withdraw Levels</div><div id="withdrawLevelsContainer"></div><button class="btn btn-green btn-small" onclick="addWithdrawLevel()" style="margin-top:8px;"><i class="fas fa-plus"></i> Add Level</button></div></div>
-    <button class="btn btn-purple" onclick="saveSettings()"><i class="fas fa-save"></i> Save All Settings</button>
+<div id="tab-settings" class="tab-content active super-only">
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-title-icon icon-primary"><i class="fas fa-robot"></i></div>App Configuration
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Bot Username (without @)</label>
+      <input type="text" id="botUsername" oninput="onBotUsernameInput(this)" placeholder="e.g. TaskHubBD24Bot">
+      <small id="botUserHint" style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:#64748b;"></small>
+    </div>
+    <div class="form-group">
+      <label>Currency Symbol</label>
+      <input type="text" id="currencySymbol">
+    </div>
   </div>
 
-  <!-- CHANNELS -->
-  <div id="tab-channels" class="tab-content super-only"><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-link"></i></div>Verification Channels</div></div><div id="channelLinksContainer"></div><div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;"><input type="text" id="newChannelLabel" placeholder="Channel Name" style="flex:1;min-width:120px;"><input type="text" id="newChannelId" placeholder="Chat ID" style="flex:1;min-width:120px;"><button class="btn btn-green btn-small" onclick="addChannelLink()"><i class="fas fa-plus"></i> Add</button></div><button class="btn btn-warning" onclick="saveChannelsAndForceReverify()" style="margin-top:16px;"><i class="fas fa-shield-halved"></i> Save & Force Re-Verify</button></div><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-chart-simple"></i></div>Stats</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;"><div class="stat-card green"><div class="num" id="totalVerifiedUsers">0</div><div class="label">Verified</div></div><div class="stat-card danger"><div class="num" id="totalNotVerifiedUsers">0</div><div class="label">Not Verified</div></div></div></div></div>
+  <!-- 👇👇👇 নতুন যোগ করা System Secrets কার্ড 👇👇👇 -->
+  <div class="card rainbow">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-title-icon icon-danger"><i class="fas fa-shield-alt"></i></div>System Secrets (API & Bot)
+      </div>
+    </div>
+    <div class="alert-box info">
+      <i class="fas fa-info-circle"></i>
+      <div>এই তথ্যগুলো শুধু অ্যাডমিন দেখতে পাবে। ইউজার প্যানেল সরাসরি এখান থেকে ডাটা নেবে।</div>
+    </div>
+    <div class="form-group">
+      <label>Telegram Bot Token</label>
+      <input type="text" id="sysBotToken" placeholder="8921657661:AAHBa...">
+    </div>
+    <div class="form-group">
+      <label>Admin Telegram ID (For Chat Notifications)</label>
+      <input type="text" id="sysAdminTgId" placeholder="6624254778">
+    </div>
+    <div class="form-group">
+      <label>Support Link (Telegram/WhatsApp)</label>
+      <input type="text" id="sysSupportLink" placeholder="https://t.me/NexEarn2Support">
+    </div>
+    <div class="form-group">
+      <label>Gemini AI API Key (For ZARA Bot)</label>
+      <input type="text" id="sysGeminiKey" placeholder="AQ.Ab8RN6...">
+    </div>
+    <button class="btn btn-danger" onclick="saveSystemSecrets()"><i class="fas fa-save"></i> Save System Secrets</button>
+  </div>
+  <!-- 👆👆👆 নতুন কার্ড শেষ 👆👆👆 -->
 
-  <!-- ANALYTICS -->
-  <div id="tab-analytics" class="tab-content super-only"><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-chart-line"></i></div>Activity Analytics</div></div><div class="analytics-range-tabs"><button class="range-tab active" data-range="today" onclick="setAnalyticsRange('today', this)">📅 Today</button><button class="range-tab" data-range="yesterday" onclick="setAnalyticsRange('yesterday', this)">📆 Yesterday</button><button class="range-tab" data-range="week" onclick="setAnalyticsRange('week', this)">🗓️ Week</button><button class="range-tab" data-range="month" onclick="setAnalyticsRange('month', this)">📊 Month</button><button class="range-tab" data-range="all" onclick="setAnalyticsRange('all', this)">♾️ All</button></div><div id="analyticsRangeLabel" style="font-size:.75rem;color:var(--text-muted);font-weight:700;margin-bottom:14px;text-align:center;padding:8px;background:var(--bg-alt);border-radius:10px;"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;"><div class="stat-card info"><div class="num" id="anaUsersActive">0</div><div class="label">Active Users</div></div><div class="stat-card purple"><div class="num" id="anaTasksDone">0</div><div class="label">Tasks Done</div></div><div class="stat-card pink"><div class="num" id="anaWithdrawals">0</div><div class="label">Withdrawals</div></div><div class="stat-card danger"><div class="num" id="anaEarnings">0</div><div class="label">Total Paid</div></div><div class="stat-card deposit"><div class="num" id="anaDeposits">0</div><div class="label">Deposits</div></div><div class="stat-card green"><div class="num" id="anaDepositTotal">0</div><div class="label">Deposit Total</div></div></div><div style="overflow-x:auto;"><table style="width:100%;font-size:.82rem;border-collapse:separate;border-spacing:0 6px;"><thead><tr><th style="text-align:left;padding:10px;color:#94a3b8;">User</th><th style="text-align:left;padding:10px;color:#94a3b8;">Tasks</th><th style="text-align:left;padding:10px;color:#94a3b8;">Earned</th></tr></thead><tbody id="analyticsTableBody"></tbody></table></div></div></div>
+  <div class="card rainbow">
+    <div class="card-header">
+      <div class="card-title">
+        <div class="card-title-icon icon-warning"><i class="fas fa-coins"></i></div>Admin Revenue System
+      </div>
+    </div>
+    <div class="alert-box success"><i class="fas fa-lightbulb"></i><div><b>💡 দুই পক্ষের লাভ:</b> অ্যাডমিনরা ইউজার ইনকাম থেকে কমিশন পাবে এবং আপনি লাভ করবেন।</div></div>
+    <div class="form-group"><label>Revenue Mode</label><select id="adminRevenueMode"><option value="none">🚫 Disabled</option><option value="referral_commission">👥 Referral Commission</option><option value="task_bonus">📋 Task Completion Bonus</option><option value="hybrid">🏆 Hybrid (Both)</option></select></div>
+    <div class="revenue-box">
+      <div class="revenue-box-title green"><i class="fas fa-users"></i> Referral Commission</div>
+      <div class="form-group"><label>Commission Rate (%)</label><input type="number" id="adminRefCommissionRate" step="0.1" value="5" min="0" max="50"></div>
+      <div class="form-group" style="margin-bottom:0;"><label>Max Daily Commission (TK)</label><input type="number" id="adminRefMaxDaily" step="0.01" value="50"></div>
+    </div>
+    <div class="revenue-box warning">
+      <div class="revenue-box-title warning"><i class="fas fa-tasks"></i> Task Completion Bonus</div>
+      <div class="form-group"><label>Per Completion Bonus (TK)</label><input type="number" id="adminPerTaskBonus" step="0.01" value="0.10"></div>
+      <div class="form-group" style="margin-bottom:0;"><label>Max Daily Bonus (TK)</label><input type="number" id="adminTaskMaxDaily" step="0.01" value="20"></div>
+    </div>
+    <div class="revenue-box info">
+      <div class="revenue-box-title info"><i class="fas fa-money-bill-transfer"></i> Admin Withdraw</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-group" style="margin-bottom:0;"><label>Min Withdraw (TK)</label><input type="number" id="adminMinWithdraw" value="100"></div>
+        <div class="form-group" style="margin-bottom:0;"><label>Withdraw Fee (%)</label><input type="number" id="adminWithdrawFee" step="0.1" value="2"></div>
+      </div>
+    </div>
+    <button class="btn btn-warning" onclick="saveAdminRevenueSettings()"><i class="fas fa-save"></i> Save Admin Revenue</button>
+  </div>
 
-  <!-- USERS -->
-  <div id="tab-users" class="tab-content super-only"><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-users"></i></div>All Users</div></div><div class="user-stats-summary"><div class="sum-cell online"><div class="sum-num" id="onlineUsersCount">0</div><div class="sum-lbl"><i class="fas fa-circle"></i> Online</div></div><div class="sum-cell working"><div class="sum-num" id="workingUsersCount">0</div><div class="sum-lbl"><i class="fas fa-briefcase"></i> Working</div></div><div class="sum-cell offline"><div class="sum-num" id="offlineUsersCount">0</div><div class="sum-lbl"><i class="fas fa-moon"></i> Offline</div></div></div><div style="position:relative;margin-bottom:16px;"><input type="text" id="userSearch" placeholder="Search by name or ID..." oninput="filterUsers()" style="padding-left:44px;"><i class="fas fa-search" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#94a3b8;"></i></div><div style="display:flex;gap:8px;margin-bottom:14px;"><button class="btn btn-info btn-small" onclick="loadUsers()" style="flex:1;"><i class="fas fa-refresh"></i> Refresh</button><button class="btn btn-purple btn-small" onclick="renderAllUsersReferralChains()" style="flex:1;"><i class="fas fa-sitemap"></i> Chains</button></div><div id="usersContainer"></div></div></div>
+  <div class="card rainbow">
+    <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-trophy"></i></div>Leaderboard Top Users</div></div>
+    <div class="lb-limit-bar"><span><i class="fas fa-users"></i> Custom Entries</span><span class="count"><span id="lbCount">0</span> / 10</span></div>
+    <div id="lbListContainer"></div>
+    <button class="btn btn-warning" id="lbAddBtn" onclick="openLbModal()" style="margin-top:10px;"><i class="fas fa-plus"></i> Add User</button>
+  </div>
 
-  <!-- WITHDRAWALS -->
-  <div id="tab-withdrawals" class="tab-content super-only"><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>Pending User Withdrawals</div></div><div id="wd-container"></div></div><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-clock-rotate-left"></i></div>All Withdrawals</div></div><div id="allWdContainer"></div></div></div>
+  <div class="card">
+    <div class="card-header"><div class="card-title"><div class="card-title-icon icon-purple"><i class="fas fa-percent"></i></div>Service Charge</div></div>
+    <div class="form-group"><label>Rate (%)</label><input type="number" id="serviceChargeRate" step="0.1" min="0" max="100"></div>
+    <button class="btn btn-purple" onclick="saveServiceCharge()"><i class="fas fa-save"></i> Save</button>
+  </div>
 
-  <!-- ADMIN PAYOUTS -->
-  <div id="tab-adminpayouts" class="tab-content super-only"><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>Pending Admin Withdrawals</div></div><div id="adminWdPendingList"></div></div><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-clock-rotate-left"></i></div>All Admin Payouts</div></div><div id="adminWdAllList"></div></div></div>
+  <div class="card rainbow">
+    <div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-crown"></i></div>Become Admin Slider</div></div>
+    <div class="form-group"><label>Status</label><select id="becomeAdminEnabled"><option value="true">✅ Enabled</option><option value="false">🚫 Disabled</option></select></div>
+    <div class="form-group"><label>Application Link *</label><input type="url" id="becomeAdminLink" placeholder="https://t.me/YourUsername"></div>
+    <div class="form-group"><label>Title</label><input type="text" id="becomeAdminTitle"></div>
+    <div class="form-group"><label>Subtitle</label><input type="text" id="becomeAdminSub"></div>
+    <div class="form-group"><label>Apply Button Text</label><input type="text" id="becomeAdminBtnText"></div>
+    <button class="btn btn-warning" onclick="saveBecomeAdminSettings()"><i class="fas fa-save"></i> Save Slider</button>
+  </div>
 
-  <!-- PACKAGES -->
-  <div id="tab-packages" class="tab-content super-only"><div class="card rainbow"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-orange"><i class="fas fa-box-open"></i></div><span id="pkgFormTitle">Create New Package</span></div></div><input type="hidden" id="pkgEditId"><div class="form-group"><label>Package Name *</label><input type="text" id="pkgName" placeholder="e.g. Starter Package"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div class="form-group"><label>Duration (Days) *</label><input type="number" id="pkgDuration" min="1" placeholder="30" oninput="calculatePackagePreview()"><small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">প্যাকেজটি কতদিন চলবে</small></div><div class="form-group"><label>Price (TK) *</label><input type="number" id="pkgPrice" min="1" step="0.01" placeholder="100" oninput="calculatePackagePreview()"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div class="form-group"><label>Profit Rate (%) *</label><input type="number" id="pkgRate" min="0" step="0.1" placeholder="50" oninput="calculatePackagePreview()"></div><div class="form-group"><label>Total Return (TK) — Auto</label><input type="text" id="pkgTotalReturnDisplay" readonly style="background:#f1f5f9;color:#0f172a;font-weight:800;border-color:#cbd5e1;"></div></div><div class="form-group"><label>Daily Income (TK) — Auto</label><input type="text" id="pkgDailyIncomeDisplay" readonly style="background:#f1f5f9;color:#059669;font-weight:800;border:1.5px solid #10b981;"></div><div class="form-group"><label>Package Description (optional)</label><textarea id="pkgDesc" rows="2" placeholder="Short description..."></textarea></div><div class="form-group"><label>Status</label><select id="pkgStatus"><option value="active">✅ Active</option><option value="inactive">🚫 Inactive</option></select></div><div style="display:flex;gap:10px;"><button class="btn btn-orange" onclick="savePackage()" style="flex:2;"><i class="fas fa-save"></i> Save Package</button><button class="btn btn-red" onclick="resetPackageForm()" style="flex:1;"><i class="fas fa-times"></i> Reset</button></div></div><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-list-check"></i></div>All Packages (<span id="pkgCount">0</span>)</div></div><div id="packagesListContainer"></div></div><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-user-check"></i></div>Active User Packages</div></div><div id="activeUserPackagesContainer"></div></div></div>
+  <div class="card">
+    <div class="card-header"><div class="card-title"><div class="card-title-icon icon-pink"><i class="fas fa-headset"></i></div>Contact / Support</div></div>
+    <div class="form-group"><label>Contact Link URL *</label><input type="url" id="contactLink"></div>
+    <div class="form-group"><label>Contact Button Text</label><input type="text" id="contactBtnText"></div>
+    <div class="form-group"><label>Contact Note</label><textarea id="contactNote" rows="2"></textarea></div>
+  </div>
 
-  <!-- MAINTENANCE -->
-  <div id="tab-maintenance" class="tab-content super-only"><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-wrench"></i></div>System Maintenance</div></div><div class="form-group"><label>Mode</label><select id="maintenanceMode"><option value="false">🟢 Online</option><option value="true">🔴 Maintenance</option></select></div><div class="form-group"><label>Message</label><input type="text" id="maintenanceMsg"></div><div class="form-group"><label>Estimated Time (Minutes)</label><input type="number" id="maintenanceTime"></div><button class="btn btn-warning" onclick="saveMaintenance()"><i class="fas fa-save"></i> Update</button></div></div>
+  <div class="card">
+    <div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-gift"></i></div>Referral & Bonus</div></div>
+    <div class="form-group"><label>Daily Login Bonus</label><input type="number" id="dailyBonusAmount"></div>
+    <div class="form-group"><label>Bonus Per Referral</label><input type="number" id="refBonus"></div>
+    <div class="form-group"><label>Min Referral Balance</label><input type="number" id="minReferralBalance"></div>
+    <div class="form-group"><label>Commission Rate (%)</label><input type="number" id="refCommissionRate" step="0.1"></div>
+    <div class="form-group"><label>Commission Mode</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
+        <div id="modeOption-bonus" onclick="selectCommissionMode('bonus')" style="padding:16px 12px;border:2px solid var(--border);border-radius:12px;cursor:pointer;text-align:center;"><div style="font-size:1.75rem;margin-bottom:6px;">🎁</div><div style="font-weight:900;font-size:.85rem;">Bonus Mode</div></div>
+        <div id="modeOption-deduct" onclick="selectCommissionMode('deduct')" style="padding:16px 12px;border:2px solid var(--border);border-radius:12px;cursor:pointer;text-align:center;"><div style="font-size:1.75rem;margin-bottom:6px;">💸</div><div style="font-weight:900;font-size:.85rem;">Deduct Mode</div></div>
+      </div>
+    </div>
+    <div class="form-group"><label>Tutorial Video Link</label><input type="text" id="tutorialLink"></div>
+    <div class="form-group"><label>Support Channel Link</label><input type="text" id="supportLink"></div>
+  </div>
 
-  <!-- REFERRALS -->
-  <div id="tab-referrals" class="tab-content super-only"><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-trophy"></i></div>Top Referrers</div></div><div id="adminRefLeaderboard"></div></div><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-chart-simple"></i></div>Statistics</div></div><div id="adminRefStats"></div></div><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-sitemap"></i></div>Referral Chains</div></div><div id="referralChainsList"></div></div></div>
+  <div class="card">
+    <div class="card-header"><div class="card-title"><div class="card-title-icon icon-cyan"><i class="fas fa-money-bill-wave"></i></div>Withdrawal System</div></div>
+    <div class="form-group"><label>Minimum Withdraw Amount</label><input type="number" id="minWithdraw"></div>
+    <div class="form-group"><label>Withdraw Notice</label><textarea id="withdrawNotice" rows="2"></textarea></div>
+    <div class="form-group"><label>Payment Methods</label><input type="text" id="paymentMethods"></div>
+    <div style="padding:14px;background:linear-gradient(135deg,rgba(99,102,241,.06),rgba(139,92,246,.06));border-radius:14px;border:1.5px solid rgba(99,102,241,.2);">
+      <div style="font-size:.9rem;color:var(--primary);margin-bottom:10px;font-weight:800;"><i class="fas fa-layer-group"></i> Withdraw Levels</div>
+      <div id="withdrawLevelsContainer"></div>
+      <button class="btn btn-green btn-small" onclick="addWithdrawLevel()" style="margin-top:8px;"><i class="fas fa-plus"></i> Add Level</button>
+    </div>
+  </div>
 
+  <button class="btn btn-purple" onclick="saveSettings()"><i class="fas fa-save"></i> Save All Settings</button>
+</div>
+
+<!-- CHANNELS -->
+<div id="tab-channels" class="tab-content super-only"><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-link"></i></div>Verification Channels</div></div><div id="channelLinksContainer"></div><div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;"><input type="text" id="newChannelLabel" placeholder="Channel Name" style="flex:1;min-width:120px;"><input type="text" id="newChannelId" placeholder="Chat ID" style="flex:1;min-width:120px;"><button class="btn btn-green btn-small" onclick="addChannelLink()"><i class="fas fa-plus"></i> Add</button></div><button class="btn btn-warning" onclick="saveChannelsAndForceReverify()" style="margin-top:16px;"><i class="fas fa-shield-halved"></i> Save & Force Re-Verify</button></div><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-chart-simple"></i></div>Stats</div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;"><div class="stat-card green"><div class="num" id="totalVerifiedUsers">0</div><div class="label">Verified</div></div><div class="stat-card danger"><div class="num" id="totalNotVerifiedUsers">0</div><div class="label">Not Verified</div></div></div></div></div>
+
+<!-- ANALYTICS -->
+<div id="tab-analytics" class="tab-content super-only"><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-chart-line"></i></div>Activity Analytics</div></div><div class="analytics-range-tabs"><button class="range-tab active" data-range="today" onclick="setAnalyticsRange('today', this)">📅 Today</button><button class="range-tab" data-range="yesterday" onclick="setAnalyticsRange('yesterday', this)">📆 Yesterday</button><button class="range-tab" data-range="week" onclick="setAnalyticsRange('week', this)">🗓️ Week</button><button class="range-tab" data-range="month" onclick="setAnalyticsRange('month', this)">📊 Month</button><button class="range-tab" data-range="all" onclick="setAnalyticsRange('all', this)">♾️ All</button></div><div id="analyticsRangeLabel" style="font-size:.75rem;color:var(--text-muted);font-weight:700;margin-bottom:14px;text-align:center;padding:8px;background:var(--bg-alt);border-radius:10px;"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;"><div class="stat-card info"><div class="num" id="anaUsersActive">0</div><div class="label">Active Users</div></div><div class="stat-card purple"><div class="num" id="anaTasksDone">0</div><div class="label">Tasks Done</div></div><div class="stat-card pink"><div class="num" id="anaWithdrawals">0</div><div class="label">Withdrawals</div></div><div class="stat-card danger"><div class="num" id="anaEarnings">0</div><div class="label">Total Paid</div></div><div class="stat-card deposit"><div class="num" id="anaDeposits">0</div><div class="label">Deposits</div></div><div class="stat-card green"><div class="num" id="anaDepositTotal">0</div><div class="label">Deposit Total</div></div></div><div style="overflow-x:auto;"><table style="width:100%;font-size:.82rem;border-collapse:separate;border-spacing:0 6px;"><thead><tr><th style="text-align:left;padding:10px;color:#94a3b8;">User</th><th style="text-align:left;padding:10px;color:#94a3b8;">Tasks</th><th style="text-align:left;padding:10px;color:#94a3b8;">Earned</th></tr></thead><tbody id="analyticsTableBody"></tbody></table></div></div></div>
+
+<!-- USERS -->
+<div id="tab-users" class="tab-content super-only"><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-users"></i></div>All Users</div></div><div class="user-stats-summary"><div class="sum-cell online"><div class="sum-num" id="onlineUsersCount">0</div><div class="sum-lbl"><i class="fas fa-circle"></i> Online</div></div><div class="sum-cell working"><div class="sum-num" id="workingUsersCount">0</div><div class="sum-lbl"><i class="fas fa-briefcase"></i> Working</div></div><div class="sum-cell offline"><div class="sum-num" id="offlineUsersCount">0</div><div class="sum-lbl"><i class="fas fa-moon"></i> Offline</div></div></div><div style="position:relative;margin-bottom:16px;"><input type="text" id="userSearch" placeholder="Search by name or ID..." oninput="filterUsers()" style="padding-left:44px;"><i class="fas fa-search" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#94a3b8;"></i></div><div style="display:flex;gap:8px;margin-bottom:14px;"><button class="btn btn-info btn-small" onclick="loadUsers()" style="flex:1;"><i class="fas fa-refresh"></i> Refresh</button><button class="btn btn-purple btn-small" onclick="renderAllUsersReferralChains()" style="flex:1;"><i class="fas fa-sitemap"></i> Chains</button></div><div id="usersContainer"></div></div></div>
+
+<!-- WITHDRAWALS -->
+<div id="tab-withdrawals" class="tab-content super-only"><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>Pending User Withdrawals</div></div><div id="wd-container"></div></div><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-clock-rotate-left"></i></div>All Withdrawals</div></div><div id="allWdContainer"></div></div></div>
+
+<!-- ADMIN PAYOUTS -->
+<div id="tab-adminpayouts" class="tab-content super-only"><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-hourglass-half"></i></div>Pending Admin Withdrawals</div></div><div id="adminWdPendingList"></div></div><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-clock-rotate-left"></i></div>All Admin Payouts</div></div><div id="adminWdAllList"></div></div></div>
+
+<!-- PACKAGES -->
+<div id="tab-packages" class="tab-content super-only"><div class="card rainbow"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-orange"><i class="fas fa-box-open"></i></div><span id="pkgFormTitle">Create New Package</span></div></div><input type="hidden" id="pkgEditId"><div class="form-group"><label>Package Name *</label><input type="text" id="pkgName" placeholder="e.g. Starter Package"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div class="form-group"><label>Duration (Days) *</label><input type="number" id="pkgDuration" min="1" placeholder="30" oninput="calculatePackagePreview()"><small style="display:block;margin-top:6px;font-size:.7rem;font-weight:700;color:var(--text-muted);">প্যাকেজটি কতদিন চলবে</small></div><div class="form-group"><label>Price (TK) *</label><input type="number" id="pkgPrice" min="1" step="0.01" placeholder="100" oninput="calculatePackagePreview()"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"><div class="form-group"><label>Profit Rate (%) *</label><input type="number" id="pkgRate" min="0" step="0.1" placeholder="50" oninput="calculatePackagePreview()"></div><div class="form-group"><label>Total Return (TK) — Auto</label><input type="text" id="pkgTotalReturnDisplay" readonly style="background:#f1f5f9;color:#0f172a;font-weight:800;border-color:#cbd5e1;"></div></div><div class="form-group"><label>Daily Income (TK) — Auto</label><input type="text" id="pkgDailyIncomeDisplay" readonly style="background:#f1f5f9;color:#059669;font-weight:800;border:1.5px solid #10b981;"></div><div class="form-group"><label>Package Description (optional)</label><textarea id="pkgDesc" rows="2" placeholder="Short description..."></textarea></div><div class="form-group"><label>Status</label><select id="pkgStatus"><option value="active">✅ Active</option><option value="inactive">🚫 Inactive</option></select></div><div style="display:flex;gap:10px;"><button class="btn btn-orange" onclick="savePackage()" style="flex:2;"><i class="fas fa-save"></i> Save Package</button><button class="btn btn-red" onclick="resetPackageForm()" style="flex:1;"><i class="fas fa-times"></i> Reset</button></div></div><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-info"><i class="fas fa-list-check"></i></div>All Packages (<span id="pkgCount">0</span>)</div></div><div id="packagesListContainer"></div></div><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-user-check"></i></div>Active User Packages</div></div><div id="activeUserPackagesContainer"></div></div></div>
+
+<!-- MAINTENANCE -->
+<div id="tab-maintenance" class="tab-content super-only"><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-wrench"></i></div>System Maintenance</div></div><div class="form-group"><label>Mode</label><select id="maintenanceMode"><option value="false">🟢 Online</option><option value="true">🔴 Maintenance</option></select></div><div class="form-group"><label>Message</label><input type="text" id="maintenanceMsg"></div><div class="form-group"><label>Estimated Time (Minutes)</label><input type="number" id="maintenanceTime"></div><button class="btn btn-warning" onclick="saveMaintenance()"><i class="fas fa-save"></i> Update</button></div></div>
+
+<!-- REFERRALS -->
+<div id="tab-referrals" class="tab-content super-only"><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-warning"><i class="fas fa-trophy"></i></div>Top Referrers</div></div><div id="adminRefLeaderboard"></div></div><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-primary"><i class="fas fa-chart-simple"></i></div>Statistics</div></div><div id="adminRefStats"></div></div><div class="card"><div class="card-header"><div class="card-title"><div class="card-title-icon icon-success"><i class="fas fa-sitemap"></i></div>Referral Chains</div></div><div id="referralChainsList"></div></div></div>
   <!-- ADMINS -->
   <div id="tab-admins" class="tab-content super-only">
     <div class="card rainbow">
