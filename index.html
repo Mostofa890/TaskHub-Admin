@@ -3450,6 +3450,7 @@ async function sendAdminReply() {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
     
     try {
+        // ১. ফায়ারবেসে মেসেজ পাঠানো
         await db.ref('chats/' + adminCurrentThreadKey + '/messages').push({
             from: 'admin',
             adminId: currentSession ? (currentSession.adminId || 'super') : 'super',
@@ -3465,16 +3466,30 @@ async function sendAdminReply() {
             unreadForUser: 1 
         }).catch(()=>{});
 
+        // ২. ইউজারকে টেলিগ্রাম নোটিফিকেশন পাঠানো
         const userId = adminCurrentThreadKey.replace('user_', '');
         const adminName = currentSession ? currentSession.username : 'Admin';
         const tgMsg = `💬 *New Reply from ${adminName}*\n\n"${text}"\n\n👉 Open the app to reply.`;
         
-        if (BOT_TOKEN_FOR_NOTIF) {
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN_FOR_NOTIF}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: userId, text: tgMsg, parse_mode: 'Markdown' })
-            }).catch(()=>{});
+        // ✅ সরাসরি ফায়ারবেস থেকে টোকেন নিয়ে নোটিফিকেশন পাঠানো (সবচেয়ে নিরাপদ উপায়)
+        try {
+            const configSnap = await db.ref('config').once('value');
+            const cfg = configSnap.val() || {};
+            const tgBotToken = cfg.botToken || BOT_TOKEN_FOR_NOTIF;
+
+            if (tgBotToken) {
+                const tgRes = await fetch(`https://api.telegram.org/bot${tgBotToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: userId, text: tgMsg, parse_mode: 'Markdown' })
+                });
+                const tgData = await tgRes.json();
+                if (!tgData.ok) console.error("Telegram API Error:", tgData);
+            } else {
+                console.warn("Bot Token missing in Firebase Config.");
+            }
+        } catch(e) {
+            console.error("Notification fetch error:", e);
         }
 
         input.value = '';
